@@ -1,0 +1,5 @@
+C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\bin\Debug\KinectTest.exe
+C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\bin\Debug\KinectTest.pdb
+C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\KinectTest.exe
+C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\KinectTest.pdb

@@ -1,0 +1,16 @@
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\MainWindow.baml
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\MainWindow.g.cs
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\App.g.cs
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay_MarkupCompile.cache
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.g.resources
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.Properties.Resources.resources
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\KinectDisplay.exe
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\KinectDisplay.pdb
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\KinectAPI.dll
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\KinectAPI.pdb
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.exe
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.pdb
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\CLNUIDevice.dll

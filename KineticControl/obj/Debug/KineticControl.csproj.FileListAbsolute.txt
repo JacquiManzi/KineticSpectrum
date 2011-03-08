@@ -1,0 +1,5 @@
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\bin\Debug\KineticControl.dll
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\bin\Debug\KineticControl.pdb
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\KineticControl.dll
+C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\KineticControl.pdb
