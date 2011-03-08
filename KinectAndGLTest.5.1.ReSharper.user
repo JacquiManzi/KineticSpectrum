@@ -1,0 +1,536 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Accelerometer.cs" caret="35" fromTop="2" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:LedMode.cs" caret="35" fromTop="2" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Motor.cs" caret="91" fromTop="5" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DeviceLoader.cs" caret="546" fromTop="19" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:KinectDevice.cs" caret="78" fromTop="4" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraType.cs" caret="144" fromTop="7" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Device.cs" caret="2310" fromTop="0" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthMatrix.cs" caret="391" fromTop="9" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="804" fromTop="11" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml" caret="344" fromTop="2" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1198" fromTop="8" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2077" fromTop="7" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2515" fromTop="6" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="4366" fromTop="4" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Device.cs" caret="2504" fromTop="14" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="2088" fromTop="29" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1947" fromTop="24" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="435" fromTop="6" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="741" fromTop="13" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2372" fromTop="7" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="4236" fromTop="12" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="10" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="21" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="22" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="663" fromTop="6" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml" caret="477" fromTop="3" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1292" fromTop="8" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1801" fromTop="17" />
+      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="839" fromTop="10" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="1506" fromTop="17" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="4579" fromTop="12" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="5359" fromTop="17" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2086" fromTop="7" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="137" fromTop="7" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="3279" fromTop="29" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2850" fromTop="13" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="88" fromTop="2" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2927" fromTop="25" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="3177" fromTop="6" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2605" fromTop="8" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="1448" fromTop="4" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2928" fromTop="15" />
+      <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2693" fromTop="6" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="using" priority="4" />
+      <Item value="OpenTK" priority="3" />
+      <Item value="Graphics" priority="3" />
+      <Item value="OpenGL" priority="2" />
+      <Item value="bool" priority="6" />
+      <Item value="false" priority="7" />
+      <Item value="glLoaded" priority="1" />
+      <Item value="true" priority="9" />
+      <Item value="return" priority="39" />
+      <Item value="GetLifetimeService`0" priority="0" />
+      <Item value="GL" priority="0" />
+      <Item value="GL`0" priority="1" />
+      <Item value="ClearBufferMask`0" priority="1" />
+      <Item value="glControl1" priority="0" />
+      <Item value="SetupViewport`0" priority="0" />
+      <Item value="DllImport" priority="0" />
+      <Item value="public" priority="34" />
+      <Item value="DeviceLoader`0" priority="3" />
+      <Item value="int" priority="36" />
+      <Item value="private" priority="33" />
+      <Item value="static" priority="9" />
+      <Item value="lock" priority="5" />
+      <Item value="if" priority="30" />
+      <Item value="loaded" priority="0" />
+      <Item value="throw" priority="11" />
+      <Item value="new" priority="35" />
+      <Item value="Exception`0" priority="2" />
+      <Item value="const" priority="2" />
+      <Item value="DeviceLoader" priority="0" />
+      <Item value="readonly" priority="8" />
+      <Item value="IList" priority="3" />
+      <Item value="Device`0" priority="13" />
+      <Item value="_Devices" priority="2" />
+      <Item value="List&lt;Device&gt;" priority="0" />
+      <Item value="KinectDevice`0" priority="20" />
+      <Item value="deviceCount" priority="1" />
+      <Item value="for" priority="1" />
+      <Item value="i" priority="2" />
+      <Item value="Device" priority="0" />
+      <Item value="string" priority="5" />
+      <Item value="IDictionary" priority="2" />
+      <Item value="this" priority="3" />
+      <Item value="_id" priority="1" />
+      <Item value="id" priority="0" />
+      <Item value="_serial" priority="6" />
+      <Item value="serial" priority="3" />
+      <Item value="byte" priority="5" />
+      <Item value="Camera`0" priority="6" />
+      <Item value="protected" priority="0" />
+      <Item value="Camera" priority="1" />
+      <Item value="SafeHandle" priority="0" />
+      <Item value="void" priority="4" />
+      <Item value="IntPtr`0" priority="29" />
+      <Item value="null" priority="9" />
+      <Item value="_cameraPointer" priority="6" />
+      <Item value="try" priority="1" />
+      <Item value="devices" priority="0" />
+      <Item value="interface" priority="0" />
+      <Item value="abstract" priority="0" />
+      <Item value="_noCameras" priority="0" />
+      <Item value="CameraType`0" priority="19" />
+      <Item value="System" priority="3" />
+      <Item value="Windows" priority="0" />
+      <Item value="BitmapSource" priority="3" />
+      <Item value="ImageSource" priority="0" />
+      <Item value="internal" priority="8" />
+      <Item value="Vector" priority="1" />
+      <Item value="switch" priority="2" />
+      <Item value="ArgumentException" priority="2" />
+      <Item value="stride" priority="3" />
+      <Item value="width" priority="3" />
+      <Item value="height" priority="1" />
+      <Item value="CameraRef`0" priority="7" />
+      <Item value="_cameraRefs" priority="7" />
+      <Item value="List&lt;CameraRef&gt;" priority="1" />
+      <Item value="imageSize" priority="0" />
+      <Item value="CalcImageSize`0" priority="0" />
+      <Item value="type" priority="4" />
+      <Item value="resolution" priority="3" />
+      <Item value="CalculateStride`0" priority="0" />
+      <Item value="SafeHandle`0" priority="0" />
+      <Item value="base" priority="2" />
+      <Item value="_map" priority="15" />
+      <Item value="UnmapViewOfFile`0" priority="0" />
+      <Item value="_section" priority="6" />
+      <Item value="ReleaseHandle`0" priority="0" />
+      <Item value="CloseHandle`0" priority="0" />
+      <Item value="cameraPointer" priority="0" />
+      <Item value="_refCamera" priority="8" />
+      <Item value="refrencingCamera" priority="0" />
+      <Item value="EventHandler`0" priority="2" />
+      <Item value="_handler" priority="1" />
+      <Item value="_timeout" priority="7" />
+      <Item value="timeout" priority="0" />
+      <Item value="EventArgs`0" priority="1" />
+      <Item value="_type" priority="1" />
+      <Item value="_devices" priority="5" />
+      <Item value="ISet" priority="0" />
+      <Item value="HashSet" priority="0" />
+      <Item value="existing" priority="2" />
+      <Item value="in" priority="0" />
+      <Item value="override" priority="1" />
+      <Item value="obj" priority="2" />
+      <Item value="ReferenceEquals`0" priority="2" />
+      <Item value="GetType`0" priority="0" />
+      <Item value="ArgumentNullException`0" priority="0" />
+      <Item value="operator" priority="2" />
+      <Item value="lhs" priority="1" />
+      <Item value="CameraPointer" priority="2" />
+      <Item value="Motor`0" priority="6" />
+      <Item value="MotorPosition`0" priority="1" />
+      <Item value="short" priority="9" />
+      <Item value="Position" priority="1" />
+      <Item value="position" priority="0" />
+      <Item value="event" priority="0" />
+      <Item value="Delegate`0" priority="1" />
+      <Item value="_position" priority="1" />
+      <Item value="String`0" priority="1" />
+      <Item value="_motorPtr" priority="3" />
+      <Item value="value" priority="1" />
+      <Item value="_motor" priority="2" />
+      <Item value="Motor" priority="1" />
+      <Item value="MotorPtr" priority="4" />
+      <Item value="Accelerometer`0" priority="3" />
+      <Item value="motor" priority="0" />
+      <Item value="out" priority="0" />
+      <Item value="XValue" priority="0" />
+      <Item value="ref" priority="1" />
+      <Item value="x" priority="0" />
+      <Item value="y" priority="0" />
+      <Item value="z" priority="0" />
+      <Item value="Accelerometer" priority="0" />
+      <Item value="pictureBox1" priority="1" />
+      <Item value="IDeviceContext`0" priority="0" />
+      <Item value="_device" priority="4" />
+      <Item value="updateCamera`0" priority="0" />
+      <Item value="Image" priority="3" />
+      <Item value="Image`0" priority="0" />
+      <Item value="SnapsToDevicePixelsProperty" priority="0" />
+      <Item value="dev" priority="0" />
+      <Item value="handleUpdate`0" priority="0" />
+      <Item value="Dispatcher" priority="3" />
+      <Item value="dispatcher" priority="0" />
+      <Item value="ComponentDispatcher`0" priority="0" />
+      <Item value="Dispatcher`0" priority="1" />
+      <Item value="_dispatcher" priority="1" />
+      <Item value="InteropBitmap`0" priority="7" />
+      <Item value="Action`0" priority="1" />
+      <Item value="KinectAPI" priority="0" />
+      <Item value="camImg" priority="7" />
+      <Item value="device" priority="1" />
+      <Item value="Console`0" priority="0" />
+      <Item value="PixelFormats`0" priority="5" />
+      <Item value="PixelFormat`0" priority="0" />
+      <Item value="getFormat`0" priority="0" />
+      <Item value="case" priority="7" />
+      <Item value="ArgumentException`0" priority="0" />
+      <Item value="DepthMatrix`0" priority="6" />
+      <Item value="memoryMap" priority="0" />
+      <Item value="_width" priority="2" />
+      <Item value="class" priority="0" />
+      <Item value="DepthRow`0" priority="3" />
+      <Item value="row" priority="1" />
+      <Item value="Height" priority="0" />
+      <Item value="IndexOutOfRangeException`0" priority="1" />
+      <Item value="ICollection" priority="0" />
+      <Item value="_offset" priority="2" />
+      <Item value="offset" priority="0" />
+      <Item value="unsafe" priority="1" />
+      <Item value="Width" priority="2" />
+      <Item value="memSection" priority="0" />
+      <Item value="address" priority="0" />
+      <Item value="IsAlive" priority="1" />
+      <Item value="DepthMatrix" priority="0" />
+      <Item value="Resolution" priority="1" />
+      <Item value="_image" priority="17" />
+      <Item value="as" priority="3" />
+      <Item value="local" priority="4" />
+      <Item value="ConstraintException" priority="0" />
+      <Item value="is" priority="1" />
+      <Item value="else" priority="1" />
+      <Item value="AllocateCamera`0" priority="0" />
+      <Item value="cRef" priority="4" />
+      <Item value="depthMode" priority="2" />
+      <Item value="DepthRgb32" priority="0" />
+      <Item value="EnvironmentVariableTarget`0" priority="0" />
+      <Item value="DepthCorrected8" priority="0" />
+      <Item value="List" priority="0" />
+      <Item value="refs" priority="1" />
+      <Item value="catch" priority="2" />
+      <Item value="ExceptionRoutedEventArgs`0" priority="0" />
+      <Item value="exception" priority="0" />
+      <Item value="WeakReference" priority="1" />
+      <Item value="StateChangeEventArgs`0" priority="0" />
+      <Item value="NewsStyleUriParser`0" priority="1" />
+      <Item value="InvalidAsynchronousStateException" priority="1" />
+      <Item value="Timer`0" priority="0" />
+      <Item value="_interval" priority="0" />
+      <Item value="intervalInMs" priority="0" />
+      <Item value="_timer" priority="2" />
+      <Item value="Enabled" priority="0" />
+      <Item value="Update`0" priority="0" />
+      <Item value="CrossAppDomainDelegate`0" priority="0" />
+      <Item value="bitmap" priority="2" />
+      <Item value="ThreadStateException" priority="0" />
+      <Item value="InvalidAsynchronousStateException`0" priority="0" />
+      <Item value="src" priority="0" />
+      <Item value="InteropBitmap" priority="0" />
+      <Item value="Collections" priority="0" />
+      <Item value="IDictionary`0" priority="0" />
+      <Item value="Linq" priority="0" />
+      <Item value="Lookup" priority="1" />
+      <Item value="Dictionary" priority="2" />
+      <Item value="entry" priority="0" />
+      <Item value="BuildBitmap`0" priority="0" />
+      <Item value="e" priority="3" />
+      <Item value="ImageBrush`0" priority="0" />
+      <Item value="Drawing`0" priority="0" />
+      <Item value="Window`0" priority="0" />
+      <Item value="Hidden" priority="0" />
+      <Item value="ellipse1" priority="3" />
+      <Item value="Visibility`0" priority="1" />
+      <Item value="object" priority="0" />
+      <Item value="MouseEventArgs`0" priority="0" />
+      <Item value="Thickness" priority="0" />
+      <Item value="p" priority="5" />
+      <Item value="_matrix" priority="2" />
+      <Item value="Point`0" priority="0" />
+      <Item value="matPos" priority="5" />
+      <Item value="column" priority="1" />
+      <Item value="ptr" priority="0" />
+      <Item value="Content" priority="0" />
+      <Item value="Byte`0" priority="1" />
+      <Item value="volatile" priority="0" />
+      <Item value="WeakReference`0" priority="0" />
+      <Item value="psvm" priority="0" />
+      <Item value="propg" priority="1" />
+      <Item value="prop" priority="1" />
+      <Item value="psr" priority="0" />
+      <Item value="UdpClient" priority="2" />
+      <Item value="client" priority="5" />
+      <Item value="byteString2" priority="2" />
+      <Item value="buf" priority="7" />
+      <Item value="Length" priority="5" />
+      <Item value="IPEndPoint" priority="2" />
+      <Item value="IPAddress`0" priority="2" />
+      <Item value="IPAddress" priority="0" />
+      <Item value="clientIP" priority="0" />
+      <Item value="Encoder`0" priority="0" />
+      <Item value="decodeString`0" priority="4" />
+      <Item value="byteString1" priority="2" />
+      <Item value="bufTwo" priority="1" />
+      <Item value="length" priority="0" />
+      <Item value="IPEndPoint`0" priority="0" />
+      <Item value="args" priority="1" />
+      <Item value="ArraySegment" priority="0" />
+      <Item value="Initialize`0" priority="0" />
+      <Item value="NumberStyles" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@OpenTK.Graphics.OpenGL.GL">
+      <Item value="Clear`0" priority="0" />
+      <Item value="DrawArrays`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@OpenTK.Graphics.OpenGL.ClearBufferMask">
+      <Item value="ColorBufferBit" priority="0" />
+      <Item value="DepthBufferBit" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:OpenTK.GLControl">
+      <Item value="SwapBuffers`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAndGLTest.Kinect.KinectDevice">
+      <Item value="GetDeviceCount`0" priority="0" />
+      <Item value="GetDeviceSerial`0" priority="0" />
+      <Item value="CreateCamera`0" priority="0" />
+      <Item value="DestroyCamera`0" priority="2" />
+      <Item value="StartCamera`0" priority="0" />
+      <Item value="StopCamera`0" priority="1" />
+      <Item value="GetCameraColorFrameRAW`0" priority="0" />
+      <Item value="GetCameraColorFrameRGB24`0" priority="0" />
+      <Item value="GetCameraColorFrameRGB32`0" priority="0" />
+      <Item value="GetCameraDepthFrameRAW`0" priority="0" />
+      <Item value="GetCameraDepthFrameCorrected8`0" priority="0" />
+      <Item value="GetCameraDepthFrameCorrected12`0" priority="0" />
+      <Item value="GetCameraDepthFrameRGB32`0" priority="0" />
+      <Item value="CreateMotor`0" priority="0" />
+      <Item value="SetMotorPosition`0" priority="0" />
+      <Item value="GetMotorAccelerometer`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList`1">
+      <Item value="Add`0" priority="1" />
+      <Item value="Contains`0" priority="0" />
+      <Item value="Remove`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IntPtr">
+      <Item value="Zero" priority="19" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Vector">
+      <Item value="Y" priority="0" />
+      <Item value="X" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAndGLTest.Kinect.Camera">
+      <Item value="CameraPointer" priority="6" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.EventHandler">
+      <Item value="Invoke`0" priority="0" />
+      <Item value="DynamicInvoke`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.EventArgs">
+      <Item value="Empty" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.ISet`1">
+      <Item value="Remove`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="GetHashCode`0" priority="0" />
+      <Item value="ToUpper`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Object">
+      <Item value="GetType`0" priority="1" />
+      <Item value="ToString`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAndGLTest.Kinect.Device">
+      <Item value="_serial" priority="0" />
+      <Item value="Equals`0" priority="0" />
+      <Item value="GetCamera`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAndGLTest.Kinect.Motor">
+      <Item value="MotorPtr" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Forms.PictureBox">
+      <Item value="Image" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAndGLTest.Kinect.DeviceLoader">
+      <Item value="Instance" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAndGLTest.Kinect.DeviceLoader">
+      <Item value="Devices" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAndGLTest.Kinect.CameraType">
+      <Item value="ColorRgb32" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAndGLTest.Form1">
+      <Item value="pictureBox1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Controls.Image">
+      <Item value="Source" priority="4" />
+      <Item value="ActualHeight" priority="0" />
+      <Item value="ActualWidth" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Threading.Dispatcher">
+      <Item value="BeginInvoke`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Interop.InteropBitmap">
+      <Item value="Invalidate`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAPI.DeviceLoader">
+      <Item value="Instance" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAPI.DeviceLoader">
+      <Item value="Devices" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAPI.Device">
+      <Item value="GetCamera`0" priority="1" />
+      <Item value="Motor" priority="0" />
+      <Item value="GetDepthMatrix`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAPI.CameraType">
+      <Item value="ColorRgb32" priority="3" />
+      <Item value="ColorRgb24" priority="1" />
+      <Item value="DepthRgb32" priority="1" />
+      <Item value="DepthCorrected8" priority="2" />
+      <Item value="DepthCorrected12" priority="0" />
+      <Item value="ColorRaw" priority="1" />
+      <Item value="DepthRaw" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAPI.Motor">
+      <Item value="Position" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Int16">
+      <Item value="MinValue" priority="1" />
+      <Item value="MaxValue" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IntPtr">
+      <Item value="Equals`0" priority="0" />
+      <Item value="ToPointer`0" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Console">
+      <Item value="WriteLine`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Media.PixelFormats">
+      <Item value="Bgr32" priority="0" />
+      <Item value="Bgr24" priority="0" />
+      <Item value="Gray8" priority="0" />
+      <Item value="Gray16" priority="0" />
+      <Item value="Gray32Float" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.WeakReference">
+      <Item value="Target" priority="6" />
+      <Item value="IsAlive" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KinectAPI.CameraRef">
+      <Item value="DEFAULT_TIMEOUT" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KinectAPI.CameraRef">
+      <Item value="DepthMatrix" priority="0" />
+      <Item value="BitmapSource" priority="0" />
+      <Item value="Update`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
+      <Item value="AddRange`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Timers.Timer">
+      <Item value="Interval" priority="0" />
+      <Item value="Enabled" priority="1" />
+      <Item value="Elapsed" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.KeyValuePair`2">
+      <Item value="Value" priority="0" />
+      <Item value="Key" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.Dictionary`2">
+      <Item value="Remove`0" priority="0" />
+      <Item value="TryGetValue`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Input.MouseEventArgs">
+      <Item value="GetPosition`0" priority="3" />
+      <Item value="StylusDevice" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Shapes.Ellipse">
+      <Item value="Visibility" priority="1" />
+      <Item value="Margin" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Visibility">
+      <Item value="Visible" priority="0" />
+      <Item value="Hidden" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Point">
+      <Item value="X" priority="3" />
+      <Item value="Y" priority="4" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Controls.Label">
+      <Item value="Content" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Math">
+      <Item value="Floor`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Byte">
+      <Item value="ToString`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.Sockets.UdpClient">
+      <Item value="Send`0" priority="3" />
+      <Item value="Connect`0" priority="0" />
+      <Item value="Close`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Net.IPAddress">
+      <Item value="Parse`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Byte">
+      <Item value="Parse`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Globalization.NumberStyles">
+      <Item value="HexNumber" priority="0" />
+      <Item value="AllowHexSpecifier" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
