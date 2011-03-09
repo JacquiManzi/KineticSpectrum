@@ -3,3 +3,5 @@ C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\bi
 C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\KinectTest.exe
 C:\Users\JCU\Documents\Visual Studio 2010\Projects\KinectAndGLTest\KinectTest\obj\x86\Debug\KinectTest.pdb
+C:\code\KineticSpectrum\KinectTest\obj\x86\Debug\KinectTest.exe
+C:\code\KineticSpectrum\KinectTest\obj\x86\Debug\KinectTest.pdb
