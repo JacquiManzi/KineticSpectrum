@@ -13,7 +13,6 @@
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Motor.cs" caret="91" fromTop="5" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DeviceLoader.cs" caret="546" fromTop="19" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:KinectDevice.cs" caret="78" fromTop="4" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraType.cs" caret="144" fromTop="7" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Device.cs" caret="2310" fromTop="0" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthMatrix.cs" caret="391" fromTop="9" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="804" fromTop="11" />
@@ -21,19 +20,14 @@
       <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1198" fromTop="8" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2077" fromTop="7" />
       <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2515" fromTop="6" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Fixture.cs" caret="171" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS150e.cs" caret="140" fromTop="7" />
+      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraType.cs" caret="93" fromTop="5" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="146" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="258" fromTop="13" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="536" fromTop="21" />
     </RecentFiles>
     <RecentEdits>
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="4366" fromTop="4" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Device.cs" caret="2504" fromTop="14" />
-      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="2088" fromTop="29" />
-      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1947" fromTop="24" />
-      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="435" fromTop="6" />
-      <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="741" fromTop="13" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2372" fromTop="7" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="4236" fromTop="12" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="10" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="21" />
-      <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="778" fromTop="22" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:DepthRow.cs" caret="663" fromTop="6" />
       <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml" caret="477" fromTop="3" />
       <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1292" fromTop="8" />
@@ -53,6 +47,17 @@
       <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="1448" fromTop="4" />
       <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2928" fromTop="15" />
       <File id="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F/f:KinectTest.cs" caret="2693" fromTop="6" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="271" fromTop="30" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Fixture.cs" caret="171" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Fixture.cs" caret="353" fromTop="15" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="1017" fromTop="38" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="545" fromTop="14" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS150e.cs" caret="140" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="184" fromTop="8" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="155" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="176" fromTop="9" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="258" fromTop="13" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="360" fromTop="13" />
     </RecentEdits>
   </RecentFiles>
   <NAntValidationSettings>
@@ -76,7 +81,7 @@
       <Item value="false" priority="7" />
       <Item value="glLoaded" priority="1" />
       <Item value="true" priority="9" />
-      <Item value="return" priority="39" />
+      <Item value="return" priority="41" />
       <Item value="GetLifetimeService`0" priority="0" />
       <Item value="GL" priority="0" />
       <Item value="GL`0" priority="1" />
@@ -84,16 +89,16 @@
       <Item value="glControl1" priority="0" />
       <Item value="SetupViewport`0" priority="0" />
       <Item value="DllImport" priority="0" />
-      <Item value="public" priority="34" />
+      <Item value="public" priority="41" />
       <Item value="DeviceLoader`0" priority="3" />
-      <Item value="int" priority="36" />
-      <Item value="private" priority="33" />
+      <Item value="int" priority="38" />
+      <Item value="private" priority="36" />
       <Item value="static" priority="9" />
       <Item value="lock" priority="5" />
       <Item value="if" priority="30" />
       <Item value="loaded" priority="0" />
       <Item value="throw" priority="11" />
-      <Item value="new" priority="35" />
+      <Item value="new" priority="36" />
       <Item value="Exception`0" priority="2" />
       <Item value="const" priority="2" />
       <Item value="DeviceLoader" priority="0" />
@@ -109,7 +114,7 @@
       <Item value="Device" priority="0" />
       <Item value="string" priority="5" />
       <Item value="IDictionary" priority="2" />
-      <Item value="this" priority="3" />
+      <Item value="this" priority="5" />
       <Item value="_id" priority="1" />
       <Item value="id" priority="0" />
       <Item value="_serial" priority="6" />
@@ -119,7 +124,7 @@
       <Item value="protected" priority="0" />
       <Item value="Camera" priority="1" />
       <Item value="SafeHandle" priority="0" />
-      <Item value="void" priority="4" />
+      <Item value="void" priority="13" />
       <Item value="IntPtr`0" priority="29" />
       <Item value="null" priority="9" />
       <Item value="_cameraPointer" priority="6" />
@@ -185,7 +190,7 @@
       <Item value="event" priority="0" />
       <Item value="Delegate`0" priority="1" />
       <Item value="_position" priority="1" />
-      <Item value="String`0" priority="1" />
+      <Item value="String`0" priority="6" />
       <Item value="_motorPtr" priority="3" />
       <Item value="value" priority="1" />
       <Item value="_motor" priority="2" />
@@ -255,7 +260,7 @@
       <Item value="DepthRgb32" priority="0" />
       <Item value="EnvironmentVariableTarget`0" priority="0" />
       <Item value="DepthCorrected8" priority="0" />
-      <Item value="List" priority="0" />
+      <Item value="List" priority="2" />
       <Item value="refs" priority="1" />
       <Item value="catch" priority="2" />
       <Item value="ExceptionRoutedEventArgs`0" priority="0" />
@@ -326,6 +331,15 @@
       <Item value="ArraySegment" priority="0" />
       <Item value="Initialize`0" priority="0" />
       <Item value="NumberStyles" priority="0" />
+      <Item value="ConsoleColor`0" priority="0" />
+      <Item value="currentColor" priority="3" />
+      <Item value="Colors`0" priority="1" />
+      <Item value="fixtureAddress" priority="1" />
+      <Item value="Type`0" priority="0" />
+      <Item value="Color`0" priority="0" />
+      <Item value="Model`0" priority="0" />
+      <Item value="Fixture`0" priority="0" />
+      <Item value="localPort" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@OpenTK.Graphics.OpenGL.GL">
       <Item value="Clear`0" priority="0" />
@@ -531,6 +545,16 @@
     <ItemStatistics item="Qualified:@System.Globalization.NumberStyles">
       <Item value="HexNumber" priority="0" />
       <Item value="AllowHexSpecifier" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KineticControl.Model">
+      <Item value="currentColor" priority="0" />
+      <Item value="fixtureAddress" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Media.Colors">
+      <Item value="AliceBlue" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Media.Color">
+      <Item value="Equals`0" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>
