@@ -51,6 +51,15 @@ namespace KineticControl
             return localIPAddress;
         }
 
+        public IPAddress InitializeLocalIPForCard(NetworkInterface networkCard)
+        {
+            bindedNetworkCard = networkCard;
+            
+            localIPAddress = bindedNetworkCard.GetIPProperties().DnsAddresses.FirstOrDefault();
+
+            return localIPAddress;
+        }
+
         public IPAddress FindDeviceIP()
         {
             //destnIPAddress = entry.AddressList.
