@@ -12,7 +12,7 @@ using System.Text;
 
 namespace KineticControl
 {
-    class Network
+    public class Network
     {
         private int _localPort;
         private int _destnPort;
@@ -45,28 +45,16 @@ namespace KineticControl
 
         public IPAddress InitializeLocalIP()
         {
-            _localIPAddress = _entry.AddressList.FirstOrDefault();
+            _localIPAddress = _entry.AddressList.First();
            
             return _localIPAddress;
         }
 
-/*
- * Initialize your local ip address by idenifying your network card, this will assign the default ip of this card
- */
-
-        public IPAddress InitializeLocalIPForCard(NetworkInterface networkCard)
-        {
-            _bindedNetworkCard = networkCard;
-            
-            _localIPAddress = _bindedNetworkCard.GetIPProperties().DnsAddresses.FirstOrDefault();
-
-            return _localIPAddress;
-        }
 
 /*
  * Broadcast to the power supplies
  */
-        private void BroadCast()
+        public void BroadCast()
         {
 
             IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), _localPort);
@@ -81,10 +69,9 @@ namespace KineticControl
 
             while (udp.Available > 0)
                 bytes.Add(udp.Receive(ref broadCastIp));
-
-            udp.Close();
-
             FindDeviceIP(udp, bytes, broadCastIp);
+            udp.Close();
+            
         }
 
 
@@ -95,7 +82,7 @@ namespace KineticControl
         public IPAddress FindDeviceIP(UdpClient udp, List<byte[]> bytes, IPEndPoint broadCastIp)
         {
             //Broadcat your local information to outside devices to find their information
-            BroadCast();
+            //BroadCast();
 
             while (udp.Available > 0)
                 bytes.Add(udp.Receive(ref broadCastIp));
@@ -108,6 +95,7 @@ namespace KineticControl
 
                 _destnIPAddress = remoteEndPoint.Address;
             }
+            udp.Close();
             
             return _destnIPAddress;
         }
