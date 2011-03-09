@@ -1,6 +1,0 @@
-<Modules>
-  <Module PersistentId="1ABBC949-1376-4036-8285-EF66A6968EB2" ModuleId="KinectDisplay" />
-  <Module PersistentId="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D" ModuleId="KinectAPI" />
-  <Module PersistentId="E37E554B-4741-4827-8162-733DE3AE02C6" ModuleId="KineticControl" />
-  <Module PersistentId="8C60A3E7-42DA-4A0E-B451-DDA21616EB4F" ModuleId="KinectTest" />
-</Modules>
