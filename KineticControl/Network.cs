@@ -14,14 +14,13 @@ namespace KineticControl
 {
     class Network
     {
-        private int localPort;
-        private int destnPort;
-        private IPHostEntry entry = Dns.GetHostEntry(Dns.GetHostName());
-        private IPAddress localIPAddress;
-        private IPAddress destnIPAddress;
-        private NetworkInterface bindedNetworkCard;
-
-        private List<NetworkInterface> networkCardList = new List<NetworkInterface>();
+        private int _localPort;
+        private int _destnPort;
+        private IPHostEntry _entry = Dns.GetHostEntry(Dns.GetHostName());
+        private IPAddress _localIPAddress;
+        private IPAddress _destnIPAddress;
+        private NetworkInterface _bindedNetworkCard;
+        private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
 
 
 /*
@@ -34,10 +33,10 @@ namespace KineticControl
 
             foreach (NetworkInterface networkInterface in adapters)
             {
-                networkCardList.Add(networkInterface);
+                _networkCardList.Add(networkInterface);
             }
 
-            return networkCardList;
+            return _networkCardList;
         }
 
 /*
@@ -46,26 +45,73 @@ namespace KineticControl
 
         public IPAddress InitializeLocalIP()
         {
-            localIPAddress = entry.AddressList.FirstOrDefault();
+            _localIPAddress = _entry.AddressList.FirstOrDefault();
            
-            return localIPAddress;
+            return _localIPAddress;
         }
+
+/*
+ * Initialize your local ip address by idenifying your network card, this will assign the default ip of this card
+ */
 
         public IPAddress InitializeLocalIPForCard(NetworkInterface networkCard)
         {
-            bindedNetworkCard = networkCard;
+            _bindedNetworkCard = networkCard;
             
-            localIPAddress = bindedNetworkCard.GetIPProperties().DnsAddresses.FirstOrDefault();
+            _localIPAddress = _bindedNetworkCard.GetIPProperties().DnsAddresses.FirstOrDefault();
 
-            return localIPAddress;
+            return _localIPAddress;
         }
 
-        public IPAddress FindDeviceIP()
+/*
+ * Broadcast to the power supplies
+ */
+        private void BroadCast()
         {
-            //destnIPAddress = entry.AddressList.
 
-            return destnIPAddress;
+            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), _localPort);
+            string dataStr = "\0\0\0" + ((char)246).ToString();
+
+            UdpClient udp = new UdpClient();
+            byte[] data = new UTF8Encoding().GetBytes(dataStr);
+            List<byte[]> bytes = new List<byte[]>();
+
+            udp.Send(data, data.Length, broadCastIp);
+            System.Threading.Thread.Sleep(481);
+
+            while (udp.Available > 0)
+                bytes.Add(udp.Receive(ref broadCastIp));
+
+            udp.Close();
+
+            FindDeviceIP(udp, bytes, broadCastIp);
         }
+
+
+/*
+* Find the IP Address of the connected power supply
+*/
+
+        public IPAddress FindDeviceIP(UdpClient udp, List<byte[]> bytes, IPEndPoint broadCastIp)
+        {
+            //Broadcat your local information to outside devices to find their information
+            BroadCast();
+
+            while (udp.Available > 0)
+                bytes.Add(udp.Receive(ref broadCastIp));
+
+            while (udp.Available > 0)
+            {
+                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                udp.Receive(ref remoteEndPoint);
+                // remoteEndPoint holds the remote IP
+
+                _destnIPAddress = remoteEndPoint.Address;
+            }
+            
+            return _destnIPAddress;
+        }
+
 
 /*
  * Getters and setters for the network
@@ -73,27 +119,28 @@ namespace KineticControl
 
         public List<NetworkInterface> NetworkCardList
         {
-            get { return networkCardList; }
-            set { this.networkCardList = value; }
+            get { return _networkCardList; }
+            set { this._networkCardList = value; }
         }
 
         public int LocalPort
         {
-            get { return localPort; }
-            set { this.localPort = value; }
+            get { return _localPort; }
+            set { this._localPort = value; }
         }
 
         public int DestnPort
         {
-            get { return destnPort; }
-            set { this.destnPort = value; }
+            get { return _destnPort; }
+            set { this._destnPort = value; }
         }
 
         public IPAddress LocalIPAddress
         {
-            get { return localIPAddress; }
-            set { this.localIPAddress = value; }
+            get { return _localIPAddress; }
+            set { this._localIPAddress = value; }
         }
 
     }
+
 }

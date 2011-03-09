@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Media;
 
 namespace KineticControl
@@ -16,33 +14,18 @@ namespace KineticControl
  * Getters and Setter for the current  color 
  */
 
-        public Color CurrentColor{
-
-
-        public Color getCurrentColor()
-        {
-            return currentColor;
+        public Color CurrentColor 
+        { 
+            get { return currentColor; } 
+            set { currentColor = value; }
         }
 
-        public void setCurrentColor(Colors currentColor)
+        public String FixtureAddres
         {
-            this.currentColor = currentColor;
-        }
-/*
- * Getters and setters for the current fixture address
- */
-
-        public String getFixtureAddress()
-        {
-            return fixtureAddress;
+            get { return fixtureAddress;  }
+            set { fixtureAddress = value; }
         }
 
-        public void setFixtureAddress(String fixtureAddress)
-        {
-            this.fixtureAddress = fixtureAddress;
-
-
-        }
 
     }
 }
