@@ -9,14 +9,17 @@ namespace KineticControl
     abstract class Model
     {
         private String fixtureAddress;
-        private Colors currentColor;
+        private Color currentColor;
 
 
 /*
  * Getters and Setter for the current  color 
  */
 
-        public Colors getCurrentColor()
+        public Color CurrentColor{
+
+
+        public Color getCurrentColor()
         {
             return currentColor;
         }
@@ -37,6 +40,8 @@ namespace KineticControl
         public void setFixtureAddress(String fixtureAddress)
         {
             this.fixtureAddress = fixtureAddress;
+
+
         }
 
     }

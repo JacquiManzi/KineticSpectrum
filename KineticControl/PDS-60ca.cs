@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KineticControl
 {
-    class Class1
+    class PDS60ca
     {
     }
 }

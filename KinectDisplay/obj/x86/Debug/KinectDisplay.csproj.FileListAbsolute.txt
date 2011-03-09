@@ -14,3 +14,5 @@ C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.exe
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\obj\x86\Debug\KinectDisplay.pdb
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\CLNUIDevice.dll
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.exe
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.pdb
