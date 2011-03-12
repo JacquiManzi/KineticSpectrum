@@ -16,3 +16,17 @@ C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectDisplay\bin\Debug\CLNUIDevice.dll
 C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.exe
 C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.pdb
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\CLNUIDevice.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\KinectDisplay.exe
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\KinectDisplay.pdb
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\KinectAPI.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\KinectAPI.pdb
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\MainWindow.baml
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\MainWindow.g.cs
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\App.g.cs
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay_MarkupCompile.cache
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.g.resources
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.Properties.Resources.resources
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\GenerateResource.write.1.tlog
