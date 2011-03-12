@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -21,7 +22,6 @@ namespace KineticControl
         private IPAddress _destnIPAddress;
         private NetworkInterface _bindedNetworkCard;
         private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
-
 
 /*
  * Retrieve a list of all the Network Interfaces on your system
@@ -52,20 +52,61 @@ namespace KineticControl
 
 
 /*
+ * Initialize your the local port to cmmunicate over
+ */
+
+        public int InitializeLocalPort()
+        {
+            TcpListener listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 0);
+            listener.Start();
+             _localPort = ((IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            
+            return _localPort;
+        }
+
+        private void handleCallback(IAsyncResult result)
+        {
+            Console.WriteLine("Receive:");
+            foreach(IPAddress address in  _entry.AddressList)
+            {
+                System.Console.WriteLine(address.ToString());
+            }
+        }
+
+/*
  * Broadcast to the power supplies
  */
         public void BroadCast()
         {
 
-            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), _localPort);
+            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
             string dataStr = "\0\0\0" + ((char)246).ToString();
-
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 53868);
+            
+      
             UdpClient udp = new UdpClient();
-            byte[] data = new UTF8Encoding().GetBytes(dataStr);
             List<byte[]> bytes = new List<byte[]>();
 
-            udp.Send(data, data.Length, broadCastIp);
-            System.Threading.Thread.Sleep(481);
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Bind(ipEndPoint);
+           
+            byte[] data1 = DecodeString(PDS60ca.DataOne);
+            byte[] data2 = DecodeString(PDS60ca.DataTwo);
+
+            socket.BeginReceive(new List<ArraySegment<byte>>(){new ArraySegment<byte>(new byte[500])}, SocketFlags.None, new AsyncCallback(handleCallback), this);
+
+            while (_destnIPAddress == null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    socket.SendTo(data1, SocketFlags.None, broadCastIp);
+                    System.Threading.Thread.Sleep(250);
+                }
+                socket.SendTo(data2, SocketFlags.None, broadCastIp);
+                System.Threading.Thread.Sleep(3000);
+                
+            }
 
             while (udp.Available > 0)
                 bytes.Add(udp.Receive(ref broadCastIp));
@@ -74,6 +115,19 @@ namespace KineticControl
             
         }
 
+/*
+ * Decode
+ */
+
+        public static byte[] DecodeString(String hexString)
+        {
+            byte[] hexBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < hexString.Length / 2; i += 2)
+            {
+                hexBytes[i / 2] = Byte.Parse(hexString.Substring(i, 2).ToUpper(), NumberStyles.AllowHexSpecifier);
+            }
+            return hexBytes;
+        }
 
 /*
 * Find the IP Address of the connected power supply

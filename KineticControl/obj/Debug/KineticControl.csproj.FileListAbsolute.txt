@@ -3,3 +3,8 @@ C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticContro
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\KineticControl.dll
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KineticControl\obj\Debug\KineticControl.pdb
+C:\code\KineticSpectrum\KineticControl\bin\Debug\KineticControl.dll
+C:\code\KineticSpectrum\KineticControl\bin\Debug\KineticControl.pdb
+C:\code\KineticSpectrum\KineticControl\obj\Debug\ResolveAssemblyReference.cache
+C:\code\KineticSpectrum\KineticControl\obj\Debug\KineticControl.dll
+C:\code\KineticSpectrum\KineticControl\obj\Debug\KineticControl.pdb
