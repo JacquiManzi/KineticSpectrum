@@ -68,7 +68,6 @@ namespace KineticControl
 
         private void handleCallback(/*Object obj, SocketAsyncEventArgs sockArgs*/ IAsyncResult result)
         {
-
             Socket socket = (Socket)result.AsyncState;
             SocketFlags flags = SocketFlags.None;
             EndPoint endPoint = _ipEndPoint;
@@ -85,9 +84,7 @@ namespace KineticControl
 
             IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
             string dataStr = "\0\0\0" + ((char)246).ToString();
-            
-            
-      
+                  
             UdpClient udp = new UdpClient();
             List<byte[]> bytes = new List<byte[]>();
 
