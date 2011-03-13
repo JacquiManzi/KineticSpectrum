@@ -11,19 +11,17 @@ namespace KineticControl
         private static String _dataOne = "0401dc4a0100090100000000a0310567";
         private static String _dataTwo = "0401dc4a0100010000000000a9fe8889";
 
-        public String DataOne
+        public static String DataOne
         {
             get { return _dataOne; }
             set { _dataOne = value;}
         }
 
-        public String DataTwo
+        public static String DataTwo
         {
             get { return _dataTwo; }
             set { _dataTwo = value; }
         }
-
-
 
     }
 }

@@ -19,9 +19,10 @@ namespace KineticControl
         private int _destnPort;
         private IPHostEntry _entry = Dns.GetHostEntry(Dns.GetHostName());
         private IPAddress _localIPAddress;
-        private IPAddress _destnIPAddress;
+        private IPEndPoint _destEndPoint;
         private NetworkInterface _bindedNetworkCard;
         private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
+        IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 53868);
 
 /*
  * Retrieve a list of all the Network Interfaces on your system
@@ -65,13 +66,15 @@ namespace KineticControl
             return _localPort;
         }
 
-        private void handleCallback(IAsyncResult result)
+        private void handleCallback(/*Object obj, SocketAsyncEventArgs sockArgs*/ IAsyncResult result)
         {
-            Console.WriteLine("Receive:");
-            foreach(IPAddress address in  _entry.AddressList)
-            {
-                System.Console.WriteLine(address.ToString());
-            }
+
+            Socket socket = (Socket)result.AsyncState;
+            SocketFlags flags = SocketFlags.None;
+            EndPoint endPoint = _ipEndPoint;
+            socket.EndReceiveFrom(result, ref endPoint);
+            _destEndPoint = (IPEndPoint) endPoint;
+            Console.WriteLine("Received");
         }
 
 /*
@@ -82,21 +85,29 @@ namespace KineticControl
 
             IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
             string dataStr = "\0\0\0" + ((char)246).ToString();
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 53868);
+            
             
       
             UdpClient udp = new UdpClient();
             List<byte[]> bytes = new List<byte[]>();
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket.Bind(ipEndPoint);
+            socket.Bind(_ipEndPoint);
            
             byte[] data1 = DecodeString(PDS60ca.DataOne);
             byte[] data2 = DecodeString(PDS60ca.DataTwo);
+            EndPoint endPoint = _ipEndPoint;
 
-            socket.BeginReceive(new List<ArraySegment<byte>>(){new ArraySegment<byte>(new byte[500])}, SocketFlags.None, new AsyncCallback(handleCallback), this);
+            //socket.BeginReceive(new List<ArraySegment<byte>>(){new ArraySegment<byte>(new byte[500])}, SocketFlags.None, new AsyncCallback(handleCallback), this);
+            socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
+                                           new AsyncCallback(handleCallback), socket);  
+ 
+            //_socketArgs.BufferList = new List<ArraySegment<byte>>() {new ArraySegment<byte>(new byte[500])};
+            //_socketArgs.Completed += new EventHandler<SocketAsyncEventArgs>(handleCallback);
+            //_socketArgs.SetBuffer(new byte[500],0,500 );
+            //socket.ReceiveAsync(_socketArgs);)
 
-            while (_destnIPAddress == null)
+            while (_destEndPoint == null)
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -110,7 +121,7 @@ namespace KineticControl
 
             while (udp.Available > 0)
                 bytes.Add(udp.Receive(ref broadCastIp));
-            FindDeviceIP(udp, bytes, broadCastIp);
+            //FindDeviceIP(udp, bytes, broadCastIp);
             udp.Close();
             
         }
@@ -133,26 +144,26 @@ namespace KineticControl
 * Find the IP Address of the connected power supply
 */
 
-        public IPAddress FindDeviceIP(UdpClient udp, List<byte[]> bytes, IPEndPoint broadCastIp)
-        {
+//        public IPAddress FindDeviceIP(UdpClient udp, List<byte[]> bytes, IPEndPoint broadCastIp)
+//        {
             //Broadcat your local information to outside devices to find their information
             //BroadCast();
-
-            while (udp.Available > 0)
-                bytes.Add(udp.Receive(ref broadCastIp));
-
-            while (udp.Available > 0)
-            {
-                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                udp.Receive(ref remoteEndPoint);
+//
+//            while (udp.Available > 0)
+//                bytes.Add(udp.Receive(ref broadCastIp));
+//
+//            while (udp.Available > 0)
+//            {
+//                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+//                udp.Receive(ref remoteEndPoint);
                 // remoteEndPoint holds the remote IP
-
-                _destnIPAddress = remoteEndPoint.Address;
-            }
-            udp.Close();
-            
-            return _destnIPAddress;
-        }
+//
+//                _destnIPAddress = remoteEndPoint.Address;
+//            }
+//            udp.Close();
+//            
+//            return _destnIPAddress;
+//        }
 
 
 /*

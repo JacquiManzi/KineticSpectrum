@@ -7,5 +7,9 @@ namespace KineticControl
 {
     interface Fixture
     {
+        String SendPacket(String packet, String address);
+        List<String> SetAddressList();
+        List<String> GetAddressList();
+
     }
 }

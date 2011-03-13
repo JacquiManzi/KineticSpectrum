@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IFlex.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Network.cs" />
