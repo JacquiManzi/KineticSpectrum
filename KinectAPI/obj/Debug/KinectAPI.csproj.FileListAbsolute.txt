@@ -10,3 +10,9 @@ C:\code\KineticSpectrum\KinectAPI\bin\Debug\KinectAPI.pdb
 C:\code\KineticSpectrum\KinectAPI\obj\Debug\ResolveAssemblyReference.cache
 C:\code\KineticSpectrum\KinectAPI\obj\Debug\KinectAPI.dll
 C:\code\KineticSpectrum\KinectAPI\obj\Debug\KinectAPI.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\CLNUIDevice.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\KinectAPI.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\KinectAPI.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\KinectAPI.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\KinectAPI.pdb

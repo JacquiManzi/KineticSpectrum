@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Drawing.Imaging;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Size = System.Windows.Size;
 
 namespace KinectAPI
 {
@@ -31,19 +33,20 @@ namespace KinectAPI
         private          IntPtr       _map;
         private          IntPtr       _section;
         private readonly Device       _refDevice;
-        private readonly Dispatcher   _dispatcher;
+        //private readonly Dispatcher   _dispatcher;
         private readonly CameraType   _type;
         private readonly int          _timeout;
 
         private volatile WeakReference _image;
         private volatile WeakReference _matrix;
+        private volatile WeakReference _bitmap;
 
 
-        private static readonly Vector Resolution = new Vector(640, 480);
+        private static readonly Size Resolution = new Size(640, 480);
 
         internal CameraRef(CameraType type, Device refrencingCamera, Dispatcher dispatcher, int timeout) : base(IntPtr.Zero, true)
         {
-            _dispatcher = dispatcher;
+            Dispatcher = dispatcher;
             _refDevice = refrencingCamera;
             _timeout = timeout;
             _type = type;
@@ -51,6 +54,9 @@ namespace KinectAPI
             _map = IntPtr.Zero;
             _section = IntPtr.Zero;
         }
+
+        internal Dispatcher Dispatcher { get; set; }
+        internal Boolean HasDispatcher { get { return Dispatcher != null; } }
 
         private static int CalcImageSize(CameraType type, int height, int width)
         {
@@ -60,13 +66,17 @@ namespace KinectAPI
 
         internal Boolean Update()
         {
-            if (_image == null) return true;
+            if (_image == null && _matrix == null) return true;
 
-            Object bitmap;
+            Object bitmap = null;
+            Object matrix = null;
             lock (this)
             {
-                bitmap = _image.Target;
-                if (bitmap == null) return false;
+                if(_image != null)
+                    bitmap = _image.Target;
+                if(_matrix != null)
+                    matrix = _matrix.Target;
+                if (bitmap == null && matrix == null) return false;
                 if (_map == IntPtr.Zero) throw new InvalidAsynchronousStateException("Not expecting _map to be null");
             }
 
@@ -99,11 +109,12 @@ namespace KinectAPI
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            if(_dispatcher != null)
-                _dispatcher.BeginInvoke((Action)(() => ((InteropBitmap) bitmap).Invalidate() ));
-            //_handler.Invoke(BitmapSource, EventArgs.Empty);)
+            if(Dispatcher != null && bitmap != null)
+                Dispatcher.BeginInvoke((Action)(() => ((InteropBitmap) bitmap).Invalidate() ));
             return true;
         }
+
+        
 
         public DepthMatrix DepthMatrix
         {
@@ -114,13 +125,13 @@ namespace KinectAPI
                     DepthMatrix local;
                     if (_matrix == null || !_matrix.IsAlive)
                     {
-                        var imageSize = (uint)CalcImageSize(_type, (int)Resolution.Y, (int)Resolution.X);
+                        var imageSize = (uint)CalcImageSize(_type, (int)Resolution.Height, (int)Resolution.Width);
                         if (_map.Equals(IntPtr.Zero))
                         {
                             _section = CreateFileMapping(new IntPtr(-1), IntPtr.Zero, 0x04, 0, imageSize, null);
                             _map = MapViewOfFile(_section, 0xF001F, 0, 0, imageSize);
                         }
-                        local = new DepthMatrix(_map, (int)Resolution.X, (int)Resolution.Y );
+                        local = new DepthMatrix(_map, (int)Resolution.Width, (int)Resolution.Height );
                          
                         _matrix = new WeakReference(local);
                     }
@@ -145,32 +156,61 @@ namespace KinectAPI
                {
                    if (_image == null || !_image.IsAlive)
                    {
-                       InteropBitmap local = BuildBitmap();
+                       InteropBitmap local = BuildBitmapSource();
                        _image = new WeakReference(local);
                        return local;
                    }
-                   return _image.Target as InteropBitmap ?? BuildBitmap();
+                   return _image.Target as InteropBitmap ?? BuildBitmapSource();
                }
            }
         }
-        
-        private InteropBitmap BuildBitmap()
+
+        public Bitmap Bitmap
         {
-            var imageSize = (uint) CalcImageSize(_type, (int) Resolution.Y, (int) Resolution.X);
-            int stride = CalculateStride(_type, (int) Resolution.X);
+            get
+            {
+                lock(this)
+                {
+                    if(_bitmap == null || !_bitmap.IsAlive)
+                    {
+                        Bitmap local = BuildBitmap();
+                        _bitmap = new WeakReference(local);
+                        return local;
+                    }
+                    return _image.Target as Bitmap ?? BuildBitmap();
+                }
+            }
+        }
+        
+        private InteropBitmap BuildBitmapSource()
+        {
+            AllocateMemory();
+
+            var format = GetWPFFormat(_type);
+            int stride = CalculateStride(_type, (int)Resolution.Width);
+            return  Imaging.CreateBitmapSourceFromMemorySection(_section, (int) Resolution.Width, (int) Resolution.Height,
+                                                            format, stride, 0) as InteropBitmap;
+        }
+
+        private Bitmap BuildBitmap()
+        {
+          AllocateMemory();
+          int stride = CalculateStride(_type, (int) Resolution.Width);
+          return new Bitmap((int) Resolution.Width, (int) Resolution.Height,stride, GetDefaultFormat(_type), _map );  
+        }
+
+        private void AllocateMemory()
+        {
+            var imageSize = (uint) CalcImageSize(_type, (int) Resolution.Height, (int) Resolution.Width);
             if (_map.Equals(IntPtr.Zero))
             {
                 _section = CreateFileMapping(new IntPtr(-1), IntPtr.Zero, 0x04, 0, imageSize, null);
                 _map = MapViewOfFile(_section, 0xF001F, 0, 0, imageSize);
             }
-            PixelFormat format = GetFormat(_type);
-
-            return  Imaging.CreateBitmapSourceFromMemorySection(_section, (int) Resolution.X, (int) Resolution.Y,
-                                                            format, stride, 0) as InteropBitmap;
         }
 
 
-        private static PixelFormat GetFormat(CameraType type)
+        private static System.Windows.Media.PixelFormat GetWPFFormat(CameraType type)
         {
             switch (type)
             {
@@ -181,12 +221,32 @@ namespace KinectAPI
                     return PixelFormats.Bgr24;
                 case CameraType.DepthCorrected8:
                     return PixelFormats.Gray8;
-                case CameraType.DepthCorrected12:
-                    return PixelFormats.Gray16;
+//                case CameraType.DepthCorrected12:
+//                    return PixelFormats.Gray16;
                 case CameraType.ColorRaw:
                 case CameraType.DepthRaw:
                     return PixelFormats.Gray32Float;
 
+            }
+            throw new ArgumentException("Unsupported Camera Type: " + type, "type");
+        }
+
+        private static System.Drawing.Imaging.PixelFormat GetDefaultFormat(CameraType type)
+        {
+            switch(type)
+            {
+                case CameraType.ColorRgb32:
+                case CameraType.DepthRgb32:
+                    return PixelFormat.Format32bppRgb;
+                case CameraType.ColorRgb24:
+                    return PixelFormat.Format24bppRgb; 
+                case CameraType.DepthCorrected8:
+                    return PixelFormat.Format8bppIndexed;
+                //                case CameraType.DepthCorrected12:
+                //                    return PixelFormats.Gray16;
+                case CameraType.ColorRaw:
+                case CameraType.DepthRaw:
+                    return PixelFormat.Format32bppRgb;
             }
             throw new ArgumentException("Unsupported Camera Type: " + type, "type");
         }

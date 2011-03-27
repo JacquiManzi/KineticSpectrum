@@ -8,3 +8,8 @@ C:\code\KineticSpectrum\KineticControl\bin\Debug\KineticControl.pdb
 C:\code\KineticSpectrum\KineticControl\obj\Debug\ResolveAssemblyReference.cache
 C:\code\KineticSpectrum\KineticControl\obj\Debug\KineticControl.dll
 C:\code\KineticSpectrum\KineticControl\obj\Debug\KineticControl.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\KineticControl\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\Documents\Code\kineticspectrum\KineticControl\obj\Debug\KineticControl.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KineticControl\bin\Debug\KineticControl.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KineticControl\bin\Debug\KineticControl.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\KineticControl\obj\Debug\KineticControl.pdb
