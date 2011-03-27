@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 
 namespace KineticControl
 {
-    interface Fixture
+    public class Fixture
     {
-        String SendPacket(String packet, String address);
-        List<String> SetAddressList();
-        List<String> GetAddressList();
+        public int Address { get; private set; }
+        public Color Color { get; set; }
 
+        public Fixture(int address)
+        {
+            Address = address;
+            Color = Colors.Black;
+        }
     }
 }

@@ -6,26 +6,15 @@ namespace KineticControl
 {
     abstract class Model
     {
-        private String fixtureAddress;
-        private Color currentColor;
+        private IList<Fixture> _fixtures;
 
-
-/*
- * Getters and Setter for the current  color 
- */
-
-        public Color CurrentColor 
-        { 
-            get { return currentColor; } 
-            set { currentColor = value; }
-        }
-
-        public String FixtureAddres
+        public Model()
         {
-            get { return fixtureAddress;  }
-            set { fixtureAddress = value; }
+            _fixtures = new List<Fixture>(50);
+            for(int i=0; i<50 ;i++)
+            {
+                _fixtures.Add(new Fixture(i));
+            }
         }
-
-
     }
 }

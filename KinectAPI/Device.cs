@@ -55,7 +55,9 @@ namespace KinectAPI
 
         public DepthMatrix GetDepthMatrix()
         {
+            
             CameraRef cRef = AllocateCamera(CameraType.DepthCorrected8, null, CameraRef.DEFAULT_TIMEOUT);
+            BitmapSource src = cRef.BitmapSource;
             return cRef.DepthMatrix;
         }
 
@@ -79,7 +81,9 @@ namespace KinectAPI
                     _cameraRefs[type] = cRef;
                 }
                 _timer.Enabled = true;
+                if (!cRef.HasDispatcher) cRef.Dispatcher = dispatcher;
             }
+
             return cRef;
         }
 

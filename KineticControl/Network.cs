@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
 
 /*
  * This class will collect all of the necessary information to set up your network
@@ -16,13 +15,11 @@ namespace KineticControl
     public class Network
     {
         private int _localPort;
-        private int _destnPort;
-        private IPHostEntry _entry = Dns.GetHostEntry(Dns.GetHostName());
+        private readonly IPHostEntry _entry = Dns.GetHostEntry(Dns.GetHostName());
+        private volatile IPEndPoint _destEndPoint;
+        private readonly List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
+        private readonly IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 53868);
         private IPAddress _localIPAddress;
-        private IPEndPoint _destEndPoint;
-        private NetworkInterface _bindedNetworkCard;
-        private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
-        IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 53868);
 
 /*
  * Retrieve a list of all the Network Interfaces on your system
@@ -44,7 +41,7 @@ namespace KineticControl
  * Retrieve your local IP Address for your default network interface
  */
 
-        public IPAddress InitializeLocalIP()
+        public IPAddress InitializeLocalIp()
         {
             _localIPAddress = _entry.AddressList.First();
            
@@ -66,10 +63,9 @@ namespace KineticControl
             return _localPort;
         }
 
-        private void handleCallback(/*Object obj, SocketAsyncEventArgs sockArgs*/ IAsyncResult result)
+        private void HandleCallback(/*Object obj, SocketAsyncEventArgs sockArgs*/ IAsyncResult result)
         {
             Socket socket = (Socket)result.AsyncState;
-            SocketFlags flags = SocketFlags.None;
             EndPoint endPoint = _ipEndPoint;
             socket.EndReceiveFrom(result, ref endPoint);
             _destEndPoint = (IPEndPoint) endPoint;
@@ -83,7 +79,6 @@ namespace KineticControl
         {
 
             IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
-            string dataStr = "\0\0\0" + ((char)246).ToString();
                   
             UdpClient udp = new UdpClient();
             List<byte[]> bytes = new List<byte[]>();
@@ -97,7 +92,7 @@ namespace KineticControl
 
             //socket.BeginReceive(new List<ArraySegment<byte>>(){new ArraySegment<byte>(new byte[500])}, SocketFlags.None, new AsyncCallback(handleCallback), this);
             socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
-                                           new AsyncCallback(handleCallback), socket);  
+                                           HandleCallback, socket);  
  
             //_socketArgs.BufferList = new List<ArraySegment<byte>>() {new ArraySegment<byte>(new byte[500])};
             //_socketArgs.Completed += new EventHandler<SocketAsyncEventArgs>(handleCallback);
@@ -170,25 +165,24 @@ namespace KineticControl
         public List<NetworkInterface> NetworkCardList
         {
             get { return _networkCardList; }
-            set { this._networkCardList = value; }
         }
 
         public int LocalPort
         {
             get { return _localPort; }
-            set { this._localPort = value; }
+            set { _localPort = value; }
         }
 
-        public int DestnPort
+        public IPEndPoint DestEndPoint
         {
-            get { return _destnPort; }
-            set { this._destnPort = value; }
+            get { return _destEndPoint; }
+            set { _destEndPoint = value; }
         }
 
         public IPAddress LocalIPAddress
         {
             get { return _localIPAddress; }
-            set { this._localIPAddress = value; }
+            set { _localIPAddress = value; }
         }
 
     }
