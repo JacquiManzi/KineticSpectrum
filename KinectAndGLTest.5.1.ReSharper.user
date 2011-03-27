@@ -16,50 +16,50 @@
       <File id="1ABBC949-1376-4036-8285-EF66A6968EB2/f:MainWindow.xaml.cs" caret="1198" fromTop="8" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraRef.cs" caret="2077" fromTop="7" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:CameraType.cs" caret="93" fromTop="5" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS150e.cs" caret="119" fromTop="6" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Fixture.cs" caret="124" fromTop="7" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Device.cs" caret="0" fromTop="0" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Accelerometer.cs" caret="0" fromTop="0" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:LedMode.cs" caret="0" fromTop="0" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:KinectDevice.cs" caret="0" fromTop="0" />
       <File id="329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D/f:Motor.cs" caret="0" fromTop="0" />
       <File id="E37E554B-4741-4827-8162-733DE3AE02C6/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="138" fromTop="7" />
       <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Model.cs" caret="141" fromTop="7" />
-      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="675" fromTop="24" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2388" fromTop="19" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Fixture.cs" caret="124" fromTop="7" />
+      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="833" fromTop="28" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4469" fromTop="8" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS150e.cs" caret="152" fromTop="9" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="4951" fromTop="8" />
     </RecentFiles>
     <RecentEdits>
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1839" fromTop="29" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4300" fromTop="20" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4440" fromTop="20" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1154" fromTop="32" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4154" fromTop="22" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4643" fromTop="13" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4643" fromTop="13" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3963" fromTop="38" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2744" fromTop="21" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3965" fromTop="34" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="643" fromTop="21" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3561" fromTop="30" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3857" fromTop="32" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3568" fromTop="23" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3899" fromTop="28" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3481" fromTop="27" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1378" fromTop="15" />
-      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="239" fromTop="11" />
-      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="614" fromTop="19" />
-      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="650" fromTop="22" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1443" fromTop="19" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1694" fromTop="25" />
-      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="565" fromTop="19" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1729" fromTop="12" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3164" fromTop="30" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2777" fromTop="23" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2322" fromTop="12" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2380" fromTop="19" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2395" fromTop="19" />
-      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2008" fromTop="9" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3900" fromTop="20" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="7053" fromTop="16" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1802" fromTop="20" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="2884" fromTop="25" />
+      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="711" fromTop="21" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="5161" fromTop="26" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4960" fromTop="22" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4115" fromTop="29" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="4602" fromTop="34" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="3315" fromTop="20" />
+      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="109" fromTop="6" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="161" fromTop="7" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="4861" fromTop="14" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="4861" fromTop="18" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="1106" fromTop="27" />
+      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="833" fromTop="27" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3343" fromTop="16" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="3708" fromTop="23" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="5642" fromTop="15" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="5348" fromTop="20" />
+      <File id="7D95F03A-AC09-4CB8-95C6-C71136BB991D/f:RunnTest.cs" caret="309" fromTop="11" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="904" fromTop="12" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="6566" fromTop="26" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="6420" fromTop="20" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="977" fromTop="31" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4418" fromTop="31" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="579" fromTop="14" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="5298" fromTop="16" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:Network.cs" caret="4856" fromTop="19" />
+      <File id="E37E554B-4741-4827-8162-733DE3AE02C6/f:PDS-60ca.cs" caret="4951" fromTop="8" />
     </RecentEdits>
   </RecentFiles>
   <NAntValidationSettings>
@@ -82,8 +82,8 @@
       <Item value="bool" priority="6" />
       <Item value="false" priority="7" />
       <Item value="glLoaded" priority="1" />
-      <Item value="true" priority="9" />
-      <Item value="return" priority="51" />
+      <Item value="true" priority="10" />
+      <Item value="return" priority="55" />
       <Item value="GetLifetimeService`0" priority="0" />
       <Item value="GL" priority="0" />
       <Item value="GL`0" priority="1" />
@@ -91,18 +91,18 @@
       <Item value="glControl1" priority="0" />
       <Item value="SetupViewport`0" priority="0" />
       <Item value="DllImport" priority="0" />
-      <Item value="public" priority="52" />
+      <Item value="public" priority="61" />
       <Item value="DeviceLoader`0" priority="3" />
-      <Item value="int" priority="43" />
-      <Item value="private" priority="41" />
-      <Item value="static" priority="9" />
+      <Item value="int" priority="49" />
+      <Item value="private" priority="46" />
+      <Item value="static" priority="12" />
       <Item value="lock" priority="5" />
       <Item value="if" priority="31" />
       <Item value="loaded" priority="0" />
       <Item value="throw" priority="11" />
-      <Item value="new" priority="39" />
+      <Item value="new" priority="47" />
       <Item value="Exception`0" priority="2" />
-      <Item value="const" priority="2" />
+      <Item value="const" priority="5" />
       <Item value="DeviceLoader" priority="0" />
       <Item value="readonly" priority="8" />
       <Item value="IList" priority="3" />
@@ -111,22 +111,22 @@
       <Item value="List&lt;Device&gt;" priority="0" />
       <Item value="KinectDevice`0" priority="20" />
       <Item value="deviceCount" priority="1" />
-      <Item value="for" priority="2" />
-      <Item value="i" priority="2" />
+      <Item value="for" priority="4" />
+      <Item value="i" priority="13" />
       <Item value="Device" priority="0" />
-      <Item value="string" priority="6" />
+      <Item value="string" priority="7" />
       <Item value="IDictionary" priority="2" />
-      <Item value="this" priority="9" />
+      <Item value="this" priority="10" />
       <Item value="_id" priority="1" />
       <Item value="id" priority="0" />
       <Item value="_serial" priority="6" />
       <Item value="serial" priority="3" />
-      <Item value="byte" priority="6" />
+      <Item value="byte" priority="15" />
       <Item value="Camera`0" priority="6" />
       <Item value="protected" priority="0" />
       <Item value="Camera" priority="1" />
       <Item value="SafeHandle" priority="0" />
-      <Item value="void" priority="15" />
+      <Item value="void" priority="16" />
       <Item value="IntPtr`0" priority="29" />
       <Item value="null" priority="9" />
       <Item value="_cameraPointer" priority="6" />
@@ -136,8 +136,8 @@
       <Item value="abstract" priority="0" />
       <Item value="_noCameras" priority="0" />
       <Item value="CameraType`0" priority="19" />
-      <Item value="System" priority="3" />
-      <Item value="Windows" priority="0" />
+      <Item value="System" priority="13" />
+      <Item value="Windows" priority="9" />
       <Item value="BitmapSource" priority="3" />
       <Item value="ImageSource" priority="0" />
       <Item value="internal" priority="8" />
@@ -192,9 +192,9 @@
       <Item value="event" priority="0" />
       <Item value="Delegate`0" priority="1" />
       <Item value="_position" priority="1" />
-      <Item value="String`0" priority="13" />
+      <Item value="String`0" priority="25" />
       <Item value="_motorPtr" priority="3" />
-      <Item value="value" priority="4" />
+      <Item value="value" priority="6" />
       <Item value="_motor" priority="2" />
       <Item value="Motor" priority="1" />
       <Item value="MotorPtr" priority="4" />
@@ -246,7 +246,7 @@
       <Item value="unsafe" priority="1" />
       <Item value="Width" priority="2" />
       <Item value="memSection" priority="0" />
-      <Item value="address" priority="0" />
+      <Item value="address" priority="1" />
       <Item value="IsAlive" priority="1" />
       <Item value="DepthMatrix" priority="0" />
       <Item value="Resolution" priority="1" />
@@ -262,7 +262,7 @@
       <Item value="DepthRgb32" priority="0" />
       <Item value="EnvironmentVariableTarget`0" priority="0" />
       <Item value="DepthCorrected8" priority="0" />
-      <Item value="List" priority="5" />
+      <Item value="List" priority="6" />
       <Item value="refs" priority="1" />
       <Item value="catch" priority="2" />
       <Item value="ExceptionRoutedEventArgs`0" priority="0" />
@@ -318,7 +318,7 @@
       <Item value="client" priority="5" />
       <Item value="byteString2" priority="2" />
       <Item value="buf" priority="7" />
-      <Item value="Length" priority="5" />
+      <Item value="Length" priority="11" />
       <Item value="IPEndPoint" priority="2" />
       <Item value="IPAddress`0" priority="8" />
       <Item value="IPAddress" priority="0" />
@@ -331,31 +331,31 @@
       <Item value="IPEndPoint`0" priority="1" />
       <Item value="args" priority="1" />
       <Item value="ArraySegment" priority="0" />
-      <Item value="Initialize`0" priority="0" />
+      <Item value="Initialize`0" priority="1" />
       <Item value="NumberStyles" priority="0" />
-      <Item value="ConsoleColor`0" priority="0" />
+      <Item value="ConsoleColor`0" priority="1" />
       <Item value="currentColor" priority="5" />
-      <Item value="Colors`0" priority="1" />
+      <Item value="Colors`0" priority="15" />
       <Item value="fixtureAddress" priority="2" />
       <Item value="Type`0" priority="0" />
-      <Item value="Color`0" priority="0" />
+      <Item value="Color`0" priority="2" />
       <Item value="Model`0" priority="0" />
       <Item value="Fixture`0" priority="0" />
       <Item value="localPort" priority="1" />
       <Item value="FixtureAddres" priority="0" />
       <Item value="networkCard" priority="1" />
       <Item value="destnPort" priority="0" />
-      <Item value="Network`0" priority="2" />
-      <Item value="List&lt;string&gt;" priority="0" />
+      <Item value="Network`0" priority="4" />
+      <Item value="List&lt;string&gt;" priority="1" />
       <Item value="NetworkCardList" priority="1" />
       <Item value="localIPAddress" priority="4" />
       <Item value="EntryPointNotFoundException`0" priority="5" />
       <Item value="FirstOrDefault`1" priority="0" />
       <Item value="SocketAddress`0" priority="0" />
       <Item value="Socket" priority="0" />
-      <Item value="socket" priority="0" />
+      <Item value="socket" priority="4" />
       <Item value="networkInterface" priority="2" />
-      <Item value="NetworkInterface`0" priority="7" />
+      <Item value="NetworkInterface`0" priority="8" />
       <Item value="foreach" priority="1" />
       <Item value="destnIPAddress" priority="0" />
       <Item value="bindedNetworkCard" priority="1" />
@@ -366,23 +366,45 @@
       <Item value="FindDeviceIP`0" priority="0" />
       <Item value="udp" priority="5" />
       <Item value="bytes" priority="0" />
-      <Item value="broadCastIp" priority="0" />
+      <Item value="broadCastIp" priority="2" />
       <Item value="_destnIPAddress" priority="1" />
       <Item value="remoteEndPoint" priority="0" />
-      <Item value="network" priority="6" />
+      <Item value="network" priority="9" />
       <Item value="Network" priority="0" />
-      <Item value="card" priority="1" />
+      <Item value="card" priority="2" />
       <Item value="netCard" priority="1" />
       <Item value="DefaultIfEmpty`1" priority="0" />
       <Item value="First`1" priority="1" />
       <Item value="break" priority="0" />
-      <Item value="_bindedNetworkCard" priority="0" />
+      <Item value="_bindedNetworkCard" priority="2" />
       <Item value="_entry" priority="1" />
       <Item value="TcpListener`0" priority="0" />
       <Item value="dataStr" priority="1" />
       <Item value="data" priority="0" />
-      <Item value="DecodeString`0" priority="0" />
+      <Item value="DecodeString`0" priority="2" />
       <Item value="while" priority="0" />
+      <Item value="SocketOptionLevel`0" priority="0" />
+      <Item value="Broadcast" priority="0" />
+      <Item value="PDS60ca`0" priority="8" />
+      <Item value="Socket`0" priority="0" />
+      <Item value="SocketFlags`0" priority="1" />
+      <Item value="_destEndPoint" priority="1" />
+      <Item value="Threading" priority="1" />
+      <Item value="Thread`0" priority="1" />
+      <Item value="Media" priority="11" />
+      <Item value="PDS60ca" priority="0" />
+      <Item value="FontFamilyValueSerializer`0" priority="0" />
+      <Item value="ValueType`0" priority="0" />
+      <Item value="_colors" priority="10" />
+      <Item value="color" priority="3" />
+      <Item value="SystemException`0" priority="0" />
+      <Item value="_address" priority="5" />
+      <Item value="powerSupply" priority="4" />
+      <Item value="_initalHex" priority="0" />
+      <Item value="addressOff" priority="0" />
+      <Item value="colorData" priority="6" />
+      <Item value="initial" priority="4" />
+      <Item value="CopyTo`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@OpenTK.Graphics.OpenGL.GL">
       <Item value="Clear`0" priority="0" />
@@ -444,6 +466,7 @@
       <Item value="ToString`0" priority="0" />
       <Item value="Contains`0" priority="0" />
       <Item value="Equals`0" priority="1" />
+      <Item value="Length" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Object">
       <Item value="GetType`0" priority="1" />
@@ -576,7 +599,7 @@
       <Item value="Floor`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Byte">
-      <Item value="ToString`0" priority="0" />
+      <Item value="ToString`0" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.Sockets.UdpClient">
       <Item value="Send`0" priority="3" />
@@ -588,6 +611,7 @@
     <ItemStatistics item="Qualified:@System.Net.IPAddress">
       <Item value="Parse`0" priority="1" />
       <Item value="HostToNetworkOrder`0" priority="0" />
+      <Item value="Any" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Byte">
       <Item value="Parse`0" priority="1" />
@@ -601,22 +625,39 @@
       <Item value="fixtureAddress" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Windows.Media.Colors">
-      <Item value="AliceBlue" priority="1" />
+      <Item value="AliceBlue" priority="4" />
+      <Item value="Azure" priority="2" />
+      <Item value="Red" priority="1" />
+      <Item value="DarkGreen" priority="0" />
+      <Item value="Bisque" priority="0" />
+      <Item value="BlanchedAlmond" priority="0" />
+      <Item value="Aquamarine" priority="0" />
+      <Item value="BlueViolet" priority="1" />
+      <Item value="Black" priority="0" />
+      <Item value="MediumSlateBlue" priority="0" />
+      <Item value="LavenderBlush" priority="0" />
+      <Item value="Lime" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Windows.Media.Color">
       <Item value="Equals`0" priority="0" />
+      <Item value="R" priority="4" />
+      <Item value="G" priority="1" />
+      <Item value="B" priority="1" />
+      <Item value="ToString`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:KineticControl.Network">
       <Item value="networkCard" priority="0" />
       <Item value="localPort" priority="0" />
       <Item value="destnPort" priority="0" />
       <Item value="localIPAddress" priority="0" />
-      <Item value="BroadCast`0" priority="0" />
+      <Item value="BroadCast`0" priority="1" />
       <Item value="NetworkCardList" priority="1" />
       <Item value="InitializeLocalIP`0" priority="1" />
       <Item value="RetrieveNetworkCards`0" priority="0" />
       <Item value="LocalIPAddress" priority="0" />
       <Item value="initializeLocalPort`0" priority="0" />
+      <Item value="_bindedNetworkCard" priority="0" />
+      <Item value="NetworkCard" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.IPHostEntry">
       <Item value="AddressList" priority="3" />
@@ -626,15 +667,20 @@
       <Item value="GetAllNetworkInterfaces`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.NetworkInformation.NetworkInterface">
-      <Item value="GetIPProperties`0" priority="0" />
+      <Item value="GetIPProperties`0" priority="3" />
       <Item value="Equals`0" priority="1" />
       <Item value="Name" priority="0" />
       <Item value="NetworkInterfaceType" priority="1" />
-      <Item value="Description" priority="0" />
+      <Item value="Description" priority="1" />
+      <Item value="Id" priority="0" />
+      <Item value="GetPhysicalAddress`0" priority="0" />
+      <Item value="GetType`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.NetworkInformation.IPInterfaceProperties">
-      <Item value="GetIPv4Properties`0" priority="0" />
+      <Item value="GetIPv4Properties`0" priority="2" />
       <Item value="DnsAddresses" priority="0" />
+      <Item value="AnycastAddresses" priority="0" />
+      <Item value="UnicastAddresses" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.NetworkInformation.IPAddressCollection">
       <Item value="FirstOrDefault`1" priority="0" />
@@ -652,6 +698,49 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Net.IPAddress">
       <Item value="AddressFamily" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Net.Sockets.SocketFlags">
+      <Item value="Broadcast" priority="2" />
+      <Item value="Multicast" priority="0" />
+      <Item value="None" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Net.Sockets.SocketType">
+      <Item value="Raw" priority="0" />
+      <Item value="Dgram" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Net.Sockets.AddressFamily">
+      <Item value="Unspecified" priority="0" />
+      <Item value="InterNetwork" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.Sockets.Socket">
+      <Item value="SetSocketOption`0" priority="0" />
+      <Item value="SendTo`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Net.Sockets.SocketOptionLevel">
+      <Item value="Udp" priority="0" />
+      <Item value="IP" priority="0" />
+      <Item value="Socket" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.NetworkInformation.UnicastIPAddressInformation">
+      <Item value="Address" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@KineticControl.PDS60ca">
+      <Item value="byteStringOne" priority="0" />
+      <Item value="byteStringTwo" priority="0" />
+      <Item value="ColorAddress" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Threading.Thread">
+      <Item value="Sleep`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Count`1" priority="1" />
+      <Item value="Max`2" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:KineticControl.PDS60ca">
+      <Item value="Equals`0" priority="0" />
+      <Item value="IntialHex" priority="2" />
+      <Item value="ColorAddress" priority="0" />
+      <Item value="AddressOff" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>

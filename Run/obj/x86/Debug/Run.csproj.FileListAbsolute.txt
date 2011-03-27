@@ -1,0 +1,7 @@
+C:\code\KineticSpectrum\Run\bin\Debug\Run.exe
+C:\code\KineticSpectrum\Run\bin\Debug\Run.pdb
+C:\code\KineticSpectrum\Run\bin\Debug\KineticControl.dll
+C:\code\KineticSpectrum\Run\bin\Debug\KineticControl.pdb
+C:\code\KineticSpectrum\Run\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\code\KineticSpectrum\Run\obj\x86\Debug\Run.exe
+C:\code\KineticSpectrum\Run\obj\x86\Debug\Run.pdb
