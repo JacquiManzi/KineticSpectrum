@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Drawing.Imaging;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Size = System.Windows.Size;
 
 namespace KinectAPI
 {
@@ -36,6 +39,7 @@ namespace KinectAPI
 
         private volatile WeakReference _image;
         private volatile WeakReference _matrix;
+        private volatile WeakReference _bitmap;
 
 
         private static readonly Size Resolution = new Size(640, 480);
@@ -107,7 +111,6 @@ namespace KinectAPI
             }
             if(Dispatcher != null && bitmap != null)
                 Dispatcher.BeginInvoke((Action)(() => ((InteropBitmap) bitmap).Invalidate() ));
-            //_handler.Invoke(BitmapSource, EventArgs.Empty);)
             return true;
         }
 
@@ -153,32 +156,61 @@ namespace KinectAPI
                {
                    if (_image == null || !_image.IsAlive)
                    {
-                       InteropBitmap local = BuildBitmap();
+                       InteropBitmap local = BuildBitmapSource();
                        _image = new WeakReference(local);
                        return local;
                    }
-                   return _image.Target as InteropBitmap ?? BuildBitmap();
+                   return _image.Target as InteropBitmap ?? BuildBitmapSource();
                }
            }
         }
+
+        public Bitmap Bitmap
+        {
+            get
+            {
+                lock(this)
+                {
+                    if(_bitmap == null || !_bitmap.IsAlive)
+                    {
+                        Bitmap local = BuildBitmap();
+                        _bitmap = new WeakReference(local);
+                        return local;
+                    }
+                    return _image.Target as Bitmap ?? BuildBitmap();
+                }
+            }
+        }
         
-        private InteropBitmap BuildBitmap()
+        private InteropBitmap BuildBitmapSource()
+        {
+            AllocateMemory();
+
+            var format = GetWPFFormat(_type);
+            int stride = CalculateStride(_type, (int)Resolution.Width);
+            return  Imaging.CreateBitmapSourceFromMemorySection(_section, (int) Resolution.Width, (int) Resolution.Height,
+                                                            format, stride, 0) as InteropBitmap;
+        }
+
+        private Bitmap BuildBitmap()
+        {
+          AllocateMemory();
+          int stride = CalculateStride(_type, (int) Resolution.Width);
+          return new Bitmap((int) Resolution.Width, (int) Resolution.Height,stride, GetDefaultFormat(_type), _map );  
+        }
+
+        private void AllocateMemory()
         {
             var imageSize = (uint) CalcImageSize(_type, (int) Resolution.Height, (int) Resolution.Width);
-            int stride = CalculateStride(_type, (int) Resolution.Width);
             if (_map.Equals(IntPtr.Zero))
             {
                 _section = CreateFileMapping(new IntPtr(-1), IntPtr.Zero, 0x04, 0, imageSize, null);
                 _map = MapViewOfFile(_section, 0xF001F, 0, 0, imageSize);
             }
-            PixelFormat format = GetFormat(_type);
-
-            return  Imaging.CreateBitmapSourceFromMemorySection(_section, (int) Resolution.Width, (int) Resolution.Height,
-                                                            format, stride, 0) as InteropBitmap;
         }
 
 
-        private static PixelFormat GetFormat(CameraType type)
+        private static System.Windows.Media.PixelFormat GetWPFFormat(CameraType type)
         {
             switch (type)
             {
@@ -195,6 +227,26 @@ namespace KinectAPI
                 case CameraType.DepthRaw:
                     return PixelFormats.Gray32Float;
 
+            }
+            throw new ArgumentException("Unsupported Camera Type: " + type, "type");
+        }
+
+        private static System.Drawing.Imaging.PixelFormat GetDefaultFormat(CameraType type)
+        {
+            switch(type)
+            {
+                case CameraType.ColorRgb32:
+                case CameraType.DepthRgb32:
+                    return PixelFormat.Format32bppRgb;
+                case CameraType.ColorRgb24:
+                    return PixelFormat.Format24bppRgb; 
+                case CameraType.DepthCorrected8:
+                    return PixelFormat.Format8bppIndexed;
+                //                case CameraType.DepthCorrected12:
+                //                    return PixelFormats.Gray16;
+                case CameraType.ColorRaw:
+                case CameraType.DepthRaw:
+                    return PixelFormat.Format32bppRgb;
             }
             throw new ArgumentException("Unsupported Camera Type: " + type, "type");
         }

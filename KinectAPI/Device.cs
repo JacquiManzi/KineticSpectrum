@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Timers;
 using System.Windows.Media.Imaging;
@@ -51,6 +52,11 @@ namespace KinectAPI
         public BitmapSource GetCamera(CameraType type, Dispatcher dispatcher, int timeoutMs = CameraRef.DEFAULT_TIMEOUT)
         {
             return AllocateCamera(type, dispatcher, timeoutMs).BitmapSource;
+        }
+
+        public Bitmap GetBitmap(CameraType type, Dispatcher dispatcher = null, int timeoutMs = CameraRef.DEFAULT_TIMEOUT)
+        {
+            return AllocateCamera(type, dispatcher, timeoutMs).Bitmap;
         }
 
         public DepthMatrix GetDepthMatrix()
