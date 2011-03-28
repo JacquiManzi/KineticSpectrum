@@ -1,2 +1,3 @@
 style: regexp
 (^|/)_ReSharper\.\w+/.*
+^.*ReSharper.user$
