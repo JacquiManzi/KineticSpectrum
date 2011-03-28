@@ -46,3 +46,10 @@ C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\obj\x86\Debug\Generate
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.exe
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\obj\x86\Debug\KinectDisplay.pdb
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\Emgu.CV.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\Emgu.CV.UI.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\Emgu.Util.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\opencv_core220.dll
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\KinectDisplay_Content.g.cs
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\cvextern.dll
+C:\code\KineticSpectrum\KinectDisplay\bin\Debug\ZedGraph.dll

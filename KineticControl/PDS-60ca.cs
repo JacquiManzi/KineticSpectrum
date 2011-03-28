@@ -57,7 +57,7 @@ namespace KineticControl
         public void setColor(Color color, int index, Network network)
         {
             _colors[index] = color;
-            network.SendUpdate();
+            //network.SendUpdate();
         }
 
         public void turnOnNode(String address)

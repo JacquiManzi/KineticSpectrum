@@ -1,12 +1,18 @@
 ﻿
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV.VideoSurveillance;
 using KinectAPI;
 using Point = System.Windows.Point;
+using System.Timers;
 
 namespace KinectDisplay
 {
@@ -18,37 +24,91 @@ namespace KinectDisplay
         private readonly Device _device;
         private bool _depthMode = false;
         private DepthMatrix _matrix;
+        private static BlobTrackerAuto<Bgr> _tracker;
+        private static IBGFGDetector<Bgr> _detector;
+        private static MCvFont _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
+        private Timer _timer;
+        private static BitmapSource _source;
+
         public MainWindow()
         {
             InitializeComponent();
             _device = DeviceLoader.Instance.Devices[0];
             _device.Motor.Position = 0;
-            camImg.Source = GetSrcFromBmp();
-            //_matrix = _device.GetDepthMatrix();
+            _source = _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
+            //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
+
+            _timer = new Timer { Interval = 500 };
+            _timer.Elapsed += (s, e) => Dispatcher.Invoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+            _timer.Enabled = true;
+
+            _detector = new FGDetector<Bgr>(FORGROUND_DETECTOR_TYPE.FGD);
+            _tracker = new BlobTrackerAuto<Bgr>();
+
+            //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
         }
 
-        private BitmapSource GetSrcFromBmp()
+        static BitmapSource GetBitmap(Bitmap bitmap)
         {
-            Bitmap bmp = _device.GetBitmap(CameraType.ColorRgb32, Dispatcher);
             return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                bmp.GetHbitmap(),
+                bitmap.GetHbitmap(),
                 IntPtr.Zero,
                 Int32Rect.Empty,
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                BitmapSizeOptions.FromEmptyOptions());
+        }
+
+        static Bitmap GetBitmap(BitmapSource source)
+        {
+            var bmp = new Bitmap(
+              source.PixelWidth,
+              source.PixelHeight,
+              PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(
+              new Rectangle(System.Drawing.Point.Empty, bmp.Size),
+              ImageLockMode.WriteOnly,
+              PixelFormat.Format32bppPArgb);
+            source.CopyPixels(
+              Int32Rect.Empty,
+              data.Scan0,
+              data.Height * data.Stride,
+              data.Stride);
+            bmp.UnlockBits(data);
+            return bmp;
         }
 
         private void CamImgSwitch(object sender, MouseButtonEventArgs e)
         {
             if (_depthMode)
             {
-                camImg.Source = GetSrcFromBmp();
+                camImg.Source = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
                 _depthMode = false;
             }
             else
             {
-                camImg.Source = GetSrcFromBmp();
+                camImg.Source = _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
                 _depthMode = true;
             }
+        }
+        
+        void ProcessFrame()
+        {
+            var frame = new Image<Bgr, byte>(GetBitmap(_source));
+            frame._SmoothGaussian(3); //filter out noises
+
+            _detector.Update(frame);
+            Image<Gray, Byte> forgroundMask = _detector.ForgroundMask;
+
+            _tracker.Process(frame, forgroundMask);
+
+            foreach (MCvBlob blob in _tracker)
+            {
+                frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
+                frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
+            }
+
+            camImg.Source = GetBitmap(frame.Bitmap);
+            jaqinetik.Source = GetBitmap(forgroundMask.Bitmap);
+
         }
 
         private void UpdateDistance(object sender, MouseEventArgs e)
@@ -83,14 +143,7 @@ namespace KinectDisplay
            
             lock (this)
             {
-                if (_matrix == null)
-                {
-                    _matrix = _device.GetDepthMatrix();
-                }
-                else
-                {
-                    _matrix = null;
-                }
+                _matrix = _matrix == null ? _device.GetDepthMatrix() : null;
             }
         }
     }

@@ -1,9 +1,10 @@
 ﻿<Window x:Class="KinectDisplay.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:UI="clr-namespace:Emgu.CV.UI;assembly=Emgu.CV.UI" Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Image Name="camImg" Stretch="Fill" MouseRightButtonDown="CamImgSwitch" MouseMove="UpdateDistance" MouseEnter="OnEnter" MouseLeave="OnExit" MouseLeftButtonDown="Grid_KeyDown"/>
+        
+        <Image Name="camImg" Stretch="Fill" MouseRightButtonDown="CamImgSwitch" MouseMove="UpdateDistance" MouseEnter="OnEnter" MouseLeave="OnExit" MouseLeftButtonDown="Grid_KeyDown" Margin="0,0,261,0" />
         <Label HorizontalAlignment="Left" MouseRightButtonDown="CamImgSwitch" Margin="171,98,0,0" Name="ellipse1" Visibility="Hidden" VerticalAlignment="Top" Content="Words" Background="White" />
+        <Image Name="jaqinetik" Height="Auto" HorizontalAlignment="Right" Margin="248,0,0,0" Stretch="Fill" VerticalAlignment="Top" Width="Auto" />
     </Grid>
 </Window>
