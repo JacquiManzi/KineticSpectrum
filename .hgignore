@@ -1,3 +1,4 @@
 style: regexp
 (^|/)_ReSharper\.\w+/.*
 ^.*ReSharper.user$
+^[\w\d]+/obj/.*$
