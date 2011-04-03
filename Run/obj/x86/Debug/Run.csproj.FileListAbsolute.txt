@@ -5,3 +5,10 @@ C:\code\KineticSpectrum\Run\bin\Debug\KineticControl.pdb
 C:\code\KineticSpectrum\Run\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\code\KineticSpectrum\Run\obj\x86\Debug\Run.exe
 C:\code\KineticSpectrum\Run\obj\x86\Debug\Run.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\bin\Debug\Run.exe
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\bin\Debug\Run.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\bin\Debug\KineticControl.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\bin\Debug\KineticControl.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\obj\x86\Debug\Run.exe
+C:\Users\JCU\Documents\Code\kineticspectrum\Run\obj\x86\Debug\Run.pdb

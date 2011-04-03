@@ -2,8 +2,10 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Emgu.CV;
@@ -12,7 +14,8 @@ using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
 using KinectAPI;
 using Point = System.Windows.Point;
-using System.Timers;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Timer = System.Timers.Timer;
 
 namespace KinectDisplay
 {
@@ -21,43 +24,101 @@ namespace KinectDisplay
     /// </summary>
     public partial class MainWindow : Window
     {
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+
+        static MainWindow()
+        {
+            string PathEnv = Environment.GetEnvironmentVariable("Path");
+            Environment.SetEnvironmentVariable("Path", "lib\\OpenCV;" + PathEnv);
+            _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
+        }
+
         private readonly Device _device;
         private bool _depthMode = false;
-        private DepthMatrix _matrix;
+        private ByteDepthMatrix _matrix;
         private static BlobTrackerAuto<Bgr> _tracker;
-        private static IBGFGDetector<Bgr> _detector;
-        private static MCvFont _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
+        //private static IBGFGDetector<Bgr> _detector;
+        private static MCvFont _font;
         private Timer _timer;
         private static BitmapSource _source;
+        private static BitmapSource _32bitSource;
+        private MouseEventArgs _lastArgs;
+        private static Image<Gray, Byte> _lastImage;
+        private static MemPointer _oldDestPointer;
+        private static MemPointer _oldSrcPointer;
+
+        private static ForegroundDetector _fd;
 
         public MainWindow()
         {
             InitializeComponent();
+            
             _device = DeviceLoader.Instance.Devices[0];
-            _device.Motor.Position = 0;
-            _source = _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
+            _device.Motor.Position = short.MinValue/4;
+            setCamera(CameraType.DepthRgb32);
+            camImg.Source = _source;
+            //_source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
 
-            _timer = new Timer { Interval = 500 };
+            _timer = new Timer { Interval = 1000 };
             _timer.Elapsed += (s, e) => Dispatcher.Invoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
-            _timer.Enabled = true;
-
-            _detector = new FGDetector<Bgr>(FORGROUND_DETECTOR_TYPE.FGD);
+            
+            _matrix = _device.GetDepthMatrix();
+            //_detector = new FGDetector<Bgr>(FORGROUND_DETECTOR_TYPE.FGD);
+            BlobTrackerAutoParam<Bgr> param = new BlobTrackerAutoParam<Bgr>();
+           
             _tracker = new BlobTrackerAuto<Bgr>();
+//            BlobTrackerAutoParam<Bgr> param = _tracker.Param;
+//            param.
+            CalibrateAndDispatch();
+            
 
-            //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+            
         }
 
-        static BitmapSource GetBitmap(Bitmap bitmap)
+        private void CalibrateAndDispatch()
         {
-            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                bitmap.GetHbitmap(),
+            Thread.Sleep(2000);
+            _fd = new ForegroundDetector(_matrix.asImage());
+            _timer.Enabled = true;
+            Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+        }
+
+        private void setCamera(CameraType type)
+        {
+            _source = _device.GetCamera(type, Dispatcher);
+            if(type != CameraType.DepthRgb32 || type != CameraType.ColorRgb32)
+            {
+                if(type == CameraType.DepthCorrected12 || type == CameraType.DepthCorrected8 ||
+                    type == CameraType.DepthRaw)
+                {
+                    _32bitSource = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
+                }
+                else
+                {
+                    _32bitSource = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
+                }
+            }
+            else
+            {
+                _32bitSource = _source;
+            }
+        }
+
+        static MemPointer GetBitmap(Bitmap bitmap)
+        {
+            MemPointer memP = new MemPointer();
+            memP.Ptr = bitmap.GetHbitmap();
+            memP.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                memP.Ptr,
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
+            return memP;
         }
 
-        static Bitmap GetBitmap(BitmapSource source)
+        static Bitmap GetBitmap32(BitmapSource source)
         {
             var bmp = new Bitmap(
               source.PixelWidth,
@@ -80,35 +141,89 @@ namespace KinectDisplay
         {
             if (_depthMode)
             {
-                camImg.Source = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
+                setCamera(CameraType.ColorRgb32);
+                camImg.Source = _source; // _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
                 _depthMode = false;
             }
             else
             {
-                camImg.Source = _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
+                setCamera(CameraType.DepthRgb32);
+                camImg.Source = _source;// _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
                 _depthMode = true;
             }
         }
-        
+
         void ProcessFrame()
         {
-            var frame = new Image<Bgr, byte>(GetBitmap(_source));
-            frame._SmoothGaussian(3); //filter out noises
+            //UpdateDistance();
+            //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
+            //frame._SmoothGaussian(9); //filter out noises
 
-            _detector.Update(frame);
-            Image<Gray, Byte> forgroundMask = _detector.ForgroundMask;
+            //_detector.Update(frame);
+            Image<Gray, Byte> forgroundMask = _matrix.asImage();
 
-            _tracker.Process(frame, forgroundMask);
+            var fg = _fd.buildMask(forgroundMask);
 
+//            _lastImage = SmoothImage(_lastImage, forgroundMask);
+//            var foreground = _lastImage.Copy();
+//            foreground.SmoothGaussian(5);
+            Image<Bgr,byte> frame = new Image<Bgr, byte>(GetBitmap32(_source));
+
+            _tracker.Process(frame, fg);
+            
             foreach (MCvBlob blob in _tracker)
             {
                 frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
                 frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
             }
 
-            camImg.Source = GetBitmap(frame.Bitmap);
-            jaqinetik.Source = GetBitmap(forgroundMask.Bitmap);
+            //camImg.Source = _source;//GetBitmap(frame.Bitmap);
+            MemPointer memP = GetBitmap(fg.Bitmap);
+            jaqinetik.Source = memP.Source;
+            if (_oldDestPointer != null)
+            {
+                DeleteObject(_oldDestPointer.Ptr);
+            }
+            _oldDestPointer = memP;
 
+            memP = GetBitmap(frame.Bitmap);
+            camImg.Source = memP.Source;
+            if(_oldSrcPointer !=null)
+            {
+                DeleteObject(_oldSrcPointer.Ptr);
+            }
+            _oldSrcPointer = memP;
+
+        }
+
+
+
+        private static Image<Gray, byte> SmoothImage(Image<Gray, byte> lastImage, Image<Gray, byte> nextImage)
+        {
+            if(lastImage == null) return nextImage;
+            if(lastImage.Height != nextImage.Height || lastImage.Width != nextImage.Width )
+                throw new ArgumentException("Image sized don't match");
+
+            //byte[,,] lastBytes = lastImage.GetObjectData()
+            //byte[,,] newBytes  = new byte[lastImage.Height,lastImage.Width,0];
+            Image<Gray, byte> newImage = new Image<Gray, byte>(lastImage.Width,lastImage.Height);
+
+            for(int i=0; i<lastImage.Height; i++)
+            {
+                for(int j = 0; j<lastImage.Width; j++)
+                {
+                    Gray val = nextImage[i, j];
+                    newImage[i, j] = (val.Intensity==0.0 ? lastImage[i, j] : val);
+                }
+            }
+
+            return newImage;
+        }
+
+
+        private void UpdateDistance()
+        {
+           if(_lastArgs != null) UpdateDistance(null, _lastArgs); 
         }
 
         private void UpdateDistance(object sender, MouseEventArgs e)
@@ -117,15 +232,17 @@ namespace KinectDisplay
             {
                 Point drawPosition = e.GetPosition(this);
                 Point matPos = e.GetPosition(camImg);
+
                 matPos.X *= 640.0/camImg.ActualWidth;
                 matPos.Y *= 480.0/camImg.ActualHeight;
-                byte value = _matrix[(int) matPos.Y][(int) matPos.X];
+                float value = _matrix[(int) matPos.Y][(int) matPos.X];
                 if (Content.ToString() != value.ToString())
                 {
                     ellipse1.Content = value;
                     ellipse1.Margin = new Thickness(drawPosition.X + 5, drawPosition.Y + 5, 0, 0);
                 }
             }
+            _lastArgs = e;
         }
 
         private void OnEnter(object sender, MouseEventArgs e)
@@ -137,14 +254,13 @@ namespace KinectDisplay
         {
             ellipse1.Visibility = Visibility.Hidden;
         }
-
-        private void Grid_KeyDown(object sender, MouseEventArgs e)
-        {
-           
-            lock (this)
-            {
-                _matrix = _matrix == null ? _device.GetDepthMatrix() : null;
-            }
-        }
     }
+
+    internal class MemPointer
+    {
+        internal BitmapSource Source;
+        internal IntPtr Ptr;
+    }
+
+    
 }

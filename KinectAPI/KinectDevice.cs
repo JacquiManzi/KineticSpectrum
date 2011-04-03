@@ -59,5 +59,13 @@ namespace KinectAPI
         public static extern bool GetCameraDepthFrameRGB32(IntPtr camera, IntPtr data, int timeout);
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        public static float RawDepthToMeters(int rawDepth)
+        {
+            if (rawDepth < 2047)
+            {
+                return (float) (1.0f / (rawDepth * -0.0030711016 + 3.3309495161));
+            }
+            return 0;
+        }
     }
 }
