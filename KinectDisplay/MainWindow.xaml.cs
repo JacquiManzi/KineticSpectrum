@@ -33,7 +33,15 @@ namespace KinectDisplay
         public MainWindow()
         {
             InitializeComponent();
-            _device = DeviceLoader.Instance.Devices[0];
+            try
+            {
+                _device = DeviceLoader.Instance.Devices[0];
+            }catch (ArgumentOutOfRangeException e)
+            {
+                Console.WriteLine("A kinect device is not plugged in.");
+                Environment.Exit(0);
+            }
+
             _device.Motor.Position = 0;
             _source = _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
@@ -44,6 +52,8 @@ namespace KinectDisplay
 
             _detector = new FGDetector<Bgr>(FORGROUND_DETECTOR_TYPE.FGD);
             _tracker = new BlobTrackerAuto<Bgr>();
+
+             
 
             //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
         }
@@ -92,7 +102,10 @@ namespace KinectDisplay
         
         void ProcessFrame()
         {
-            var frame = new Image<Bgr, byte>(GetBitmap(_source));
+            Bitmap bitmap = GetBitmap(_source);
+            //call func on bitmap
+            changePixelColor(bitmap);
+            var frame = new Image<Bgr, byte>(bitmap);
             frame._SmoothGaussian(3); //filter out noises
 
             _detector.Update(frame);
@@ -109,6 +122,30 @@ namespace KinectDisplay
             camImg.Source = GetBitmap(frame.Bitmap);
             jaqinetik.Source = GetBitmap(forgroundMask.Bitmap);
 
+        }
+
+        public void changePixelColor(Bitmap bit)
+        {
+            Color color;
+            Color savedColor = Color.Black;
+            for(int i = 0; i < bit.Width; i++)
+            {
+                for(int j = 0; j < bit.Height; j++)
+                {
+                    color = bit.GetPixel(i, j);
+                    
+                    if(color.R == 0 && color.G == 0 && color.B == 0)
+                    {
+                        bit.SetPixel(i,j,savedColor);
+                    }
+                    else
+                    {
+                        savedColor = Color.FromArgb(255, color.R,color.G, color.B);
+                        
+                    }
+                    
+                }
+            }
         }
 
         private void UpdateDistance(object sender, MouseEventArgs e)

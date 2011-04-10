@@ -4,3 +4,9 @@ C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectAPI\bin
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectAPI\bin\Release\KinectAPI.pdb
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectAPI\obj\Release\KinectAPI.dll
 C:\Users\JCU\documents\visual studio 2010\Projects\KinectAndGLTest\KinectAPI\obj\Release\KinectAPI.pdb
+C:\code\KineticSpectrum\KinectAPI\bin\Release\CLNUIDevice.dll
+C:\code\KineticSpectrum\KinectAPI\bin\Release\KinectAPI.dll
+C:\code\KineticSpectrum\KinectAPI\bin\Release\KinectAPI.pdb
+C:\code\KineticSpectrum\KinectAPI\obj\Release\ResolveAssemblyReference.cache
+C:\code\KineticSpectrum\KinectAPI\obj\Release\KinectAPI.dll
+C:\code\KineticSpectrum\KinectAPI\obj\Release\KinectAPI.pdb
