@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Windows.Media;
 
 /*
@@ -18,39 +19,26 @@ namespace KineticControl
     {
         private int _localPort;
         private int _destnPort;
-        private IPHostEntry _entry = Dns.GetHostEntry(Dns.GetHostName());
         private IPAddress _localIPAddress;
         private IPEndPoint _destEndPoint;
         private NetworkInterface _bindedNetworkCard;
         private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
         IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 55350);
         private PDS60ca powerSupply = new PDS60ca();
-        private Color[] _address;
         private readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
    
         public Network()
         {
-        }
-        
-        public Network(Color[] address)
-        {
-            _address = address;
         }
 
 /*           
  * Retrieve a list of all the Network Interfaces on your system
  */
 
-        public List<NetworkInterface> RetrieveNetworkCards()
+        public static List<NetworkInterface> RetrieveNetworkCards()
         {
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-
-            foreach (NetworkInterface networkInterface in adapters)
-            {
-                _networkCardList.Add(networkInterface);
-            }
-
-            return _networkCardList;
+            return new List<NetworkInterface>(adapters);
         }
 
 /*
@@ -86,7 +74,7 @@ namespace KineticControl
             EndPoint endPoint = _ipEndPoint;
             socket.EndReceiveFrom(result, ref endPoint);
             _destEndPoint = (IPEndPoint) endPoint;
-            Console.WriteLine("Received");
+            Console.WriteLine("Received response from: {0}", _destnPort);
         }
 
 /*
@@ -95,11 +83,7 @@ namespace KineticControl
         public void BroadCast()
         {
             IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
-            string dataStr = "\0\0\0" + ((char)246).ToString();
 
-            List<byte[]> bytes = new List<byte[]>();
-
-            
             socket.Bind(_ipEndPoint);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
               
@@ -124,32 +108,39 @@ namespace KineticControl
                      
         }
 
-        public void SendUpdate(Color[] colors)
+        public void SendUpdate(ColorData colorData)
         {
-            int length = (powerSupply.IntialHex.Length + powerSupply.AddressOff.Length) / 2;
-            byte[] colorData = new byte[length];
-            byte[] initial = DecodeString(powerSupply.IntialHex);
-
-            colorData.Initialize();
-            
-            initial.CopyTo(colorData, 0);
-            for (int i = 0; i < colors.Length; i++)
-            {
-                colorData[initial.Length + i*3] = colors[i].R;
-                colorData[initial.Length + i * 3 + 1] = colors[i].G;
-                colorData[initial.Length + i * 3 + 2] = colors[i].B;
-            }
-
             socket.SendTo(DecodeString(PDS60ca.byteStringOne), SocketFlags.None, _destEndPoint);
-            System.Threading.Thread.Sleep(100);  
-            socket.SendTo(colorData, SocketFlags.None, _destEndPoint); 
+            Thread.Sleep(10);
+            socket.SendTo(colorData.Bytes, SocketFlags.None, _destEndPoint);
         }
 
-/*
- * Decode
- */
+        public void SendUpdate(Color color)
+        {
+            ColorData colorData = new ColorData(DecodeString(powerSupply.IntialHex),50);
+            for(int i=0; i<colorData.Count; i++)
+            {
+                colorData[i] = color;
+            }
+            SendUpdate(colorData);
+        }
 
-        public static byte[] DecodeString(String hexString)
+        public void SendUpdate(Color[] colors)
+        {
+            ColorData colorData = new ColorData(DecodeString(powerSupply.IntialHex), 50);
+
+            for(int i=0; i<colorData.Count; i++)
+            {
+                colorData[i] = colors[i];
+            }
+
+            SendUpdate(colorData);
+        }
+
+        /*
+         * Decode
+         */
+        private static byte[] DecodeString(String hexString)
         {
             byte[] hexBytes = new byte[hexString.Length / 2];
             for (int i = 0; i < hexString.Length / 2; i++)

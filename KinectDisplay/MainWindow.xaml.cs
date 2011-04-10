@@ -3,9 +3,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Emgu.CV;
@@ -48,6 +48,8 @@ namespace KinectDisplay
         private static MemPointer _oldDestPointer;
         private static MemPointer _oldSrcPointer;
 
+        private static volatile bool _inProcess = false;
+
         private static ForegroundDetector _fd;
 
         public MainWindow()
@@ -55,7 +57,7 @@ namespace KinectDisplay
             InitializeComponent();
             
             _device = DeviceLoader.Instance.Devices[0];
-            _device.Motor.Position = short.MinValue/4;
+            _device.Motor.Position = short.MaxValue/8;// short.MinValue / 4;
             setCamera(CameraType.DepthRgb32);
             camImg.Source = _source;
             //_source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
@@ -81,8 +83,12 @@ namespace KinectDisplay
         {
             Thread.Sleep(2000);
             _fd = new ForegroundDetector(_matrix.asImage());
-            _timer.Enabled = true;
-            Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+            //_timer.Enabled = true;
+            Task frameProcessor = new Task(()=>{
+                                                   Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+                                                   while(true){ ProcessFrame(); }
+                                               });
+            frameProcessor.Start();
         }
 
         private void setCamera(CameraType type)
@@ -155,29 +161,47 @@ namespace KinectDisplay
 
         void ProcessFrame()
         {
-            //UpdateDistance();
-            //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
-            //frame._SmoothGaussian(9); //filter out noises
-
-            //_detector.Update(frame);
-            Image<Gray, Byte> forgroundMask = _matrix.asImage();
-
-            var fg = _fd.buildMask(forgroundMask);
-
-//            _lastImage = SmoothImage(_lastImage, forgroundMask);
-//            var foreground = _lastImage.Copy();
-//            foreground.SmoothGaussian(5);
-            Image<Bgr,byte> frame = new Image<Bgr, byte>(GetBitmap32(_source));
-
-            _tracker.Process(frame, fg);
             
-            foreach (MCvBlob blob in _tracker)
-            {
-                frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
-                frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
-            }
+                //UpdateDistance();
+                //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
+                //frame._SmoothGaussian(9); //filter out noises
 
-            //camImg.Source = _source;//GetBitmap(frame.Bitmap);
+                //_detector.Update(frame);
+                Image<Gray, Byte> forgroundMask = _matrix.asImage();
+
+                var fg = _fd.buildMask(forgroundMask);
+
+                //            _lastImage = SmoothImage(_lastImage, forgroundMask);
+                //            var foreground = _lastImage.Copy();
+                //            foreground.SmoothGaussian(5);
+                //            Image<Bgr,byte> frame = new Image<Bgr, byte>(GetBitmap32(_source));
+                //
+                //            _tracker.Process(frame, fg);
+                //            
+                //            foreach (MCvBlob blob in _tracker)
+                //            {
+                //                frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
+                //                frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
+                //            }
+                //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
+
+
+            Dispatcher.BeginInvoke(new Action(() => UpdateImage(fg)));
+
+
+            //            memP = GetBitmap(frame.Bitmap);
+            //            camImg.Source = memP.Source;
+            //            if(_oldSrcPointer !=null)
+            //            {
+            //                DeleteObject(_oldSrcPointer.Ptr);
+            //            }
+            //            _oldSrcPointer = memP;
+            //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+
+        }
+
+        private void UpdateImage(Image<Gray, byte> fg)
+        {
             MemPointer memP = GetBitmap(fg.Bitmap);
             jaqinetik.Source = memP.Source;
             if (_oldDestPointer != null)
@@ -185,15 +209,6 @@ namespace KinectDisplay
                 DeleteObject(_oldDestPointer.Ptr);
             }
             _oldDestPointer = memP;
-
-            memP = GetBitmap(frame.Bitmap);
-            camImg.Source = memP.Source;
-            if(_oldSrcPointer !=null)
-            {
-                DeleteObject(_oldSrcPointer.Ptr);
-            }
-            _oldSrcPointer = memP;
-
         }
 
 

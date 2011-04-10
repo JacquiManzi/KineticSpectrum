@@ -8,17 +8,33 @@ namespace KineticControl
     {
         public static void Main()
         {
-            NetworkInterface card;
-            PDS60ca powerSupply = new PDS60ca();
-            Network network = new Network(powerSupply.ColorAddress);
+            Network network = new Network();
 
-            network.RetrieveNetworkCards();
+//            var cards = Network.RetrieveNetworkCards();
+//
+//            while (true)
+//            {
+//                Console.WriteLine("Select a Network card:");
+//                for (int i = 0; i < cards.Count; i++)
+//                {
+//                    Console.WriteLine("[{0}] {1}", i, cards[i].Name);
+//                }
+//
+//                Console.Write("Selection: ");
+//                String read = Console.ReadLine();
+//                int num;
+//                if(int.TryParse(read, out num) && num >=0 && num < cards.Count)
+//                {
+//                    network.NetworkCard = cards[num];
+//                    break;
+//                }
+//            }
+
             foreach (var netCard in network.NetworkCardList)
             {
-                if (netCard.Name.Equals("Local Area Connection"))
+                if ( netCard.Name.Equals("Local Area Connection") )
                 {
-                    card = netCard;
-                    network.NetworkCard = card;
+                    network.NetworkCard = netCard;
                     network.InitializeLocalIP();
                     network.InitializeLocalPort();
 
@@ -26,9 +42,11 @@ namespace KineticControl
                 }
             }
            
+            Color[] colors = new Color[50];
+            for (int i = 0; i < 50; i++)
+                colors[i] = Colors.Blue;
             network.BroadCast();
-            powerSupply.setColor(Colors.Crimson, 0, network);
-           
+            network.SendUpdate(colors);
         }
 
     }

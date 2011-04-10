@@ -52,9 +52,10 @@ namespace KinectDisplay
                     }
                 }
             }
-            img._Erode(6);
-            img._Dilate(10);
-            img._SmoothGaussian(3);
+//            img._Erode(6);
+//            img._Dilate(10);
+//            img._SmoothGaussian(3);
+
             return img;
 
         }
@@ -63,6 +64,7 @@ namespace KinectDisplay
 
         public static Boolean CompareDoubles(double first, double second)
         {
+            if (second == 0.0) return true;
             return Math.Abs(first - second) <= TOL;
         }
     }

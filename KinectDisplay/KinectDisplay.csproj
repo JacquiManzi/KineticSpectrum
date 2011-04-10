@@ -88,6 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ChangeTracker.cs" />
     <Compile Include="ForegroundDetector.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -95,6 +96,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObjectTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,6 +124,10 @@
     <ProjectReference Include="..\KinectAPI\KinectAPI.csproj">
       <Project>{329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D}</Project>
       <Name>KinectAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KineticControl\KineticControl.csproj">
+      <Project>{E37E554B-4741-4827-8162-733DE3AE02C6}</Project>
+      <Name>KineticControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -13,30 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Run", "Run\Run.csproj", "{7D95F03A-AC09-4CB8-95C6-C71136BB991D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{B198FA8B-4470-43A9-96D1-AAFB4F7DA321}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCV", "OpenCV", "{D348EEE1-C1A9-497E-B0C6-F6A1BD841B65}"
-	ProjectSection(SolutionItems) = preProject
-		lib\OpenCV\cudart32_32_16.dll = lib\OpenCV\cudart32_32_16.dll
-		lib\OpenCV\cufft32_32_16.dll = lib\OpenCV\cufft32_32_16.dll
-		lib\OpenCV\cvextern.dll = lib\OpenCV\cvextern.dll
-		lib\OpenCV\npp32_32_16.dll = lib\OpenCV\npp32_32_16.dll
-		lib\OpenCV\opencv_calib3d220.dll = lib\OpenCV\opencv_calib3d220.dll
-		lib\OpenCV\opencv_contrib220.dll = lib\OpenCV\opencv_contrib220.dll
-		lib\OpenCV\opencv_core220.dll = lib\OpenCV\opencv_core220.dll
-		lib\OpenCV\opencv_features2d220.dll = lib\OpenCV\opencv_features2d220.dll
-		lib\OpenCV\opencv_ffmpeg220.dll = lib\OpenCV\opencv_ffmpeg220.dll
-		lib\OpenCV\opencv_flann220.dll = lib\OpenCV\opencv_flann220.dll
-		lib\OpenCV\opencv_gpu220.dll = lib\OpenCV\opencv_gpu220.dll
-		lib\OpenCV\opencv_highgui220.dll = lib\OpenCV\opencv_highgui220.dll
-		lib\OpenCV\opencv_imgproc220.dll = lib\OpenCV\opencv_imgproc220.dll
-		lib\OpenCV\opencv_legacy220.dll = lib\OpenCV\opencv_legacy220.dll
-		lib\OpenCV\opencv_ml220.dll = lib\OpenCV\opencv_ml220.dll
-		lib\OpenCV\opencv_objdetect220.dll = lib\OpenCV\opencv_objdetect220.dll
-		lib\OpenCV\opencv_video220.dll = lib\OpenCV\opencv_video220.dll
-		lib\OpenCV\ZedGraph.dll = lib\OpenCV\ZedGraph.dll
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,9 +79,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B198FA8B-4470-43A9-96D1-AAFB4F7DA321} = {DC08AAC1-E0CE-46BB-BB12-971605BA3295}
-		{D348EEE1-C1A9-497E-B0C6-F6A1BD841B65} = {B198FA8B-4470-43A9-96D1-AAFB4F7DA321}
 	EndGlobalSection
 EndGlobal
