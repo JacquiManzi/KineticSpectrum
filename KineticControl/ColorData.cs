@@ -9,11 +9,13 @@ namespace KineticControl
     {
         private readonly byte[] _byteArray;
         private readonly int _initialLength;
+        private readonly int _length;
 
         public ColorData(byte[] initialData, int length)
         {
             _initialLength = initialData.Length;
-            _byteArray = new byte[_initialLength + length*3];
+            _length = length;
+            _byteArray = new byte[_initialLength + PDS60ca.addressOff.Length/2];
             _byteArray.Initialize();
             initialData.CopyTo(_byteArray, 0);
         }

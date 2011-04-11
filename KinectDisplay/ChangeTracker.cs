@@ -1,56 +1,54 @@
-﻿using System;
-using System.Windows.Media;
-using Emgu.CV;
+﻿using Emgu.CV;
 using Emgu.CV.Structure;
-using KineticControl;
+using Emgu.CV.VideoSurveillance;
 
 namespace KinectDisplay
 {
-    class ChangeTracker
+    class ChangeTracker<TColor> : IBGFGDetector<TColor> where TColor : struct, IColor
     {
-        private readonly ColorData _colorState;
-        //public int[] _lastUpdated;
-
-        private readonly Image<Gray, byte> _lastImage;
-
-        private readonly DateTime _lastUpdate;
-
+        private Image<TColor, byte> _lastImage;
+        
         private readonly Image<Gray, byte> _diffImg;
 
         private static readonly Gray Black = new Gray(0.0);
-        private static readonly Gray White = new Gray(256.0);
+        private static readonly Gray White = new Gray(255.0);
 
-        public ChangeTracker(ColorData colorData)
+        public ChangeTracker()
         {
-            _colorState = colorData;
-            for (int i = 0; i < colorData.Count; i++ )
-            {
-                colorData[i] = Colors.Black;
-            }
-            //_lastUpdated = new int[colorData.Count];
-            _lastUpdate = DateTime.Now;
             _lastImage = null;
             _diffImg = new Image<Gray, byte>(640,480);
+            byte[,,] diff = new byte[480,640,1];
+            _diffImg.Data = diff;
         }
 
-        public Image<Gray, byte> UpdateImage(Image<Gray, byte> image)
+        public void Update(Image<TColor, byte> image)
         {
-            UpdateColors();
-            for (int i = 0; i < image.Height; i++)
+            if (_lastImage == null)
             {
-                for (int j = 0; j < image.Width; j++)
+                _lastImage = image.Copy();
+            }
+
+            byte[,,] data = image.Data;
+            byte[,,] lastdata = _lastImage.Data;
+            byte[,,] diffData = _diffImg.Data;
+            int height = image.Height;
+            int width = image.Width;
+            
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
                 {
-                    Gray baseGray = _lastImage[i, j];
-                    Gray topGray = image[i, j];
-                    double topIntensity = topGray.Intensity;
-                    if (topGray.Intensity == 0.0 || baseGray.Intensity == 0)
+                    byte baseGray = lastdata[i, j, 0];
+                    byte topGray = data[i, j, 0];
+
+                    if (topGray == 0 || baseGray == 0)
                     {
-                        _diffImg[i, j] = Black;
+                        diffData[i, j, 0] = 0;
                     }
                     else
                     {
-                        double baseIntensity = baseGray.Intensity;
-                        if (ForegroundDetector.CompareDoubles(baseIntensity, topIntensity))
+                        if (ForegroundDetector<TColor>.CompareDoubles(baseGray, topGray))
                         {
                             _diffImg[i, j] = Black;
                         }
@@ -61,43 +59,18 @@ namespace KinectDisplay
                     }
                 }
             }
-            _diffImg.Erode(3);
-
-            for (int i = 0; i < _diffImg.Height; i++ )
-            {
-                for(int j =0; j < _diffImg.Width; j++)
-                {
-                    if(_diffImg[i,j].Intensity == 256.0)
-                    {
-                        UpdateBucket(image[i, j].Intensity);
-                    }
-                }
-            }
-
-            return _diffImg;
+            _diffImg._Erode(3);
+            _lastImage = image.Copy();
         }
 
-        private void UpdateColors()
+        public Image<Gray, byte> ForgroundMask
         {
-            TimeSpan delta = DateTime.Now - _lastUpdate;
-            double adjfactor = Math.Pow(2, delta.Seconds);
-
-            for (int i = 0; i < _colorState.Count; i++)
-            {
-                Color color = _colorState[i];
-                color.R = (byte) (color.R/adjfactor);
-                color.G = (byte) (color.G/adjfactor);
-                color.B = (byte) (color.B/adjfactor);
-                _colorState[i] = color;
-            }
+            get { return _diffImg.Copy(); }
         }
 
-        private void UpdateBucket(double intensity)
+        public Image<Gray, byte> BackgroundMask
         {
-            int pos = (int)Math.Floor(intensity/250.0*49);
-            _colorState[pos] = Colors.Red;
+            get { return _diffImg.Not(); }
         }
-
-        public ColorData ColorData { get { return _colorState; } }
     }
 }

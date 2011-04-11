@@ -22,7 +22,7 @@ namespace KineticControl
         private IPAddress _localIPAddress;
         private IPEndPoint _destEndPoint;
         private NetworkInterface _bindedNetworkCard;
-        private List<NetworkInterface> _networkCardList = new List<NetworkInterface>();
+        private List<NetworkInterface> _networkCardList = null;
         IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 55350);
         private PDS60ca powerSupply = new PDS60ca();
         private readonly Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -99,13 +99,11 @@ namespace KineticControl
                 for (int i = 0; i < 5; i++)
                 {
                     socket.SendTo(data1, SocketFlags.None, broadCastIp);
-                    System.Threading.Thread.Sleep(250);
+                    Thread.Sleep(250);
                 }
                 socket.SendTo(data2, SocketFlags.None, broadCastIp);
-                System.Threading.Thread.Sleep(3000);               
-            }
-
-                     
+                Thread.Sleep(3000);               
+            } 
         }
 
         public void SendUpdate(ColorData colorData)
@@ -129,7 +127,7 @@ namespace KineticControl
         {
             ColorData colorData = new ColorData(DecodeString(powerSupply.IntialHex), 50);
 
-            for(int i=0; i<colorData.Count; i++)
+            for(int i=0; i<colors.Length; i++)
             {
                 colorData[i] = colors[i];
             }
@@ -140,7 +138,7 @@ namespace KineticControl
         /*
          * Decode
          */
-        private static byte[] DecodeString(String hexString)
+        public static byte[] DecodeString(String hexString)
         {
             byte[] hexBytes = new byte[hexString.Length / 2];
             for (int i = 0; i < hexString.Length / 2; i++)
@@ -150,13 +148,26 @@ namespace KineticControl
             return hexBytes;
         }
 
+        public void SetInterface(String interfaceName)
+        {
+            foreach(var card in NetworkCardList)
+            {
+               if(card.Name.Equals(interfaceName))
+               {
+                   NetworkCard = card;
+                   return;
+               }
+            }
+            throw new ArgumentException("Interface '" +interfaceName + "' does not exist.");
+        }
+
 /*
  * Getters and setters for the network
  */
 
         public List<NetworkInterface> NetworkCardList
         {
-            get { return _networkCardList; }
+            get { return _networkCardList ?? (_networkCardList = RetrieveNetworkCards()); }
             set { this._networkCardList = value; }
         }
 

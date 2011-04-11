@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
 using KinectAPI;
+using KineticControl;
 using Point = System.Windows.Point;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
-using Timer = System.Timers.Timer;
 
 namespace KinectDisplay
 {
@@ -29,50 +27,37 @@ namespace KinectDisplay
 
         static MainWindow()
         {
-            string PathEnv = Environment.GetEnvironmentVariable("Path");
-            Environment.SetEnvironmentVariable("Path", "lib\\OpenCV;" + PathEnv);
-            _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
+            string pathEnv = Environment.GetEnvironmentVariable("Path");
+            Environment.SetEnvironmentVariable("Path", "lib\\OpenCV;" + pathEnv);
         }
 
         private readonly Device _device;
-        private bool _depthMode = false;
-        private ByteDepthMatrix _matrix;
-        private static BlobTrackerAuto<Bgr> _tracker;
-        //private static IBGFGDetector<Bgr> _detector;
-        private static MCvFont _font;
-        private Timer _timer;
+        private bool _depthMode;
+        private readonly ByteDepthMatrix _matrix;
         private static BitmapSource _source;
-        private static BitmapSource _32bitSource;
         private MouseEventArgs _lastArgs;
-        private static Image<Gray, Byte> _lastImage;
         private static MemPointer _oldDestPointer;
-        private static MemPointer _oldSrcPointer;
+        //private static MemPointer _oldSrcPointer;
+        private static Network _network;
 
-        private static volatile bool _inProcess = false;
+        private static IBGFGDetector<Gray> _fg;
+        private static BucketUpdater _buckets;
 
-        private static ForegroundDetector _fd;
+
 
         public MainWindow()
         {
             InitializeComponent();
             
             _device = DeviceLoader.Instance.Devices[0];
-            _device.Motor.Position = short.MaxValue/8;// short.MinValue / 4;
-            setCamera(CameraType.DepthRgb32);
+            _device.Motor.Position = short.MaxValue/8;//*/ short.MinValue / 4;
+            SetCamera(CameraType.DepthCorrected8);
             camImg.Source = _source;
             //_source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
 
-            _timer = new Timer { Interval = 1000 };
-            _timer.Elapsed += (s, e) => Dispatcher.Invoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
-            
             _matrix = _device.GetDepthMatrix();
-            //_detector = new FGDetector<Bgr>(FORGROUND_DETECTOR_TYPE.FGD);
-            BlobTrackerAutoParam<Bgr> param = new BlobTrackerAutoParam<Bgr>();
            
-            _tracker = new BlobTrackerAuto<Bgr>();
-//            BlobTrackerAutoParam<Bgr> param = _tracker.Param;
-//            param.
             CalibrateAndDispatch();
             
 
@@ -82,8 +67,14 @@ namespace KinectDisplay
         private void CalibrateAndDispatch()
         {
             Thread.Sleep(2000);
-            _fd = new ForegroundDetector(_matrix.asImage());
-            //_timer.Enabled = true;
+
+            _network = new Network();
+            _network.SetInterface("Local Area Connection");
+            _network.BroadCast();
+            ColorData colorData = new ColorData(Network.DecodeString("0401dc4a01000801000000000000000002ef00000002f0ff"), 50);
+            _buckets = new BucketUpdater(colorData);
+            //_fg = new ChangeTracker<Gray>();
+            _fg = new ForegroundDetector<Gray>(_matrix.asImage());
             Task frameProcessor = new Task(()=>{
                                                    Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
                                                    while(true){ ProcessFrame(); }
@@ -91,24 +82,73 @@ namespace KinectDisplay
             frameProcessor.Start();
         }
 
-        private void setCamera(CameraType type)
+
+        void ProcessFrame()
+        {
+            
+            //UpdateDistance();
+            //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
+            //frame._SmoothGaussian(9); //filter out noises
+
+            //_detector.Update(frame);
+            Image<Gray, byte> depthImage = _matrix.asImage();
+            
+            _fg.Update(depthImage);
+
+            Image<Gray, byte> fgMask = _fg.ForgroundMask;
+            _buckets.UpdateBuckets(fgMask, depthImage);
+
+            _network.SendUpdate(_buckets.ColorData);
+                
+                
+
+            //            _lastImage = SmoothImage(_lastImage, forgroundMask);
+            //            var foreground = _lastImage.Copy();
+            //            foreground.SmoothGaussian(5);
+            //            Image<Bgr,byte> frame = new Image<Bgr, byte>(GetBitmap32(_source));
+            //
+            //            _tracker.Process(frame, fg);
+            //            
+            //            foreach (MCvBlob blob in _tracker)
+            //            {
+            //                frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
+            //                frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
+            //            }
+            //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
+
+
+            Dispatcher.BeginInvoke(new Action(() => UpdateImage(fgMask)));
+
+
+            //            memP = GetBitmap(frame.Bitmap);
+            //            camImg.Source = memP.Source;
+            //            if(_oldSrcPointer !=null)
+            //            {
+            //                DeleteObject(_oldSrcPointer.Ptr);
+            //            }
+            //            _oldSrcPointer = memP;
+            //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
+
+        }
+
+        private void SetCamera(CameraType type)
         {
             _source = _device.GetCamera(type, Dispatcher);
-            if(type != CameraType.DepthRgb32 || type != CameraType.ColorRgb32)
+            if (type != CameraType.DepthRgb32 || type != CameraType.ColorRgb32)
             {
-                if(type == CameraType.DepthCorrected12 || type == CameraType.DepthCorrected8 ||
+                if (type == CameraType.DepthCorrected12 || type == CameraType.DepthCorrected8 ||
                     type == CameraType.DepthRaw)
                 {
-                    _32bitSource = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
+                    camImg.Source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
                 }
                 else
                 {
-                    _32bitSource = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
+                    camImg.Source = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
                 }
             }
             else
             {
-                _32bitSource = _source;
+                camImg.Source = _source;
             }
         }
 
@@ -147,58 +187,18 @@ namespace KinectDisplay
         {
             if (_depthMode)
             {
-                setCamera(CameraType.ColorRgb32);
+                SetCamera(CameraType.ColorRgb32);
                 camImg.Source = _source; // _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
                 _depthMode = false;
             }
             else
             {
-                setCamera(CameraType.DepthRgb32);
+                SetCamera(CameraType.DepthCorrected8);
                 camImg.Source = _source;// _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
                 _depthMode = true;
             }
         }
 
-        void ProcessFrame()
-        {
-            
-                //UpdateDistance();
-                //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
-                //frame._SmoothGaussian(9); //filter out noises
-
-                //_detector.Update(frame);
-                Image<Gray, Byte> forgroundMask = _matrix.asImage();
-
-                var fg = _fd.buildMask(forgroundMask);
-
-                //            _lastImage = SmoothImage(_lastImage, forgroundMask);
-                //            var foreground = _lastImage.Copy();
-                //            foreground.SmoothGaussian(5);
-                //            Image<Bgr,byte> frame = new Image<Bgr, byte>(GetBitmap32(_source));
-                //
-                //            _tracker.Process(frame, fg);
-                //            
-                //            foreach (MCvBlob blob in _tracker)
-                //            {
-                //                frame.Draw(Rectangle.Round(blob), new Bgr(255.0, 255.0, 255.0), 2);
-                //                frame.Draw(blob.ID.ToString(), ref _font, System.Drawing.Point.Round(blob.Center), new Bgr(255.0, 255.0, 255.0));
-                //            }
-                //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
-
-
-            Dispatcher.BeginInvoke(new Action(() => UpdateImage(fg)));
-
-
-            //            memP = GetBitmap(frame.Bitmap);
-            //            camImg.Source = memP.Source;
-            //            if(_oldSrcPointer !=null)
-            //            {
-            //                DeleteObject(_oldSrcPointer.Ptr);
-            //            }
-            //            _oldSrcPointer = memP;
-            //Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(ProcessFrame));
-
-        }
 
         private void UpdateImage(Image<Gray, byte> fg)
         {

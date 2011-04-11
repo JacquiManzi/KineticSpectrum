@@ -88,6 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BucketUpdater.cs" />
     <Compile Include="ChangeTracker.cs" />
     <Compile Include="ForegroundDetector.cs" />
     <Compile Include="MainWindow.xaml.cs">

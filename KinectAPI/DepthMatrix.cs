@@ -42,7 +42,26 @@ namespace KinectAPI
 
         public Image<Gray,Byte> asImage()
         {
-          Image<Gray,Byte> image = new Image<Gray, byte>(Width, Height, CameraRef.CalculateStride(CameraType.DepthCorrected8, Width), _section);
+          Image<Gray,Byte> image = new Image<Gray, byte>(Width, Height);
+            int width = Width;
+            if(Width % 4 != 0)
+                width = Width + (4-Width%4);
+
+            byte[,,] data = new byte[Height,width,1];
+            unsafe
+            {
+                byte* section = (byte*) _section.ToPointer();
+                for(int i=0; i<Height; i++)
+                {
+                    for(int j=0; j<Width; j++)
+                    {
+                        data[i, j, 0] = *(section++);
+                    }
+                }
+            }
+
+            image.Data = data;
+
             return image;
         }
     }

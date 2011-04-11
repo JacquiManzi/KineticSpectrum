@@ -75,3 +75,5 @@ C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\opencv_ml220
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\opencv_objdetect220.dll
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\opencv_video220.dll
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\opencv_contrib220.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\KineticControl.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\bin\Debug\KineticControl.pdb

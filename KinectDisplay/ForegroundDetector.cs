@@ -1,71 +1,79 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using Emgu.CV.VideoSurveillance;
 
 namespace KinectDisplay
 {
-    public class ForegroundDetector
+    public class ForegroundDetector<TColor> : IBGFGDetector<TColor> where TColor: struct, IColor
     {
-        private Image<Gray, byte> _baseImage;
+        private readonly Image<TColor, byte> _baseImage;
+        private readonly Image<Gray, byte> _foregroundMask;
 
-        private static readonly Gray Black = new Gray(0.0);
-        private static readonly Gray White = new Gray(256.0);
-        
-        public ForegroundDetector(Image<Gray,byte> image)
+        public ForegroundDetector(Image<TColor,byte> image)
         {
             _baseImage = image.Copy();
             _baseImage.SmoothGaussian(3);
+            _foregroundMask = new Image<Gray, byte>(640, 480);
+            byte[, ,] diff = new byte[480, 640, 1];
+            _foregroundMask.Data = diff;
         }
 
-        public Image<Gray, byte> buildMask(Image<Gray, byte> image)
+        public void Update(Image<TColor, byte> image)
         {
             image = image.Copy();
             image.SmoothGaussian(3);
             //return image.AbsDiff(_baseImage);
+            byte[, ,] data = image.Data;
+            byte[, ,] basedata = _baseImage.Data;
+            byte[, ,] diffData = _foregroundMask.Data;
+            int height = image.Height;
+            int width = image.Width;
 
-            Image<Gray,byte> img = new Image<Gray, byte>(image.Width, image.Height);
-            for(int i=0; i<image.Height; i++)
+            
+            for(int i=0; i<height; i++)
             {
-                for(int j=0; j<image.Width; j++)
+                for(int j=0; j<width; j++)
                 {
-                    Gray baseGray = _baseImage[i, j];
-                    Gray topGray = image[i, j];
-                    double topIntensity = topGray.Intensity;
-                    if(topGray.Intensity == 0.0)
+                    byte topIntensity = data[i, j, 0];
+                    if(topIntensity == 0)
                     {
-                        img[i, j] = Black;
+                        diffData[i, j, 0] = 0;
                     }
                     else
                     {
-                        double baseIntensity = baseGray.Intensity;
-                        if(CompareDoubles(baseIntensity, topIntensity))
+                        if(CompareDoubles(basedata[i,j,0], topIntensity))
                         {
-                            img[i, j] = Black;
+                            diffData[i, j,0] = byte.MinValue;
                         }
                         else
                         {
-                            img[i, j] = White;
+                            diffData[i, j,0] = byte.MaxValue;
                         }
                     }
                 }
             }
-//            img._Erode(6);
+            _foregroundMask._Erode(7);
 //            img._Dilate(10);
 //            img._SmoothGaussian(3);
-
-            return img;
-
         }
 
-        private const double TOL = 3.0;
+        private const double TOL = 4.0;
 
         public static Boolean CompareDoubles(double first, double second)
         {
             if (second == 0.0) return true;
             return Math.Abs(first - second) <= TOL;
+        }
+
+        public Image<Gray, byte> BackgroundMask
+        {
+            get { return _foregroundMask.Not(); }
+        }
+
+        public Image<Gray, byte> ForgroundMask
+        {
+            get { return _foregroundMask.Copy(); }
         }
     }
 }
