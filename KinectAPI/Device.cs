@@ -54,12 +54,19 @@ namespace KinectAPI
             return AllocateCamera(type, dispatcher, timeoutMs).BitmapSource;
         }
 
-        public DepthMatrix GetDepthMatrix()
+        public ByteDepthMatrix GetDepthMatrix()
         {
-            
-            CameraRef cRef = AllocateCamera(CameraType.DepthCorrected8, null, CameraRef.DEFAULT_TIMEOUT);
-            BitmapSource src = cRef.BitmapSource;
-            return cRef.DepthMatrix;
+            return (ByteDepthMatrix)AllocateCamera(CameraType.DepthCorrected8, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
+        }
+
+        public IntDepthMatrix GetColorDepthMatrix()
+        {
+            return (IntDepthMatrix) AllocateCamera(CameraType.DepthRgb32, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
+        }
+
+        public DistanceDepthMatrix GetDistanceDepthMatrix()
+        {
+            return (DistanceDepthMatrix)AllocateCamera(CameraType.DepthRgb32, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
         }
 
         private CameraRef AllocateCamera(CameraType type, Dispatcher dispatcher, int timeoutMs)

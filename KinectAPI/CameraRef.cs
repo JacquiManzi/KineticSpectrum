@@ -120,28 +120,38 @@ namespace KinectAPI
         {
             get
             {
-                lock(this)
+                lock (this)
                 {
-                    DepthMatrix local;
+                    DepthMatrix local = null;
                     if (_matrix == null || !_matrix.IsAlive)
                     {
-                        var imageSize = (uint)CalcImageSize(_type, (int)Resolution.Height, (int)Resolution.Width);
+                        var imageSize = (uint) CalcImageSize(_type, (int) Resolution.Height, (int) Resolution.Width);
                         if (_map.Equals(IntPtr.Zero))
                         {
                             _section = CreateFileMapping(new IntPtr(-1), IntPtr.Zero, 0x04, 0, imageSize, null);
                             _map = MapViewOfFile(_section, 0xF001F, 0, 0, imageSize);
                         }
-                        local = new DepthMatrix(_map, (int)Resolution.Width, (int)Resolution.Height );
-                         
+                        switch (_type)
+                        {
+                            case CameraType.DepthCorrected8:
+                                local = new ByteDepthMatrix(_map, (int) Resolution.Width, (int) Resolution.Height);
+                                break;
+                            case CameraType.DepthRgb32:
+                                local = new IntDepthMatrix(_map, (int) Resolution.Width, (int) Resolution.Height);
+                                break;
+                            case CameraType.DepthRaw:
+                                local = new DistanceDepthMatrix(_map, (int) Resolution.Width, (int) Resolution.Height);
+                                break;
+                            default:
+                                throw new ArgumentException(
+                                    "Can only create depth matricies for DepthCorrected8, DepthRgb32, and DepthRaw CameraTypes");
+                        }
+
                         _matrix = new WeakReference(local);
                     }
                     else if (_matrix.Target is DepthMatrix)
                     {
                         local = _matrix.Target as DepthMatrix;
-                    }
-                    else
-                    {
-                        throw new ConstraintException("This Camera has already been allocated as a '" + _image.Target.GetType() + "'");
                     }
                     return local;
                 }
@@ -251,14 +261,11 @@ namespace KinectAPI
             throw new ArgumentException("Unsupported Camera Type: " + type, "type");
         }
 
-        private static int CalculateStride(CameraType type, int width)
+        internal static int CalculateStride(CameraType type, int width)
         {
             int stride;
             switch (type)
             {
-                case CameraType.ColorRaw:
-                case CameraType.DepthRaw:
-                    throw new ArgumentException("Don't know how to handle the raw types yet, sorry");
                 case CameraType.ColorRgb24:
                     stride = (width * 3 + 3) & ~3;
                     break;
@@ -267,6 +274,8 @@ namespace KinectAPI
                     break;
                 case CameraType.ColorRgb32:
                 case CameraType.DepthRgb32:
+                case CameraType.ColorRaw:
+                case CameraType.DepthRaw:
                     stride = width * 4;
                     break;
                 case CameraType.DepthCorrected8:

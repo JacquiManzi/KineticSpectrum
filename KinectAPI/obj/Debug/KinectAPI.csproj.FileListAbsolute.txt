@@ -16,3 +16,5 @@ C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\KinectAPI.pdb
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\KinectAPI.dll
 C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\obj\Debug\KinectAPI.pdb
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\Emgu.CV.dll
+C:\Users\JCU\Documents\Code\kineticspectrum\KinectAPI\bin\Debug\Emgu.Util.dll

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patterns.cs" />
+    <Compile Include="ColorData.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Network.cs" />
