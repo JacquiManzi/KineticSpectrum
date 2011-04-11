@@ -111,10 +111,11 @@ namespace KinectAPI
 
         private void RemoveRef(CameraType cType)
         {
-            CameraRef cRef = _cameraRefs[cType];
+            CameraRef cRef;
             lock (_cameraRefs)
             {
-                if (!cRef.Update())
+                
+                if (_cameraRefs.TryGetValue(cType, out cRef) && !cRef.Update())
                 {
                     _cameraRefs.Remove(cType);
                     if (_cameraRefs.Count == 0)
@@ -126,7 +127,8 @@ namespace KinectAPI
                     }
                 }
             }
-            cRef.Dispose();
+            if(cRef != null)
+                cRef.Dispose();
         }
         #endregion
 

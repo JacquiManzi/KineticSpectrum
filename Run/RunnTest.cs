@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Media;
 
@@ -6,11 +7,16 @@ namespace KineticControl
 {
     class RunnTest
     {
+        private static Patterns pattern = new Patterns();
         public static void Main()
         {
-            Network network = new Network();
+            NetworkInterface card;
+            PDS60ca powerSupply = new PDS60ca();
+            Network network = new Network(powerSupply.ColorAddress);
+            Network network2 = new Network(powerSupply.ColorAddress);
 
-//            var cards = Network.RetrieveNetworkCards();
+            network.RetrieveNetworkCards();
+			//            var cards = Network.RetrieveNetworkCards();
 //
 //            while (true)
 //            {
@@ -29,24 +35,45 @@ namespace KineticControl
 //                    break;
 //                }
 //            }
-
             foreach (var netCard in network.NetworkCardList)
             {
-                if ( netCard.Name.Equals("Local Area Connection") )
+                if (netCard.Name.Equals("Local Area Connection"))
                 {
-                    network.NetworkCard = netCard;
+                    card = netCard;
+                    network.NetworkCard = card;
                     network.InitializeLocalIP();
                     network.InitializeLocalPort();
+
+                    network2.NetworkCard = card;
+                    network2.InitializeLocalIP();
+                    network2.InitializeLocalPort();
 
                     break;
                 }
             }
            
-            Color[] colors = new Color[50];
-            for (int i = 0; i < 50; i++)
-                colors[i] = Colors.Blue;
-            network.BroadCast();
-            network.SendUpdate(colors);
+           network.BroadCast();
+           network2.ipEndpoint = new IPEndPoint(IPAddress.Any, 5022);
+           network2.BroadCast();
+           //network.FindPowerSupply();
+           for (int i = 0; i < pattern.GetColors().Count; i++)
+           {
+               for (int j = 0; j < 50; j++)
+               {
+
+                   powerSupply.setColor(pattern.GetColors()[i], j, network, 1);
+                   
+               }
+           }
+
+//           for (int i = 0; i < pattern.GetColors().Count; i++)
+//           {
+//               for (int j = 0; j < 50; j++)
+//               {
+//                   powerSupply.setColor(pattern.GetColors()[i], j, network2, 2);
+//               }
+//           }
+
         }
 
     }

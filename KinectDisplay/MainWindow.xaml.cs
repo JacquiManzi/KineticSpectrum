@@ -37,7 +37,7 @@ namespace KinectDisplay
         private static BitmapSource _source;
         private MouseEventArgs _lastArgs;
         private static MemPointer _oldDestPointer;
-        private static MemPointer _oldSrcPointer;
+        //private static MemPointer _oldSrcPointer;
         private static Network _network;
 
         private static IBGFGDetector<Gray> _fg;
@@ -116,8 +116,8 @@ namespace KinectDisplay
             //            }
             //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
 
-            Dispatcher.BeginInvoke(new Action(() => UpdatePrimaryImage(((ForegroundDetector<Gray>) _fg).BaseImage)));
-            Dispatcher.BeginInvoke(new Action(() => UpdateSecondaryImage(fgMask)));
+
+            Dispatcher.BeginInvoke(new Action(() => UpdateImage(fgMask)));
 
 
             //            memP = GetBitmap(frame.Bitmap);
@@ -200,18 +200,7 @@ namespace KinectDisplay
         }
 
 
-        private void UpdatePrimaryImage(Emgu.CV.Image<Gray, byte> fg)
-        {
-            MemPointer memP = GetBitmap(fg.Bitmap);
-            camImg.Source = memP.Source;
-            if (_oldSrcPointer != null)
-            {
-                DeleteObject(_oldSrcPointer.Ptr);
-            }
-            _oldSrcPointer = memP;
-
-        }
-        private void UpdateSecondaryImage(Image<Gray, byte> fg)
+        private void UpdateImage(Image<Gray, byte> fg)
         {
             MemPointer memP = GetBitmap(fg.Bitmap);
             jaqinetik.Source = memP.Source;
