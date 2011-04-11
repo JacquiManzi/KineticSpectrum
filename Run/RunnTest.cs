@@ -12,8 +12,8 @@ namespace KineticControl
         {
             NetworkInterface card;
             PDS60ca powerSupply = new PDS60ca();
-            Network network = new Network(powerSupply.ColorAddress);
-            Network network2 = new Network(powerSupply.ColorAddress);
+            Network network = new Network();
+            Network network2 = new Network();
 
             network.RetrieveNetworkCards();
 			//            var cards = Network.RetrieveNetworkCards();
