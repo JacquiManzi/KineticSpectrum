@@ -36,16 +36,24 @@ namespace KineticControl
            network.BroadCast();
            network2.ipEndpoint = new IPEndPoint(IPAddress.Any, 5022);
            network2.BroadCast();
-            //network.FindPowerSupply();
-           for (int i = 0; i < pattern.GetBlues().Count; i++)
+           //network.FindPowerSupply();
+           for (int i = 0; i < pattern.GetColors().Count; i++)
            {
                for (int j = 0; j < 50; j++)
                {
 
-                  // powerSupply.setColor(pattern.GetBlues()[i], j, network);
-                   powerSupply.setColor(pattern.GetColors()[i], j, network2);
+                   powerSupply.setColor(pattern.GetColors()[i], j, network, 1);
+                   
                }
            }
+
+//           for (int i = 0; i < pattern.GetColors().Count; i++)
+//           {
+//               for (int j = 0; j < 50; j++)
+//               {
+//                   powerSupply.setColor(pattern.GetColors()[i], j, network2, 2);
+//               }
+//           }
 
         }
 
