@@ -48,7 +48,7 @@ namespace KinectDisplay
                     }
                     else
                     {
-                        if (ForegroundDetector<TColor>.CompareDoubles(baseGray, topGray))
+                        if (ForegroundDetector<TColor>.CompareDoubles(baseGray, topGray, 2.0))
                         {
                             _diffImg[i, j] = Black;
                         }

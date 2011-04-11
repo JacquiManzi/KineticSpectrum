@@ -55,7 +55,11 @@ namespace KinectAPI
                 {
                     for(int j=0; j<Width; j++)
                     {
-                        data[i, j, 0] = *(section++);
+                        if (*section > 60)
+                            data[i, j, 0] = *section;
+                        else
+                            data[i, j, 0] = 0;
+                        section++;
                     }
                 }
             }

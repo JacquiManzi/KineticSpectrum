@@ -9,6 +9,7 @@ namespace KinectDisplay
     public class BucketUpdater
     {
         private readonly ColorData _colorData;
+        private readonly int _bucketEntries;
         private DateTime _lastUpdate;
 
 
@@ -33,7 +34,7 @@ namespace KinectDisplay
 
             for (int i = 0; i < height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 100; j < width-100; j++)
                 {
                     if (maskD[i, j, 0] == 255)
                     {
