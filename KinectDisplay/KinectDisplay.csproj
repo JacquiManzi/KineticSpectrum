@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="BucketUpdater.cs" />
     <Compile Include="ChangeTracker.cs" />
+    <Compile Include="Background.cs" />
     <Compile Include="ForegroundDetector.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

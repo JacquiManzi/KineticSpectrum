@@ -57,7 +57,7 @@ namespace KinectDisplay
 
             Console.WriteLine("Setting up Kinect...");
             _device = DeviceLoader.Instance.Devices[0];
-            _device.Motor.Position = short.MaxValue/8;//*/ short.MinValue / 4;
+            _device.Motor.Position = short.MaxValue/4;//*/ short.MinValue / 4;
             Console.WriteLine("Reading Camera Data...");
             SetCamera(CameraType.DepthRgb32);
             //_source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
