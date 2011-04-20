@@ -11,6 +11,10 @@ namespace KinectDisplay
         private readonly ColorData _colorData;
         private readonly int _bucketEntries;
         private DateTime _lastUpdate;
+        Patterns pattern = new Patterns();
+        private Random rand = new Random();
+        private Boolean change = true;
+        private Color colorState = Colors.Blue;
 
 
         public BucketUpdater(ColorData colorData)
@@ -48,27 +52,28 @@ namespace KinectDisplay
         {
             TimeSpan delta = DateTime.Now - _lastUpdate;
             _lastUpdate = DateTime.Now;
-            double adjfactor = Math.Pow(3, delta.TotalSeconds);
+            double adjfactor = Math.Pow(4, delta.TotalSeconds);
+            pattern.ParanoidZen(ref colorState, adjfactor, _colorData);
+            //pattern.HappyTrails(_colorData, adjfactor);
 
-            for (int i = 0; i < _colorData.Count; i++)
-            {
-                Color color = _colorData[i];
-                color.R = (byte)(color.R / adjfactor);
-                color.G = (byte)(color.G / adjfactor);
-                color.B = (byte)(color.B / adjfactor);
-                _colorData[i] = color;
-            }
+ 
+
         }
 
         private void UpdateBucket(byte intensity)
         {
+            
+
             //int bucket = (int) (52.36*Math.Log(intensity, Math.E) + 53.422);
             int bucket = (int)(0.360493 * Math.Pow(1.01928, intensity));
             //            int start = 90;
             //            int end = 255;
             //            int pos = (int)Math.Floor((intensity-50.0)/(255.0-50)*49);
             if (bucket < 0) return;
-            _colorData[bucket] = Colors.Green;
+           // _colorData[bucket] = pattern.GetColors()[rand.Next(pattern.GetColors().Count - 1)];
+            //_colorData[bucket] = Colors.SlateBlue;
+            _colorData[bucket] = Colors.Red;
+
         }
 
         public ColorData ColorData { get { return _colorData; } }

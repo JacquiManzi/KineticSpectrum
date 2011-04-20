@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media;
+
 
 namespace KineticControl
 {
@@ -16,6 +18,7 @@ namespace KineticControl
         private List<Color> Reds = new List<Color>();
         private List<Color> Pinks = new List<Color>();
         private List<Color> Purples = new List<Color>();
+        private Boolean change = true;
 
 
 
@@ -188,6 +191,80 @@ namespace KineticControl
             Yellows.Add(Colors.YellowGreen);
         }
 
+        /*
+         * This is an effect that displays a color to its max and the nto its mix
+         */
+
+        public void ParanoidZen(ref Color colorState, double adjfactor, ColorData colorData)
+        {
+          //  Console.WriteLine(colorState.B + " " +adjfactor);
+            
+            if (change)
+            {
+                adjfactor += 10;
+                if (colorState.B - adjfactor < 0)
+                {
+                    colorState.B = 0;
+                }
+                else
+                {
+
+                    colorState.B = (byte)(colorState.B - adjfactor);
+                }
+                for (int i = 0; i < (colorData).Count; i++)
+                  {
+                    colorData[i] = colorState;
+                     if (colorState.B == 0)
+                     {
+                       change = false;
+                     }
+                  }
+
+            }
+            else
+            {
+                adjfactor += 10;
+
+                if (colorState.B + adjfactor > 255)
+                {
+                    colorState.B = 255;
+                }
+                else
+                {
+                    colorState.B = (byte) (colorState.B + adjfactor);
+                }
+                for (int i = 0; i < ( colorData).Count; i++)
+                {
+                    colorData[i] = colorState;
+                    if (colorState.B == 255)
+                    {
+                        change = true;
+                    }
+
+                }
+
+            }
+            
+        }
+
+        /*
+         * This is a color trailing effect
+         * */
+
+        public void HappyTrails(ColorData _colorData, double adjfactor)
+        {
+            for (int i = 0; i < _colorData.Count; i++)
+            {
+                Color color = _colorData[i];
+
+                color.R = (byte) (color.R/adjfactor);
+                color.G = (byte) (color.G/adjfactor);
+                if(color.B < 250)
+                    color.B = (byte) (color.B + adjfactor);
+                _colorData[i] = color;
+            }
+        }
+
         public List<Color> GetColors()
         {
             return AllColors;
@@ -217,6 +294,13 @@ namespace KineticControl
         {
             return Yellows;
         }
+
+
+        public List<Color> GetPinks()
+        {
+            return Pinks;
+        }
+
 
         
 

@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
 using KinectAPI;
 using KineticControl;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
@@ -99,6 +102,8 @@ namespace KinectDisplay
             _buckets.UpdateBuckets(fgMask, depthImage);
 
             _network.SendUpdate(_buckets.ColorData);
+
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
                 
                 
 
@@ -268,6 +273,35 @@ namespace KinectDisplay
         private void OnExit(object sender, MouseEventArgs e)
         {
             ellipse1.Visibility = Visibility.Hidden;
+        }
+
+        private void CheckKeys()
+        {
+           Motor m = _device.Motor;
+          if((Keyboard.GetKeyStates(Key.Divide) & KeyStates.Down) > 0 )
+          {
+              m.Position += short.MaxValue/ 50;
+          }
+          else if((Keyboard.GetKeyStates(Key.Multiply) & KeyStates.Down) > 0)
+          {
+              m.Position -= short.MaxValue / 50;
+          }
+          else if ((Keyboard.GetKeyStates(Key.Back) & KeyStates.Down) > 0)
+          {
+              return;
+          }
+           
+
+        }
+
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Grid_KeyDown_1(object sender, KeyEventArgs e)
+        {
+
         }
     }
 

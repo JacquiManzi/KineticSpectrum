@@ -112,7 +112,7 @@ namespace KineticControl
             EndPoint endPoint = _ipEndPoint;
             
             socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
-                                           new AsyncCallback(handleCallback), socket); 
+                                           handleCallback, socket); 
             
             while (_destEndPoint == null)
             {

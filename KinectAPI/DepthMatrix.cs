@@ -19,10 +19,7 @@ namespace KinectAPI
             Width = width;
             Height = height;
         }
-
-        
-
-        
+ 
     }
 
     public class ByteDepthMatrix : DepthMatrix
@@ -55,7 +52,7 @@ namespace KinectAPI
                 {
                     for(int j=0; j<Width; j++)
                     {
-                        if (*section > 60)
+                        if (*section > 50)
                             data[i, j, 0] = *section;
                         else
                             data[i, j, 0] = 0;
