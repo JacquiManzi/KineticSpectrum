@@ -41,7 +41,7 @@ namespace KinectAPI
             Image<Gray,short> image = new Image<Gray, short>(Width, Height);
             int width = (Width * 2 + 3) & ~3;
 
-
+ 
             short[,,] data = new short[Height,width,1];
             unsafe
             {
@@ -104,7 +104,7 @@ namespace KinectAPI
                 {
                     for(int j=0; j<Width; j++)
                     {
-                        if (*section > 60)
+                        if (*section > 50)
                             data[i, j, 0] = *section;
                         else
                             data[i, j, 0] = 0;
