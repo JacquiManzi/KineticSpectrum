@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HexStrings.cs" />
     <Compile Include="Patterns.cs" />
     <Compile Include="ColorData.cs" />
     <Compile Include="Fixture.cs" />

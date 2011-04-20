@@ -15,7 +15,7 @@ namespace KineticControl
         {
             _initialLength = initialData.Length;
             _length = length;
-            _byteArray = new byte[_initialLength + PDS60ca.addressOff.Length/2];
+            _byteArray = new byte[_initialLength + HexStrings.addressOff.Length/2];
             _byteArray.Initialize();
             initialData.CopyTo(_byteArray, 0);
         }

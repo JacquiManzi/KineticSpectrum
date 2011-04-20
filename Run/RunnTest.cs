@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Windows.Media;
+﻿using System.Net.NetworkInformation;
 
 namespace KineticControl
 {
@@ -11,7 +8,6 @@ namespace KineticControl
         public static void Main()
         {
             NetworkInterface card;
-            PDS60ca powerSupply = new PDS60ca();
             Network network = new Network();
             Network network2 = new Network();
 
@@ -53,16 +49,14 @@ namespace KineticControl
             }
            
            network.BroadCast();
-           network2.ipEndpoint = new IPEndPoint(IPAddress.Any, 5022);
-           network2.BroadCast();
-           //network.FindPowerSupply();
+            PDS60ca powerSupply = network.PDSs[0];
            for (int i = 0; i < pattern.GetColors().Count; i++)
            {
                for (int j = 0; j < 50; j++)
                {
-
-                   powerSupply.setColor(pattern.GetColors()[i], j, network, 1);
-                   
+                   powerSupply.FixtureOne[j] = pattern.GetColors()[i];
+                   powerSupply.FixtureTwo[j] = pattern.GetColors()[i];
+                   powerSupply.UpdateSystem();
                }
            }
 

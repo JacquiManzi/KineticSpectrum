@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
@@ -10,6 +11,7 @@ namespace KinectDisplay
         private Image<TColor, byte> _baseImage;
         private readonly Image<TColor, byte> _lastImage;
         private readonly Image<Gray, byte> _foregroundMask;
+        private DateTime _resetTime;
 
         public ForegroundDetector(Image<TColor,byte> image)
         {
@@ -19,6 +21,16 @@ namespace KinectDisplay
             byte[, ,] diff = new byte[480, 640, 1];
             _foregroundMask.Data = diff;
             UpdateBase();
+
+//
+//            Color colorState;
+//            colorState.R = (byte) (colorState.R/adjfactor);
+//
+//
+//            for()
+//            {
+//                _colorData[i] = colorState;
+//            }
         }
 
         private void UpdateBase()
@@ -39,7 +51,11 @@ namespace KinectDisplay
 
         public void Update(Image<TColor, byte> image)
         {
-            image = image.Copy();
+            if( _resetTime < DateTime.Now)
+            {
+                _baseImage = image;
+                _resetTime = DateTime.MaxValue;
+            }
             //image._SmoothGaussian(3);
             //return image.AbsDiff(_baseImage);
             byte[, ,] data = image.Data;
@@ -50,7 +66,9 @@ namespace KinectDisplay
             int height = image.Height;
             int width = image.Width;
 
-            Boolean allDifferrent = true;
+            double numMatchingBase = 0, numMatchingLast = 0;
+            double numDiffBase = 0, numDiffLast = 0;
+            
             for(int i=0; i<height; i++)
             {
                     for(int j=0; j<width; j++)
@@ -76,19 +94,39 @@ namespace KinectDisplay
                             basedata[i, j, 0] = (byte)topIntensity;
                         }
                         int lastIntensity = lastData[i, j, 0];
-                        if(lastIntensity == topIntensity )
+                        if(lastIntensity > 10 && lastIntensity == topIntensity )
                         {
-                            allDifferrent = false;
+                            numMatchingLast++;
                         }
+                        else if(lastIntensity > 10)
+                        {
+                            numDiffLast++;
+                        }
+                        if(baseIntensity >10 && baseIntensity == topIntensity)
+                        {
+                            numMatchingBase++;
+                        }
+                        else if(baseIntensity > 10)
+                        {
+                            numDiffBase++;
+                        }
+
                     }
                 }
             }
-            if (allDifferrent)
+            //Console.WriteLine("Last image differences: {0}%", numDiffLast/(numDiffLast + numMatchingLast));
+            //Console.WriteLine("Base image differences: {0}%", numDiffBase/(numDiffBase + numMatchingBase));
+            if(numDiffBase/(numDiffBase + numMatchingBase) > .70 &&
+                numDiffLast/(numDiffLast + numMatchingLast) > .60)
             {
-                Console.WriteLine("Resetting Base...");
-                _baseImage = image.Copy();
+                _resetTime = DateTime.Now + new TimeSpan(0, 0, 0, 0, 250);
+                _baseImage = image;
+                Console.WriteLine("Resetting base");
             }
-            _foregroundMask._Erode(16);
+               
+            
+            _foregroundMask._Erode(6);
+//            _foregroundMask._Dilate(6);
 //            img._Dilate(10);
 //            img._SmoothGaussian(3);
         }
