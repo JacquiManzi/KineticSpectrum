@@ -14,7 +14,7 @@ namespace KinectDisplay
         private readonly int _tolerance;
         private readonly int _updateTime;
 
-        public Background(int width, int height, int tolerance = 4, int updateTime = 30)
+        public Background(int width, int height, int tolerance = 3, int updateTime = 200)
         {
             _lowerBound = new byte[height,width];
             _upperBound = new byte[height, width];
@@ -42,19 +42,19 @@ namespace KinectDisplay
                 return true;
             }
 
-//            if(val > _base[hPos,wPos] && _base[hPos,wPos] != 0)
-//            {
-//                _base[hPos, wPos] = val;
-//                return true;
-//            }
+            if(val > _base[hPos,wPos] && _base[hPos,wPos] != 0)
+            {
+                _base[hPos, wPos] = val;
+                return true;
+            }
 
             if (val == 0)
             {
                 _percentBlack[hPos, wPos]++;
-//                if(_percentBlack[hPos,wPos] > _updateTime/2.0)
-//                {
-//                    _base[hPos, wPos] = 0;
-//                }
+                if(_percentBlack[hPos,wPos] > _updateTime/8.0)
+                {
+                    _base[hPos, wPos] = 0;
+                }
                 return true;
             }
             

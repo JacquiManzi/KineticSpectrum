@@ -201,7 +201,7 @@ namespace KineticControl
             
             if (change)
             {
-                adjfactor += 10;
+                adjfactor += .5;
                 if (colorState.B - adjfactor < 0)
                 {
                     colorState.B = 0;
@@ -223,7 +223,7 @@ namespace KineticControl
             }
             else
             {
-                adjfactor += 10;
+                adjfactor += .5;
 
                 if (colorState.B + adjfactor > 255)
                 {

@@ -48,6 +48,7 @@
     <Compile Include="Model.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="PDS-60ca.cs" />
+    <Compile Include="PDS.cs" />
     <Compile Include="PDS150e.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -96,7 +96,7 @@ namespace KinectAPI
             if(Width % 4 != 0)
                 width = Width + (4-Width%4);
 
-            byte[,,] data = new byte[Height,width,1];
+             byte[,,] data = new byte[Height,width,1];
             unsafe
             {
                 byte* section = (byte*) _section.ToPointer();

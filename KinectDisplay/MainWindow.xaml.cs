@@ -36,7 +36,7 @@ namespace KinectDisplay
         private readonly Device _device;
         private bool _depthMode;
         private readonly ByteDepthMatrix _matrix;
-        private readonly IntDepthMatrix _imgMatrix;
+        //private readonly IntDepthMatrix _imgMatrix;
         private static BitmapSource _source;
         private MouseEventArgs _lastArgs;
         private static MemPointer _oldDestPointer;
@@ -46,7 +46,7 @@ namespace KinectDisplay
         private static IBGFGDetector<Gray> _fg;
         private static BucketUpdater _buckets;
 
-        private static IList<PDS60ca> _PDSs;
+        private static IList<PDS> _PDSs;
 
         private static MCvFont _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
         private static BlobTrackerAuto<Bgr> _tracker = new BlobTrackerAuto<Bgr>();
@@ -59,6 +59,11 @@ namespace KinectDisplay
             InitializeComponent();
 
             Console.WriteLine("Setting up Kinect...");
+            if(DeviceLoader.Instance.Devices.Count == 0)
+            {
+                Console.WriteLine("No Kinect available");
+                Environment.Exit(0);
+            }
             _device = DeviceLoader.Instance.Devices[0];
             _device.Motor.Position = short.MaxValue/4;//*/ short.MinValue / 4;
             Console.WriteLine("Reading Camera Data...");
@@ -68,8 +73,8 @@ namespace KinectDisplay
 
             Console.WriteLine("Getting Basic Depth Matrix");
             _matrix = _device.GetDepthMatrix();
-            Console.WriteLine("Loaded Color Depth Matrix");
-            _imgMatrix = _device.GetColorDepthMatrix();
+            //Console.WriteLine("Loaded Color Depth Matrix");
+            //_imgMatrix = _device.GetColorDepthMatrix();
            
             CalibrateAndDispatch();
         }
@@ -83,12 +88,17 @@ namespace KinectDisplay
             _network.SetInterface("Local Area Connection");
             Console.WriteLine("Searching for Power Supplies...");
 //            _network.FindPowerSupplies();
-            _network.BroadCast();
+            //_network.BroadCast();
             _PDSs = _network.PDSs;
             Console.WriteLine("Found {0} PDSs.", _PDSs.Count);
 
             Console.WriteLine("Calibrating Camera...");
-            _buckets = new BucketUpdater(_PDSs[0].FixtureOne, _PDSs[0].FixtureTwo);
+            List<ColorData> colorDatas = new List<ColorData>();
+            foreach(PDS pds in _PDSs)
+            {
+                colorDatas.AddRange(pds.AllColorData);
+            }
+            _buckets = new BucketUpdater(colorDatas);
             //_fg = new ChangeTracker<Gray>();
             _fg = new ForegroundDetector<Gray>(_matrix.AsImage());
             Task frameProcessor = new Task(()=>{
@@ -114,22 +124,22 @@ namespace KinectDisplay
             Image<Gray, byte> fgMask = _fg.ForgroundMask;
             _buckets.UpdateBuckets(fgMask, depthImage);
 
-            Image<Bgr, byte> colorImg = _imgMatrix.AsImage();
+            //Image<Bgr, byte> colorImg = _imgMatrix.AsImage();
             //colorImg._Dilate(5);
             //colorImg._SmoothGaussian(3);
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
 
-            foreach(PDS60ca pds in _PDSs)
+            foreach(PDS pds in _PDSs)
             {
                 pds.UpdateSystem();
             }
 
             //_network.SendUpdate(_buckets.ColorData);
-            BlobSeq newSeq = new BlobSeq();
+            //BlobSeq newSeq = new BlobSeq();
 
-            _detector.DetectNewBlob(depthImage, fgMask, newSeq, _blobSeq);
+            //_detector.DetectNewBlob(depthImage, fgMask, newSeq, _blobSeq);
             //Console.WriteLine("Blob Count: " + newSeq.Count);
-            _blobSeq = newSeq;
+            //_blobSeq = newSeq;
 //            _tracker.Process(colorImg, fgMask);
 //
 //            foreach (MCvBlob blob in _tracker)
@@ -145,8 +155,8 @@ namespace KinectDisplay
                         
             //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
 
-            Dispatcher.BeginInvoke(new Action(() => UpdateFirstImage(depthImage)));
-            Dispatcher.BeginInvoke(new Action(() => UpdateSecondImage(fgMask)));
+            //Dispatcher.BeginInvoke(new Action(() => UpdateFirstImage(depthImage)));
+            //Dispatcher.BeginInvoke(new Action(() => UpdateSecondImage(fgMask)));
             
 
 

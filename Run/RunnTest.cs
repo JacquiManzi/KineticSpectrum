@@ -1,4 +1,5 @@
 ﻿using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace KineticControl
 {
@@ -9,7 +10,6 @@ namespace KineticControl
         {
             NetworkInterface card;
             Network network = new Network();
-            Network network2 = new Network();
 
             network.RetrieveNetworkCards();
 			//            var cards = Network.RetrieveNetworkCards();
@@ -40,23 +40,19 @@ namespace KineticControl
                     network.InitializeLocalIP();
                     network.InitializeLocalPort();
 
-                    network2.NetworkCard = card;
-                    network2.InitializeLocalIP();
-                    network2.InitializeLocalPort();
-
                     break;
                 }
             }
            
            network.BroadCast();
-            PDS60ca powerSupply = network.PDSs[0];
+           PDS powerSupply = network.PDSs[0];// PDSs[0];
            for (int i = 0; i < pattern.GetColors().Count; i++)
            {
                for (int j = 0; j < 50; j++)
                {
-                   powerSupply.FixtureOne[j] = pattern.GetColors()[i];
-                   powerSupply.FixtureTwo[j] = pattern.GetColors()[i];
+                   powerSupply.AllColorData[0][j] = pattern.GetColors()[i];
                    powerSupply.UpdateSystem();
+                   Thread.Sleep(100);
                }
            }
 
