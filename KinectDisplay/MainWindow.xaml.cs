@@ -50,8 +50,11 @@ namespace KinectDisplay
 
         private static MCvFont _font = new MCvFont(FONT.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0);
         private static BlobTrackerAuto<Bgr> _tracker = new BlobTrackerAuto<Bgr>();
-        private static BlobDetector _detector = new BlobDetector(BLOB_DETECTOR_TYPE.Simple);
+        private static Emgu.CV.VideoSurveillance.BlobDetector _detector = new Emgu.CV.VideoSurveillance.BlobDetector(BLOB_DETECTOR_TYPE.Simple);
         private static BlobSeq _blobSeq = new BlobSeq();
+
+        private static BlobDetector _blobDetect = new BlobDetector(480, 640, 700);
+        private static ObjectTracker _blobTrack = new ObjectTracker();
 
 
         public MainWindow()
@@ -65,9 +68,9 @@ namespace KinectDisplay
                 Environment.Exit(0);
             }
             _device = DeviceLoader.Instance.Devices[0];
-            _device.Motor.Position = short.MaxValue/4;//*/ short.MinValue / 4;
+            _device.Motor.Position = 0;//short.MaxValue/4;//*/ short.MinValue / 4;
             Console.WriteLine("Reading Camera Data...");
-            SetCamera(CameraType.DepthRgb32);
+            //SetCamera(CameraType.DepthRgb32);
             //_source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
 
@@ -119,14 +122,25 @@ namespace KinectDisplay
             //_detector.Update(frame);
             Image<Gray, byte> depthImage = _matrix.AsImage();
             
+            
             _fg.Update(depthImage);
 
-            Image<Gray, byte> fgMask = _fg.ForgroundMask;
-            _buckets.UpdateBuckets(fgMask, depthImage);
+            Image<Gray, byte> fgMask;
+            fgMask = _fg.ForgroundMask;
+            //fgMask = depthImage.Canny(new Gray(100), new Gray(100));
+            //_buckets.UpdateBuckets(fgMask, depthImage);
 
             //Image<Bgr, byte> colorImg = _imgMatrix.AsImage();
             //colorImg._Dilate(5);
             //colorImg._SmoothGaussian(3);
+            
+            IList<Blob> blobs = _blobDetect.FindBlobs(fgMask);
+            _blobTrack.Track(blobs);
+           // fgMask = fgMask.CopyBlank();
+
+            Blob.AddOutline(fgMask, blobs, _font);
+            
+
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
 
             foreach(PDS pds in _PDSs)
@@ -155,8 +169,8 @@ namespace KinectDisplay
                         
             //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
 
-            //Dispatcher.BeginInvoke(new Action(() => UpdateFirstImage(depthImage)));
-            //Dispatcher.BeginInvoke(new Action(() => UpdateSecondImage(fgMask)));
+            Dispatcher.BeginInvoke(new Action(() => UpdateFirstImage(depthImage)));
+            Dispatcher.BeginInvoke(new Action(() => UpdateSecondImage(fgMask)));
             
 
 

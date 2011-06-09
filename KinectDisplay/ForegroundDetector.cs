@@ -23,49 +23,12 @@ namespace KinectDisplay
             _foregroundMask = new Image<Gray, byte>(640, 480);
             byte[, ,] diff = new byte[480, 640, 1];
             _foregroundMask.Data = diff;
-            //UpdateBase();
-
-//
-//            Color colorState;
-//            colorState.R = (byte) (colorState.R/adjfactor);
-//
-//
-//            for()
-//            {
-//                _colorData[i] = colorState;
-//            }
         }
-
-//        private void UpdateBase()
-//        {
-//            byte[,,] data = _baseImage.Data;
-//            int height = _baseImage.Height;
-//            int width = _baseImage.Width;
-//
-//            for(int i = 0; i < height; i++)
-//                for(int j=0; j<width; j++)
-//                {
-//                    if(data[i,j,0] < 50)
-//                    {
-//                        data[i, j, 0] = 0;
-//                    }
-//                }
-//        }
 
         public void Update(Image<TColor, byte> image)
         {
-//            if( _resetTime < DateTime.Now)
-//            {
-//                _baseImage = image;
-//                _resetTime = DateTime.MaxValue;
-//            }
-            //image._SmoothGaussian(3);
-            //return image.AbsDiff(_baseImage);
             byte[, ,] data = image.Data;
-//            byte[, ,] basedata = _baseImage.Data;
-            
             byte[, ,] diffData = _foregroundMask.Data;
-            byte[, ,] lastData = _lastImage.Data;
 
             int height = image.Height;
             int width = image.Width;
@@ -78,34 +41,8 @@ namespace KinectDisplay
                 for(int j=0; j<width; j++)
                 {
                     byte topIntensity = data[i, j, 0];
-                    diffData[i, j, 0] = (byte) (_backGround.Update(topIntensity, j, i) ? 0 : 255);
-
-//                        byte baseIntensity = _backGround[i, j];
-//                        
-//                        if( baseIntensity > 10 && topIntensity - baseIntensity > TOL)
-//                        {
-//                            basedata[i, j, 0] = (byte)topIntensity;
-//                        }
-//                        int lastIntensity = lastData[i, j, 0];
-//                        if(lastIntensity > 10 && lastIntensity == topIntensity )
-//                        {
-//                            numMatchingLast++;
-//                        }
-//                        else if(lastIntensity > 10)
-//                        {
-//                            numDiffLast++;
-//                        }
-//                        if(baseIntensity >10 && baseIntensity == topIntensity)
-//                        {
-//                            numMatchingBase++;
-//                        }
-//                        else if(baseIntensity > 10)
-//                        {
-//                            numDiffBase++;
-//                        }
-
+                    diffData[i, j, 0] = (byte) _backGround.Update(topIntensity, j, i);
                 }
-                
             }
             //Console.WriteLine("Last image differences: {0}%", numDiffLast/(numDiffLast + numMatchingLast));
             //Console.WriteLine("Base image differences: {0}%", numDiffBase/(numDiffBase + numMatchingBase));
@@ -119,9 +56,7 @@ namespace KinectDisplay
                
             
             _foregroundMask._Erode(6);
-//            _foregroundMask._Dilate(6);
-//            img._Dilate(10);
-//            img._SmoothGaussian(3);
+            _foregroundMask._Dilate(7);
         }
 
         private const double TOL = 4.0;

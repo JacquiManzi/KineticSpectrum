@@ -9,25 +9,43 @@ namespace KinectDisplay
 {
     public class ObjectTracker
     {
-        private Image<Gray, byte> _lastImage;
-        private int _life;
+        private IList<Blob> _blobs;
+        private int _objCount = 0;
 
 
-        public ObjectTracker(int width, int height)
+        public ObjectTracker()
         {
-            _lastImage = new Image<Gray, byte>(width, height, new Gray(0.0));
+           _blobs = new List<Blob>();
         }
 
-        public void Process(Image<Gray, byte> baseImg, Image<Gray, byte> maskImg)
+        public void Track(IList<Blob> newBlobs)
         {
-            
+            foreach(Blob newBlob in newBlobs)
+            {
+                Blob closestMatch = null;
+                int maxScore=0;
+
+                foreach(Blob blob in _blobs)
+                {
+                    int score = (int) ( (blob.OverlapPercent(newBlob) + 
+                                         newBlob.OverlapPercent(blob)  ) * 100 );
+                    if(score > maxScore)
+                    {
+                        maxScore = score;
+                        closestMatch = blob;
+                    }
+                }
+
+                newBlob.Name = (closestMatch == null ? (_objCount++).ToString() : closestMatch.Name);
+            }
+            _blobs = newBlobs;
         }
 
-
+        public IList<Blob> Blobs { get { return _blobs; } }
     }
 
-    public class Blob
+    class Overlap
     {
-        private Image<Gray, byte> _blobImg;
+        
     }
 }

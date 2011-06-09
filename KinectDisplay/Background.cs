@@ -1,5 +1,4 @@
-﻿using System;
-using Emgu.CV;
+﻿using Emgu.CV;
 using Emgu.CV.Structure;
 
 namespace KinectDisplay
@@ -27,7 +26,7 @@ namespace KinectDisplay
             _updateTime = updateTime;
         }
 
-        public bool Update(byte val, int wPos, int hPos)
+        public byte Update(byte val, int wPos, int hPos)
         {
             if(_percentBlack[hPos,wPos] > 0)
             {
@@ -39,13 +38,13 @@ namespace KinectDisplay
             }
             if (ForegroundDetector<Gray>.CompareDoubles(_base[hPos, wPos], val, _tolerance))
             {
-                return true;
+                return val;
             }
 
             if(val > _base[hPos,wPos] && _base[hPos,wPos] != 0)
             {
                 _base[hPos, wPos] = val;
-                return true;
+                return val;
             }
 
             if (val == 0)
@@ -55,7 +54,8 @@ namespace KinectDisplay
                 {
                     _base[hPos, wPos] = 0;
                 }
-                return true;
+                //this used to be true, I've made it false because that seems right...
+                return 0;
             }
             
             _percentBlack[hPos, wPos]--;
@@ -94,7 +94,7 @@ namespace KinectDisplay
                     _base[hPos, wPos] = 0;
                 }
             }
-            return false;
+            return 0;
             
         }
 

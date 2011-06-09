@@ -76,6 +76,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Blob.cs" />
     <Compile Include="BucketUpdater.cs" />
     <Compile Include="ChangeTracker.cs" />
     <Compile Include="Background.cs" />
@@ -86,6 +87,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlobDetector.cs" />
     <Compile Include="ObjectTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
