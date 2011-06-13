@@ -53,7 +53,7 @@ namespace KinectDisplay
         private static Emgu.CV.VideoSurveillance.BlobDetector _detector = new Emgu.CV.VideoSurveillance.BlobDetector(BLOB_DETECTOR_TYPE.Simple);
         private static BlobSeq _blobSeq = new BlobSeq();
 
-        private static BlobDetector _blobDetect = new BlobDetector(480, 640, 700);
+        private static BlobDetector _blobDetect = new BlobDetector(480, 640, 400);
         private static ObjectTracker _blobTrack = new ObjectTracker();
 
 

@@ -20,23 +20,35 @@ namespace KinectDisplay
 
         public void Track(IList<Blob> newBlobs)
         {
-            foreach(Blob newBlob in newBlobs)
+            foreach(Blob blob in _blobs)
             {
                 Blob closestMatch = null;
-                int maxScore=0;
+                int minScore = int.MaxValue;
 
-                foreach(Blob blob in _blobs)
+                foreach(Blob newBlob in newBlobs)
                 {
-                    int score = (int) ( (blob.OverlapPercent(newBlob) + 
-                                         newBlob.OverlapPercent(blob)  ) * 100 );
-                    if(score > maxScore)
+//                    int score = (int) ( (blob.OverlapPercent(newBlob) + 
+//                                         newBlob.OverlapPercent(blob)  ) * 100 );
+                    int score = blob.Score(newBlob);
+                    if(score < minScore)
                     {
-                        maxScore = score;
+                        minScore = score;
                         closestMatch = blob;
                     }
                 }
-
-                newBlob.Name = (closestMatch == null ? (_objCount++).ToString() : closestMatch.Name);
+                if(closestMatch != null)
+                {
+                    closestMatch.Name = blob.Name;
+                }
+                
+//                blob.Name = (closestMatch == null ? (_objCount++).ToString() : closestMatch.Name);
+            }
+            foreach(Blob newBlob in newBlobs)
+            {
+                if (newBlob.Name == null)
+                {
+                    newBlob.Name = (_objCount++).ToString();
+                }
             }
             _blobs = newBlobs;
         }
