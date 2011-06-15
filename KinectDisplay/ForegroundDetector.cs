@@ -119,7 +119,7 @@ namespace KinectDisplay
                
             
             _foregroundMask._Erode(6);
-//            _foregroundMask._Dilate(6);
+            _foregroundMask._Dilate(8);
 //            img._Dilate(10);
 //            img._SmoothGaussian(3);
         }
