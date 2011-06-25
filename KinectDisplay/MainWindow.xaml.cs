@@ -34,7 +34,6 @@ namespace KinectDisplay
         }
 
         private readonly Device _device;
-        private bool _depthMode;
         private readonly ByteDepthMatrix _matrix;
         //private readonly IntDepthMatrix _imgMatrix;
         private static BitmapSource _source;
@@ -115,7 +114,7 @@ namespace KinectDisplay
         void ProcessFrame()
         {
             
-            //UpdateDistance();
+            UpdateDistance();
             //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
             //frame._SmoothGaussian(9); //filter out noises
 
@@ -185,27 +184,6 @@ namespace KinectDisplay
 
         }
 
-        private void SetCamera(CameraType type)
-        {
-            _source = _device.GetCamera(type, Dispatcher);
-            if (type != CameraType.DepthRgb32 && type != CameraType.ColorRgb32)
-            {
-                if (type == CameraType.DepthCorrected12 || type == CameraType.DepthCorrected8 ||
-                    type == CameraType.DepthRaw)
-                {
-                    camImg.Source = _device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
-                }
-                else
-                {
-                    camImg.Source = _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
-                }
-            }
-            else
-            {
-                camImg.Source = _source;
-            }
-        }
-
         static MemPointer GetBitmap(Bitmap bitmap)
         {
             MemPointer memP = new MemPointer();
@@ -217,42 +195,6 @@ namespace KinectDisplay
                 BitmapSizeOptions.FromEmptyOptions());
             return memP;
         }
-
-        static Bitmap GetBitmap32(BitmapSource source)
-        {
-            var bmp = new Bitmap(
-              source.PixelWidth,
-              source.PixelHeight,
-              PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(
-              new Rectangle(System.Drawing.Point.Empty, bmp.Size),
-              ImageLockMode.WriteOnly,
-              PixelFormat.Format32bppPArgb);
-            source.CopyPixels(
-              Int32Rect.Empty,
-              data.Scan0,
-              data.Height * data.Stride,
-              data.Stride);
-            bmp.UnlockBits(data);
-            return bmp;
-        }
-
-        private void CamImgSwitch(object sender, MouseButtonEventArgs e)
-        {
-            if (_depthMode)
-            {
-                SetCamera(CameraType.ColorRgb32);
-                camImg.Source = _source; // _device.GetCamera(CameraType.ColorRgb32, Dispatcher);
-                _depthMode = false;
-            }
-            else
-            {
-                SetCamera(CameraType.DepthCorrected8);
-                camImg.Source = _source;// _device.GetCamera(CameraType.DepthRgb32, Dispatcher);
-                _depthMode = true;
-            }
-        }
-
 
         private void UpdateSecondImage(Image<Gray, byte> fg)
         {
@@ -275,30 +217,6 @@ namespace KinectDisplay
             }
             _oldSrcPointer = memP;
         }
-
-
-        private static Image<Gray, byte> SmoothImage(Image<Gray, byte> lastImage, Image<Gray, byte> nextImage)
-        {
-            if(lastImage == null) return nextImage;
-            if(lastImage.Height != nextImage.Height || lastImage.Width != nextImage.Width )
-                throw new ArgumentException("Image sized don't match");
-
-            //byte[,,] lastBytes = lastImage.GetObjectData()
-            //byte[,,] newBytes  = new byte[lastImage.Height,lastImage.Width,0];
-            Image<Gray, byte> newImage = new Image<Gray, byte>(lastImage.Width,lastImage.Height);
-
-            for(int i=0; i<lastImage.Height; i++)
-            {
-                for(int j = 0; j<lastImage.Width; j++)
-                {
-                    Gray val = nextImage[i, j];
-                    newImage[i, j] = (val.Intensity==0.0 ? lastImage[i, j] : val);
-                }
-            }
-
-            return newImage;
-        }
-
 
         private void UpdateDistance()
         {
@@ -349,26 +267,6 @@ namespace KinectDisplay
           {
               return;
           }
-           
-
-        }
-
-        private void Grid_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void Grid_KeyDown_1(object sender, KeyEventArgs e)
-        {
-
         }
     }
-
-    internal class MemPointer
-    {
-        internal BitmapSource Source;
-        internal IntPtr Ptr;
-    }
-
-    
 }
