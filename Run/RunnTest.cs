@@ -44,7 +44,7 @@ namespace KineticControl
                 }
             }
            
-           network.BroadCast();
+           //network.BroadCast();
            PDS powerSupply = network.PDSs[0];// PDSs[0];
            for (int i = 0; i < pattern.GetColors().Count; i++)
            {
@@ -52,6 +52,7 @@ namespace KineticControl
                {
                    powerSupply.AllColorData[0][j] = pattern.GetColors()[i];
                    powerSupply.UpdateSystem();
+                   Thread.Sleep(30);
                    Thread.Sleep(100);
                }
            }

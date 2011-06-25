@@ -4,16 +4,16 @@
 exe
 C#
 .cs
-C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\obj\x86\Debug\
+C:\code\KineticSpectrum\KinectDisplay\obj\x86\Debug\
 KinectDisplay
 none
 false
 DEBUG;TRACE
-C:\Users\JCU\Documents\Code\kineticspectrum\KinectDisplay\App.xaml
+C:\code\KineticSpectrum\KinectDisplay\App.xaml
 11151548125
 18-1794059893
-11836152760
-18-545531615
+11829366583
+18-1555553924
 MainWindow.xaml;
 
 False

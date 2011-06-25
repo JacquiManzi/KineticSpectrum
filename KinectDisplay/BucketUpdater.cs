@@ -16,6 +16,10 @@ namespace KinectDisplay
         private Random rand = new Random();
         private Boolean change = true;
         private Color colorState = Colors.Blue;
+        private int inc = 0;
+        private int count = 0;
+        private int colorCount = 0;
+        Random random = new Random();
 
 
         public BucketUpdater(IList<ColorData> colorData)
@@ -60,33 +64,49 @@ namespace KinectDisplay
             foreach (var colorData in _colorData)
             {
                 pattern.ParanoidZen(ref colorState, adjfactor, colorData);
+               // pattern.HappyTrails(colorData, adjfactor);
+               // pattern.GetBlues();
             }
             foreach (ColorData colorData in _colorData)
             {
                 //pattern.HappyTrails(colorData, adjfactor);
+                
             }
+
+            if(colorCount >= 1000)
+            {
+                colorState = pattern.GetColors()[random.Next(0, pattern.GetColors().Count)];
+                colorCount = 0;
+            }
+            colorCount++;
         }
 
         private const int adjust = 6;
         private void UpdateBucket(byte intensity)
         {
             
-            
-            //int bucket = (int) (52.36*Math.Log(intensity, Math.E) + 53.422);
+           RainbowMaddness(intensity);
+
+        }
+
+        public void normalRed(byte intensity)
+        {
             int bucket = (int)(0.360493 * Math.Pow(1.01928, intensity));
             //            int start = 90;
             //            int end = 255;
             //            int pos = (int)Math.Floor((intensity-50.0)/(255.0-50)*49);
-            bucket = (int) Math.Round(bucket - adjust + bucket*adjust/46.0);
+            bucket = (int)Math.Round(bucket - adjust + bucket * adjust / 46.0);
             if (bucket < 0) return;
-
+            int i = 0;
             foreach (ColorData colorData in _colorData)
             {
-                int thisBucket = bucket*4/colorData.Spacing + colorData.Initial;
+                int thisBucket = bucket * 4 / colorData.Spacing + colorData.Initial;
                 if (colorData.Spacing == 12)
                     colorData[thisBucket] = Colors.Red;
                 else
-                    colorData[thisBucket] = Colors.Red;
+                    //colorData[thisBucket] = Colors.Red;
+                    colorData[thisBucket] = pattern.GetReds()[4];
+                i++;
                 if (thisBucket == 46)
                 {
                     colorData[47] = Colors.Red;
@@ -94,9 +114,39 @@ namespace KinectDisplay
                     colorData[49] = Colors.Red;
                 }
             }
-            //_colorData[bucket] = Colors.SlateBlue;
-            //_colorData[bucket] = Colors.Red;
+        }
 
+        public void RainbowMaddness(byte intensity)
+        {
+            int bucket = (int)(0.360493 * Math.Pow(1.01928, intensity));
+            bucket = (int)Math.Round(bucket - adjust + bucket * adjust / 46.0);
+            if (bucket < 0) return;
+            foreach (ColorData colorData in _colorData)
+            {
+                int thisBucket = bucket * 4 / colorData.Spacing + colorData.Initial;
+                if (colorData.Spacing == 12)
+                    colorData[thisBucket] = Colors.Red;
+                else
+                    colorData[thisBucket] = pattern.GetColors()[inc];
+                if (thisBucket == 46)
+                {
+                    colorData[47] = pattern.GetColors()[inc];
+                    colorData[48] = pattern.GetColors()[inc];
+                    colorData[49] = pattern.GetColors()[inc];
+                }
+                if (count > 10000000)
+                {
+                    inc++;
+                    count = 0;
+                }
+                
+                if(inc >= pattern.GetColors().Count)
+                {
+                    inc = 0;
+                }
+
+                count++;
+            }
         }
 
         public IList<ColorData> AllColorData { get { return _colorData; } }

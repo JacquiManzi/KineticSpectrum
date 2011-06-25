@@ -25,7 +25,6 @@ namespace KineticControl
         public Patterns()
         {
             AllColors.Add(Colors.Aqua);
-            AllColors.Add(Colors.AliceBlue);
             AllColors.Add(Colors.Aquamarine);
             AllColors.Add(Colors.Blue);
             AllColors.Add(Colors.BlueViolet);
