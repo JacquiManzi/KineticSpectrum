@@ -133,6 +133,7 @@ namespace KinectAPI
 
         public int Id
         {
+            [DebuggerStepThrough]
             get { return _id; }
         }
 

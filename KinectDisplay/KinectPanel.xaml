@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="KinectDisplay.KinectPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="960">
+    <Grid>
+        <Image Name="camImg" Stretch="Fill"  Height="Auto" Width="Auto" MouseMove="UpdateDistance" MouseEnter="OnEnter" MouseLeave="OnExit" Margin="0,0,450,0"/>
+        <Label HorizontalAlignment="Left"  Margin="171,98,0,0" Name="ellipse1" Visibility="Hidden" VerticalAlignment="Top" Content="Words" Background="White" />
+        <Image Name="jaqinetik" Height="Auto" HorizontalAlignment="Right" Margin="480,0,0,0" Stretch="Fill" VerticalAlignment="Top" Width="Auto" />
+    </Grid>
+</UserControl>
