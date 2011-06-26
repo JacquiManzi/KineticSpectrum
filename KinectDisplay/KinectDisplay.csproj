@@ -84,6 +84,7 @@
     <Compile Include="BucketUpdater.cs" />
     <Compile Include="ChangeTracker.cs" />
     <Compile Include="Background.cs" />
+    <Compile Include="ForegroundCut.cs" />
     <Compile Include="ForegroundDetector.cs" />
     <Compile Include="KinectPanel.xaml.cs">
       <DependentUpon>KinectPanel.xaml</DependentUpon>

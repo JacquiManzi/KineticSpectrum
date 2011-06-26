@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Timers;
 
 namespace KinectAPI
 {
@@ -7,7 +8,28 @@ namespace KinectAPI
         public static readonly DeviceLoader Instance = new DeviceLoader();
         private static IList<Device> _devices;
 
-        private DeviceLoader() {}
+
+        private readonly Timer _timer;
+        private IList<Device> _cachedDevices = new List<Device>();
+
+        private DeviceLoader()
+        {
+            _timer = new Timer { Interval = 1000 / 30 };
+            _timer.Elapsed += (s, e) => Update();
+            _timer.Start();
+        }
+
+        private volatile bool updating = false;
+        private void Update()
+        {
+            if (updating) return;
+            updating = true;
+            foreach (Device cachedDevice in _cachedDevices)
+            {
+                cachedDevice.Update();
+            }
+            updating = false;
+        }
 
         public IList<Device> Devices
         {
@@ -36,10 +58,9 @@ namespace KinectAPI
                 {
                     _devices.Remove(d);
                 }
+                _cachedDevices = _devices;
                 return _devices;
             }
         }
-
-
     }
 }

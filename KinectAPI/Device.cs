@@ -12,7 +12,6 @@ namespace KinectAPI
     {
         private readonly int _id;
         private readonly string _serial;
-        private readonly Timer _timer;
         private LedMode _ledMode;
         
         private readonly Dictionary<CameraType, CameraRef> _cameraRefs;
@@ -29,9 +28,7 @@ namespace KinectAPI
             _id = id;
             _serial = serial;
             _cameraRefs = new Dictionary<CameraType, CameraRef>();
-            _timer = new Timer {Interval = 1000/30};
-            _timer.Elapsed += (s,e) => Update();
-
+           
             _ledMode = LedMode.Off;
             Motor = new Motor(serial);
             Accelerometer = new Accelerometer(Motor);
@@ -50,25 +47,25 @@ namespace KinectAPI
         #region Camera Methods
         public BitmapSource GetCamera(CameraType type, Dispatcher dispatcher, int timeoutMs = CameraRef.DEFAULT_TIMEOUT)
         {
-            return AllocateCamera(type, dispatcher, timeoutMs).BitmapSource;
+            return AllocateCamera(type, dispatcher,null, timeoutMs).BitmapSource;
         }
 
-        public ByteDepthMatrix GetDepthMatrix()
+        public ByteDepthMatrix GetDepthMatrix(Action action = null)
         {
-            return (ByteDepthMatrix)AllocateCamera(CameraType.DepthCorrected8, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
+            return (ByteDepthMatrix)AllocateCamera(CameraType.DepthCorrected8, null, action, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
         }
 
         public IntDepthMatrix GetColorDepthMatrix()
         {
-            return (IntDepthMatrix) AllocateCamera(CameraType.DepthRgb32, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
+            return (IntDepthMatrix) AllocateCamera(CameraType.DepthRgb32, null, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
         }
 
         public DistanceDepthMatrix GetDistanceDepthMatrix()
         {
-            return (DistanceDepthMatrix)AllocateCamera(CameraType.DepthRgb32, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
+            return (DistanceDepthMatrix)AllocateCamera(CameraType.DepthRgb32, null, null, CameraRef.DEFAULT_TIMEOUT).DepthMatrix;
         }
 
-        private CameraRef AllocateCamera(CameraType type, Dispatcher dispatcher, int timeoutMs)
+        private CameraRef AllocateCamera(CameraType type, Dispatcher dispatcher, Action action, int timeoutMs)
         {
             CameraRef cRef;
             lock (_cameraRefs)
@@ -84,17 +81,16 @@ namespace KinectAPI
 
                 if (!_cameraRefs.TryGetValue(type, out cRef))
                 {
-                    cRef = new CameraRef(type, this, dispatcher, timeoutMs);
+                    cRef = new CameraRef(type, this, dispatcher,action, timeoutMs);
                     _cameraRefs[type] = cRef;
                 }
-                _timer.Enabled = true;
                 if (!cRef.HasDispatcher) cRef.Dispatcher = dispatcher;
             }
 
             return cRef;
         }
 
-        private void Update()
+        internal void Update()
         {
             Dictionary<CameraType, CameraRef> refs; 
             lock(_cameraRefs)
@@ -119,7 +115,6 @@ namespace KinectAPI
                     _cameraRefs.Remove(cType);
                     if (_cameraRefs.Count == 0)
                     {
-                        _timer.Enabled = false;
                         KinectDevice.StopCamera(CameraPointer);
                         KinectDevice.DestroyCamera(CameraPointer);
                         CameraPointer = IntPtr.Zero;

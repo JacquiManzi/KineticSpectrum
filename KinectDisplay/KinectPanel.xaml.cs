@@ -44,10 +44,10 @@ namespace KinectDisplay
         private MemPointer _oldDestPointer;
         private MemPointer _oldSrcPointer;
 
-        private static IBGFGDetector<Gray> _fg;
+        private IBGFGDetector<Gray> _fg;
 
-        private static BlobDetector _blobDetect = new BlobDetector(480, 640, 400);
-        private static ObjectTracker _blobTrack = new ObjectTracker();
+        private BlobDetector _blobDetect = new BlobDetector(480, 640, 400);
+        private ObjectTracker _blobTrack = new ObjectTracker();
 
 
         public KinectPanel()
@@ -64,20 +64,30 @@ namespace KinectDisplay
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
 
             Console.WriteLine("Getting Basic Depth Matrix");
-            _matrix = Device.GetDepthMatrix();
+            processing = true;
+            _matrix = Device.GetDepthMatrix(Update);
+            Thread.Sleep(2000);
 
-            _fg = new ForegroundDetector<Gray>(_matrix.AsImage());
-            Task frameProcessor = new Task(()=>{
-                                                   Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-                                                   while(true){ ProcessFrame(); }
-                                               });
-            frameProcessor.Start();
+            //_fg = new ForegroundDetector<Gray>(_matrix.AsImage());
+            _fg = new ForegroundCut<Gray>(210);
+            processing = false;
+//            Task frameProcessor = new Task(()=>{
+//                                                   Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+//                                                   while(true){ ProcessFrame(); }
+//                                               });
+//            frameProcessor.Start();
         }
 
+        void Update()
+        {
+            if (!processing)
+                new Task(ProcessFrame).Start();
+        }
 
+        private volatile Boolean processing = false;
         void ProcessFrame()
         {
-            
+            processing = true;
             //UpdateDistance();
             //var frame = new Image<Bgr, byte>(GetBitmap32(_32bitSource));
             //frame._SmoothGaussian(9); //filter out noises
@@ -86,11 +96,11 @@ namespace KinectDisplay
             Image<Gray, byte> depthImage = _matrix.AsImage();
             
             
-            //_fg.Update(depthImage);
+            _fg.Update(depthImage);
 
             Image<Gray, byte> fgMask;
-            fgMask = depthImage;
-            //fgMask = _fg.ForgroundMask;
+            //fgMask = depthImage;
+            fgMask = _fg.ForgroundMask;
             //fgMask = depthImage.Canny(new Gray(100), new Gray(100));
             //_buckets.UpdateBuckets(fgMask, depthImage);
 
@@ -98,14 +108,14 @@ namespace KinectDisplay
             //colorImg._Dilate(5);
             //colorImg._SmoothGaussian(3);
             
-            //IList<Blob> blobs = _blobDetect.FindBlobs(fgMask);
-            //_blobTrack.Track(blobs);
+            IList<Blob> blobs = _blobDetect.FindBlobs(fgMask);
+            _blobTrack.Track(blobs);
            // fgMask = fgMask.CopyBlank();
 
-            //Blob.AddOutline(fgMask, blobs, Font);
+            Blob.AddOutline(fgMask, blobs, Font);
             
 
-            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
+            //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
 
             //BlobSeq newSeq = new BlobSeq();
 
@@ -127,8 +137,9 @@ namespace KinectDisplay
                         
             //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
 
-            Dispatcher.BeginInvoke(new Action(() => UpdateFirstImage(depthImage)));
-           // Dispatcher.BeginInvoke(new Action(() => UpdateSecondImage(fgMask)));
+            Dispatcher.Invoke(new Action(() => UpdateFirstImage(depthImage)));
+            Dispatcher.Invoke(new Action(() => UpdateSecondImage(fgMask)));
+            processing = false;
         }
 
         private void SetCamera(CameraType type)

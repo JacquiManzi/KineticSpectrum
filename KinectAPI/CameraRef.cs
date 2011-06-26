@@ -44,9 +44,10 @@ namespace KinectAPI
 
         private static readonly Size Resolution = new Size(640, 480);
 
-        internal CameraRef(CameraType type, Device refrencingCamera, Dispatcher dispatcher, int timeout) : base(IntPtr.Zero, true)
+        internal CameraRef(CameraType type, Device refrencingCamera, Dispatcher dispatcher, Action action, int timeout) : base(IntPtr.Zero, true)
         {
             Dispatcher = dispatcher;
+            Action = action;
             _refDevice = refrencingCamera;
             _timeout = timeout;
             _type = type;
@@ -56,6 +57,7 @@ namespace KinectAPI
         }
 
         internal Dispatcher Dispatcher { get; set; }
+        internal Action Action { get; set; }
         internal Boolean HasDispatcher { get { return Dispatcher != null; } }
 
         private static int CalcImageSize(CameraType type, int height, int width)
@@ -111,6 +113,7 @@ namespace KinectAPI
             }
             if(Dispatcher != null && bitmap != null)
                 Dispatcher.BeginInvoke((Action)(() => ((InteropBitmap) bitmap).Invalidate() ));
+            if (Action != null) Action.Invoke();
             return true;
         }
 

@@ -56,6 +56,7 @@ namespace KinectDisplay
 
             StackPanel grid = (StackPanel) Content;
             _panels = new List<KinectPanel>(devices.Count);
+            Height = 0;
 
             foreach(Device device in devices)
             {
