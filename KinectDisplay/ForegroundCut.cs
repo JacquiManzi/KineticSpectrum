@@ -37,7 +37,7 @@ namespace KinectDisplay
 
                    if(val < _threash && val > 40)
                    {
-                       diffData[i, j, 0] = 255;
+                       diffData[i, j, 0] = val;
                    }
                    else
                    {

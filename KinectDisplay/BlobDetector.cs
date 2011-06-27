@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Windows;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
@@ -27,6 +27,8 @@ namespace KinectDisplay
         {
             if(image.Height != _height || image.Width != _width)
                 throw new ArgumentException("Image dimentions don't match initialized dimentions");
+            image._Erode(2);
+            image._Dilate(4);
 
             IList<Blob> bList = new List<Blob>();
 
@@ -71,7 +73,7 @@ namespace KinectDisplay
             while(toProcess.Count > 0)
             {
                 Point p = toProcess.Dequeue();
-                x = p.X; y = p.Y;
+                x =(int) p.X; y =(int) p.Y;
                 area++;
                 _temp[y, x] = true;
                 int val = img[y, x, 0];
@@ -83,35 +85,35 @@ namespace KinectDisplay
                 
                 xsum += x; ysum += y; zsum += val;
 
-                if (x > 0 && Math.Abs(img[y, x - 1, 0]-val) < _tol && !_temp[y, x - 1])
+                if (x > 0 && !_temp[y, x - 1] && img[y, x - 1, 0] != 0)
                 {
                     _temp[y, x - 1] = true;
                     toProcess.Enqueue(new Point(x - 1, y));
                 }
-                if (x < width - 1 &&  Math.Abs(img[y, x + 1, 0]-val) < _tol && !_temp[y, x + 1])
+                if (x < width - 1 && !_temp[y, x + 1] && img[y, x + 1, 0] != 0)
                 {
                     _temp[y, x + 1] = true;
                     toProcess.Enqueue(new Point(x + 1, y));
                 }
-                if (y > 0 &&  Math.Abs(img[y-1, x, 0]-val) < _tol && !_temp[y - 1, x])
+                if (y > 0 && !_temp[y - 1, x] && img[y - 1, x, 0] != 0)
                 {
                     _temp[y - 1, x] = true;
                     toProcess.Enqueue(new Point(x, y - 1));
                 }
-                if (y < height - 1 &&  Math.Abs(img[y+1,x, 0]-val) < _tol && !_temp[y + 1, x])
+                if (y < height - 1 && !_temp[y + 1, x] && img[y + 1, x, 0] != 0)
                 {
                     _temp[y + 1, x] = true;
                     toProcess.Enqueue(new Point(x, y + 1));
                 }
             }
 
-            byte[,,] bData = new byte[ymax-ymin+1,xmax-xmin+1,1];
+            //byte[,,] bData = new byte[ymax-ymin+1,xmax-xmin+1,1];
             for (y = ymin; y <= ymax; y++)
                 for (x = xmin; x <= xmax; x++ )
                 {
                     if(_temp[y,x])
                     {
-                        bData[y - ymin, x - xmin, 0] = byte.MaxValue;
+                        //bData[y - ymin, x - xmin, 0] = byte.MaxValue;
                         _temp[y, x] = false;
                     }
                 }
@@ -123,10 +125,9 @@ namespace KinectDisplay
                 XMax = xmax,
                 YMax = ymax,
                 Area = area,
-                XCenter = xsum/area,
-                YCenter = ysum/area,
+                Center = new Point(xsum/area, ysum/area),
                 ZCenter = zsum/area,
-                BlobImg = new Image<Gray, byte>(bData)
+                //BlobImg = new Image<Gray, byte>(bData)
             };
         }
     }

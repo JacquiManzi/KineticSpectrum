@@ -1,25 +1,13 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using Emgu.CV.VideoSurveillance;
 using KinectAPI;
 using KineticControl;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using Point = System.Windows.Point;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace KinectDisplay
 {
@@ -89,6 +77,36 @@ namespace KinectDisplay
 //                                                   while(true){ ProcessFrame(); }
 //                                               });
 //            frameProcessor.Start();
+        }
+
+        private static volatile int _recCount = default(int);
+        private static volatile bool _reconciling = false;
+        public static void ReconcileBlobs()
+        {
+            int noPanels = _panels.Count;
+            if (++_recCount < noPanels || _reconciling) return;
+            _reconciling = true;
+
+            for(int i=0; i < (noPanels-1); i++)
+            {
+                IList<Blob> baseBlobs = _panels[i].Blobs;
+                CameraTransform baseTransform = _panels[i].CameraTransform;
+
+                for(int j=i+1; j < noPanels; j++)
+                {
+                    IList<Blob> compBlobs = _panels[j].Blobs;
+                    CameraTransform compTransform = _panels[j].CameraTransform;
+                    foreach (Blob b in baseBlobs)
+                    {
+                        Blob xformd = baseTransform.TransformBlob(b);
+                        Blob closest = xformd.ClosestBlob(compTransform, compBlobs);
+                        if(closest != null)
+                            b.MergeBlobs(closest);
+                    }
+                }
+            }
+            _recCount = 0;
+            _reconciling = false;
         }
     }
 }

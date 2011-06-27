@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Emgu.CV;
-using Emgu.CV.Structure;
+﻿using System.Collections.Generic;
 
 namespace KinectDisplay
 {
     public class ObjectTracker
     {
         private IList<Blob> _blobs;
-        private int _objCount = 0;
+        private static int _objCount = default(int);
 
 
         public ObjectTracker()
@@ -20,25 +15,34 @@ namespace KinectDisplay
 
         public void Track(IList<Blob> newBlobs)
         {
+            IList<Blob> bList = new List<Blob>();
             foreach(Blob newBlob in newBlobs)
             {
                 Blob closestMatch = null;
-                int maxScore=0;
+                double maxScore=0;
 
                 foreach(Blob blob in _blobs)
                 {
-                    int score = (int) ( (blob.OverlapPercent(newBlob) + 
-                                         newBlob.OverlapPercent(blob)  ) * 100 );
+                    double score = blob.Score(newBlob);
+                    
                     if(score > maxScore)
                     {
                         maxScore = score;
                         closestMatch = blob;
                     }
                 }
-
-                newBlob.Name = (closestMatch == null ? (_objCount++).ToString() : closestMatch.Name);
+                if(closestMatch == null)
+                {
+                    newBlob.Name = (_objCount++).ToString();
+                    bList.Add(newBlob);
+                }
+                else
+                {
+                    closestMatch.AbsorbDimentionsOf(newBlob);
+                    bList.Add(closestMatch);
+                }
             }
-            _blobs = newBlobs;
+            _blobs = bList;
         }
 
         public IList<Blob> Blobs { get { return _blobs; } }

@@ -8,14 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
 using KinectAPI;
-using KineticControl;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -36,6 +32,9 @@ namespace KinectDisplay
         public Device Device;
         public MCvFont Font;
         public int Position = 0;
+        public CameraTransform CameraTransform;
+
+        public IList<Blob> Blobs;
 
         private ByteDepthMatrix _matrix;
         //private readonly IntDepthMatrix _imgMatrix;
@@ -46,8 +45,8 @@ namespace KinectDisplay
 
         private IBGFGDetector<Gray> _fg;
 
-        private BlobDetector _blobDetect = new BlobDetector(480, 640, 400);
-        private ObjectTracker _blobTrack = new ObjectTracker();
+        private readonly BlobDetector _blobDetect = new BlobDetector(480, 640, 400);
+        private readonly ObjectTracker _blobTrack = new ObjectTracker();
 
 
         public KinectPanel()
@@ -59,6 +58,8 @@ namespace KinectDisplay
         {
             Device.Motor.Position = 0;//short.MaxValue/4;//*/ short.MinValue / 4;
             Console.WriteLine("Reading Camera Data...");
+
+            CameraTransform = CameraTransform.Transforms[Device.Serial];
             //SetCamera(CameraType.DepthRgb32);
             //_source = Device.GetCamera(CameraType.DepthCorrected8, Dispatcher);
             //((BitmapSource) camImg.Source).Changed += new EventHandler((object obj, EventArgs args) => ProcessFrame());
@@ -66,10 +67,10 @@ namespace KinectDisplay
             Console.WriteLine("Getting Basic Depth Matrix");
             processing = true;
             _matrix = Device.GetDepthMatrix(Update);
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
 
             //_fg = new ForegroundDetector<Gray>(_matrix.AsImage());
-            _fg = new ForegroundCut<Gray>(210);
+            _fg = new ForegroundCut<Gray>(220);
             processing = false;
 //            Task frameProcessor = new Task(()=>{
 //                                                   Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
@@ -84,6 +85,7 @@ namespace KinectDisplay
                 new Task(ProcessFrame).Start();
         }
 
+//        private static volatile int _frames = 0;
         private volatile Boolean processing = false;
         void ProcessFrame()
         {
@@ -95,7 +97,7 @@ namespace KinectDisplay
             //_detector.Update(frame);
             Image<Gray, byte> depthImage = _matrix.AsImage();
             
-            
+            //depthImage._Dilate(2);
             _fg.Update(depthImage);
 
             Image<Gray, byte> fgMask;
@@ -110,9 +112,20 @@ namespace KinectDisplay
             
             IList<Blob> blobs = _blobDetect.FindBlobs(fgMask);
             _blobTrack.Track(blobs);
-           // fgMask = fgMask.CopyBlank();
+            Blobs = _blobTrack.Blobs;
 
-            Blob.AddOutline(fgMask, blobs, Font);
+//            _frames++;
+//
+//                if ((DateTime.Now - _lastRec).Seconds > 5)
+//                {
+//                    Console.WriteLine(_frames/5);
+//                    _frames = 0;
+//                    _lastRec = DateTime.Now;
+//                }
+
+            // fgMask = fgMask.CopyBlank();
+
+            Blob.AddOutline(fgMask, Blobs, Font);
             
 
             //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(CheckKeys));
@@ -137,8 +150,14 @@ namespace KinectDisplay
                         
             //            camImg.Source = _source;//GetBitmap(frame.Bitmap);
 
-            Dispatcher.Invoke(new Action(() => UpdateFirstImage(depthImage)));
-            Dispatcher.Invoke(new Action(() => UpdateSecondImage(fgMask)));
+            Dispatcher.Invoke(new Action(() =>
+                                             {
+                                                 UpdateFirstImage(depthImage);
+                                                 UpdateSecondImage(fgMask);
+                                             }));
+
+            MainWindow.ReconcileBlobs();
+
             processing = false;
         }
 
