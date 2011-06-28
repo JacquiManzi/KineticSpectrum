@@ -41,7 +41,7 @@ namespace KineticCalibration
                 }
                 else
                 {
-                    Image fst = _images.GetEnumerator().Current;
+                    Image fst = _images[0];
                     double x = led.LedPosition.X*fst.ActualWidth/640.0;
                     double y = led.LedPosition.Y*fst.ActualHeight/480.0;
                     marker.Transform(x,y);
@@ -117,7 +117,6 @@ namespace KineticCalibration
 
         internal LedMarker(Led led, Border borderBase)
         {
-            _isSelected = true;
             _border = borderBase;
             Led = led;
             Img.MaxHeight = 4;
@@ -126,6 +125,7 @@ namespace KineticCalibration
             Img.MouseLeftButtonUp += ImageMouseLeftButtonUp;
             Img.MouseMove += ImageMouseMove;
             Img.RenderTransform = new TranslateTransform();
+            IsSelected = true;
         }
 
         public bool IsSelected

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -43,6 +44,8 @@ namespace KineticCalibration
                 Fixture2.Items.Add(lType);
             }
             InitializeVideo();
+
+            Network.GetInstance().SetInterface("Local Area Connection");
             //Grid grid = (Grid)Content;
             //PDS60ca pds = new PDS60ca();
             //pds.SetColorData1(LightType.Short);
@@ -55,14 +58,18 @@ namespace KineticCalibration
 
         private void UpdateLights()
         {
-           foreach(PDS60ca pds in PowerSupplies.Items )
+           PDS60ca[] pdss = new PDS60ca[PowerSupplies.Items.Count];
+           PowerSupplies.Items.CopyTo(pdss,0);
+
+           foreach(PDS60ca pds in pdss )
            {
                try
                {
                    if(pds.EndPoint.Address != System.Net.IPAddress.Any)
                         pds.UpdateSystem();
                }
-               catch(SocketException se){}
+               catch(SocketException se)
+               {}
            }
         }
 
@@ -211,11 +218,11 @@ namespace KineticCalibration
             {
                 if (_selectedPds.Data2.LightType != (LightType)Fixture2.SelectedItem)
                 {
-                    _selectedPds.SetColorData2((LightType) Fixture1.SelectedItem);
+                    _selectedPds.SetColorData2((LightType) Fixture2.SelectedItem);
                 }
                 if (LedGroup2 != null)
                     LedGroup2.CleanUp((Grid) Content);
-                LedGroup2 = new LedGroup(_selectedPds.Data1.Leds, (Grid)Content, Border, 20, _imgToDev.Keys);
+                LedGroup2 = new LedGroup(_selectedPds.Data2.Leds, (Grid)Content, Border, 20, _imgToDev.Keys);
             }
         }
 

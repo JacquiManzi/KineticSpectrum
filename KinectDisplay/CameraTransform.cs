@@ -14,7 +14,11 @@ namespace KinectDisplay
             Transforms = new Dictionary<String,CameraTransform>();
             CameraTransform t = new CameraTransform("779722104935", new Matrix());
             Transforms.Add(t.Serial, t);
-            t = new CameraTransform("135875605138", new Matrix(1, 0, 0, 1, -253.866666666667, -59.7333333333333));
+            //t = new CameraTransform("135875605138", new Matrix(1, 0, 0, 1, -253.866666666667, -59.7333333333333));
+            Matrix matrix = new Matrix(0.999061302243977, -0.043318752966462, 0.043318752966462, 0.999061302243977,
+                                       -258.133333333333, -64);
+            matrix.Invert();
+            t = new CameraTransform("135875605138", matrix);
             Transforms.Add(t.Serial, t);
         }
 

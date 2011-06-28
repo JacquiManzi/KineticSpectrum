@@ -43,7 +43,7 @@ namespace KineticControl
         {
             if(Data1.LightType != LightType.None)
                 _network.SendUpdate(EndPoint, Data1);
-            if(Data1.LightType != LightType.None)
+            if(Data2.LightType != LightType.None)
                 _network.SendUpdate(EndPoint, Data2);
         }
 
@@ -58,7 +58,8 @@ namespace KineticControl
         }
 
         private const String INITAL_HEX =  "0401dc4a01000801000000000000000002ef00000002f0ff";
-        private const String INTIAL_HEX2 = "0401dc4a010008010000000000000000011b00000002f0ff";
+        private const String INTIAL_HEX2 = //"0401dc4a010008010000000000000000011b00000002f0ff";
+                                           "0401dc4a010001010000000000000000ffffffff00";
 
         public static byte[] InitialHex
         {

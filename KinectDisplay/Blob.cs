@@ -91,6 +91,10 @@ namespace KinectDisplay
                 {
                     other.SetProperties(this);
                 }
+                else
+                {
+                    SetProperties(other);
+                }
             }
         }
 
