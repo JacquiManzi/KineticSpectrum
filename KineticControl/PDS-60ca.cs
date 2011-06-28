@@ -7,24 +7,42 @@ namespace KineticControl
     public class PDS60ca : PDS
     {
         private readonly Network _network;
-        private readonly IPEndPoint _endPoint;
-        
+        public IPEndPoint EndPoint { get; set; }
 
-        private readonly ColorData _data1;
-        private readonly ColorData _data2;
+
+        public ColorData Data1 { get; private set; }
+        public ColorData Data2 { get; private set; }
+
+        public PDS60ca()
+        {
+            _network = Network.GetInstance();
+            Data1 = new ColorData(InitialHex, LightType.None);
+            Data2 = new ColorData(InitialHex2, LightType.None);
+            EndPoint = new IPEndPoint(IPAddress.IPv6None, 6038);
+        }
 
         public PDS60ca(Network network, IPEndPoint endPoint)
         {
             _network = network;
-            _endPoint = endPoint;
-            _data1 = new ColorData(IntialHex, 50);
-            _data2 = new ColorData(IntialHex2, 50);
+            EndPoint = endPoint;
+            Data1 = new ColorData(InitialHex, LightType.Short);
+            Data2 = new ColorData(InitialHex2, LightType.Short);
+        }
+
+        public void SetColorData1(LightType lightType)
+        {
+            Data1 = new ColorData(InitialHex, lightType);
+        }
+
+        public void SetColorData2(LightType lightType)
+        {
+            Data2 = new ColorData(InitialHex2, lightType); 
         }
 
         public void UpdateSystem()
         {
-            _network.SendUpdate(_endPoint, _data1);
-            _network.SendUpdate(_endPoint, _data2);
+            _network.SendUpdate(EndPoint, Data1);
+            _network.SendUpdate(EndPoint, Data2);
         }
 
         public string getType()
@@ -32,26 +50,28 @@ namespace KineticControl
             return "PDS60ca";
         }
 
-
-        public ColorData FixtureOne { get { return _data1; } }
-        public ColorData FixtureTwo { get { return _data2; } }
-        private const String _initalHex =  "0401dc4a01000801000000000000000002ef00000002f0ff";
-        private const String _intialHex2 = "0401dc4a010008010000000000000000011b00000002f0ff";
-
-        public static byte[] IntialHex
+        public override string ToString()
         {
-            get { return HexStrings.DecodeString(_initalHex); }
+            return getType() + EndPoint.Address;
         }
 
-        public static byte[] IntialHex2
+        private const String INITAL_HEX =  "0401dc4a01000801000000000000000002ef00000002f0ff";
+        private const String INTIAL_HEX2 = "0401dc4a010008010000000000000000011b00000002f0ff";
+
+        public static byte[] InitialHex
         {
-            get { return HexStrings.DecodeString(_intialHex2); }
+            get { return HexStrings.DecodeString(INITAL_HEX); }
+        }
+
+        public static byte[] InitialHex2
+        {
+            get { return HexStrings.DecodeString(INTIAL_HEX2); }
         }
 
 
         public IList<ColorData> AllColorData
         {
-            get { return new List<ColorData>(){_data1, _data2}; }
+            get { return new List<ColorData>{Data1, Data2}; }
         }
     }
 }

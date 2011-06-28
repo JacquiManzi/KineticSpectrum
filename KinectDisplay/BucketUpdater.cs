@@ -82,8 +82,8 @@ namespace KinectDisplay
 
             foreach (ColorData colorData in _colorData)
             {
-                int thisBucket = bucket*4/colorData.Spacing + colorData.Initial;
-                if (colorData.Spacing == 12)
+                int thisBucket = bucket*4/colorData.LightType.Spacing + colorData.Initial;
+                if (colorData.LightType.Spacing == 12)
                     colorData[thisBucket] = Colors.Red;
                 else
                     colorData[thisBucket] = Colors.Red;

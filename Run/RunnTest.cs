@@ -9,7 +9,7 @@ namespace KineticControl
         public static void Main()
         {
             NetworkInterface card;
-            Network network = new Network();
+            Network network = Network.GetInstance();
 
             network.RetrieveNetworkCards();
 			//            var cards = Network.RetrieveNetworkCards();

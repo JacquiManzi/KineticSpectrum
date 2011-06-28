@@ -9,7 +9,7 @@ namespace KineticControl
     public class PDS150e : PDS
     {
         private readonly Network _network;
-        private readonly IPEndPoint _endPoint;
+        private IPEndPoint _endPoint;
         
 
         private readonly ColorData _data1;
@@ -18,7 +18,7 @@ namespace KineticControl
         {
             _network = network;
             _endPoint = endPoint;
-            _data1 = new ColorData(IntialHex, 50,14, 5);
+            _data1 = new ColorData(IntialHex,new LightType(){Name = "Accent List", NoLights = 50, Spacing=14}, 5);
         }
 
         public void UpdateSystem()
@@ -29,6 +29,12 @@ namespace KineticControl
         public string getType()
         {
             return "PDS150e";
+        }
+
+        public IPEndPoint EndPoint
+        {
+            get { return _endPoint; }
+            set { _endPoint = value; }
         }
 
 

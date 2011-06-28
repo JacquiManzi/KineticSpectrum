@@ -44,7 +44,6 @@ namespace KinectDisplay
 
             StackPanel grid = (StackPanel) Content;
             _panels = new List<KinectPanel>(devices.Count);
-            Height = 0;
 
             foreach(Device device in devices)
             {
@@ -63,7 +62,7 @@ namespace KinectDisplay
         {
             Thread.Sleep(2000);
             Console.WriteLine("Setting Up Network...");
-            _network = Network.GetInstance();
+            _network = new Network();
             Console.WriteLine("Setting Network Inerface...");
             _network.SetInterface("Local Area Connection");
             Console.WriteLine("Searching for Power Supplies...");
@@ -77,36 +76,6 @@ namespace KinectDisplay
 //                                                   while(true){ ProcessFrame(); }
 //                                               });
 //            frameProcessor.Start();
-        }
-
-        private static volatile int _recCount = default(int);
-        private static volatile bool _reconciling = false;
-        public static void ReconcileBlobs()
-        {
-            int noPanels = _panels.Count;
-            if (++_recCount < noPanels || _reconciling) return;
-            _reconciling = true;
-
-            for(int i=0; i < (noPanels-1); i++)
-            {
-                IList<Blob> baseBlobs = _panels[i].Blobs;
-                CameraTransform baseTransform = _panels[i].CameraTransform;
-
-                for(int j=i+1; j < noPanels; j++)
-                {
-                    IList<Blob> compBlobs = _panels[j].Blobs;
-                    CameraTransform compTransform = _panels[j].CameraTransform;
-                    foreach (Blob b in baseBlobs)
-                    {
-                        Blob xformd = baseTransform.TransformBlob(b);
-                        Blob closest = xformd.ClosestBlob(compTransform, compBlobs);
-                        if(closest != null)
-                            b.MergeBlobs(closest);
-                    }
-                }
-            }
-            _recCount = 0;
-            _reconciling = false;
         }
     }
 }

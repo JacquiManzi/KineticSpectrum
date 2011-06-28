@@ -16,9 +16,9 @@ using KinectAPI;
 namespace CalibrateVideo
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for VideoCalibrationWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class VideoCalibrationWindow : Window
     {
 
         private Point origin;
@@ -26,7 +26,7 @@ namespace CalibrateVideo
 
         private Dictionary<Image, Device> _imgToDev = new Dictionary<Image, Device>();
         private Image _selectedImage;
-        public MainWindow()
+        public VideoCalibrationWindow()
         {
             InitializeComponent();
             
