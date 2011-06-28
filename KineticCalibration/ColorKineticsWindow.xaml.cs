@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,6 +28,8 @@ namespace KineticCalibration
         private LedGroup LedGroup1;
         private LedGroup LedGroup2;
 
+        private Timer _timer;
+
         private readonly Dictionary<Image, Device> _imgToDev;
 
         public ColorKineticsWindow()
@@ -43,6 +47,23 @@ namespace KineticCalibration
             //PDS60ca pds = new PDS60ca();
             //pds.SetColorData1(LightType.Short);
             //LedGroup gr = new LedGroup(pds.Data1.Leds,grid, Border,1,_imgToDev.Keys);
+            _timer = new Timer(1000/30);
+            _timer.Elapsed += (s,e)=>UpdateLights();
+            _timer.Enabled = true;
+
+        }
+
+        private void UpdateLights()
+        {
+           foreach(PDS60ca pds in PowerSupplies.Items )
+           {
+               try
+               {
+                   if(pds.EndPoint.Address != System.Net.IPAddress.Any)
+                        pds.UpdateSystem();
+               }
+               catch(SocketException se){}
+           }
         }
 
         private void ResizeHandler()
@@ -165,10 +186,11 @@ namespace KineticCalibration
             if (System.Net.IPAddress.TryParse(IPAddress.Text, out ipAddress))
             {
                 _selectedPds.EndPoint = new IPEndPoint(ipAddress, _selectedPds.EndPoint.Port);
-                int index = PowerSupplies.Items.IndexOf(_selectedPds);
-                PowerSupplies.Items.Remove(_selectedPds);
-                PowerSupplies.Items.Insert(index, _selectedPds);
-                PowerSupplies.SelectedItem = _selectedPds;
+                PowerSupplies.Items.Refresh();
+//                int index = PowerSupplies.Items.IndexOf(_selectedPds);
+//                PowerSupplies.Items.Remove(_selectedPds);
+//                PowerSupplies.Items.Insert(index, _selectedPds);
+//                PowerSupplies.SelectedItem = _selectedPds;
             }
         }
 
@@ -180,6 +202,8 @@ namespace KineticCalibration
                 {
                     _selectedPds.SetColorData1((LightType) Fixture1.SelectedItem);
                 }
+                if (LedGroup1 != null)
+                    LedGroup1.CleanUp((Grid)Content);
                 LedGroup1 = new LedGroup(_selectedPds.Data1.Leds,(Grid)Content, Border, 0, _imgToDev.Keys);
             }
 
@@ -189,6 +213,8 @@ namespace KineticCalibration
                 {
                     _selectedPds.SetColorData2((LightType) Fixture1.SelectedItem);
                 }
+                if (LedGroup2 != null)
+                    LedGroup2.CleanUp((Grid) Content);
                 LedGroup2 = new LedGroup(_selectedPds.Data1.Leds, (Grid)Content, Border, 20, _imgToDev.Keys);
             }
         }

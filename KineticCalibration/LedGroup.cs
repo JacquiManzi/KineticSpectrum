@@ -16,7 +16,7 @@ namespace KineticCalibration
         internal static readonly BitmapImage RedSquare = new BitmapImage(new Uri(Environment.CurrentDirectory + @"\redSquare.png"));
         //private readonly List<Led> _leds;
         private readonly IList<LedMarker> _markers;
-        private IEnumerable<Image> _images;
+        private IList<Image> _images;
 
 
         public LedGroup(IList<Led> leds, Grid grid, Border border, int no, IEnumerable<Image> images)
@@ -24,7 +24,7 @@ namespace KineticCalibration
             _markers = new List<LedMarker>(leds.Count);
             double starty = 8*25;
             double startx = 380 + no;
-            _images = images;
+            _images = new List<Image>(images);
             foreach (Led led in leds)
             {
                 LedMarker marker = new LedMarker(led, border);
@@ -63,13 +63,15 @@ namespace KineticCalibration
             {
                 led.LedPosition = new LedPosition();
             }
-            Image fst = _images.GetEnumerator().Current;
+            Image fst = _images[0];
             led.LedPosition.X = sender.X*640.0/fst.ActualWidth;
             led.LedPosition.Y = sender.Y*480.0/fst.ActualHeight;
             led.LedPosition.External = true;
+            Point pt = new Point(sender.Img.RenderTransform.Value.OffsetX, sender.Img.RenderTransform.Value.OffsetY);
             foreach (Image image in _images)
             {
-                if (image.IsMouseOver)
+                image.Focus();
+                if (null != image.InputHitTest(pt))
                 {
                     led.LedPosition.External = false;
                     break;
@@ -84,6 +86,14 @@ namespace KineticCalibration
                 if (marker != ledMarker)
                     ledMarker.IsSelected = false;
             } 
+        }
+
+        public void CleanUp(Grid grid)
+        {
+            foreach (LedMarker ledMarker in _markers)
+            {
+                grid.Children.Remove(ledMarker.Img);
+            }
         }
     }
 

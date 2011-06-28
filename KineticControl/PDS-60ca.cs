@@ -18,7 +18,7 @@ namespace KineticControl
             _network = Network.GetInstance();
             Data1 = new ColorData(InitialHex, LightType.None);
             Data2 = new ColorData(InitialHex2, LightType.None);
-            EndPoint = new IPEndPoint(IPAddress.IPv6None, 6038);
+            EndPoint = new IPEndPoint(IPAddress.Any, 6038);
         }
 
         public PDS60ca(Network network, IPEndPoint endPoint)
@@ -41,8 +41,10 @@ namespace KineticControl
 
         public void UpdateSystem()
         {
-            _network.SendUpdate(EndPoint, Data1);
-            _network.SendUpdate(EndPoint, Data2);
+            if(Data1.LightType != LightType.None)
+                _network.SendUpdate(EndPoint, Data1);
+            if(Data1.LightType != LightType.None)
+                _network.SendUpdate(EndPoint, Data2);
         }
 
         public string getType()
