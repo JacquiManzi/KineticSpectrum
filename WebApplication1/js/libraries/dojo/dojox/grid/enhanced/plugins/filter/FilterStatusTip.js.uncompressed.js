@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/grid/enhanced/templates/FilterStatusPane.html':"<div class=\"dojoxGridFStatusTip\"\n\t><div class=\"dojoxGridFStatusTipHead\"\n\t\t><span class=\"dojoxGridFStatusTipTitle\" dojoAttachPoint=\"statusTitle\"></span\n\t\t><span class=\"dojoxGridFStatusTipRel\" dojoAttachPoint=\"statusRel\"></span\n\t></div\n\t><div class=\"dojoxGridFStatusTipDetail\" dojoAttachPoint=\"statusDetailNode\"\n\t></div\n></div>\n"}});
 define("dojox/grid/enhanced/plugins/filter/FilterStatusTip", [
 	"dojo/_base/declare",
 	"dojo/_base/array",
@@ -144,3 +142,5 @@ define("dojox/grid/enhanced/plugins/filter/FilterStatusTip", [
 		}
 	});
 });
+require({cache:{
+'url:dojox/grid/enhanced/templates/FilterStatusPane.html':"<div class=\"dojoxGridFStatusTip\"\n\t><div class=\"dojoxGridFStatusTipHead\"\n\t\t><span class=\"dojoxGridFStatusTipTitle\" dojoAttachPoint=\"statusTitle\"></span\n\t\t><span class=\"dojoxGridFStatusTipRel\" dojoAttachPoint=\"statusRel\"></span\n\t></div\n\t><div class=\"dojoxGridFStatusTipDetail\" dojoAttachPoint=\"statusDetailNode\"\n\t></div\n></div>\n"}});

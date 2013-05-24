@@ -6,8 +6,9 @@ define("dojox/mobile/FixedSplitter", [
 	"dojo/dom-geometry",
 	"dijit/_Contained",
 	"dijit/_Container",
-	"dijit/_WidgetBase"
-], function(array, declare, win, domClass, domGeometry, Contained, Container, WidgetBase){
+	"dijit/_WidgetBase",
+	"dojo/has"
+], function(array, declare, win, domClass, domGeometry, Contained, Container, WidgetBase, has){
 
 	// module:
 	//		dojox/mobile/FixedSplitter
@@ -80,9 +81,9 @@ define("dojox/mobile/FixedSplitter", [
 			if(!parent || !parent.resize){ // top level widget
 				var _this = this;
 				f = function(){
-					setTimeout(function(){
+					_this.defer(function(){
 						_this.resize();
-					}, 0);
+					});
 				};
 			}
 
@@ -125,13 +126,24 @@ define("dojox/mobile/FixedSplitter", [
 			c = children[idx];
 			domGeometry.setMarginBox(c, props2);
 			c.style[this.orientation === "H" ? "height" : "width"] = "";
-
-			for(i = 0; i < children.length; i++){
-				c = children[i];
-				props1[tl] = offset;
-				domGeometry.setMarginBox(c, props1);
-				c.style[this.orientation === "H" ? "top" : "left"] = "";
-				offset += a[i];
+			// dojox.mobile mirroring support
+			if(has("dojo-bidi") && (this.orientation=="H" && !this.isLeftToRight())){
+				offset = l;
+				for(i = children.length - 1; i >= 0; i--){
+					c = children[i];
+					props1[tl] = l - offset;
+					domGeometry.setMarginBox(c, props1);
+					c.style[this.orientation === "H" ? "top" : "left"] = "";
+					offset -= a[i];
+				}
+			}else{
+				for(i = 0; i < children.length; i++){
+					c = children[i];
+					props1[tl] = offset;
+					domGeometry.setMarginBox(c, props1);
+					c.style[this.orientation === "H" ? "top" : "left"] = "";
+					offset += a[i];
+				}
 			}
 
 			array.forEach(this.getChildren(), function(child){

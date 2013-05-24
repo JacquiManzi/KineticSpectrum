@@ -31,6 +31,10 @@ define("dojox/calendar/_RendererMixin", ["dojo/_base/declare", "dojo/_base/lang"
 		//		Indicates that the item displayed by this renderer is selected.
 		selected: false,
 		
+		// storeState: Boolean
+		//		Indicates that the item displayed by this renderer is not in the store, being saved to the store or in the store.
+		storeState: false,
+		
 		// moveEnabled: Boolean
 		//		Whether the event displayed by this renderer can be moved.
 		moveEnabled: true,
@@ -52,7 +56,7 @@ define("dojox/calendar/_RendererMixin", ["dojo/_base/declare", "dojo/_base/lang"
 			endTimeLabel: 50
 		},		
 		
-		_setSelectedAttr: function(value){
+		_setSelectedAttr: function(value){			
 			this._setState("selected", value, "Selected");
 		},
 		
@@ -68,10 +72,33 @@ define("dojox/calendar/_RendererMixin", ["dojo/_base/declare", "dojo/_base/lang"
 			this._setState("hovered", value, "Hovered");
 		},
 		
+		_setStoreStateAttr: function(value){
+			var cssClass = null;
+			switch(value){
+				case "storing":
+					cssClass = "Storing";
+					break;
+				case "unstored":
+					cssClass = "Unstored";
+					break;
+				default:
+					cssClass = null;
+			}
+			var tn = this.stateNode || this.domNode;				
+			domClass.remove(tn, "Storing");
+			domClass.remove(tn, "Unstored");
+			
+			this._set("storeState", value);
+			
+			if(cssClass != null){		
+				domClass.add(tn, cssClass);
+			}
+		},
+		
 		_setState: function(prop, value, cssClass){
 			if(this[prop] != value){
-				var tn = this.stateNode || this.domNode;
-				domClass[value ? "add" : "remove"](tn, cssClass);
+				var tn = this.stateNode || this.domNode;				
+				domClass[value ? "add" : "remove"](tn, cssClass);			
 				this._set(prop, value);
 			}	
 		},
@@ -132,7 +159,7 @@ define("dojox/calendar/_RendererMixin", ["dojo/_base/declare", "dojo/_base/lang"
 			//		The size of the item renderer on the time axis. 
 			// tags:
 			//		protected
-			var visible = true;
+			var visible;
 			var limit = this.visibilityLimits[elt];
 			
 			switch(elt){

@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/calendar/templates/MonthColumnView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\t\t\n\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div data-dojo-attach-point=\"vScrollBar\" class=\"dojoxCalendarVScrollBar\">\n\t\t<div data-dojo-attach-point=\"vScrollBarContent\" style=\"visibility:hidden;position:relative; width:1px; height:1px;\" ></div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"scrollContainer\" class=\"dojoxCalendarScrollContainer\">\n\t\t<div data-dojo-attach-point=\"sheetContainer\" style=\"position:relative;left:0;right:0;margin:0;padding:0\">\t\t\t\n\t\t\t<div data-dojo-attach-point=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t</div> \n\t</div>\t\n</div>\n"}});
 define("dojox/calendar/MonthColumnView", [
 "./ViewBase", 
 "dijit/_TemplatedMixin", 
@@ -310,7 +308,7 @@ function(
 			var len = "wide";
 			
 			if(this.columnHeaderFormatLength){
-				len = this.columnHeaderFormatLength
+				len = this.columnHeaderFormatLength;
 			}
 			
 			var months = this.renderData.dateLocaleModule.getNames("months", len, "standAlone");
@@ -384,7 +382,7 @@ function(
 			//		private
 			
 			if(date < 1){
-				date = 1
+				date = 1;
 			}else if(date>31){
 				date = 31;
 			}
@@ -529,6 +527,13 @@ function(
 		},
 		
 		_configureScrollBar: function(renderData){
+			// summary:
+			//		Sets the scroll bar size and position.
+			// renderData: Object
+			//		The render data.
+			// tags:
+			//		protected
+			
 			if(has("ie") && this.scrollBar){
 				domStyle.set(this.scrollBar.domNode, "width", (renderData.scrollbarWidth + 1) + "px");
 			}
@@ -812,8 +817,6 @@ function(
 
 			query("tr", table).forEach(function (tr, row){
 				
-				//domStyle.set(tr, "height", this._getRowHeight(row) + "px");
-				
 				tr.className = "";
 				// compatibility layer for IE7 & 8 that does not support :first-child and :last-child pseudo selectors
 				if(row == 0){
@@ -850,29 +853,65 @@ function(
 
 		},
 		
-		styleGridCell: function(node, date, col, row, renderData){
+		// styleGridCellFunc: Function
+		//		Custom function to customize the appearance of a grid cell by installing custom CSS class on the node.
+		//		The signature of the function must be the same then the styleGridCell one.
+		//		By default the defaultStyleGridCell function is used.
+		styleGridCellFunc: null,
+		
+		defaultStyleGridCell: function(node, date, col, row, renderData){
 			// summary:
 			//		Styles the CSS classes to the node that displays a column.
-			//		By default this method is setting the "dojoxCalendarToday" class name if the 
-			//		date displayed is the current date or "dojoxCalendarWeekend" if the date represents a weekend.
+			//		By default this method is setting the following CSS classes:
+			//		- "dojoxCalendarToday" class name if the date displayed is the current date,
+			//		- "dojoxCalendarWeekend" if the date represents a weekend,
+			//		- the CSS class corresponding of the displayed day of week ("Sun", "Mon" and so on),
 			// node: Node
-			//		The DOM node that displays the column in the grid.
+			//		The DOM node that displays the cell in the grid.
 			// date: Date
-			//		The date displayed by this column
+			//		The date displayed by this cell.
+			// col: Integer
+			//		The column index of this cell.
+			// row: Integer
+			//		The row index of this cell.
 			// renderData: Object
 			//		The render data.
 			// tags:
 			//		protected
-
-			var cal = renderData.dateModule;
+			
 			if(date == null){
 				return;
 			}
+			domClass.add(node, this._cssDays[date.getDay()]);
 			if(this.isToday(date)){				
 				domClass.add(node, "dojoxCalendarToday");
 			}else if(this.isWeekEnd(date)){
 				domClass.add(node, "dojoxCalendarWeekend");
 			}					
+		},
+		
+		styleGridCell: function(node, date, col, row, renderData){
+			// summary:
+			//		Styles the CSS classes to the node that displays a column.
+			//		Delegates to styleGridCellFunc if defined or defaultStyleGridCell otherwise.
+			// node: Node
+			//		The DOM node that displays the cell in the grid.
+			// date: Date
+			//		The date displayed by this cell.
+			// col: Integer
+			//		The column index of this cell.
+			// row: Integer
+			//		The row index of this cell.
+			// renderData: Object
+			//		The render data.
+			// tags:
+			//		protected
+
+			if(this.styleGridCellFunc){
+				this.styleGridCellFunc(node, date, col, row, renderData);
+			}else{
+				this.defaultStyleGridCell(node, date, col, row, renderData);
+			}				
 		},
 							
 		_buildItemContainer: function(renderData, oldRenderData){
@@ -1057,7 +1096,7 @@ function(
 			//		private
 
 			var pos = 0;
-			if(start){
+			if(start || d.getHours() != 0 || d.getMinutes() != 0){
 				pos = (d.getDate()-1) * this.renderData.daySize;
 			}else{
 				var d2 = this._waDojoxAddIssue(d, "day", -1);
@@ -1141,16 +1180,19 @@ function(
 				var selected = this.isItemSelected(item);
 				var hovered = this.isItemHovered(item);
 				var focused = this.isItemFocused(item);
-
+				
 				var renderer = ir.renderer;
 
 				renderer.set("hovered", hovered);
 				renderer.set("selected", selected);
 				renderer.set("edited", edited);
 				renderer.set("focused", this.showFocus ? focused : false);
-				renderer.set("moveEnabled", this.isItemMoveEnabled(item, "vertical"));
-				renderer.set("resizeEnabled", this.isItemResizeEnabled(item, "vertical"));
-
+				
+				renderer.set("storeState", this.getItemStoreState(item));
+				
+				renderer.set("moveEnabled", this.isItemMoveEnabled(item._item, "vertical"));
+				renderer.set("resizeEnabled", this.isItemResizeEnabled(item._item, "vertical"));
+				
 				this.applyRendererZIndex(item, ir, hovered, selected, edited, focused);
 
 				if(renderer.updateRendering){
@@ -1468,3 +1510,5 @@ function(
 		
 	});
 });
+require({cache:{
+'url:dojox/calendar/templates/MonthColumnView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\t\t\n\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div data-dojo-attach-point=\"vScrollBar\" class=\"dojoxCalendarVScrollBar\">\n\t\t<div data-dojo-attach-point=\"vScrollBarContent\" style=\"visibility:hidden;position:relative; width:1px; height:1px;\" ></div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"scrollContainer\" class=\"dojoxCalendarScrollContainer\">\n\t\t<div data-dojo-attach-point=\"sheetContainer\" style=\"position:relative;left:0;right:0;margin:0;padding:0\">\t\t\t\n\t\t\t<div data-dojo-attach-point=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t</div> \n\t</div>\t\n</div>\n"}});

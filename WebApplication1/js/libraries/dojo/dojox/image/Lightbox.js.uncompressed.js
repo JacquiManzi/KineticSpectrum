@@ -1,11 +1,9 @@
-require({cache:{
-'url:dojox/image/resources/Lightbox.html':"<div class=\"dojoxLightbox\" dojoAttachPoint=\"containerNode\">\n\t<div style=\"position:relative\">\n\t\t<div dojoAttachPoint=\"imageContainer\" class=\"dojoxLightboxContainer\" dojoAttachEvent=\"onclick: _onImageClick\">\n\t\t\t<img dojoAttachPoint=\"imgNode\" src=\"${imgUrl}\" class=\"${imageClass}\" alt=\"${title}\">\n\t\t\t<div class=\"dojoxLightboxFooter\" dojoAttachPoint=\"titleNode\">\n\t\t\t\t<div class=\"dijitInline LightboxClose\" dojoAttachPoint=\"closeButtonNode\"></div>\n\t\t\t\t<div class=\"dijitInline LightboxNext\" dojoAttachPoint=\"nextButtonNode\"></div>\t\n\t\t\t\t<div class=\"dijitInline LightboxPrev\" dojoAttachPoint=\"prevButtonNode\"></div>\n\t\t\t\t<div class=\"dojoxLightboxText\" dojoAttachPoint=\"titleTextNode\"><span dojoAttachPoint=\"textNode\">${title}</span><span dojoAttachPoint=\"groupCount\" class=\"dojoxLightboxGroupText\"></span></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"}});
 define("dojox/image/Lightbox", ["dojo", "dijit", "dojox", "dojo/text!./resources/Lightbox.html", "dijit/Dialog", "dojox/fx/_base"], function(dojo, dijit, dojox, template){
 
 	dojo.experimental("dojox.image.Lightbox");
 	dojo.getObject("image", true, dojox);
 
-	dojo.declare("dojox.image.Lightbox", dijit._Widget, {
+	var Lightbox = dojo.declare("dojox.image.Lightbox", dijit._Widget, {
 		// summary:
 		//		A dojo-based Lightbox implementation.
 		// description:
@@ -132,7 +130,7 @@ define("dojox/image/Lightbox", ["dojo", "dijit", "dojox", "dojo/text!./resources
 
 	});
 
-	dojo.declare("dojox.image.LightboxDialog",
+	Lightbox.LightboxDialog = dojo.declare("dojox.image.LightboxDialog",
 		dijit.Dialog, {
 		// summary:
 		//		The "dialog" shared	 between any Lightbox instances on the page, publically available
@@ -622,9 +620,9 @@ define("dojox/image/Lightbox", ["dojo", "dijit", "dojox", "dojo/text!./resources
 			}
 		}
 	});
-	
 
-	return dojox.image.Lightbox;
-
+	return Lightbox;
 });
 
+require({cache:{
+'url:dojox/image/resources/Lightbox.html':"<div class=\"dojoxLightbox\" dojoAttachPoint=\"containerNode\">\n\t<div style=\"position:relative\">\n\t\t<div dojoAttachPoint=\"imageContainer\" class=\"dojoxLightboxContainer\" dojoAttachEvent=\"onclick: _onImageClick\">\n\t\t\t<img dojoAttachPoint=\"imgNode\" src=\"${imgUrl}\" class=\"${imageClass}\" alt=\"${title}\">\n\t\t\t<div class=\"dojoxLightboxFooter\" dojoAttachPoint=\"titleNode\">\n\t\t\t\t<div class=\"dijitInline LightboxClose\" dojoAttachPoint=\"closeButtonNode\"></div>\n\t\t\t\t<div class=\"dijitInline LightboxNext\" dojoAttachPoint=\"nextButtonNode\"></div>\t\n\t\t\t\t<div class=\"dijitInline LightboxPrev\" dojoAttachPoint=\"prevButtonNode\"></div>\n\t\t\t\t<div class=\"dojoxLightboxText\" dojoAttachPoint=\"titleTextNode\"><span dojoAttachPoint=\"textNode\">${title}</span><span dojoAttachPoint=\"groupCount\" class=\"dojoxLightboxGroupText\"></span></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"}});

@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/calendar/templates/SimpleColumnView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\t\n\t<div data-dojo-attach-point=\"header\" class=\"dojoxCalendarHeader\">\n\t\t<div class=\"dojoxCalendarYearColumnHeader\" data-dojo-attach-point=\"yearColumnHeader\">\n\t\t\t<table><tr><td><span data-dojo-attach-point=\"yearColumnHeaderContent\"></span></td></tr></table>\t\t\n\t\t</div>\n\t\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t\t</div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"vScrollBar\" class=\"dojoxCalendarVScrollBar\">\n\t\t<div data-dojo-attach-point=\"vScrollBarContent\" style=\"visibility:hidden;position:relative; width:1px; height:1px;\" ></div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"scrollContainer\" class=\"dojoxCalendarScrollContainer\">\n\t\t<div data-dojo-attach-point=\"sheetContainer\" style=\"position:relative;left:0;right:0;margin:0;padding:0\">\n\t\t\t<div data-dojo-attach-point=\"rowHeader\" class=\"dojoxCalendarRowHeader\">\n\t\t\t\t<table data-dojo-attach-point=\"rowHeaderTable\" class=\"dojoxCalendarRowHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t</div> \n\t</div>\n</div>\n\n"}});
 define("dojox/calendar/SimpleColumnView", [
 "./ViewBase", 
 "dijit/_TemplatedMixin", 
@@ -88,11 +86,11 @@ function(
 		columnCount: 7,
 	
 		// minHours: Integer
-		//		The minimum hour to be displayed. It must be in the [0,24] interval.
+		//		The minimum hour to be displayed. It must be in the [0,23] interval and must be lower than the maxHours.
 		minHours: 8,
 		
 		// maxHours: Integer
-		//		The maximum hour to be displayed. It must be in the [0,24] interval.	
+		//		The maximum hour to be displayed. It must be in the [1,24] interval and must be greater than the minHours.	
 		maxHours: 18,
 		
 		// hourSize: Integer
@@ -103,6 +101,22 @@ function(
 		// timeSlotDuration: Integer
 		//		Duration of the time slot in minutes. Must be a divisor of 60.
 		timeSlotDuration: 15,
+
+		// rowHeaderGridSlotDuration: Integer
+		//		Duration of the time slot in minutes in the row header. Must be a divisor of 60 and a multiple/divisor of timeSlotDuration.
+		rowHeaderGridSlotDuration: 60,
+		
+		// rowHeaderLabelSlotDuration: Integer
+		//		Duration of the time slot in minutes in the row header labels. Must be a divisor of 60 and a multiple/divisor of timeSlotDuration.
+		rowHeaderLabelSlotDuration: 60,
+		
+		// rowHeaderLabelOffset: Integer
+		//		Offset of the row label from the top of the row header cell in pixels.
+		rowHeaderLabelOffset: 2,
+		
+		// rowHeaderFirstLabelOffset: Integer
+		//		Offset of the first row label from the top of the first row header cell in pixels.
+		rowHeaderFirstLabelOffset: 2,
 		
 		// verticalRenderer: Class
 		//		The class use to create vertical renderers.
@@ -121,8 +135,9 @@ function(
 		
 		constructor: function(){
 			this.invalidatingProperties = ["columnCount", "startDate", "minHours", "maxHours", "hourSize", "verticalRenderer",
-				"rowHeaderTimePattern", "columnHeaderDatePattern", "timeSlotDuration", "percentOverlap", "horizontalGap", 
-				"scrollBarRTLPosition","itemToRendererKindFunc", "layoutPriorityFunction", "formatItemTimeFunc", "textDir", "items"];
+				"rowHeaderTimePattern", "columnHeaderDatePattern", "timeSlotDuration", "rowHeaderGridSlotDuration", "rowHeaderLabelSlotDuration", 
+				"rowHeaderLabelOffset", "rowHeaderFirstLabelOffset","percentOverlap", "horizontalGap", "scrollBarRTLPosition","itemToRendererKindFunc", 
+				"layoutPriorityFunction", "formatItemTimeFunc", "textDir", "items"];
 			this._columnHeaderHandlers = [];
 		},
 		
@@ -174,8 +189,9 @@ function(
 			renderData.hourSize = this.get("hourSize");
 			renderData.hourCount = renderData.maxHours - renderData.minHours;		
 			renderData.slotDuration = this.get("timeSlotDuration"); // must be consistent with previous statement
+			renderData.rowHeaderGridSlotDuration = this.get("rowHeaderGridSlotDuration");
 			renderData.slotSize = Math.ceil(renderData.hourSize / (60 / renderData.slotDuration));
-			renderData.hourSize = renderData.slotSize * (60 / renderData.slotDuration);
+			renderData.hourSize = renderData.slotSize * (60 / renderData.slotDuration);			
 			renderData.sheetHeight = renderData.hourSize * renderData.hourCount;		
 			renderData.scrollbarWidth = metrics.getScrollbar().w + 1;
 			
@@ -228,20 +244,20 @@ function(
 			this.inherited(arguments);
 			
 			var v = this.minHours;
-			if(v < 0 || v>24 || isNaN(v)){
+			if(v < 0 || v>23 || isNaN(v)){
 				this.minHours = 0;
 			}
 			v = this.maxHours;
-			if (v < 0 || v>24 || isNaN(v)){
+			if (v < 1 || v>24 || isNaN(v)){
 				this.minHours = 24;
 			}
 			
 			if(this.minHours > this.maxHours){
 				var t = this.maxHours;
 				this.maxHours = this.minHours;
-				this.maxHours = t;
+				this.minHours = t;
 			}
-			if (v-this.minHours < 1){
+			if (this.maxHours - this.minHours < 1){
 				this.minHours = 0;
 				this.maxHours = 24;				
 			}
@@ -250,16 +266,16 @@ function(
 			}
 			
 			v = this.percentOverlap;
-			if(this.percentOverlap<0 ||this.percentOverlap>100 || isNaN(this.percentOverlap)){
+			if(v < 0 ||v > 100 || isNaN(v)){
 				this.percentOverlap = 70;
 			}
 			if(this.hourSize<5 || isNaN(this.hourSize)){
 				this.hourSize = 10;
 			}
 			v = this.timeSlotDuration;
-			if(v<1 || v>60 || isNaN(v)){
-				v = 15;
-			}
+            if (v < 1 || v > 60 || isNaN(v)) {
+                this.timeSlotDuration = 15;
+            }
 		},
 		
 		_setStartDateAttr: function(value){
@@ -365,7 +381,7 @@ function(
 		},
 		
 		_setStartTimeOfDayAttr: function(value){
-			this._setStartTimeOfDay(value.hours, value.minutes, value.duration, value.easing)
+			this._setStartTimeOfDay(value.hours, value.minutes, value.duration, value.easing);
 		},
 		
 		_getStartTimeOfDayAttr: function(){
@@ -756,8 +772,10 @@ function(
 		styleColumnHeaderCell: function(node, date, renderData){
 			// summary:
 			//		Styles the CSS classes to the node that displays a column header cell.
-			//		By default this method is setting the "dojoxCalendarToday" class name if the 
-			//		date displayed is the current date or "dojoxCalendarWeekend" if the date represents a weekend.
+			//		By default this method is setting:
+			//		- "dojoxCalendarToday" class name if the date displayed is the current date,
+			//		- "dojoxCalendarWeekend" if the date represents a weekend,
+			//		- the CSS class corresponding of the displayed day of week ("Sun", "Mon" and so on).
 			// node: Node
 			//		The DOM node that displays the column in the grid.
 			// date: Date
@@ -766,13 +784,30 @@ function(
 			//		The render data.
 			// tags:
 			//		protected
+			
+			domClass.add(node, this._cssDays[date.getDay()]);
 
 			if(this.isToday(date)){				
-				return domClass.add(node, "dojoxCalendarToday");
+				domClass.add(node, "dojoxCalendarToday");
 			} else if(this.isWeekEnd(date)){
-				return domClass.add(node, "dojoxCalendarWeekend");
+				domClass.add(node, "dojoxCalendarWeekend");
 			}	
 		},
+
+        _addMinutesClasses: function(node, minutes){
+            switch(minutes){
+                case 0:
+                    domClass.add(node, "hour");
+                    break;
+                case 30:
+                    domClass.add(node, "halfhour");
+                    break;
+                case 15:
+                case 45:
+                    domClass.add(node, "quarterhour");
+                    break;
+            }
+        },
 		
 		_buildRowHeader: function(renderData, oldRenderData){
 
@@ -793,6 +828,11 @@ function(
 			if (!rowHeaderTable){
 				return;
 			}
+			
+			if(this._rowHeaderLabelContainer == null){
+				this._rowHeaderLabelContainer = domConstruct.create("div", {"class": "dojoxCalendarRowHeaderLabelContainer"}, this.rowHeader);				 
+			}
+			
 						
 			domStyle.set(rowHeaderTable, "height", renderData.sheetHeight + "px");
 			
@@ -804,8 +844,11 @@ function(
 			}else{ 
 				tbody = domConstruct.create("tbody", null, rowHeaderTable);
 			}
-									
-			var count = renderData.hourCount - (oldRenderData ? oldRenderData.hourCount : 0);
+						
+			var nbRows = Math.floor(60 / renderData.rowHeaderGridSlotDuration) * renderData.hourCount;
+			
+			var count = nbRows - 
+				(oldRenderData ? Math.floor(60 / oldRenderData.rowHeaderGridSlotDuration) * oldRenderData.hourCount : 0);
 		
 			// Build HTML structure
 			if(count>0){ // creation
@@ -822,29 +865,75 @@ function(
 			}		
 								
 			// fill labels
+			
+						
+			var rd = this.renderData;
+			var size = Math.ceil(renderData.hourSize / (60 / renderData.rowHeaderGridSlotDuration));
 			var d = new Date(2000, 0, 1, 0, 0, 0);
 			
 			query("tr", rowHeaderTable).forEach(function(tr, i){
 				var td = query("td", tr)[0];				
 				td.className = "";				
+								
+				domStyle.set(tr, "height", (has("ie") == 7)?size-2*(60 / renderData.rowHeaderGridSlotDuration):size + "px");
 				
-				var size = renderData.hourSize;
-				if (has("ie") == 7) {
-					// ie7 workaournd: do not take border into account.
-					size -= 2;					
-				}
+				this.styleRowHeaderCell(td, d.getHours(), d.getMinutes(), rd);
+				
+				var m = (i * this.renderData.rowHeaderGridSlotDuration) % 60;
 
-				domStyle.set(tr, "height", size + "px");
-				
-				d.setHours(this.renderData.minHours + (i));
-				this.styleRowHeaderCell(td, d.getHours(), renderData);					
-				this._setText(td, this._formatRowHeaderLabel(d));
+                this._addMinutesClasses(td, m);
 
 			}, this);
-						
-		},		
+			
+			var lc = this._rowHeaderLabelContainer;			
+			count = (Math.floor(60 / this.rowHeaderLabelSlotDuration) * renderData.hourCount) - lc.childNodes.length;
+			
+			var span;
+			if(count>0){ // creation
+				for(var i=0; i < count; i++){
+					span = domConstruct.create("span", null, lc);
+					domClass.add(span, "dojoxCalendarRowHeaderLabel");
+				}					 
+			}else{
+				count = -count;
+				// deletion of existing nodes
+				for(var i=0; i < count; i++){
+					lc.removeChild(lc.lastChild);
+				}
+			}
+			
+			size = Math.ceil(renderData.hourSize / (60 / this.rowHeaderLabelSlotDuration));
+								
+			query(">span", lc).forEach(function(span, i){
+				d.setHours(0);
+				d.setMinutes(renderData.minHours * 60 + (i*this.rowHeaderLabelSlotDuration));
+				this._configureRowHeaderLabel(span, d, i, size*i, rd);
+			}, this);
+			
+		},
 		
-		styleRowHeaderCell: function(node, h, renderData){
+		_configureRowHeaderLabel: function(node, d, index, pos, renderData){
+			// summary:
+			//		Configures the label of a row header cell.
+			// node: DOMNode
+			//		The DOM node that is the parent of the label.
+			// d:Date
+			//		A date object that contains the hours and minutes displayed by this row header cell.
+			// index: Integer
+			//		The index of this row header cell
+			// pos: Integer
+			//		The computed position of the row header cell
+			// renderData: Object
+			//		The render data.
+			
+			this._setText(node, this._formatRowHeaderLabel(d));
+			domStyle.set(node, "top", (pos + (index==0?this.rowHeaderFirstLabelOffset:this.rowHeaderLabelOffset))+"px");
+			var m = (index * this.rowHeaderLabelSlotDuration) % 60;
+			domClass.remove(node, ["hour", "halfhour", "quarterhour"]);
+            this._addMinutesClasses(node, m);
+		},
+		
+		styleRowHeaderCell: function(node, h, m, renderData){
 			// summary:
 			//		Styles the CSS classes to the node that displays a row header cell.
 			//		By default this method is doing nothing.
@@ -961,7 +1050,7 @@ function(
 				
 				// the minutes part of the time of day displayed by the current tr
 				var m = (i * this.renderData.slotDuration) % 60;
-				
+				var h = this.minHours + Math.floor((i * this.renderData.slotDuration) / 60);
 				query("td", tr).forEach(function (td, col){
 					
 					td.className = "";
@@ -974,32 +1063,57 @@ function(
 					
 					var d = renderData.dates[col];
 					
-					this.styleGridColumn(td, d, renderData);
-					
-					switch(m){
-						case 0:
-							domClass.add(td, "hour");
-							break;
-						case 30:
-							domClass.add(td, "halfhour");
-							break;
-						case 15:
-						case 45:
-							domClass.add(td, "quarterhour");
-							break;
-					}
+					this.styleGridCell(td, d, h, m, renderData);
+
+                    this._addMinutesClasses(td, m);
+
 				}, this);				
 			}, this); 
 												 
 		},
+		
+		// styleGridCellFunc: Function
+		//		Custom function to customize the appearance of a grid cell by installing custom CSS class on the node.
+		//		The signature of the function must be the same then the styleGridCell one.
+		//		By default the defaultStyleGridCell function is used.
+		styleGridCellFunc: null,
 				
-		styleGridColumn: function(node, date, renderData){
+		defaultStyleGridCell: function(node, date, hours, minutes, renderData){
 			// summary:
-			//		Styles the CSS classes to the node that displays a column.
-			//		By default this method is setting the "dojoxCalendarToday" class name if the 
-			//		date displayed is the current date or "dojoxCalendarWeekend" if the date represents a weekend.
+			//		Styles the CSS classes to the node that displays a cell.
+			//		By default this method is setting:
+			//		- "dojoxCalendarToday" class name if the date displayed is the current date,
+			//		- "dojoxCalendarWeekend" if the date represents a weekend,
+			//		- the CSS class corresponding of the displayed day of week ("Sun", "Mon" and so on),
+			//		- the CSS classes corresponfing to the time of day (e.g. "H14" and "M30" for for 2:30pm).   
 			// node: Node
-			//		The DOM node that displays the column in the grid.
+			//		The DOM node that displays the cell in the grid.
+			// date: Date
+			//		The date displayed by this cell.
+			// hours: Integer
+			//		The hours part of time of day displayed by the start of this cell.
+			// minutes: Integer
+			//		The minutes part of time of day displayed by the start of this cell.
+			// renderData: Object
+			//		The render data object.
+			// tags:
+			//		protected
+			
+			domClass.add(node, [this._cssDays[date.getDay()], "H"+hours, "M"+minutes]);
+
+			if(this.isToday(date)){				
+				return domClass.add(node, "dojoxCalendarToday");
+			} else if(this.isWeekEnd(date)){
+				return domClass.add(node, "dojoxCalendarWeekend");
+			}
+		},
+		
+		styleGridCell: function(node, date, hours, minutes, renderData){
+			// summary:
+			//		Styles the CSS classes to the node that displays a cell.
+			//		Delegates to styleGridCellFunc if defined or defaultStyleGridCell otherwise.
+			// node: Node
+			//		The DOM node that displays the cell in the grid.
 			// date: Date
 			//		The date displayed by this column
 			// renderData: Object
@@ -1007,11 +1121,11 @@ function(
 			// tags:
 			//		protected
 
-			if(this.isToday(date)){				
-				return domClass.add(node, "dojoxCalendarToday");
-			} else if(this.isWeekEnd(date)){
-				return domClass.add(node, "dojoxCalendarWeekend");
-			}	
+			if(this.styleGridCellFunc){
+				this.styleGridCellFunc(node, date, hours, minutes, renderData);
+			}else{
+				this.defaultStyleGridCell(node, date, hours, minutes, renderData);
+			}
 		},
 							
 		_buildItemContainer: function(renderData, oldRenderData){
@@ -1247,15 +1361,17 @@ function(
 				var selected = this.isItemSelected(item);
 				var hovered = this.isItemHovered(item);
 				var focused = this.isItemFocused(item);
-
+				
 				var renderer = ir.renderer;
 
 				renderer.set("hovered", hovered);
 				renderer.set("selected", selected);
 				renderer.set("edited", edited);
 				renderer.set("focused", this.showFocus ? focused : false);
-				renderer.set("moveEnabled", this.isItemMoveEnabled(item, "vertical"));
-				renderer.set("resizeEnabled", this.isItemResizeEnabled(item, "vertical"));
+				renderer.set("storeState", this.getItemStoreState(item));
+				
+				renderer.set("moveEnabled", this.isItemMoveEnabled(item._item, "vertical"));
+				renderer.set("resizeEnabled", this.isItemResizeEnabled(item._item, "vertical"));
 
 				this.applyRendererZIndex(item, ir, hovered, selected, edited, focused);
 
@@ -1505,11 +1621,10 @@ function(
 			var minH = rd.minHours*60;
 			var maxH = rd.maxHours*60;
 			var minutes = minH + (pos * (maxH - minH) / rd.sheetHeight);
-			var d = {
+			return {
 				hours: Math.floor(minutes / 60),
 				minutes: Math.floor(minutes % 60)
 			};
-			return d;
 		},
 		
 		///////////////////////////////////////////////////////////////
@@ -1633,3 +1748,5 @@ function(
 		
 	});
 });
+require({cache:{
+'url:dojox/calendar/templates/SimpleColumnView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\t\n\t<div data-dojo-attach-point=\"header\" class=\"dojoxCalendarHeader\">\n\t\t<div class=\"dojoxCalendarYearColumnHeader\" data-dojo-attach-point=\"yearColumnHeader\">\n\t\t\t<table><tr><td><span data-dojo-attach-point=\"yearColumnHeaderContent\"></span></td></tr></table>\t\t\n\t\t</div>\n\t\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t\t</div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"vScrollBar\" class=\"dojoxCalendarVScrollBar\">\n\t\t<div data-dojo-attach-point=\"vScrollBarContent\" style=\"visibility:hidden;position:relative; width:1px; height:1px;\" ></div>\n\t</div>\t\n\t<div data-dojo-attach-point=\"scrollContainer\" class=\"dojoxCalendarScrollContainer\">\n\t\t<div data-dojo-attach-point=\"sheetContainer\" style=\"position:relative;left:0;right:0;margin:0;padding:0\">\n\t\t\t<div data-dojo-attach-point=\"rowHeader\" class=\"dojoxCalendarRowHeader\">\n\t\t\t\t<table data-dojo-attach-point=\"rowHeaderTable\" class=\"dojoxCalendarRowHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t\t\t</div>\n\t\t</div> \n\t</div>\n</div>\n\n"}});

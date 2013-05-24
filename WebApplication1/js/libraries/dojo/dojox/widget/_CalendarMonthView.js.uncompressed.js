@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/widget/Calendar/CalendarMonth.html':"<div class=\"dojoxCalendarMonthLabels\" style=\"left: 0px;\"  \n\tdojoAttachPoint=\"monthContainer\" dojoAttachEvent=\"onclick: onClick\">\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n        <tbody>\n            <tr class=\"dojoxCalendarMonthGroupTemplate\">\n                <td class=\"dojoxCalendarMonthTemplate\">\n                    <div class=\"dojoxCalendarMonthLabel\"></div>\n                </td>\n             </tr>\n        </tbody>\n    </table>\n</div>\n"}});
 define("dojox/widget/_CalendarMonthView", [
 	"dojo/_base/declare",
 	"./_CalendarView",
@@ -26,6 +24,10 @@ define("dojox/widget/_CalendarMonthView", [
 		//		Specifies the CSS class to apply to the header node for this view.
 		headerClass: "dojoxCalendarMonthHeader",
 
+		// displayedYear: String 
+		//              The current year being displayed 
+		displayedYear: "", 
+
 		postCreate: function(){
 			// summary:
 			//		Constructs the view
@@ -38,7 +40,11 @@ define("dojox/widget/_CalendarMonthView", [
 		},
 
 		_setValueAttr: function(value){
-			this.header.innerHTML = value.getFullYear();
+			var year = this.header.innerHTML = value.getFullYear(); 
+			// We should be keeping this info around, might as well expose it too. 
+			// Added while patching http://bugs.dojotoolkit.org/ticket/15520 
+			this.set("displayedYear", year); 
+			this._populateMonths(); 
 		},
 
 		_getMonthNames: _CalendarMonthYearView.prototype._getMonthNames,
@@ -52,12 +58,13 @@ define("dojox/widget/_CalendarMonthView", [
 			var parentNode = evt.target.parentNode;
 			var month = parentNode.cellIndex + (parentNode.parentNode.rowIndex * 4);
 			var date = this.get("value");
-
 			// Seeing a really strange bug in FF3.6 where this has to be called twice
 			// in order to take affect
 			date.setMonth(month);
 			date.setMonth(month);
+			date.setYear(this.displayedYear);
 			this.onValueSelected(date, month);
 		}
 	});
-});
+});require({cache:{
+'url:dojox/widget/Calendar/CalendarMonth.html':"<div class=\"dojoxCalendarMonthLabels\" style=\"left: 0px;\"  \n\tdojoAttachPoint=\"monthContainer\" dojoAttachEvent=\"onclick: onClick\">\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n        <tbody>\n            <tr class=\"dojoxCalendarMonthGroupTemplate\">\n                <td class=\"dojoxCalendarMonthTemplate\">\n                    <div class=\"dojoxCalendarMonthLabel\"></div>\n                </td>\n             </tr>\n        </tbody>\n    </table>\n</div>\n"}});

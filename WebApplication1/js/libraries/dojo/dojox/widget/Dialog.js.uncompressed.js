@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/widget/Dialog/Dialog.html':"<div class=\"dojoxDialog\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"${id}_title\">\n\t<div dojoAttachPoint=\"titleBar\" class=\"dojoxDialogTitleBar\">\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dojoxDialogTitle\" id=\"${id}_title\">${title}</span>\n\t</div>\n\t<div dojoAttachPoint=\"dojoxDialogWrapper\">\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dojoxDialogPaneContent\"></div>\n\t</div>\n\t<div dojoAttachPoint=\"closeButtonNode\" class=\"dojoxDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\">\n\t\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\">x</span>\n\t</div>\n</div>\n"}});
 define("dojox/widget/Dialog", [
 	"dojo", "dojox", "dojo/text!./Dialog/Dialog.html", 
 	"dijit/Dialog", "dojo/window", "dojox/fx", "./DialogSimple"
@@ -7,7 +5,7 @@ define("dojox/widget/Dialog", [
 
 	dojo.getObject('widget', true, dojox);
 	
-	dojo.declare('dojox.widget.Dialog', dojox.widget.DialogSimple,
+	return dojo.declare('dojox.widget.Dialog', dojox.widget.DialogSimple,
 		{
 		// summary:
 		//		A Lightbox-like Modal-dialog for HTML Content
@@ -249,8 +247,7 @@ define("dojox/widget/Dialog", [
 		}
 
 	});
-
-	return dojox.widget.Dialog;
-
 });
 
+require({cache:{
+'url:dojox/widget/Dialog/Dialog.html':"<div class=\"dojoxDialog\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"${id}_title\">\n\t<div dojoAttachPoint=\"titleBar\" class=\"dojoxDialogTitleBar\">\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dojoxDialogTitle\" id=\"${id}_title\">${title}</span>\n\t</div>\n\t<div dojoAttachPoint=\"dojoxDialogWrapper\">\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dojoxDialogPaneContent\"></div>\n\t</div>\n\t<div dojoAttachPoint=\"closeButtonNode\" class=\"dojoxDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\">\n\t\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\">x</span>\n\t</div>\n</div>\n"}});

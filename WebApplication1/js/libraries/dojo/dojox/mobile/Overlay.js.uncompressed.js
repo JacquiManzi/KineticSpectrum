@@ -1,7 +1,7 @@
 define("dojox/mobile/Overlay", [
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/sniff",
+	"dojo/sniff",
 	"dojo/_base/window",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
@@ -9,8 +9,10 @@ define("dojox/mobile/Overlay", [
 	"dojo/window",
 	"dijit/_WidgetBase",
 	"dojo/_base/array",
-	"dijit/registry"
-], function(declare, lang, has, win, domClass, domGeometry, domStyle, windowUtils, WidgetBase, array, registry){
+	"dijit/registry",
+	"dojo/touch",
+	"./_css3"
+], function(declare, lang, has, win, domClass, domGeometry, domStyle, windowUtils, WidgetBase, array, registry, touch, css3){
 
 	return declare("dojox.mobile.Overlay", WidgetBase, {
 		// summary:
@@ -20,6 +22,14 @@ define("dojox/mobile/Overlay", [
 		// baseClass: String
 		//		The name of the CSS class of this widget.
 		baseClass: "mblOverlay mblOverlayHidden",
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			if(!this.containerNode){
+				// set containerNode so that getChildren() works
+				this.containerNode = this.domNode;
+			}
+		},
 
 		_reposition: function(){
 			// summary:
@@ -54,17 +64,17 @@ define("dojox/mobile/Overlay", [
 			}
 			var _domNode = this.domNode;
 			domClass.replace(_domNode, ["mblCoverv", "mblIn"], ["mblOverlayHidden", "mblRevealv", "mblOut", "mblReverse", "mblTransition"]);
-			setTimeout(lang.hitch(this, function(){
-				var handler = this.connect(_domNode, "webkitTransitionEnd", function(){
+			this.defer(function(){
+				var handler = this.connect(_domNode, css3.name("transitionEnd"), function(){
 					this.disconnect(handler);
 					domClass.remove(_domNode, ["mblCoverv", "mblIn", "mblTransition"]);
 					this._reposition();
 				});
 				domClass.add(_domNode, "mblTransition");
-			}), 100);
+			}, 100);
 			var skipReposition = false;
 
-			this._moveHandle = this.connect(win.doc.documentElement, has('touch') ? "ontouchmove" : "onmousemove",
+			this._moveHandle = this.connect(win.doc.documentElement, touch.move,
 				function(){
 					skipReposition = true;
 				}
@@ -89,15 +99,15 @@ define("dojox/mobile/Overlay", [
 				clearInterval(this._repositionTimer);
 				this._repositionTimer = null;
 			}
-			if(has("webkit")){
+			if(has("css3-animations")){
 				domClass.replace(_domNode, ["mblRevealv", "mblOut", "mblReverse"], ["mblCoverv", "mblIn", "mblOverlayHidden", "mblTransition"]);
-				setTimeout(lang.hitch(this, function(){
-					var handler = this.connect(_domNode, "webkitTransitionEnd", function(){
+				this.defer(function(){
+					var handler = this.connect(_domNode, css3.name("transitionEnd"), function(){
 						this.disconnect(handler);
 						domClass.replace(_domNode, ["mblOverlayHidden"], ["mblRevealv", "mblOut", "mblReverse", "mblTransition"]);
 					});
 					domClass.add(_domNode, "mblTransition");
-				}), 100);
+				}, 100);
 			}else{
 				domClass.replace(_domNode, ["mblOverlayHidden"], ["mblCoverv", "mblIn", "mblRevealv", "mblOut", "mblReverse"]);
 			}

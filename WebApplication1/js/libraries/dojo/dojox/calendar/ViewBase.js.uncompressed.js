@@ -1,46 +1,46 @@
 define("dojox/calendar/ViewBase", [
-"dojo/_base/declare", 
-"dojo/_base/lang", 
-"dojo/_base/array", 
-"dojo/_base/window", 
-"dojo/_base/event",
-"dojo/_base/html", 
-"dojo/_base/sniff", 
-"dojo/query", 
-"dojo/dom", 
-"dojo/dom-style",
-"dojo/dom-construct", 
-"dojo/dom-geometry",
-"dojo/on", 
-"dojo/date", 
-"dojo/date/locale", 
-"dijit/_WidgetBase",  
-"dojox/widget/_Invalidating", 
-"dojox/widget/Selection", 
-"dojox/calendar/time",
-"./StoreMixin"],
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/window",
+	"dojo/_base/event",
+	"dojo/_base/html",
+	"dojo/sniff",
+	"dojo/query",
+	"dojo/dom",
+	"dojo/dom-style",
+	"dojo/dom-construct",
+	"dojo/dom-geometry",
+	"dojo/on",
+	"dojo/date",
+	"dojo/date/locale",
+	"dijit/_WidgetBase",
+	"dojox/widget/_Invalidating",
+	"dojox/widget/Selection",
+	"dojox/calendar/time",
+	"./StoreMixin"],
 
-function(
-	declare, 
-	lang, 
-	arr, 
-	win, 
-	event, 
-	html, 
-	has, 
-	query, 
-	dom, 
-	domStyle,
-	domConstruct,
-	domGeometry,
-	on, 
-	date, 
-	locale, 
-	_WidgetBase, 
-	_Invalidating, 
-	Selection, 
-	timeUtil, 
-	StoreMixin){
+	function(
+		declare,
+		lang,
+		arr,
+		win,
+		event,
+		html,
+		has,
+		query,
+		dom,
+		domStyle,
+		domConstruct,
+		domGeometry,
+		on,
+		date,
+		locale,
+		_WidgetBase,
+		_Invalidating,
+		Selection,
+		timeUtil,
+		StoreMixin){
 	
 	/*=====
 	var __GridClickEventArgs = {
@@ -71,7 +71,9 @@ function(
 		// summary:
 		//		An item editing event.
 		// item: Object
-		//		The date item that is being edited.
+		//		The render item that is being edited. Set/get the startTime and/or endTime properties to customize editing behavior.
+		// storeItem: Object
+		//		The real data from the store. DO NOT change properties, but you may use properties of this item in the editing behavior logic.
 		// editKind: String
 		//		Kind of edit: "resizeBoth", "resizeStart", "resizeEnd" or "move".
 		// dates: Date[]
@@ -95,6 +97,18 @@ function(
 	};
 	=====*/
 	
+	/*=====
+	var __rendererLifecycleEventArgs = {
+		// summary:
+		//		An renderer lifecycle event.
+		// renderer: Object
+		//		The renderer.		
+		// source: dojox/calendar/ViewBase
+		//		The view where the event occurred.
+		// item:Object?
+		//		The item that will be displayed by the renderer for the "rendererCreated" and "rendererReused" events. 
+	};
+	=====*/
 
 	return declare("dojox.calendar.ViewBase", [_WidgetBase, StoreMixin, _Invalidating, Selection], {
 		
@@ -127,13 +141,14 @@ function(
 		//		Optional function to format the time of day of the item renderers.
 		//		The function takes the date and render data object as arguments and returns a String.
 		formatItemTimeFunc: null,
+		
+		_cssDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 				
 		_getFormatItemTimeFuncAttr: function(){
 			if(this.owner != null){
 				return this.owner.get("formatItemTimeFunc");
-			}else{
-				return this.formatItemTimeFunc;
 			}
+			return this.formatItemTimeFunc;			
 		},
 		
 		// The listeners added by the view itself.
@@ -162,7 +177,7 @@ function(
 			while(this.rendererList.length > 0){
 				this._destroyRenderer(this.rendererList.pop());
 			}			
-			for(kind in this._rendererPool){				
+			for(var kind in this._rendererPool){
 				var pool = this._rendererPool[kind];
 				if(pool){
 					while(pool.length > 0){
@@ -176,6 +191,24 @@ function(
 			}
 		
 			this.inherited(arguments);
+		},
+		
+		
+		resize: function(){
+			// summary:
+			//		Function to call when the view is resized. 
+			//		If the view is in a Dijit container or in a Dojo mobile container, it will be automatically called.
+			//		On other use cases, this method must called when the window is resized and/or when the orientation has changed.
+		},
+		
+		_getTopOwner: function(){
+			// summary:
+			//		Returns the top owner: the calendar or the parent view.
+			var p = this;
+			while(p.owner != undefined){
+				p = p.owner;
+			}
+			return p;
 		},
 		
 		_createRenderData: function(){
@@ -210,7 +243,9 @@ function(
 					}				
 			
 					var tNode = win.doc.createElement("span");
-					this.applyTextDir(tNode, text);					
+					if(has("dojo-bidi")){
+						this.applyTextDir(tNode, text);
+					}
 					
 					if(allowHTML){
 						tNode.innerHTML = text;
@@ -561,11 +596,7 @@ function(
 				return false;
 			} 			
 			
-			if(cal.compare(item.endTime, rd.endTime) == 1){
-				return false;
-			}
-			
-			return true;
+			return cal.compare(item.endTime, rd.endTime) != 1;
 		},
 		
 		_ensureItemInView: function(item){
@@ -708,7 +739,8 @@ function(
 			}
 			if(has("opera")){
 				return "-o-";
-			}			
+			}
+            return "";
 		},				
 		
 		_setScrollPosition: function(pos){
@@ -1108,7 +1140,7 @@ function(
 						
 			if(item != null && kind != null && rendererClass != null){
 				
-				var res, renderer;
+				var res=null, renderer=null;
 				
 				var pool = this.rendererPool[kind];
 				
@@ -1135,12 +1167,12 @@ function(
 						kind: kind
 					};
 
-					this._onRendererCreated(res);
+					this._onRendererCreated({renderer:res, source:this, item:item});
 					
 				} else {
 					renderer = res.renderer; 
 					
-					this._onRendererReused(renderer);
+					this._onRendererReused({renderer:renderer, source:this, item:item});
 				}
 				
 				renderer.owner = this;
@@ -1157,75 +1189,77 @@ function(
 				return res;	
 			}
 			return null;
-		},	
+		},
 		
-		_onRendererCreated: function(renderer){
-			this.onRendererCreated(renderer);
-			// workaround for a bubble up issue, properly fixed in master with a change of API.
-			// currently we only have a simple view or a view in a view, so testing owner.owner is enough.
-			var calendar = this.owner && this.owner.owner ? this.owner.owner : this.owner;
-			if(calendar){
-				calendar.onRendererCreated(renderer);
+		_onRendererCreated: function(e){
+			if(e.source == this){
+				this.onRendererCreated(e);
+			}
+			if(this.owner != null){
+				this.owner._onRendererCreated(e);
 			}
 		},
 		
-		onRendererCreated: function(renderer){
+		onRendererCreated: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been created.
-			// renderer: dojox/calendar/_RendererMixin
-			//		The renderer created.
+			// e: __rendererLifecycleEventArgs
+			//		The renderer lifecycle event.
 			// tags:
 			//		callback
 		},	
 		
-		_onRendererRecycled: function(renderer){
-			this.onRendererRecycled(renderer);
-			var calendar = this.owner && this.owner.owner ? this.owner.owner : this.owner;
-			if(calendar){
-				calendar.onRendererRecycled(renderer);
+		_onRendererRecycled: function(e){
+			if(e.source == this){
+				this.onRendererRecycled(e);
+			}
+			if(this.owner != null){
+				this.owner._onRendererRecycled(e);
 			}
 		},
 		
-		onRendererRecycled: function(renderer){
+		onRendererRecycled: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been recycled.
-			// renderer: dojox/calendar/_RendererMixin
-			//		The renderer recycled.
+			// e: __rendererLifecycleEventArgs
+			//		The renderer lifecycle event.
 			// tags:
 			//		callback
 
 		},
-		
-		_onRendererReused: function(renderer){
-			this.onRendererReused(renderer);
-			var calendar = this.owner && this.owner.owner ? this.owner.owner : this.owner;
-			if(calendar){
-				calendar.onRendererReused(renderer);
+						
+		_onRendererReused: function(e){
+			if(e.source == this){
+				this.onRendererReused(e);
+			}
+			if(this.owner != null){
+				this.owner._onRendererReused(e);
 			}
 		},
 		
-		onRendererReused: function(renderer){
+		onRendererReused: function(e){
 			// summary:
 			//		Event dispatched when an item renderer that was recycled is reused.
-			// renderer: dojox/calendar/_RendererMixin
-			//		The renderer reused.
+			// e: __rendererLifecycleEventArgs
+			//		The renderer lifecycle event.
 			// tags:
 			//		callback
 		},
 		
-		_onRendererDestroyed: function(renderer){
-			this.onRendererDestroyed(renderer);
-			var calendar = this.owner && this.owner.owner ? this.owner.owner : this.owner;
-			if(calendar){
-				calendar.onRendererDestroyed(renderer);
+		_onRendererDestroyed: function(e){
+			if(e.source == this){
+				this.onRendererDestroyed(e);
+			}
+			if(this.owner != null){
+				this.owner._onRendererDestroyed(e);
 			}
 		},
 		
-		onRendererDestroyed: function(renderer){
+		onRendererDestroyed: function(e){
 			// summary:
 			//		Event dispatched when an item renderer is destroyed.
-			// renderer: dojox/calendar/_RendererMixin
-			//		The renderer destroyed.
+			// e: __rendererLifecycleEventArgs
+			//		The renderer lifecycle event.
 			// tags:
 			//		callback
 		},
@@ -1236,7 +1270,7 @@ function(
 
 			this.onRenderersLayoutDone(view);
 			if(this.owner != null){
-				this.owner.onRenderersLayoutDone(view);
+				this.owner._onRenderersLayoutDone(view);
 			}				
 		},
 									
@@ -1255,7 +1289,7 @@ function(
 			// tags:
 			//		protected			
 								
-			this._onRendererRecycled(renderer);
+			this._onRendererRecycled({renderer:renderer, source:this});
 			
 			var pool = this.rendererPool[renderer.kind];
 			
@@ -1282,13 +1316,9 @@ function(
 			//		The item renderer to destroy.
 			// tags:
 			//		protected
-			this._onRendererDestroyed(renderer);
+			this._onRendererDestroyed({renderer:renderer, source:this});
 			
-			var ir = renderer.renderer;
-			
-			arr.forEach(ir.__handles, function(handle){
-				handle.remove();
-			});				
+			var ir = renderer.renderer;		
 			
 			if(ir["destroy"]){
 				ir.destroy();
@@ -1327,7 +1357,7 @@ function(
 			// summary:
 			//		Update the moveEnabled and resizeEnabled properties of a renderer according to its event current editing state.
 			// item: Object
-			//		The event data item.
+			//		The store data item.
 			// renderer: dojox/calendar/_RendererMixin
 			//		The item renderer.
 			// tags:
@@ -1384,7 +1414,7 @@ function(
 				var selected = this.isItemSelected(item);
 				var hovered = this.isItemHovered(item);
 				var edited = this.isItemBeingEdited(item);
-				var focused = this.showFocus ? this.isItemFocused(item) : false;
+				var focused = this.showFocus ? this.isItemFocused(item) : false;				
 				
 				for(var j = 0; j < list.length; j++){
 					
@@ -1393,6 +1423,7 @@ function(
 					renderer.set("selected", selected);
 					renderer.set("edited", edited);
 					renderer.set("focused", focused);
+					renderer.set("storeState", this.getItemStoreState(item));
 					
 					this.applyRendererZIndex(item, list[j], hovered, selected, edited, focused);
 					
@@ -1464,7 +1495,7 @@ function(
 				this.updateRenderers([old, this.hoveredItem], true);
 				
 				if(item && renderer){
-					this._updateEditingCapabilities(item, renderer);
+					this._updateEditingCapabilities(item._item ? item._item : item, renderer);
 				}
 			}
 		},
@@ -1481,11 +1512,11 @@ function(
 			// returns: Boolean
 			if (this._isEditing && this._edProps){
 				return item.id == this._edProps.editedItem.id;
-			}else{
-				return this.owner ?  
-					this.owner.isItemHovered(item) : 
-					this.hoveredItem != null && this.hoveredItem.id == item.id;
 			}
+			return this.owner ?  
+				this.owner.isItemHovered(item) : 
+				this.hoveredItem != null && this.hoveredItem.id == item.id;
+			
 		},
 		
 		isItemFocused: function(item){
@@ -1514,9 +1545,8 @@ function(
 		_getSelectionModeAttr: function(value){			
 			if(this.owner){
 				return this.owner.get("selectionMode");
-			}else{
-				return this.inherited(arguments);
 			}
+			return this.inherited(arguments);			
 		},
 		
 		_setSelectedItemAttr: function(value){			
@@ -1530,9 +1560,8 @@ function(
 		_getSelectedItemAttr: function(value){			
 			if(this.owner){
 				return this.owner.get("selectedItem");
-			}else{
-				return this.selectedItem; // no getter on super class (dojox.widget.Selection)
 			}
+			return this.selectedItem; // no getter on super class (dojox.widget.Selection)			
 		},
 		
 		_setSelectedItemsAttr: function(value){			
@@ -1546,17 +1575,15 @@ function(
 		_getSelectedItemsAttr: function(){			
 			if(this.owner){
 				return this.owner.get("selectedItems");
-			}else{
-				return this.inherited(arguments);
 			}
+			return this.inherited(arguments);
 		},
 		
 		isItemSelected: function(item){			
 			if(this.owner){
 				return this.owner.isItemSelected(item);
-			}else{
-				return this.inherited(arguments);
 			}
+			return this.inherited(arguments);
 		},
 		
 		selectFromEvent: function(e, item, renderer, dispatch){			
@@ -1599,9 +1626,8 @@ function(
 		_getCreateItemFuncAttr: function(){			
 			if(this.owner){
 				return this.owner.get("createItemFunc");
-			}else{
-				return this.createItemFunc;
 			}
+			return this.createItemFunc;
 		},
 		
 		// createOnGridClick: Boolean
@@ -1612,9 +1638,8 @@ function(
 		_getCreateOnGridClickAttr: function(){
 			if(this.owner){
 				return this.owner.get("createOnGridClick");
-			}else{
-				return this.createOnGridClick;
 			}
+			return this.createOnGridClick;			
 		},
 		
 		////////////////////////////////////////////////////////////////////
@@ -1623,7 +1648,7 @@ function(
 		//
 		///////////////////////////////////////////////////////////////////	
 		
-		_gridMouseDown: false,
+		_gridMouseDown: false,		
 				
 		_onGridMouseDown: function(e){
 			// tags:
@@ -1653,21 +1678,32 @@ function(
 					return;
 				}
 				
-				var newItem = f(this, this.getTime(e), e);
+				var newItem = this._createdEvent = f(this, this.getTime(e), e);
 								
 				var store = this.get("store");
 											
 				if(!newItem || store == null){
 					return;
 				}
+								
+				var newRenderItem = this.itemToRenderItem(newItem, store);
+				newRenderItem._item = newItem;
+				this._setItemStoreState(newItem, "unstored");
 				
-				store.put(newItem);
+				// add the new temporary item to the displayed list and force view refresh
+				var owner = this._getTopOwner();
+				var items = owner.get("items");
 				
-				var renderers = this.getRenderers(newItem);
-				// renderer created when item put in store
+				owner.set("items", items ? items.concat([newRenderItem]) : [newRenderItem]);
+								
+				this._refreshItemsRendering();
+				
+				// renderer created in _refreshItemsRenderering()
+				var renderers = this.getRenderers(newItem);				
 				if(renderers && renderers.length>0){
 					var renderer = renderers[0];					
 					if(renderer){
+						// trigger editing
 						this._onRendererHandleMouseDown(e, renderer.renderer, "resizeEnd");
 					}					
 				}
@@ -1724,7 +1760,7 @@ function(
 			//		private
 
 			if(obj && obj._isEditing){
-				p = obj._edProps;
+				var p = obj._edProps;
 				if(p && p.endEditingTimer){
 					clearTimeout(p.endEditingTimer);
 					p.endEditingTimer = null;
@@ -1886,7 +1922,7 @@ function(
 			var list = this.itemToRenderer[item.id];
 
 			if(list == null){
-				return;
+				return null;
 			}
 
 			// trivial and most common use case.
@@ -1948,8 +1984,8 @@ function(
 			//		The item represented by the renderer.
 			// rendererKind: String
 			//		The kind of renderer.
-			// returns: Boolean
-			return this.editable && (this.owner ? this.owner.isItemEditable() : true);
+			// returns: Boolean			
+			return this.getItemStoreState(item) != "storing" && this.editable && (this.owner ? this.owner.isItemEditable(item, rendererKind) : true);
 		},
 
 		isItemMoveEnabled: function(item, rendererKind){
@@ -2012,10 +2048,12 @@ function(
 			// tags:
 			//		protected
 
-			this._isEditing = true;			
+			this._isEditing = true;
+			this._getTopOwner()._isEditing = true;
 			var p = this._edProps;
 			
 			p.editedItem = item;
+			p.storeItem = this.renderItemToItem(item, this.get("store"));
 			p.eventSource = eventSource;
 			
 			p.secItem = this._secondarySheet ? this._findRenderItem(item.id, this._secondarySheet.renderData.items) : null;
@@ -2059,6 +2097,7 @@ function(
 			
 			this._onItemEditBegin({
 				item: item,
+				storeItem: p.storeItem,
 				eventSource: eventSource
 			});
 		},
@@ -2091,7 +2130,8 @@ function(
 			// tags:
 			//		protected
 
-			this._isEditing = false;					
+			this._isEditing = false;
+			this._getTopOwner()._isEditing = false;
 			
 			var p = this._edProps;
 			
@@ -2104,11 +2144,10 @@ function(
 				this.rendererList = p.editRendererList.concat(this.rendererList);
 				lang.mixin(this.itemToRenderer, p.editItemToRenderer);
 			}
-			
-			var store = this.get("store");
-						
+
 			this._onItemEditEnd(lang.mixin(this._createItemEditEvent(), {
-				item: this.renderItemToItem(p.editedItem, store),
+				item: p.editedItem,
+				storeItem: p.storeItem,
 				eventSource: eventSource,
 				completed: !canceled
 			}));
@@ -2125,12 +2164,47 @@ function(
 			this._dispatchCalendarEvt(e, "onItemEditEnd");
 			
 			if(!e.isDefaultPrevented()){
-				if(e.completed){
+				
+				var store = this.get("store");
+				
+				// updated store item
+				var storeItem = this.renderItemToItem(e.item, store);
+				
+				var s = this._getItemStoreStateObj(e.item);
+				
+				if(s != null && s.state == "unstored"){
+														
+					if(e.completed){
+						// renderItemToItem cannot find the original data item
+						// (as it does not exist in the store yet) to mixin with.
+						// so we must do it here.
+						storeItem = lang.mixin(s.item, storeItem);
+						this._setItemStoreState(storeItem, "storing");
+						
+						// add to the store.
+						store.add(storeItem);
+						
+					}else{ // creation canceled
+						// cleanup items list
+						var owner = this._getTopOwner();
+						var items = owner.get("items");
+						var l = items.length; 
+						for(var i=l-1; i>=0; i--){
+							if(items[i].id == s.id){
+								items.splice(i, 1);
+								break;
+							}
+						}
+						this._setItemStoreState(storeItem, null);
+						owner.set("items", items);						
+					}									
+					
+				} else if(e.completed){
 					// Inject new properties in data store item				
-					// and apply data changes
-					var store = this.get("store");
-					store.put(e.item);
-				}else{			
+					// and apply data changes		
+					this._setItemStoreState(storeItem, "storing");
+					store.put(storeItem);								
+				}else{
 					e.item.startTime = this._editStartTimeSave; 
 					e.item.endTime = this._editEndTimeSave;
 				}
@@ -2195,6 +2269,7 @@ function(
 			
 			this._onItemEditBeginGesture(this.__fixEvt(lang.mixin(this._createItemEditEvent(), {
 				item: item,
+				storeItem: p.storeItem,
 				startTime: item.startTime,
 				endTime: item.endTime,
 				editKind: editKind,
@@ -2437,6 +2512,7 @@ function(
 
 			var evt = lang.mixin(this._createItemEditEvent(), {
 				item: item,
+				storeItem: p.storeItem,
 				startTime: item.startTime,
 				endTime: item.endTime,
 				editKind: editKind,
@@ -2455,7 +2531,7 @@ function(
 			// prevent invalid range
 			if(cal.compare(item.startTime, item.endTime) == 1){
 				var tmp = item.startTime;
-				item.startTime = item.startTime;
+				item.startTime = item.endTime;
 				item.endTime = tmp;
 			}
 			
@@ -2646,6 +2722,7 @@ function(
 			
 			this._onItemEditEndGesture(lang.mixin(this._createItemEditEvent(), {
 				item: item,
+				storeItem: p.storeItem,
 				startTime: item.startTime,
 				endTime: item.endTime,
 				editKind: p.editKind,
