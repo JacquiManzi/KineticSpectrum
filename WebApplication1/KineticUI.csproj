@@ -60,6 +60,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="js\kui\DesignMenu\DesignMenu.js" />
+    <Content Include="js\kui\ModelMenu\ModelMenu.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />
     <Content Include="js\libraries\dojo\dijit\a11y.js.uncompressed.js" />
@@ -7707,11 +7709,14 @@
     <Content Include="js\libraries\dojo\dojo\_firebug\tab_rgt_norm.png" />
     <Content Include="js\libraries\dojo\dojo\_firebug\tab_rgt_over.png" />
     <Content Include="js\libraries\dojo\dojo\_firebug\warningIcon.png" />
-    <Content Include="js\Main.js" />
+    <Content Include="js\kui\Main.js" />
+    <Content Include="js\kui\ProcessModel.js" />
+    <Content Include="js\kui\util\CommonHTML.js" />
     <Content Include="KinectSpectrum.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSharp\ProccessModel.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -8274,6 +8279,7 @@
     <Content Include="js\libraries\dojo\dojo\resources\LICENSE" />
     <Content Include="js\libraries\dojo\dojo\store\README" />
     <Content Include="js\libraries\dojo\dojo\_firebug\LICENSE" />
+    <Content Include="3D Models\Lightbulb.obj" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

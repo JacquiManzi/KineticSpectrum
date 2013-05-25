@@ -7,5 +7,10 @@ namespace WebApplication1.CSharp
 {
     public class ProccessModel
     {
+
+
+
+
+
     }
 }

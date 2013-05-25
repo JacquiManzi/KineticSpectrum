@@ -6,37 +6,44 @@
     <!--Javascript libraries to import -->
     <!--Dojo toolkit -->
     <script "text/javascript" src="js/libraries/dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true, gfxRenderer:'svg,silverlight,vml',
-    debugAtAllCosts: true, isDebug: true, mblThemeFiles: ['base','Carousel','PageIndicator'], locale: '${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}' "></script>
+    debugAtAllCosts: true, isDebug: true, mblThemeFiles: ['base','Carousel','PageIndicator'], locale: '${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}',  paths: {'kui': '/js/kui'} "></script>
     <!-- Dijit- Dojo toolkit UI library -->
     <script type="text/javascript" src="js/libraries/dojo/dijit/dijit.js" data-dojo-config="async: true, parseOnLoad: true, isDebug: true,  debugAtAllCosts: true ,
-    gfxRenderer:'svg, silverlight,vml'"></script>
+    gfxRenderer:'svg, silverlight,vml' , paths: {'kui': '/js/kui'}"></script>
      
     <!-- CSS links -->
     <!-- Dojo dijit tundra themes -->
-    <link rel="stylesheet" href="js/libraries/dojo/dijit/themes/tundra/tundra.css" media="screen"/>
+    <link rel="stylesheet" href="js/libraries/dojo/dijit/themes/tundra/tundra.css" media="screen"/> 
 
 </head>   
 <body class="tundra">
 
-<div id="mainContainer">    
+<div id="mainContainer" style="height:100%;width:100%;">    
 
 </div>
 
-</body>   
-</html>
+</body>         
+</html>     
 
 <script>
 
     require(["dijit/registry",
        "dijit/layout/BorderContainer",    
        "dijit/layout/ContentPane",
-       "dojox/layout/ContentPane"
+       "dojox/layout/ContentPane",
+       "dojo/window",
+       "kui/DesignMenu/DesignMenu",
+       "kui/ModelMenu/ModelMenu"
     ],
-           function (registry, BorderContainer, ContentPane, ContentPaneX) {
+           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu) {
+
+               var windowHeight = window.getBox().h - 20;
+
                /*The main border container for the entire EOS*/   
                var mainContainer = new BorderContainer({
                    design: "headline",
-                   liveSplitters: true
+                   liveSplitters: true,
+                   style:"height:"+ windowHeight+ "px;width:100%;"    
                }, "mainContainer");
 
                /*Top content pane for the main border container*/
@@ -45,7 +52,9 @@
                            region: "top",
                            id: "topContainer",
                            splitter: true,
-                           minSize: ".1"
+                           minSize: ".1",
+                           style: "height:20%;width:100%;background-color:#1f1f1f;"          
+
                        })
                );
 
@@ -59,12 +68,12 @@
                mainContainer.addChild(centerContainer);
 
 
-               var appBarContainer = new ContentPane({
+               var bottomContainer = new ContentPane({
                    splitter: true,
                    region: "bottom",
-                   id: "mainAppBarContainer",
+                   id: "bottomContainer",
                    minSize: ".1",
-                   style: ""
+                   style: "width:100%;height:20%;background-color:#1f1f1f;"
                });
 
              
@@ -72,7 +81,7 @@
 
                /*The bottom content pane for the application bar*/
                mainContainer.addChild(
-                       appBarContainer
+                       bottomContainer
                );
 
                /*Left container*/
@@ -81,7 +90,8 @@
                            splitter: true,
                            region: "left",
                            id: "leftContainer",
-                           minSize: ".1"
+                           minSize: ".1",
+                           style:"width:20%;height:100%;background-color:#1f1f1f;"
                        })
                );
 
@@ -91,9 +101,20 @@
                            splitter: true,
                            region: "right",
                            id: "rightContainer",
-                           minSize: ".1"
+                           minSize: ".1",
+                           style:"height:100%;width:20%;background-color:#1f1f1f;"
                        })
                );
+
+
+               //Create the left design menu
+               var designMenu = new DesignMenu();
+               designMenu.createMenu();
+
+               //Create the botom model file menu
+               var modelMenu = new ModelMenu();
+               modelMenu.createMenu();    
+
 
                mainContainer.startup();
            
