@@ -61,10 +61,19 @@
                     });
             },
 
-        /*Create DOM Ordered List (li)*/
+        /*Create DOM List item (li)*/
 
             createLI = function (style) {
                 return domConstruct.create("li",
+                    {
+                        style: style
+                    });
+            },
+
+            /*Create DOM Ordered List (ol)*/
+
+            createOL = function (style) {
+                return domConstruct.create("ol",
                     {
                         style: style
                     });
@@ -83,6 +92,15 @@
                     });
 
             },
+
+            createLabel = function (style, node) {
+                return domConstruct.create("label",
+                        {
+                            style: style,
+                            'for': node
+                        });
+            },
+
 
             createStyleSheetLink = function (href, rel, type, media) {
                 return domConstruct.create("link",
@@ -234,8 +252,10 @@
             createRow: createRow,
             createCell: createCell,
             createImage: createImage,
+            createLabel: createLabel, 
             createUL: createUL,
             createLI: createLI,
+            createOL: createOL, 
             createLink: createLink,
             createStyleSheetLink: createStyleSheetLink,
             createSVGCanvas: createSVGCanvas,

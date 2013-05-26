@@ -6,7 +6,7 @@
     <!--Javascript libraries to import -->
     <!--Dojo toolkit -->
     <script "text/javascript" src="js/libraries/dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true, gfxRenderer:'svg,silverlight,vml',
-    debugAtAllCosts: true, isDebug: true, mblThemeFiles: ['base','Carousel','PageIndicator'], locale: '${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}',  paths: {'kui': '/js/kui'} "></script>
+    debugAtAllCosts: true, isDebug: true, mblThemeFiles: ['base','Carousel','PageIndicator'], locale: '${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}',  paths: {'kui': '/js/kui', 'threejs': '/js/libraries/threejs'} "></script>
     <!-- Dijit- Dojo toolkit UI library -->
     <script type="text/javascript" src="js/libraries/dojo/dijit/dijit.js" data-dojo-config="async: true, parseOnLoad: true, isDebug: true,  debugAtAllCosts: true ,
     gfxRenderer:'svg, silverlight,vml' , paths: {'kui': '/js/kui'}"></script>
@@ -33,9 +33,11 @@
        "dojox/layout/ContentPane",
        "dojo/window",
        "kui/DesignMenu/DesignMenu",
-       "kui/ModelMenu/ModelMenu"
+       "kui/ModelMenu/ModelMenu",
+       "kui/ModelView/ModelView",
+       "dojo/on"
     ],
-           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu) {
+           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu, ModelView, on) {
 
                var windowHeight = window.getBox().h - 20;
 
@@ -53,7 +55,7 @@
                            id: "topContainer",
                            splitter: true,
                            minSize: ".1",
-                           style: "height:20%;width:100%;background-color:#1f1f1f;"          
+                           style: "height:5%;width:100%;background-color:#1f1f1f;"          
 
                        })
                );
@@ -61,19 +63,26 @@
                var centerContainer = new ContentPaneX({
                    region: "center",
                    id: "centerContainer",
-                   style: "width:80%;height:80%;background-color:black;",      
+                   style: "width:90%;height:95%;background-color:black;",      
                    executeScripts: true
                });
                /*The center content pane to the bottom content pane*/
                mainContainer.addChild(centerContainer);
 
+               /*Create and place the model view content pane into center container*/
+               var modelView = new ModelView();
+               centerContainer.set('content', modelView.domNode);
+                
 
+               dojo.connect(modelView, 'onShow', dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/doberman.js")); 
+
+                   
                var bottomContainer = new ContentPane({
                    splitter: true,
                    region: "bottom",
                    id: "bottomContainer",
                    minSize: ".1",
-                   style: "width:100%;height:20%;background-color:#1f1f1f;"
+                   style: "width:100%;height:5%;background-color:#1f1f1f;"
                });
 
              
@@ -85,15 +94,22 @@
                );
 
                /*Left container*/
-               mainContainer.addChild(
-                       new ContentPane({
-                           splitter: true,
-                           region: "left",
-                           id: "leftContainer",
-                           minSize: ".1",
-                           style:"width:20%;height:100%;background-color:#1f1f1f;"
-                       })
-               );
+               var leftContainer = new ContentPane({
+                   splitter: true,
+                   region: "left",
+                   id: "leftContainer",
+                   minSize: ".1",
+                   style:"width:10%;height:100%;background-color:#1f1f1f;"
+               });
+
+               mainContainer.addChild(leftContainer);
+             
+
+
+               //Create the left design menu
+               var designMenu = new DesignMenu(null, null,  modelView);
+               leftContainer.set('content', designMenu.domNode); 
+               designMenu.createMenu();
 
                /*Right container*/
                mainContainer.addChild(
@@ -102,14 +118,11 @@
                            region: "right",
                            id: "rightContainer",
                            minSize: ".1",
-                           style:"height:100%;width:20%;background-color:#1f1f1f;"
+                           style:"height:100%;width:10%;background-color:#1f1f1f;"
                        })
                );
 
 
-               //Create the left design menu
-               var designMenu = new DesignMenu();
-               designMenu.createMenu();
 
                //Create the botom model file menu
                var modelMenu = new ModelMenu();
