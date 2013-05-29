@@ -52,6 +52,7 @@
                    
             displayModel: function (fileLocation) {
 
+               
 
                 var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h - 20;
                 var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w - 20;
@@ -60,10 +61,11 @@
 
 
                 var scene = new three.Scene();
-                var camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
-                camera.position.x = this.cameriaPositionX;
-                camera.position.y = this.cameriaPositionY;
-                camera.position.z = this.cameriaPositionZ;
+                this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
+
+                this.camera.position.x = this.cameriaPositionX;
+                this.camera.position.y = this.cameriaPositionY;
+                this.camera.position.z = this.cameriaPositionZ;
 
                 var renderer = new three.WebGLRenderer();
                 renderer.setSize(paneWidth, paneHeight);
@@ -96,9 +98,11 @@
 
                     requestAnimationFrame(render);
 
-                    camera.lookAt(scene.position);
-                    renderer.render(scene, camera);
+                    this.camera.lookAt(scene.position);
+                    renderer.render(scene, this.camera);
                 });
+
+                this.render = render; 
 
 
                 loader.load(fileLocation, function (object) {
@@ -110,23 +114,31 @@
 
             },
 
+            setCameraPosition: function(x, y, z)
+            {
+                this.camera.position.x = x;
+                this.camera.position.y = y;
+                this.camera.position.z = z;
+
+            },
+
 
             shineDirectionalLight: function (scene, color, intensity, distance, positions) 
             {
 
-                var directionalLight = new three.DirectionalLight(color);
-                directionalLight.position.set(positions.x, positions.y, positions.z).normalize();
-                scene.add(directionalLight);
+               this.directionalLight = new three.DirectionalLight(color);
+                this.directionalLight.position.set(positions.x, positions.y, positions.z).normalize();
+                scene.add(this.directionalLight);
 
             },
 
             shineAmbientLight: function (scene, color) 
             {
-                var ambient = new three.AmbientLight(color);
-                scene.add(ambient);
+                this.ambient = new three.AmbientLight(color);
+                scene.add(this.ambient);
 
             }
-
+             
 
 
          

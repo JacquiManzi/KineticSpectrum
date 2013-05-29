@@ -8285,6 +8285,7 @@
     <Content Include="js\kui\3DModels\Lightbulb.js" />
     <Content Include="js\kui\3DModels\doberman.js" />
     <Content Include="js\kui\3DModels\Snake.js" />
+    <Content Include="js\kui\3DModels\Rabbit.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

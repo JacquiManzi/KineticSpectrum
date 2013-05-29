@@ -44,7 +44,8 @@
                /*The main border container for the entire EOS*/   
                var mainContainer = new BorderContainer({
                    design: "headline",
-                   liveSplitters: true,
+                   liveSplitters: false,
+                   gutters: false,
                    style:"height:"+ windowHeight+ "px;width:100%;"    
                }, "mainContainer");
 
@@ -53,9 +54,11 @@
                        new ContentPane({
                            region: "top",
                            id: "topContainer",
-                           splitter: true,
+                           splitter: false,
                            minSize: ".1",
-                           style: "height:5%;width:100%;background-color:#1f1f1f;"          
+                           style: "height:5%;" +
+                                  "width:100%;" +
+                                  "background-color:black;"
 
                        })
                );
@@ -63,7 +66,9 @@
                var centerContainer = new ContentPaneX({
                    region: "center",
                    id: "centerContainer",
-                   style: "width:90%;height:95%;background-color:black;",      
+                   style: "width:90%;" +
+                          "height:95%;" +
+                          "background-color:black;",
                    executeScripts: true
                });
                /*The center content pane to the bottom content pane*/
@@ -74,15 +79,17 @@
                centerContainer.set('content', modelView.domNode);
                 
 
-               dojo.connect(modelView, 'onShow', dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/doberman.js")); 
+               dojo.connect(modelView, 'onShow', dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/Rabbit.js")); 
 
                    
                var bottomContainer = new ContentPane({
-                   splitter: true,
+                   splitter: false,
                    region: "bottom",
                    id: "bottomContainer",
                    minSize: ".1",
-                   style: "width:100%;height:5%;background-color:#1f1f1f;"
+                   style: "width:100%;" +
+                          "height:5%;" +
+                          "background-color:black;"
                });
 
              
@@ -95,11 +102,13 @@
 
                /*Left container*/
                var leftContainer = new ContentPane({
-                   splitter: true,
+                   splitter: false,
                    region: "left",
                    id: "leftContainer",
                    minSize: ".1",
-                   style:"width:10%;height:100%;background-color:#1f1f1f;"
+                   style: "width:10%;" +
+                          "height:100%;" +
+                          "background-color:#1f1f1f;"
                });
 
                mainContainer.addChild(leftContainer);
@@ -114,11 +123,13 @@
                /*Right container*/
                mainContainer.addChild(
                        new ContentPane({
-                           splitter: true,
+                           splitter: false,
                            region: "right",
                            id: "rightContainer",
                            minSize: ".1",
-                           style:"height:100%;width:10%;background-color:#1f1f1f;"
+                           style: "height:100%;" +
+                                  "width:10%;" +
+                                  "background-color:black;"
                        })
                );
 
