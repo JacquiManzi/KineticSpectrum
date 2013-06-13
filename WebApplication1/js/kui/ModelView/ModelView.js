@@ -21,7 +21,7 @@
 
             constructor: function (obj, obj2) {
 
-
+                this.style = "overflow:hidden"; 
                 /*Camera properties*/
                 this.fov = 45;
                 this.aspect = 0;

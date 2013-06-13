@@ -47,7 +47,7 @@
                     
                 }
 
-                dojo.connect(this.domNode, "onmousedown", dojo.hitch(vertexSphere, vertexSphere.selectSphere, this.spheres, this.domNode, this.camera));
+                dojo.connect(this.domNode, "onmousedown", dojo.hitch(vertexSphere, vertexSphere.findSelectionType, this.spheres, this.domNode, this.camera));
 
               
             }

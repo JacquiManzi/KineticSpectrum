@@ -7717,7 +7717,9 @@
     <Content Include="js\kui\ProcessModel.js" />
     <Content Include="js\kui\util\CommonHTML.js" />
     <Content Include="js\libraries\threejs\three.js" />
-    <Content Include="KinectSpectrum.html" />
+    <Content Include="KinectSpectrum.html">
+      <BrowseToURL>~/KineticSpectrum.html</BrowseToURL>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,7 @@
 
 
                 this.sphere = this.createSphere();
+               
             
             },
 
@@ -43,25 +44,35 @@
                 sphere.position.y = this.y;
                 sphere.position.z = this.z;
 
+                sphere.isSelected = false;
+
                 return sphere;
 
             },
 
-            selectSphere: function (spheres, domElement, camera, event) {
+            findSelectionType: function (spheres, domElement, camera, event)
+            {
+                var intersects = this.findIntersects(spheres, domElement, camera, event);
 
+                if (intersects.length > 0) {
 
+                    if (!intersects[0].object.isSelected) {
 
-                var mouse = { x: (event.layerX / domGeom.getMarginSize(domElement).w) * 2 - 1, y: -(event.layerY / domGeom.getMarginSize(domElement).h) * 2 + 1 };
-                //var mouse = { x: (event.x / window.innerWidth) * 2 - 1, y: -(event.y / window.innerHeight) * 2 + 1 };
-                var vector = new three.Vector3( mouse.x, mouse.y, 1);
+                        this.selectSphere(intersects);
 
-                this.projector.unprojectVector( vector, camera );
+                    }
+                    else {
 
-                var raycaster = new three.Raycaster(camera.position, vector.sub(camera.position).normalize());
+                        this.deseletSphere(intersects);
 
-                var intersects = raycaster.intersectObjects(spheres);
+                    }
 
-                if (intersects.length > 0 ) {
+                }
+
+            },
+
+            selectSphere: function (intersects) {
+
 
                     var selectionMaterial = new three.MeshBasicMaterial({
 
@@ -70,14 +81,37 @@
 
 
                     intersects[0].object.setMaterial(selectionMaterial);
-                }
+
+                    intersects[0].object.isSelected = true;
 
             },
 
-            deseletSphere: function () {
+            deseletSphere: function (intersects) {
+
+             
+                    var selectionMaterial = new three.MeshNormalMaterial({
+
+                        
+                    });
+
+                    intersects[0].object.setMaterial(selectionMaterial);
+
+                    intersects[0].object.isSelected = false;
 
 
+            },
 
+            findIntersects: function (spheres, domElement, camera, event) {
+
+                var mouse = { x: (event.layerX / domGeom.getMarginSize(domElement).w) * 2 - 1, y: -(event.layerY / domGeom.getMarginSize(domElement).h) * 2 + 1 };
+
+                var vector = new three.Vector3(mouse.x, mouse.y, 1);
+
+                this.projector.unprojectVector(vector, camera);
+
+                var raycaster = new three.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+                return raycaster.intersectObjects(spheres);
 
             }
 

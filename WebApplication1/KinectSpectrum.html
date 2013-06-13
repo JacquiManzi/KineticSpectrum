@@ -68,7 +68,8 @@
                    id: "centerContainer",
                    style: "width:90%;" +
                           "height:95%;" +
-                          "background-color:black;",
+                          "background-color:black;"+
+                          "overflow: hidden;",
                    executeScripts: true
                });
                /*The center content pane to the bottom content pane*/
@@ -121,7 +122,7 @@
                designMenu.createMenu();
 
                /*Right container*/
-               mainContainer.addChild(
+              /* mainContainer.addChild(
                        new ContentPane({
                            splitter: false,
                            region: "right",
@@ -131,7 +132,7 @@
                                   "width:10%;" +
                                   "background-color:black;"
                        })
-               );
+               );*/
 
 
 
