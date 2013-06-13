@@ -11,15 +11,16 @@ define([
     "dijit/layout/AccordionContainer",
     "dijit/form/NumberTextBox",
     "dijit/form/CheckBox",
-    "dojox/widget/ColorPicker",
+    "dijit/ColorPalette",
     "dijit/form/DropDownButton",
     "dijit/MenuItem",
     "dijit/DropDownMenu",
-    "dijit/form/Button"
+    "dijit/form/Button",
+    "threejs/three"
     
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, AccordionContainer, NumberTextBox, CheckBox,
-        ColorPicker, DropDownButton, MenuItem, DropDownMenu, Button) {
+        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, three) {
     "use strict";
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -58,7 +59,9 @@ define([
 
             container.addChild(contentPane);
 
-            this.create3DCameraSection(contentPane); 
+            var div = html.createDiv();
+            this.create3DCameraSection(contentPane, div);
+           // this.createLightingSection(contentPane, div);
 
         },
 
@@ -75,12 +78,10 @@ define([
 
         },
 
-        create3DCameraSection: function (menu)
+        create3DCameraSection: function (menu, div)
         {
-            
-            var div = html.createDiv();
 
-            var cameraDiv = html.createDiv("width:170px;");
+            var cameraDiv = html.createDiv("width:100%;");
             var camTitleDiv = html.createDiv("color: white;" +
                                      "padding-top: 10px;" +
                                      "text-align: center;"+
@@ -90,35 +91,38 @@ define([
              
             camTitleDiv.innerHTML = "Camera Settings";
 
-            var cameraList = html.createUL("list-style-type: none;text-align:right;");
+            var cameraList = html.createUL("list-style-type: none;text-align:center;");
             
-            //fov item
-            this.fovBox = this.createNumberTextBox("FOV", cameraList);
+            //camera x, y ,and z items w/ change buttons
+            var xChange = this.createButton('&#10003', null);
+            var yChange = this.createButton('&#10003', null);
+            var zChange = this.createButton('&#10003', null);
 
-            //aspect item
-            this.aspectBox = this.createNumberTextBox("Aspect", cameraList);
+            /*Create x,y,z number text boxes*/
+            this.camXBox = this.createNumberTextBox("X Pos", cameraList, xChange);
+            this.camYBox = this.createNumberTextBox("Y Pos", cameraList, yChange);
+            this.camZBox = this.createNumberTextBox("Z Pos", cameraList, zChange);
 
-            //near item
-            this.nearBox = this.createNumberTextBox("Near", cameraList);
-
-            //far item
-            this.farBox = this.createNumberTextBox("Far", cameraList);
-
-            //camera x, y ,and z items
-            this.camXBox = this.createNumberTextBox("X Pos", cameraList);
-            this.camYBox = this.createNumberTextBox("Y Pos", cameraList);
-            this.camZBox = this.createNumberTextBox("Z Pos", cameraList);
+            /*Create and set the click functions of each check button*/
+            xChange.set('onClick', dojo.hitch(this, this.changeXCamPos, this.modelView, this.camXBox));          
+            yChange.set('onClick', dojo.hitch(this, this.changeYCamPos, this.modelView, this.camYBox));            
+            zChange.set('onClick', dojo.hitch(this, this.changeZCamPos, this.modelView, this.camZBox));
 
             domConstruct.place(cameraList, cameraDiv);
+            domConstruct.place(cameraDiv, div);           
+            domConstruct.place(div, menu.domNode);
 
+        },
 
+        createLightingSection: function(menu, div)
+        {
             /*Lighting Section*/
 
             var lightingList = html.createUL("list-style-type: none;" +
-                                             "text-align:right;");
+                                             "text-align:center;");
 
             var lightingDiv = html.createDiv("padding-top:20px;" +
-                                             "width:180px;");
+                                             "width:100%;");
 
             var lightTitleDiv = html.createDiv("color: white;" +
                                                "text-align:center;" +
@@ -131,49 +135,89 @@ define([
             lightTitleDiv.innerHTML = "Lighting Settings";
 
             //Directional light
-            
+
             //Directional check box
             this.hasDirectioalLight = this.createCheckBox("Directonal Light", lightingList);
 
+            //Create color selection function for directional light
+         
+            var directSelect = dojo.hitch(this, function (modelView, designView, colorVal) {
+
+                //Format of color value is in a hex string- need to convert to pure hex value
+                colorVal = colorVal.substr(1);
+                var colorToHex = parseInt("0x" + colorVal);
+
+                //var colorToHex = parseInt(colorVal);
+                designView.changeDirectionalColor(modelView, colorToHex);
+
+            }, this.modelView, this);
+
             //Directional color selector
-            this.directionalColor = this.createColorPicker("Directional Color", lightingList);
-                      
+            this.directionalColor = this.createColorPalette("Directional Color", lightingList, directSelect);
+
             domConstruct.place(lightingList, lightingDiv);
 
+            /*Create change button for light directional intensity*/
+            var intensityClick = dojo.hitch(this, this.changeDirectIntensity, this.modelView, this);
+            var intensityChange = this.createButton('&#10003', intensityClick);
+
             //Directional Intensity Value
-            this.intensity = this.createNumberTextBox("Intensity", lightingList);
+            this.intensity = this.createNumberTextBox("Intensity", lightingList, intensityChange);
+
+            /*Create change button for light directional distance*/
+            var distanceClick = dojo.hitch(this, this.changeDirectDistance, this.modelView, this);
+            var distanceChange = this.createButton('&#10003', distanceClick);
 
             //Directional distance
-            this.distance = this.createNumberTextBox("Distance", lightingList);
+            this.distance = this.createNumberTextBox("Distance", lightingList, distanceChange);
+
+            /*Create change buttons for each directional light coordinate*/
+
+            var directXChange = this.createButton('&#10003', null);
+            var directYChange = this.createButton('&#10003', null);
+            var directZChange = this.createButton('&#10003', null);
 
             //Directional x, y, and z positions
-            this.directX = this.createNumberTextBox("X Pos", lightingList);
-            this.directY = this.createNumberTextBox("Y Pos", lightingList);
-            this.directZ = this.createNumberTextBox("Z Pos", lightingList);
+            this.directX = this.createNumberTextBox("X Pos", lightingList, directXChange);
+            this.directY = this.createNumberTextBox("Y Pos", lightingList, directYChange);
+            this.directZ = this.createNumberTextBox("Z Pos", lightingList, directZChange);
 
-            //Ambient Light
+            /*Create and set the click functions of each check button*/
+            directXChange.set('onClick', dojo.hitch(this, this.changeDirectXpos, this.modelView, this));
+            directYChange.set('onClick', dojo.hitch(this, this.changeDirectYpos, this.modelView, this));
+            directZChange.set('onClick', dojo.hitch(this, this.changeDirectZpos, this.modelView, this));
+
+            //Ambient Light 
 
             //Ambient light check box
             this.hasAmbientLight = this.createCheckBox("Ambient Light", lightingList);
 
+            var ambientColorSelect = dojo.hitch(this, function (modelView, designView, colorVal) {
+
+                //Format of color value is in a hex string- need to convert to pure hex value
+                colorVal = colorVal.substr(1);
+                var colorToHex = parseInt("0x" + colorVal); 
+       
+                //var colorToHex = parseInt(colorVal);
+                designView.changeAmbientColor(modelView, colorToHex); 
+
+            }, this.modelView, this);
+
+            //Create color selection function for ambient color
+
             //Ambient light color selector
-            this.ambientColor = this.createColorPicker("Ambient Color", lightingList);
+            this.ambientColor = this.createColorPalette("Ambient Color", lightingList, ambientColorSelect);
 
 
             //Submit Button Area
-            var submitDiv = html.createDiv("text-align:center;"); 
-            this.createButton("Submit", submitDiv, dojo.hitch(this, this.changeModelViewValues, this.modelView, this));
+            var submitDiv = html.createDiv("text-align:center;");
+            this.createButton("Submit", dojo.hitch(this, this.changeModelViewValues, this.modelView, this), submitDiv);
 
-       
-            domConstruct.place(cameraDiv, div);
             domConstruct.place(lightingDiv, div);
             domConstruct.place(submitDiv, div);
-         
-            domConstruct.place(div, menu.domNode);
-
         },
 
-        createNumberTextBox: function (label, list)
+        createNumberTextBox: function (label, list, changeButton)
         {
 
             var li = html.createLI("color:#3d8dd5;" +
@@ -187,6 +231,7 @@ define([
             li.innerHTML = label +" ";
 
             domConstruct.place(numberBox.domNode, li);
+            domConstruct.place(changeButton.domNode, li);  
             domConstruct.place(li, list);
 
             return numberBox;
@@ -213,7 +258,7 @@ define([
 
         },
 
-        createColorPicker: function (label, list)
+        createColorPalette: function (label, list, clickFunc)
         {
             var li = html.createLI("color:#3d8dd5;" +
                                    "padding-bottom:10px;");
@@ -232,9 +277,10 @@ define([
 
             });
 
-            
+           
+            var colorPalette = new ColorPalette({
 
-            var colorPicker = new ColorPicker({
+                onChange: clickFunc
 
             });
 
@@ -246,14 +292,14 @@ define([
             dropDownMenu.addChild(colorItem);
 
 
-            domConstruct.place(colorPicker.domNode, colorItem.domNode); 
+            domConstruct.place(colorPalette.domNode, colorItem.domNode);
             domConstruct.place(dropDownButton.domNode, li);
             domConstruct.place(li, list);
 
             return dropDownMenu;
         },
 
-        createButton: function (label, div, func)
+        createButton: function (label, func, div)
         {
             var button = new Button({
 
@@ -261,88 +307,138 @@ define([
                 onClick: func
             });
 
-            domConstruct.place(button.domNode, div); 
+            if (!!div) {
+                domConstruct.place(button.domNode, div);
+            }
+
+            return button; 
         },
 
-        changeModelViewValues: function(modelView, designMenu)
+        /*
+        * Change an individual item on the 3D model
+        */
+        changeXCamPos: function(modelView, designMenuValue)
+        {
+            var value = designMenuValue.get('value');
+            if (!!value && !isNaN(value)) {
+                modelView.camera.position.x = value;
+            }
+
+        },
+
+        changeYCamPos: function(modelView, designMenuValue)
+        {
+            var value = designMenuValue.get('value');
+            if (!!value && !isNaN(value)) {
+                modelView.camera.position.y = value;
+            }
+
+        },
+
+        changeZCamPos: function(modelView, designMenuValue)
+        {
+            var value = designMenuValue.get('value');
+            if (!!value && !isNaN(value)) {
+                modelView.camera.position.z = value;
+            }
+
+        },
+
+        changeDirectXpos: function(modelView, designMenu)
+        {
+            var directX = designMenu.directX.get('value');
+            if (!!directX && !isNaN(directX)) {
+                modelView.directionalLight.position.x = directX;
+            }
+
+        },
+
+        changeDirectYpos: function(modelView, designMenu)
+        {
+            var directY = designMenu.directY.get('value');
+            if (!!directY && !isNaN(directY)) {
+                modelView.directionalLight.position.y = directY;
+            }
+
+        },
+
+        changeDirectZpos: function(modelView, designMenu) 
+        {
+            var directZ = designMenu.directZ.get('value');
+            if (!!directZ && !isNaN(directZ)) {
+                modelView.directionalLight.position.z = directZ;
+            }
+
+        },
+
+        changeDirectIntensity: function(modelView, designMenu)
+        {
+            var directionalIntensity = designMenu.intensity.get('value');
+            if (!!directionalIntensity && !isNaN(directionalIntensity)) {
+                modelView.directionalLight.intensity = directionalIntensity;
+            }
+        },
+
+        changeDirectDistance: function(modelView, designMenu)
+        {
+            var directionalLightDistance = designMenu.distance.get('value');
+            if (!!directionalLightDistance && !isNaN(directionalLightDistance)) {
+                modelView.directionalLight.distance = directionalLightDistance;
+            }
+        },
+
+        changeDirectionalColor: function(modelView, newColor)
+        {
+            var directionalColor = newColor;
+            if (!!directionalColor) {
+
+                var threeColor = new three.Color(newColor);
+                modelView.directionalLight.color = threeColor;
+
+            }
+
+        },
+
+        changeAmbientColor: function(modelView, newColor)
+        {
+            var ambientColor = newColor
+            if (!!ambientColor) {
+
+                var threeColor = new three.Color(newColor);
+                modelView.ambient.color = threeColor;
+            }
+        },
+
+        changeModelViewValues: function(modelView, designMenu) 
         {
 
             /*Camera Settings*/
-            var fov = designMenu.fovBox.get('value');
-            if (!!fov && !isNaN(fov)) {
-                modelView.camera.fov = fov;
-            }
+            //Change x Cam Pos
+            this.changeXCamPos(modelView, designMenu.camXBox);
 
-            var aspect = designMenu.aspectBox.get('value');
-            if (!!aspect && !isNaN(aspect)) {
-                modelView.camera.aspect = aspect;
-            }
+            //Change y Cam Pos
+            this.changeYCamPos(modelView, designMenu.camYBox);
 
-            var near = designMenu.nearBox.get('value');
-            if (!!near && !isNaN(near)) {
-                modelView.camera.near = near;
-            }
-
-            var far = designMenu.farBox.get('value');
-            if (!!far && !isNaN(far)) {
-                modelView.camera.far = far;
-            }
-
-            var camXPos = designMenu.camXBox.get('value');
-            if (!!camXPos && !isNaN(camXPos)) {
-                modelView.camera.position.x = camXPos;
-            }
-
-            var camYPos = designMenu.camYBox.get('value');
-            if (!!camYPos && !isNaN(camYPos)) {
-                modelView.camera.position.y = camYPos;
-            }
-
-            var camZPos = designMenu.camZBox.get('value');
-            if (!!camZPos && !isNaN(camZPos)) {
-                modelView.camera.position.z = camZPos;
-            }
+            //Change Z Cam Pos
+            this.changeZCamPos(modelView, designMenu.camZBox);
 
             
             /*Lighting Settings*/
+            //Change directional light x position
+            this.changeDirectXpos(modelView, designMenu);
 
-            var directionalColor = designMenu.directionalColor.get('value');
-            if (!!directionalColor && !isNaN(directionalColor)) {
-                modelView.directionalColor.color = directionalColor;
-            }
+            //Change directional light y position
+            this.changeDirectYpos(modelView, designMenu);
 
-            var directX = designMenu.directX.get('value');
-            if (!!directX && !isNaN(directX)) {
-                modelView.directionalLightX.color = directX;
-            }
+            //Change directional light z position
+            this.changeDirectZpos(modelView, designMenu);
 
-            var directY = designMenu.directY.get('value');
-            if (!!directY && !isNaN(directY)) {
-                modelView.directionalLightY.color = directY;
-            }
+            //Change directional light intensity
+            this.changeDirectIntensity(modelView, designMenu);
 
-            var directZ = designMenu.directZ.get('value');
-            if (!!directZ && !isNaN(directZ)) {
-                modelView.directionalLightZ.color = directZ;
-            }
+            //Change directional light distance
+            this.changeDirectDistance(modelView, designMenu);
 
-
-            var ambientColor = designMenu.ambientColor.get('value');
-            if (!!ambientColor && !isNaN(ambientColor)) {
-                modelView.ambient.color = ambientColor;
-            }         
-
-            var directionalIntensity = designMenu.intensity.get('value');
-            if (!!directionalIntensity && !isNaN(directionalIntensity)) {
-                modelView.directionalLightIntensity = directionalIntensity;
-            }
-
-            var directionalLightDistance = designMenu.distance.get('value');
-            if (!!directionalLightDistance && !isNaN(directionalLightDistance)) {
-                modelView.directionalLight.directionalLightDistance = directionalLightDistance;
-            }
-
-         
 
         }
 

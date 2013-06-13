@@ -6,10 +6,11 @@
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojo/dom-geometry"
+    "dojo/dom-geometry",
+    "kui/ModelView/ModelSkeleton"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -53,15 +54,15 @@
             displayModel: function (fileLocation) {
 
                
-
-                var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h - 20;
-                var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w - 20;
+                var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h;
+                var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w;
                 
                 this.aspect = (paneWidth / paneHeight);
 
 
                 var scene = new three.Scene();
                 this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
+                
 
                 this.camera.position.x = this.cameriaPositionX;
                 this.camera.position.y = this.cameriaPositionY;
@@ -102,17 +103,44 @@
                     renderer.render(scene, this.camera);
                 });
 
-                this.render = render; 
+                var modelViewNode = this.domNode;
+                var orbitControl = new three.OrbitControls(this.camera, modelViewNode);
 
+                loader.load(fileLocation, dojo.hitch(this, this.loadObject, scene, render));
 
-                loader.load(fileLocation, function (object) {
-                    scene.add(object);
+                var animate = function () {
 
-                    render();
-                });
+                    requestAnimationFrame(animate);
+                    orbitControl.update();                    
+                }
 
+                animate();
 
             },
+
+            loadObject: function(scene, render, object)
+            {
+                var geometry = object.children[0].geometry;
+                three.GeometryUtils.center(geometry);
+
+                var modelSkeleton = new ModelSkeleton(geometry, this.domNode, scene, this.camera);
+                modelSkeleton.colorEachVertex();
+
+                var mesh = new three.Mesh(modelSkeleton.geometry, new three.MeshBasicMaterial(
+                    {
+                        color: 0x999999,
+                        wireframe: true,
+                        transparent: false,
+                        opacity: 0.85,
+                        vertexColors: true
+                    }));
+
+
+                scene.add(mesh);
+
+                render();
+            },
+
 
             setCameraPosition: function(x, y, z)
             {
@@ -139,12 +167,6 @@
 
             }
              
-
-
-         
-
-
-
 
         });
 

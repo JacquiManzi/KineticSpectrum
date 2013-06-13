@@ -63,7 +63,9 @@
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\ModelMenu\Model.js" />
     <Content Include="js\kui\ModelMenu\ModelMenu.js" />
+    <Content Include="js\kui\ModelView\ModelSkeleton.js" />
     <Content Include="js\kui\ModelView\ModelView.js" />
+    <Content Include="js\kui\ModelView\VertexSphere.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />
     <Content Include="js\libraries\dojo\dijit\a11y.js.uncompressed.js" />
