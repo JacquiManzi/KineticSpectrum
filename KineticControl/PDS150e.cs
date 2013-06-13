@@ -18,7 +18,7 @@ namespace KineticControl
         {
             _network = network;
             _endPoint = endPoint;
-            _data1 = new ColorData(IntialHex,new LightType(){Name = "Accent List", NoLights = 50, Spacing=14}, 5);
+            _data1 = new ColorData(this, IntialHex,new LightType(){Name = "Accent List", NoLights = 50, Spacing=14}, 5);
         }
 
         public void UpdateSystem()
@@ -48,7 +48,7 @@ namespace KineticControl
             get { return HexStrings.DecodeString(_initalHex); }
         }
 
-        public IList<ColorData> AllColorData
+        public List<ColorData> AllColorData
         {
             get { return new List<ColorData>(){_data1}; }
         }

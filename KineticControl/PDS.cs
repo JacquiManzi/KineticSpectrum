@@ -8,7 +8,7 @@ namespace KineticControl
 {
     public interface PDS
     {
-        IList<ColorData> AllColorData { get; }
+        List<ColorData> AllColorData { get; }
         void UpdateSystem();
         string getType();
 

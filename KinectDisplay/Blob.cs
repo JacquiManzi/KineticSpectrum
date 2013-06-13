@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Media;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Point = System.Windows.Point;
+using Color = System.Windows.Media.Color;
 
 namespace KinectDisplay
 {
@@ -45,6 +47,22 @@ namespace KinectDisplay
             {
                 baseImg.Draw(Rectangle.Round(new RectangleF(blob.XMin, blob.YMin, blob.XMax-blob.XMin, blob.YMax-blob.YMin)), new Gray(255), 2 );
                 baseImg.Draw(blob.Name, ref font, new System.Drawing.Point(blob.XMax,blob.YMax), new Gray(255) );  
+            }
+            return baseImg;
+        }
+
+        public static Image<Rgba, byte> AddOutline(Image<Rgba, byte> baseImg, IEnumerable<Blob> blobs, MCvFont font)
+        {
+            return AddOutline(baseImg, blobs, font, Colors.White);
+        }
+
+        public static Image<Rgba, byte> AddOutline(Image<Rgba, byte> baseImg, IEnumerable<Blob> blobs, MCvFont font, Color color)
+        {
+            Rgba rgbaColor = new Rgba(color.R, color.G, color.B, color.A);
+            foreach (Blob blob in blobs)
+            {
+                baseImg.Draw(Rectangle.Round(new RectangleF(blob.XMin, blob.YMin, blob.XMax - blob.XMin, blob.YMax - blob.YMin)), rgbaColor, 2);
+                baseImg.Draw(blob.Name, ref font, new System.Drawing.Point(blob.XMax, blob.YMax), rgbaColor);
             }
             return baseImg;
         }
@@ -104,7 +122,7 @@ namespace KinectDisplay
             born = blob.born;
         }
 
-        public String Name { get; internal set; }
+        public String Name { get;  set; }
         //public Image<Gray, byte> BlobImg { get; internal set; }
 
         public Point BottomRight { 
@@ -132,18 +150,18 @@ namespace KinectDisplay
             }
         }
 
-        public int XMax { get; internal set; }
-        public int YMax { get; internal set; }
-        public int XMin { get; internal set; }
-        public int YMin { get; internal set; }
+        public int XMax { get;  set; }
+        public int YMax { get;  set; }
+        public int XMin { get;  set; }
+        public int YMin { get;  set; }
 
-        public int ZMin { get; internal set; }
-        public int ZMax { get; internal set; }
-        public int Area { get; internal set; }
+        public int ZMin { get;  set; }
+        public int ZMax { get;  set; }
+        public int Area { get;  set; }
 
-        public Point Center { get; internal set; }
+        public Point Center { get;  set; }
 //        public int XCenter { get; internal set; }
-        public int ZCenter { get; internal set; }
+        public int ZCenter { get;  set; }
         //public int YCenter { get; internal set; }
 
 

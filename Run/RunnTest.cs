@@ -1,5 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 using System.Threading;
+using System.Windows.Media;
 
 namespace KineticControl
 {
@@ -31,28 +32,27 @@ namespace KineticControl
 //                    break;
 //                }
 //            }
-            foreach (var netCard in network.NetworkCardList)
-            {
-                if (netCard.Name.Equals("Local Area Connection"))
-                {
-                    card = netCard;
-                    network.NetworkCard = card;
-                    network.InitializeLocalIP();
-                    network.InitializeLocalPort();
 
-                    break;
-                }
-            }
+           network.SetInterface("Local Area Connection 2");
+
+
            
            network.BroadCast();
            PDS powerSupply = network.PDSs[0];// PDSs[0];
-           for (int i = 0; i < pattern.GetColors().Count; i++)
+           while (true)
            {
-               for (int j = 0; j < 50; j++)
+               for (int i = 0; i < pattern.GetColors().Count; i++)
                {
-                   powerSupply.AllColorData[0][j] = pattern.GetColors()[i];
-                   powerSupply.UpdateSystem();
-                   Thread.Sleep(100);
+                   Color color = pattern.GetColors()[i];
+                   for (int j = 0; j < 50; j++)
+                   {
+                       foreach (var colorData in powerSupply.AllColorData)
+                       {
+                           colorData[j] = color;
+                       }
+                       powerSupply.UpdateSystem();
+                       Thread.Sleep(100);
+                   }
                }
            }
 

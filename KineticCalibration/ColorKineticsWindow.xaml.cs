@@ -20,7 +20,7 @@ namespace KineticCalibration
     /// </summary>
     public partial class ColorKineticsWindow : Window
     {
-        private PDS60ca _selectedPds;
+        private PDS60Ca _selectedPds;
         private Image _selectedImage;
 
         private Point _origin;
@@ -48,8 +48,8 @@ namespace KineticCalibration
             Network.GetInstance().SetInterface("Local Area Connection");
             //Grid grid = (Grid)Content;
             //PDS60ca pds = new PDS60ca();
-            //pds.SetColorData1(LightType.Short);
-            //LedGroup gr = new LedGroup(pds.Data1.Leds,grid, Border,1,_imgToDev.Keys);
+            //pds.SetColorAllColorData[0](LightType.Short);
+            //LedGroup gr = new LedGroup(pds.AllColorData[0].Leds,grid, Border,1,_imgToDev.Keys);
             _timer = new Timer(1000/30);
             _timer.Elapsed += (s,e)=>UpdateLights();
             _timer.Enabled = true;
@@ -58,10 +58,10 @@ namespace KineticCalibration
 
         private void UpdateLights()
         {
-           PDS60ca[] pdss = new PDS60ca[PowerSupplies.Items.Count];
+           PDS60Ca[] pdss = new PDS60Ca[PowerSupplies.Items.Count];
            PowerSupplies.Items.CopyTo(pdss,0);
 
-           foreach(PDS60ca pds in pdss )
+           foreach(PDS60Ca pds in pdss )
            {
                try
                {
@@ -168,17 +168,17 @@ namespace KineticCalibration
         {
             if (e.AddedItems.Count > 0)
             {
-                _selectedPds = (PDS60ca) e.AddedItems[0];
+                _selectedPds = (PDS60Ca) e.AddedItems[0];
                 IPAddress.IsEnabled = Fixture1.IsEnabled = Fixture2.IsEnabled = RemoveButton.IsEnabled = true;
                 IPAddress.Text = _selectedPds.EndPoint==null?"":_selectedPds.EndPoint.Address.ToString();
-
-                if (!Fixture1.Items.Contains(_selectedPds.Data1.LightType))
-                    Fixture1.Items.Add(_selectedPds.Data1.LightType);
-                if (!Fixture2.Items.Contains(_selectedPds.Data2.LightType))
-                    Fixture2.Items.Add(_selectedPds.Data2.LightType);
                 
-                Fixture1.SelectedItem = _selectedPds.Data1.LightType;
-                Fixture2.SelectedItem = _selectedPds.Data2.LightType;
+                if (!Fixture1.Items.Contains(_selectedPds.AllColorData[0].LightType))
+                    Fixture1.Items.Add(_selectedPds.AllColorData[0].LightType);
+                if (!Fixture2.Items.Contains(_selectedPds.AllColorData[1].LightType))
+                    Fixture2.Items.Add(_selectedPds.AllColorData[1].LightType);
+                
+                Fixture1.SelectedItem = _selectedPds.AllColorData[0].LightType;
+                Fixture2.SelectedItem = _selectedPds.AllColorData[1].LightType;
             }
             else
             {
@@ -205,30 +205,30 @@ namespace KineticCalibration
         {
             if (sender == Fixture1)
             {
-                if (_selectedPds.Data1.LightType != (LightType)Fixture1.SelectedItem)
+                if (_selectedPds.AllColorData[0].LightType != (LightType)Fixture1.SelectedItem)
                 {
                     _selectedPds.SetColorData1((LightType) Fixture1.SelectedItem);
                 }
                 if (LedGroup1 != null)
                     LedGroup1.CleanUp((Grid)Content);
-                LedGroup1 = new LedGroup(_selectedPds.Data1.Leds,(Grid)Content, Border, 0, _imgToDev.Keys);
+                LedGroup1 = new LedGroup(_selectedPds.AllColorData[0].Leds,(Grid)Content, Border, 0, _imgToDev.Keys);
             }
 
             if (sender == Fixture2)
             {
-                if (_selectedPds.Data2.LightType != (LightType)Fixture2.SelectedItem)
+                if (_selectedPds.AllColorData[1].LightType != (LightType)Fixture2.SelectedItem)
                 {
                     _selectedPds.SetColorData2((LightType) Fixture2.SelectedItem);
                 }
                 if (LedGroup2 != null)
                     LedGroup2.CleanUp((Grid) Content);
-                LedGroup2 = new LedGroup(_selectedPds.Data2.Leds, (Grid)Content, Border, 20, _imgToDev.Keys);
+                LedGroup2 = new LedGroup(_selectedPds.AllColorData[1].Leds, (Grid)Content, Border, 20, _imgToDev.Keys);
             }
         }
 
         private void AddPds(object sender, RoutedEventArgs e)
         {
-            _selectedPds = new PDS60ca();
+            _selectedPds = new PDS60Ca();
             PowerSupplies.Items.Add(_selectedPds);
             PowerSupplies.SelectedItem = _selectedPds;
         }
@@ -256,7 +256,7 @@ namespace KineticCalibration
             }
             
             //List<PDS> pdss = new List<PDS>(PowerSupplies.ItemsSource.GetEnumerator());
-            PDS60ca[] pdss = new PDS60ca[PowerSupplies.Items.Count];
+            PDS60Ca[] pdss = new PDS60Ca[PowerSupplies.Items.Count];
             PowerSupplies.Items.CopyTo(pdss, 0);
             XElement xmlDoc = new XElement("Configuration");
             xmlDoc.Add(XmlEncoder.encodeXml(serToTransform));

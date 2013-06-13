@@ -1,20 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Windows.Media;
 using System.Xml.Linq;
 
 namespace KineticControl
 {
-    public class ColorData : IEnumerable<Color>
+    public class ColorData : IEnumerable<Color>, IEquatable<ColorData>
     {
+        private readonly IPAddress _deviceAddress;
         private readonly byte[] _byteArray;
         private readonly IList<Led> _leds;
         private readonly int _initialLength;
         private readonly int _initial;
+
         public LightType LightType { get; set; }
 
-        public ColorData(byte[] initialData, LightType lightType, int initial = 0)
+        public ColorData(PDS pds, byte[] initialData, LightType lightType, int initial = 0)
         {
+            _deviceAddress = pds.EndPoint.Address;
             LightType = lightType;
             _initialLength = initialData.Length;
             _byteArray = new byte[_initialLength + HexStrings.addressOff.Length/2];
@@ -56,6 +62,43 @@ namespace KineticControl
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public bool Equals(ColorData other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            if (!_deviceAddress.Equals(other._deviceAddress))
+                return false;
+
+            if (_initialLength != other._initialLength)
+                return false;
+            
+            return _byteArray.Take(_initialLength).SequenceEqual(other._byteArray.Take(_initialLength));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ColorData) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _initialLength;
+        }
+
+        public static bool operator ==(ColorData left, ColorData right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ColorData left, ColorData right)
+        {
+            return !Equals(left, right);
         }
 
         public XElement ToXml()

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Windows.Media;
 
 /*
  * This class will collect all of the necessary information to set up your network
@@ -15,12 +13,22 @@ using System.Windows.Media;
 
 namespace KineticControl
 {
+    class NetworkState
+    {
+        public readonly Socket Socket;
+        public const int BUFFER_SIZE = 1024;
+        public byte[] Buffer = new byte[BUFFER_SIZE];
+
+        internal NetworkState(Socket socket)
+        {
+            Socket = socket;
+        }
+    }
+
     public class Network
     {
         private int _localPort;
-        private int _destnPort = 0;
         private IPAddress _localIPAddress;
-        private IPEndPoint _destEndPoint;
         private NetworkInterface _bindedNetworkCard;
         private List<NetworkInterface> _networkCardList;
         readonly IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 55350);
@@ -58,15 +66,22 @@ namespace KineticControl
 
         public void SetInterface(String networkInterface)
         {
+            if (_networkCardList.Count == 0)
+                RetrieveNetworkCards();
+
             foreach(NetworkInterface inter in NetworkCardList)
             {
                 if(inter.Name.Equals(networkInterface))
                 {
                     NetworkCard = inter;
+                    InitializeLocalIP();
+                    InitializeLocalPort();
                     return;
                 }
             }
+            throw new ArgumentException("Specified network interface '" + networkInterface + "' doesn't exist.");
         }
+
 
 /*
  * Retrieve your local IP Address for your default network interface
@@ -74,14 +89,19 @@ namespace KineticControl
 
         public IPAddress InitializeLocalIP()
         {
-            _localIPAddress =_bindedNetworkCard.GetIPProperties().UnicastAddresses[0].Address;
-                       
-            return _localIPAddress;
+            foreach(var unicastAddress in _bindedNetworkCard.GetIPProperties().UnicastAddresses)
+            {
+                if(unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return _localIPAddress = unicastAddress.Address;
+                }
+            }
+            throw new InvalidOperationException("Specified network card has no IPv4 IP Address...");
         }
 
 
 /*
- * Initialize your the local port to cmmunicate over
+ * Initialize your the local port to communicate over
  */
 
         public int InitializeLocalPort()
@@ -96,17 +116,44 @@ namespace KineticControl
 
         private void HandleCallback(IAsyncResult result)
         {
-            Socket socket = (Socket)result.AsyncState;
-            EndPoint endPoint = _ipEndPoint;
-            socket.EndReceiveFrom(result, ref endPoint);
-            lock (this)
-            {
-                _destEndPoint = (IPEndPoint) endPoint;
-                PDS60ca newPDS = new PDS60ca(this, _destEndPoint);
-                if (!_pdss.Contains(newPDS))
-                    _pdss.Add(newPDS);
-                Console.WriteLine("Found Device at endpoint: " + _destEndPoint);
-            }
+            NetworkState state = (NetworkState)result.AsyncState;
+            state.Socket.EndReceive(result);
+            IPEndPoint newDevice = new IPEndPoint(GetAddressFromResponse(state.Buffer), 6038);
+            
+            String model = GetModelFromResponse(state.Buffer);
+            PDS pds;
+            if(model.Equals("SPDS-480ca"))
+                pds = new PDS480Ca(this, newDevice);
+            else if(model.Equals("PDS-60ca"))
+                pds = new PDS60Ca(this, newDevice);
+            else
+              throw new InvalidOperationException("No handler available for PDS type: " + model);
+            
+            if (!_pdss.Contains(pds))
+                _pdss.Add(pds);
+            Console.WriteLine("Found Device '" + model + "' at endpoint:" + newDevice);
+        }
+
+        private static IPAddress GetAddressFromResponse(byte[] response)
+        {
+            if (response == null) throw new ArgumentNullException("response");
+            //take bytes 13-16
+            byte[] ipBytes = response.Skip(12).Take(4).ToArray();
+            return new IPAddress(ipBytes);
+        }
+
+        private static String GetModelFromResponse(byte[] response)
+        {
+            byte[] modelBytes = response.Skip(32).SkipWhile(b => b != 0x0A).Skip(3).TakeWhile(b => b != 0x0A).ToArray();
+            return Encoding.ASCII.GetString(modelBytes);
+        }
+
+
+        private IPAddress GetLocalIP(byte endAddress)
+        {
+            byte[] ipBytes = _localIPAddress.GetAddressBytes();
+            ipBytes[3] = endAddress;
+            return new IPAddress(ipBytes);
         }
 
 /*
@@ -114,110 +161,112 @@ namespace KineticControl
  */
         public void BroadCast()
         {
-            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("169.254.255.255"), 6038);
+            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6038);
+            IPEndPoint localBroadCastIp = new IPEndPoint(GetLocalIP(0xff), 6038);
+
+            //arbitrary IP address that we tell the remote device to reply from...
+            IPAddress mscNetworkIP = GetLocalIP(0xC0);
 
             _socket.Bind(_ipEndPoint);
             _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-              
-            byte[] data1 = HexStrings.DataOne;
-            byte[] data2 = HexStrings.DataTwo;
-            byte[] data3 = HexStrings.DataThree;
-            byte[] data4 = HexStrings.DataFour;
 
-            EndPoint endPoint = _ipEndPoint;
+            NetworkState state = new NetworkState(_socket);
+
+
+            //update this to accept connections, which will trigger the BeginReceive
+            _socket.BeginReceive(state.Buffer, 0, NetworkState.BUFFER_SIZE, 0, HandleCallback, state); 
             
-            _socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
-                                           HandleCallback, _socket); 
+            for (int i = 0; i < 5; i++)
+                _socket.SendTo(HexStrings.FullSearch, broadCastIp);
+
+            Thread.Sleep(1000);
+
+            for (int i = 0; i < 4; i++)
+                _socket.SendTo(HexStrings.PartialSearch, localBroadCastIp);
+                
+            Thread.Sleep(10);
+            _socket.SendTo(HexStrings.LocalRequestHex(mscNetworkIP), localBroadCastIp);
+            Thread.Sleep(1000);
             
-            while (_destEndPoint == null)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    _socket.SendTo(data3, SocketFlags.None, broadCastIp);
-                    Thread.Sleep(250);
-                }
-                _socket.SendTo(data4, SocketFlags.None, broadCastIp);
-                Thread.Sleep(1000);
-            }
         }
 
-        public void SendUpdate(ColorData colorData)
-        {
-            _socket.SendTo(colorData.Bytes, SocketFlags.None, _destEndPoint);
-        }
-
+       
         public void SendUpdate(IPEndPoint endPoint, ColorData colorData)
         {
-            _socket.SendTo(colorData.Bytes, SocketFlags.None, endPoint);
+            var args = new SocketAsyncEventArgs();
+            args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
+            args.RemoteEndPoint = endPoint;
+//            _socket.SendAsync(args);
+            _socket.SendToAsync(args);
         }
 
-        public void SendUpdate(Color[] colors, int network)
-        {
-            int length = (PDS60ca.InitialHex.Length + HexStrings.AddressOff.Length) / 2;
-            byte[] colorData = new byte[length];
-            byte[] initial;
-
-            if (network == 1)
-            {
-                initial = PDS60ca.InitialHex;
-            }
-            else
-            {
-                initial = PDS60ca.InitialHex2;
-            }
-
-            colorData.Initialize();
-            
-            initial.CopyTo(colorData, 0);
-            for (int i = 0; i < colors.Length; i++)
-            {
-                colorData[initial.Length + i*3] = colors[i].R;
-                colorData[initial.Length + i * 3 + 1] = colors[i].G;
-                colorData[initial.Length + i * 3 + 2] = colors[i].B;
-            }
-
-//            if (network == 2)
+//        public void SendUpdate(Color[] colors, int network)
+//        {
+//            int length = (PDS60Ca.InitialHex.Length + HexStrings.AddressOff.Length) / 2;
+//            byte[] colorData = new byte[length];
+//            byte[] initial;
+//
+//            if (network == 1)
 //            {
-//                _socket.SendTo(DecodeString(PDS60ca.byteStringThree), SocketFlags.None, _destEndPoint);
+//                initial = PDS60Ca.InitialHex;
 //            }
 //            else
 //            {
-//                _socket.SendTo(DecodeString(PDS60ca.byteStringOne), SocketFlags.None, _destEndPoint);
+//                initial = PDS60Ca.InitialHex2;
 //            }
-            Thread.Sleep(20);  
-            _socket.SendTo(colorData, SocketFlags.None, _destEndPoint);
-            Thread.Sleep(20);
-        }
+//
+//            colorData.Initialize();
+//            
+//            initial.CopyTo(colorData, 0);
+//            for (int i = 0; i < colors.Length; i++)
+//            {
+//                colorData[initial.Length + i*3] = colors[i].R;
+//                colorData[initial.Length + i * 3 + 1] = colors[i].G;
+//                colorData[initial.Length + i * 3 + 2] = colors[i].B;
+//            }
+//
+////            if (network == 2)
+////            {
+////                _socket.SendTo(DecodeString(PDS60ca.byteStringThree), SocketFlags.None, _destEndPoint);
+////            }
+////            else
+////            {
+////                _socket.SendTo(DecodeString(PDS60ca.byteStringOne), SocketFlags.None, _destEndPoint);
+////            }
+//            Thread.Sleep(20);  
+//            _socket.SendTo(colorData, SocketFlags.None, _destEndPoint);
+//            Thread.Sleep(20);
+//        }
 
         
-        public void FindPowerSupplies(int timeOutInMs = int.MaxValue)
-        {
-            DateTime start = DateTime.Now;
-            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6038);
-
-            _socket.Bind(_ipEndPoint);
-            _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-
-            byte[] data1 = HexStrings.PsSearch;
-           
-            EndPoint endPoint = _ipEndPoint;
-
-            _socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
-                                           HandleCallback, _socket);
-            int ms = 0;
-            do
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    ms = (int) Math.Min(250, (DateTime.Now - start).TotalMilliseconds + timeOutInMs);
-                    _socket.SendTo(data1, SocketFlags.None, broadCastIp);
-                    Thread.Sleep(ms);
-                }
-                // _socket.SendTo(data2, SocketFlags.None, broadCastIp);
-                if (_destEndPoint == null)
-                    Thread.Sleep(3000);
-            } while (_destEndPoint == null && ms > 0);
-        }
+//        public void FindPowerSupplies(int timeOutInMs = int.MaxValue)
+//        {
+//            DateTime start = DateTime.Now;
+//            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6038);
+//
+//            _socket.Bind(_ipEndPoint);
+//            _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+//
+//            byte[] data1 = HexStrings.PsSearch;
+//           
+//            EndPoint endPoint = _ipEndPoint;
+//
+//            _socket.BeginReceiveFrom(new byte[500], 0, 500, SocketFlags.None, ref endPoint,
+//                                           HandleCallback, _socket);
+//            int ms = 0;
+//            do
+//            {
+//                for (int i = 0; i < 5; i++)
+//                {
+//                    ms = (int) Math.Min(250, (DateTime.Now - start).TotalMilliseconds + timeOutInMs);
+//                    _socket.SendTo(data1, SocketFlags.None, broadCastIp);
+//                    Thread.Sleep(ms);
+//                }
+//                // _socket.SendTo(data2, SocketFlags.None, broadCastIp);
+//                if (_destEndPoint == null)
+//                    Thread.Sleep(3000);
+//            } while (_destEndPoint == null && ms > 0);
+//        }
 
      
 
@@ -234,46 +283,32 @@ namespace KineticControl
         public List<NetworkInterface> NetworkCardList
         {
             get { return _networkCardList ?? RetrieveNetworkCards(); }
-            set { this._networkCardList = value; }
+            set { _networkCardList = value; }
         }
 
         public int LocalPort
         {
             get { return _localPort; }
-            set { this._localPort = value; }
+            set { _localPort = value; }
         }
 
-        public int DestnPort
-        {
-            get { return _destnPort; }
-            set { this._destnPort = value; }
-        }
+        public int DestnPort { get; set; }
 
         public IPAddress LocalIPAddress
         {
             get { return _localIPAddress; }
-            set { this._localIPAddress = value; }
+            set { _localIPAddress = value; }
         }
 
         public NetworkInterface NetworkCard
         {
             get { return _bindedNetworkCard; }
-            set { this._bindedNetworkCard = value; }
+            internal set { _bindedNetworkCard = value; }
         }
-
-        public IPEndPoint ipEndpoint
-        {
-            get { return _ipEndPoint; }
-        }
-
+        
         public IList<PDS> PDSs
         {
             get { return _pdss.AsReadOnly(); }
         }
-
-
-        
-
     }
-
 }

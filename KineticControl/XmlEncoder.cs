@@ -15,7 +15,7 @@ namespace KineticControl
             {
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(node["IPAddress"].InnerText), 6038 );
      
-                PDS60ca pds = new PDS60ca(Network.GetInstance(), endPoint);
+                PDS60Ca pds = new PDS60Ca(Network.GetInstance(), endPoint);
                  
             }
             return null;
@@ -40,16 +40,21 @@ namespace KineticControl
             return cam;
         }
 
-        public static XElement encodeXml(IEnumerable<PDS60ca> pdss)
+        public static XElement encodeXml(IEnumerable<PDS60Ca> pdss)
         {
             XElement pdssNode = new XElement("PDSs");
-            foreach (PDS60ca pds in pdss)
+            foreach (PDS60Ca pds in pdss)
             {
                 XElement pdsNode = new XElement("PDS");
                 pdsNode.Add(new XElement("Address", pds.EndPoint.Address.ToString()));
                 pdsNode.Add(new XElement("Port", pds.EndPoint.Port));
-                pdsNode.Add(new XElement("Data1", pds.Data1.ToXml()));
-                pdsNode.Add(new XElement("Data2", pds.Data2.ToXml()));
+                pdsNode.Add(new XElement("Type", pds.getType()));
+                XElement dataNode = new XElement("DataSets");
+                foreach(var colorData in pds.AllColorData)
+                {
+                    dataNode.Add(new XElement("ColorData", colorData.ToXml()));
+                }
+                pdsNode.Add(dataNode);                
                 pdssNode.Add(pdsNode);  
             }
             return pdssNode;
