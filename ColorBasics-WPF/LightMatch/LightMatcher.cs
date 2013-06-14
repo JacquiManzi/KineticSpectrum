@@ -16,6 +16,7 @@ namespace RevKitt.LightBuilder
 
         private readonly List<Light> _unKnownLights = new List<Light>();
         private readonly List<Light> _lights = new List<Light>();
+        private readonly List<Light> _ignoredLights = new List<Light>();
 
         private LightSearch _lightSearch;
 
@@ -30,6 +31,7 @@ namespace RevKitt.LightBuilder
             List<Blob> remaining = new List<Blob>(blobs);
             List<Light> missingLights = FindMissingLights(_unKnownLights, remaining);
             missingLights.AddRange(FindMissingLights(_lights, remaining));
+            FindMissingLights(_ignoredLights, remaining);
 
             foreach (var blob in remaining)
             {
@@ -47,14 +49,18 @@ namespace RevKitt.LightBuilder
                 }
                 
             }
-            return _lights;
+            else if (_lightSearch == null)
+            {
+                _lightSearch = new LightSearch(this);
+            }
+            return new List<Light>(_lights.Union(_unKnownLights));
         }
 
         public bool IsSearching { get { return _lightSearch != null && !_lightSearch.Done; } }
 
         public void BeginSearch()
         {
-            if(_lightSearch == null || _lightSearch.Done)
+            if(_lightSearch != null && _lightSearch.Done)
                 _lightSearch = new LightSearch(this);
         }
 
@@ -78,6 +84,7 @@ namespace RevKitt.LightBuilder
                 if (!found)
                 {
                     missing.Add(light);
+                    light.Brightness = 0;
                 }
             }
             return missing;
@@ -92,6 +99,7 @@ namespace RevKitt.LightBuilder
 
             private readonly LightMatcher _matcher;
 
+            private HashSet<Light> _initialyUnknown;
             private readonly HashSet<Light> _expectedMissing = new HashSet<Light>();
             private List<Light> _onNext = new List<Light>();
 
@@ -102,12 +110,14 @@ namespace RevKitt.LightBuilder
             public LightSearch(LightMatcher matcher)
             {
                 _matcher = matcher;
+                _initialyUnknown = new HashSet<Light>(matcher._unKnownLights);
                 Done = false;
                 Reset();
             }
 
             private void Reset()
             {
+                _lastUpdate = DateTime.Now;
                 foreach(var address in _matcher._lightSystem.LightAddresses)
                 {
                     _matcher._lightSystem[address] = Colors.White;
@@ -125,6 +135,15 @@ namespace RevKitt.LightBuilder
                 }
             }
 
+
+            //Each light address will pass through this code Three times
+            //On its first pass, the light will be turned off. At this point it is the currentIndex.
+            //On its second pass, we will attempt to narrow down which light it is, by taking all the lights
+            //  that have turned off since the last pass and saving them in a list (onNext) to be inspected next time
+            //On its third pass we find all lights that were missing in the last pass and checking if any of them
+            // are now present. If all of them are still not present, then the light isn't in the field of view.
+            // if one is present, it must be the right one. If two are present, then there was a chance blink
+            // that has messed everything up, so we must return to the first pass for that light.
             public IEnumerable<Light> SearchUpdate(ISet<Light> missingLights)
             {
                 DateTime now = DateTime.Now;
@@ -132,6 +151,8 @@ namespace RevKitt.LightBuilder
                     return Enumerable.Empty<Light>();
                 _lastUpdate = now;
 
+                //First pass through, so we don't have to worry about the other two steps
+                //Just turn off the current index
                 if(_reset)
                 {
                     //we just waited for a reset cycle with all on,
@@ -139,15 +160,23 @@ namespace RevKitt.LightBuilder
                      IndexOn(_currentIndex, false);
                     _currentIndex++;
                     _reset = false;
+                    return Enumerable.Empty<Light>();
                 }
 
                 if (_currentIndex > _matcher._unassignedAddresses.Count + 1)
+                {
                     Done = true;
+                    _initialyUnknown.IntersectWith(_matcher._unKnownLights);
+                    _matcher._ignoredLights.AddRange(_initialyUnknown);
+                    _matcher._unKnownLights.RemoveAll(l => _initialyUnknown.Contains(l));
+                }
+                    
 
                 IndexOn(_currentIndex-1, true);
                 IndexOn(_currentIndex, false);
                 //remove the missing items we expect to be missing
-                missingLights.ExceptWith(_expectedMissing);
+                AdjustMissing(missingLights);
+                
 
                 var backOn = FindBackOn(missingLights);
 
@@ -155,9 +184,23 @@ namespace RevKitt.LightBuilder
                 //so, let's add them to the list of lights we expect to be on next time
                 _onNext = new List<Light>(missingLights);
 
-                
-
                 return backOn;
+            }
+
+            private void AdjustMissing(ISet<Light> missing)
+            {
+                foreach(var expected in _expectedMissing)
+                {
+                   if(missing.Contains(expected))
+                   {
+                       _matcher._unKnownLights.Remove(expected);
+                   }
+                   else if(expected.IsUnknown)
+                   {//TODO: Watch out for this, it might cause problems with lights that are just too far away
+                       _matcher._unKnownLights.Remove(expected);
+                       _matcher._ignoredLights.Add(expected);
+                   }
+                }
             }
 
             private IEnumerable<Light> FindBackOn(ISet<Light> missingLights)
@@ -176,12 +219,13 @@ namespace RevKitt.LightBuilder
                 {
                     //OK, too many on. Let's reset and try again
                     Reset();
-                    _currentIndex--;
+                    _currentIndex -= 2;
                     backOn.Clear();
+                    missingLights.Clear();
                 }
                 else if (backOn.Count == 1)
                 {
-                    backOn.First().Address = _matcher._unassignedAddresses[_currentIndex - 1];
+                    backOn.First().Address = _matcher._unassignedAddresses[_currentIndex - 2];
                 }
                 else
                 {
