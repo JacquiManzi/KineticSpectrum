@@ -11,6 +11,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using KineticControl;
 using Microsoft.Kinect;
 
 namespace RevKitt.LightBuilder
@@ -98,7 +99,8 @@ namespace RevKitt.LightBuilder
                 // Allocate space to put the pixels we'll receive
                 this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
 
-                _processor = new ImageProcessor(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight);
+                LightSystem lightSystem = InitCK();
+                _processor = new ImageProcessor(lightSystem, this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight);
                 // Add an event handler to be called whenever there is new color frame data
                 this.sensor.ColorFrameReady += this.SensorColorFrameReady;
 
@@ -119,6 +121,16 @@ namespace RevKitt.LightBuilder
             {
                 this.StatusBar.Content = Properties.Resources.NoKinectReady;
             }
+        }
+
+        private LightSystem InitCK()
+        {
+            LightingManager lightingManager = new LightingManager();
+            if (lightingManager.NeedsPrompt)
+                throw new Exception("BOOOO! Network adapter not set properly. Options Include: \n" + String.Join("\n", lightingManager.LightSystem.NetworkInterfaces));
+            Console.WriteLine("Querying for Lighting....");
+            lightingManager.LightSystem.RefreshLightList().Wait();
+            return lightingManager.LightSystem;
         }
 
         private void ColorImageOnMouseLeftButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)

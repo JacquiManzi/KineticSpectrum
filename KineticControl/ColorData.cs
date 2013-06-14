@@ -31,7 +31,9 @@ namespace KineticControl
             _leds = new List<Led>(lightType.NoLights);
             for (int i = 0; i < lightType.NoLights; i++ )
             {
-                _leds.Add(new Led(_byteArray, _initialLength, i));
+                Led led = new Led(_byteArray, _initialLength, i);
+                _leds.Add(led);
+                led.Color = Colors.White;
             }
         }
 

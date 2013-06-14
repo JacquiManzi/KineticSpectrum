@@ -39,3 +39,5 @@ Z:\Users\JCU\personal\ks\KineticSpectrum\ColorBasics-WPF\bin\Debug\LightBuilder.
 Z:\Users\JCU\personal\ks\KineticSpectrum\ColorBasics-WPF\bin\Debug\LightBuilder.pdb
 Z:\Users\JCU\personal\ks\KineticSpectrum\ColorBasics-WPF\obj\Debug\LightBuilder.exe
 Z:\Users\JCU\personal\ks\KineticSpectrum\ColorBasics-WPF\obj\Debug\LightBuilder.pdb
+C:\Users\jcu\personal\ks\KineticSpectrum\ColorBasics-WPF\obj\Debug\LightBuilder.exe
+C:\Users\jcu\personal\ks\KineticSpectrum\ColorBasics-WPF\obj\Debug\LightBuilder.pdb

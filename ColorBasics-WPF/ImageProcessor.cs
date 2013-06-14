@@ -8,6 +8,7 @@ using Emgu.CV.Structure;
 using Emgu.CV.CvEnum;
 using KinectDisplay;
 using KineticControl;
+using Color = System.Windows.Media.Color;
 
 namespace RevKitt.LightBuilder
 {
@@ -16,38 +17,36 @@ namespace RevKitt.LightBuilder
         private readonly int           _width;
         private readonly int           _height;
         private readonly LightDetector _lightDetector;
-        private readonly LightMatcher  _lightMatcher;
+        private LightMatcher  _lightMatcher;
         private readonly LightSystem   _lightSystem;
         private readonly MCvFont       _font = new MCvFont(FONT.CV_FONT_HERSHEY_COMPLEX, 0.3, 0.3);
 
-        public ImageProcessor(int width, int height)
+        public ImageProcessor(LightSystem lightSystem, int width, int height)
         {
             _width = width;
             _height = height;
             _lightDetector = new LightDetector(height, width, 5);
-            LightingManager lightingManager = new LightingManager();
-            if(lightingManager.NeedsPrompt)
-                throw new Exception("BOOOO! Network adapter not set properly. Options Include: \n" + String.Join("\n",lightingManager.LightSystem.NetworkInterfaces));
-            Console.WriteLine("Querying for Lighting....");
-            lightingManager.LightSystem.RefreshLightList().Wait();
-            _lightMatcher = new LightMatcher(lightingManager.LightSystem);
-            _lightSystem = lightingManager.LightSystem;
+            _lightSystem = lightSystem;
+            Lights = new List<Light>();
         }
 
         public Bitmap ProcessImage(byte[] colorPixels)
         {
-
-//            var image = BuildImage(colorPixels);
-//            byte[,,] data = image.Data;
-
             var image = new Image<Rgba, byte>(_width, _height);
             image.Bytes = colorPixels;
 
             Mask = _lightDetector.Mask(image);
-            IList<Blob> blobs = _lightDetector.FindBlobs(Mask);
-            Lights = _lightMatcher.UpdateLights(blobs, image).AsReadOnly();
-
-            Blob.AddOutline(image, Lights.Select(light=>light.LightBlob), _font);
+            IList<Blob> blobs = _lightDetector.FindBlobs(Mask, image);
+            if (_lightMatcher != null)
+            {
+                Lights = _lightMatcher.UpdateLights(blobs, image).AsReadOnly();
+                Blob.AddOutline(image, Lights.Select(light => light.LightBlob), _font);
+            }
+            else
+            {
+                NameBlobs(blobs);
+                Blob.AddOutline(image, blobs, _font);
+            }
             return image.Bitmap;
         }
 
@@ -56,20 +55,24 @@ namespace RevKitt.LightBuilder
 
         public void Click(int x, int y)
         {
+            if (IsSearching) return;
+
             Light light = Lights.FirstOrDefault(l => l.LightBlob.ContainsPoint(x, y));
-            if(light != null)
+            if(light != null && !light.IsUnknown)
             {
-                _lightSystem[light.Address] = Colors.Black;
+                Color color = light.SensedOn ? Colors.Black : Colors.White;
+                _lightSystem[light.Address] = color;
             }
         }
 
         public bool IsSearching
         {
-            get { return _lightMatcher.IsSearching; }
+            get { return _lightMatcher != null && _lightMatcher.IsSearching; }
         }
 
         public void BeginSearch()
         {
+            _lightMatcher = new LightMatcher(_lightSystem);
             _lightMatcher.BeginSearch();
         }
 

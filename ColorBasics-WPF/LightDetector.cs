@@ -23,9 +23,6 @@ namespace RevKitt.LightBuilder
             _minArea = minArea;
         }
 
-
-       
-
         public Image<Gray, byte> Mask(Image<Rgba,byte> image )
         {
             int minVal = Math.Max(100,ImageMax(image)-50);
@@ -36,12 +33,14 @@ namespace RevKitt.LightBuilder
             for(int y=0; y<_height; y++)
                 for(int x=0; x<_width; x++)
                 {
-                    if (data[y,x,0]+data[y,x,1]+data[y,x,2] > minVal)
-                        mData[y, x, 0] = 255;
+                    int brightness = data[y, x, 0] + data[y, x, 1] + data[y, x, 2];
+                    if ( brightness > minVal)
+                        mData[y, x, 0] = (byte) (brightness/3);
                     else
                         mData[y, x, 0] = 0;
                 }
-            mask._Dilate(1);
+            mask._Erode(1);
+            mask._Dilate(2);
             return mask;
         }
 
@@ -61,19 +60,20 @@ namespace RevKitt.LightBuilder
             return max;
         }
 
-        public IList<Blob> FindBlobs(Image<Gray, byte> image)
+        public IList<Blob> FindBlobs(Image<Gray, byte> maskImage, Image<Rgba, byte> colorImage )
         {
-            if(image.Height != _height || image.Width != _width)
+            if(maskImage.Height != _height || maskImage.Width != _width)
                 throw new ArgumentException("Image dimentions don't match initialized dimentions");
 
             IList<Blob> bList = new List<Blob>();
 
-            byte[,,] data = image.Data;
+            byte[,,] maskData = maskImage.Data;
+            byte[,,] colorData = colorImage.Data;
 
             for(int y=0; y<_height; y++)
                 for(int x=0; x<_width; x++)
                 {
-                    if(data[y,x,0] == 255)
+                    if(maskData[y,x,0] != 0)
                     {
                         bool doFill = true;
                         foreach (Blob existingBlob in bList)
@@ -87,7 +87,7 @@ namespace RevKitt.LightBuilder
                         }
                         if (doFill)
                         {
-                            Blob newBlob = FloodFill(y, x, data);
+                            Blob newBlob = FloodFill(y, x, maskData, colorData);
                             if (newBlob.Area >= _minArea)
                                 bList.Add(newBlob);
                         }
@@ -97,12 +97,11 @@ namespace RevKitt.LightBuilder
             return bList;
         }
 
-        private void ResetTemp()
-        {}
+        
 
-        private Blob FloodFill(int ymin, int xmin, byte[,,] data)
+        private Blob FloodFill(int ymin, int xmin, byte[,,] maskData, byte[,,] imageData)
         {
-            int height = data.GetLength(0), width = data.GetLength(1);
+            int height = maskData.GetLength(0), width = maskData.GetLength(1);
             int xmax = xmin, ymax = ymin;
 
             Queue<Point> toProcess = new Queue<Point>();
@@ -110,12 +109,14 @@ namespace RevKitt.LightBuilder
             int x, y, area = 0;
             int ysum;
             int xsum = ysum = 0;
+            int brightness = 0;
            
             while(toProcess.Count > 0)
             {
                 Point p = toProcess.Dequeue();
                 x =(int) p.X; y =(int) p.Y;
                 area++;
+                brightness += imageData[y, x, 0] + imageData[y, x, 0] + imageData[y, x, 0];
                 _temp[y, x] = true;
                 if (x > xmax) xmax = x;
                 if (y > ymax) ymax = y;
@@ -123,22 +124,22 @@ namespace RevKitt.LightBuilder
                 
                 xsum += x; ysum += y; 
 
-                if (x > 0 && !_temp[y, x - 1] && data[y, x - 1,0] == 255)
+                if (x > 0 && !_temp[y, x - 1] && maskData[y, x - 1,0] != 0)
                 {
                     _temp[y, x - 1] = true;
                     toProcess.Enqueue(new Point(x - 1, y));
                 }
-                if (x < width - 1 && !_temp[y, x + 1] && data[y, x + 1,0] == 255)
+                if (x < width - 1 && !_temp[y, x + 1] && maskData[y, x + 1,0] !=0)
                 {
                     _temp[y, x + 1] = true;
                     toProcess.Enqueue(new Point(x + 1, y));
                 }
-                if (y > 0 && !_temp[y - 1, x] && data[y - 1, x,0] == 255)
+                if (y > 0 && !_temp[y - 1, x] && maskData[y - 1, x,0] !=0 )
                 {
                     _temp[y - 1, x] = true;
                     toProcess.Enqueue(new Point(x, y - 1));
                 }
-                if (y < height - 1 && !_temp[y + 1, x] && data[y + 1, x,0]==255)
+                if (y < height - 1 && !_temp[y + 1, x] && maskData[y + 1, x,0] != 0)
                 {
                     _temp[y + 1, x] = true;
                     toProcess.Enqueue(new Point(x, y + 1));
@@ -163,6 +164,7 @@ namespace RevKitt.LightBuilder
                 XMax = xmax,
                 YMax = ymax,
                 Area = area,
+                Brightness = brightness / area,
 // ReSharper disable PossibleLossOfFraction
                 Center = new Point(xsum/area, ysum/area)
 // ReSharper restore PossibleLossOfFraction

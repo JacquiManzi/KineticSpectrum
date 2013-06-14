@@ -158,6 +158,7 @@ namespace KinectDisplay
         public int ZMin { get;  set; }
         public int ZMax { get;  set; }
         public int Area { get;  set; }
+        public int Brightness { get; set; }
 
         public Point Center { get;  set; }
 //        public int XCenter { get; internal set; }
