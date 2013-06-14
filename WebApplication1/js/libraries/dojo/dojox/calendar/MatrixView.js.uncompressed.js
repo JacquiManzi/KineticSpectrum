@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/calendar/templates/MatrixView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\n\t<div  class=\"dojoxCalendarYearColumnHeader\" data-dojo-attach-point=\"yearColumnHeader\">\n\t\t<table><tr><td><span data-dojo-attach-point=\"yearColumnHeaderContent\"></span></td></tr></table>\t\t\n\t</div>\t\n\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\t\n\t<div dojoAttachPoint=\"rowHeader\" class=\"dojoxCalendarRowHeader\">\n\t\t<table data-dojo-attach-point=\"rowHeaderTable\" class=\"dojoxCalendarRowHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div dojoAttachPoint=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t</div>\t\n</div>\n"}});
 define("dojox/calendar/MatrixView", [
 "dojo/_base/declare", 
 "dojo/_base/array", 
@@ -186,15 +184,7 @@ function(
 			
 			this._ddRendererList = [];
 			this._ddRendererPool = [];
-			this._rowHeaderHandles = [];
-			
-			// For Dojo 1.8
-			//	this._viewHandles.push(
-			//		ViewPort.on("resize", lang.hitch(this, this._resizeHandler)));
-			
-			// pre 1.8 compat code
-			this._viewHandles.push(on(window, "resize", lang.hitch(this, this._resizeHandler)));
-			
+			this._rowHeaderHandles = [];			
 		},
 		
 		destroy: function(preserveDom){
@@ -548,9 +538,11 @@ function(
 			//		The render data.
 			// tags:
 			//		protected
+			
+			domClass.add(node, this._cssDays[date.getDay()]);
 
 			if(this.isWeekEnd(date)){
-				return domClass.add(node, "dojoxCalendarWeekend");
+				domClass.add(node, "dojoxCalendarWeekend");
 			}	
 		},		
 		
@@ -609,7 +601,7 @@ function(
 				tbody = domConstruct.create("tbody", null, rowHeaderTable);
 			}				
 						
-			var count = renderData.rowCount - (oldRenderData ? oldRenderData.rowCount : 0);
+			var count = renderData.rowCount - query("tr", rowHeaderTable).length;
 			
 			// Build HTML structure
 			if(count>0){ // creation
@@ -709,11 +701,13 @@ function(
 			if(!table){
 				return;
 			}
+			
+			var currentTR = query("tr", table);
 
-			var rowDiff = renderData.rowCount - (oldRenderData ? oldRenderData.rowCount : 0);
+			var rowDiff = renderData.rowCount - currentTR.length;
 			var addRows = rowDiff > 0;
 			
-			var colDiff  = renderData.columnCount - (oldRenderData ? oldRenderData.columnCount : 0);
+			var colDiff  = renderData.columnCount - (currentTR ? query("td", currentTR[0]).length : 0);
 			
 			if(has("ie") == 8){
 				// workaround Internet Explorer 8 bug.
@@ -813,23 +807,32 @@ function(
 
 		},
 		
-		styleGridCell: function(node, date, renderData){
+		// styleGridCellFunc: Function
+		//		Custom function to customize the appearance of a grid cell by installing custom CSS class on the node.
+		//		The signature of the function must be the same then the styleGridCell one.
+		//		By default the defaultStyleGridCell function is used.
+		styleGridCellFunc: null,
+		
+		defaultStyleGridCell: function(node, date, renderData){
 			// summary:
-			//		Styles the CSS classes to the node that displays a column.
+			//		Styles the CSS classes to the node that displays a cell.
 			//		By default this method is setting the following CSS classes:
 			//		- "dojoxCalendarToday" class name if the date displayed is the current date, 
 			//		- "dojoxCalendarWeekend" if the date represents a weekend or
 			//		- "dojoxCalendarDayDisabled" if the date is out of the [refStartTime, refEndTime] interval.
+			//		- the CSS class corresponding of the displayed day of week ("Sun", "Mon" and so on).			
 			// node: Node
-			//		The DOM node that displays the column in the grid.
+			//		The DOM node that displays the cell in the grid.
 			// date: Date
-			//		The date displayed by this column
+			//		The date displayed by this cell.
 			// renderData: Object
 			//		The render data.
 			// tags:
 			//		protected
-
-			var cal = renderData.dateModule;
+			
+			domClass.add(node, this._cssDays[date.getDay()]);
+			
+			var cal = this.dateModule;
 			if(this.isToday(date)){				
 				domClass.add(node, "dojoxCalendarToday");
 			}else if(this.refStartTime != null && this.refEndTime != null && 
@@ -839,6 +842,25 @@ function(
 			}else if(this.isWeekEnd(date)){
 				domClass.add(node, "dojoxCalendarWeekend");
 			}	
+		},
+		
+		styleGridCell: function(node, date, renderData){
+			// summary:
+			//		Styles the CSS classes to the node that displays a cell.
+			//		Delegates to styleGridCellFunc if defined or defaultStyleGridCell otherwise.
+			// node: Node
+			//		The DOM node that displays the cell in the grid.
+			// date: Date
+			//		The date displayed by this cell.
+			// renderData: Object
+			//		The render data.
+			// tags:
+			//		protected
+			if(this.styleGridCellFunc){
+				this.styleGridCellFunc(node, date, renderData);
+			}else{
+				this.defaultStyleGridCell(node, date, renderData);
+			}
 		},
 
 		_buildItemContainer: function(renderData, oldRenderData){
@@ -914,6 +936,10 @@ function(
 			}, this); 
 
 			renderData.cells = rows;
+		},
+		
+		resize: function(e){
+			this._resizeHandler(e);
 		},
 
 		_resizeHandler: function(e, apply){
@@ -1120,7 +1146,7 @@ function(
 					});
 					this._expandAnimation.play();
 				}else{
-					this._expandRowImpl(size)
+					this._expandRowImpl(size);
 				}
 			}			
 		},
@@ -1240,7 +1266,6 @@ function(
 		_resizeRowsImpl: function(tableNode, query){
 			// tags:
 			//		private
-			var rd = this.renderData;
 			dojo.query(query, tableNode).forEach(function(tr, i){
 				domStyle.set(tr, "height", this._getRowHeight(i)+"px");
 			}, this);
@@ -1270,12 +1295,8 @@ function(
 			// tags:
 			//		protected
 			
-			arr.forEach(renderer.__handles, function(handle){
-				handle.remove();
-			});				
-			
-			if(renderer["destroy"]){
-				renderer.destroy();
+			if(renderer["destroyRecursive"]){
+				renderer.destroyRecursive();
 			}
 			
 			html.destroy(renderer.domNode);	
@@ -1506,7 +1527,7 @@ function(
 			
 			var hiddenItems = [];
 			
-			var hItems;
+			var hItems = null;
 			var hOffsets = [];
 			if(horizontalItems.length > 0 && this.horizontalRenderer){
 				var hItems = this._createHorizontalLayoutItems(index, start, end, horizontalItems);
@@ -1545,10 +1566,6 @@ function(
 
 			var rd = this.renderData;
 			var cal = rd.dateModule;
-			var cell = rd.cells[index];
-			var irHeight = this.horizontalRendererHeight;
-			var vOverlap = this.percentOverlap / 100;
-			var maxW = domGeometry.getMarginBox(this.itemContainer).w;
 			var sign = rd.rtl ? -1 : 1;
 			var layoutItems = [];
 
@@ -1633,7 +1650,7 @@ function(
 			var overlapLayoutRes = this.computeOverlapping(layoutItems, this._overlapLayoutPass3);
 			var vOverlap = this.percentOverlap / 100;
 		
-			for(i=0; i<rd.columnCount; i++){
+			for(var i=0; i<rd.columnCount; i++){
 				var numLanes = overlapLayoutRes.addedPassRes[i];
 				var index = rd.rtl ? rd.columnCount - i - 1 : i;				
 				if(vOverlap == 0){
@@ -1740,7 +1757,6 @@ function(
 			//		private
 			
 			var rd = this.renderData;
-			var cal = rd.dateModule;
 			var cell = rd.cells[index];
 			var cellH = this._getRowHeight(index);
 			var irHeight = this.horizontalRendererHeight;
@@ -1782,7 +1798,7 @@ function(
 					var w = item.end - item.start;
 					if (has("ie") >= 9 && item.start + w < this.itemContainer.offsetWidth) {
 						w++;
-					};
+					}
 
 					domStyle.set(ir.container, {
 						"top": (fullHeight ? this.cellPaddingTop : posY) + "px",
@@ -1809,9 +1825,8 @@ function(
 		_layoutLabelItemsImpl: function(index, layoutItems, hasHiddenItems, hiddenItems, hOffsets){
 			// tags:
 			//		private
-			var d, list, posY;
+			var list, posY;
 			var rd = this.renderData;
-			var cal = rd.dateModule;
 			var cell = rd.cells[index];
 			var cellH = this._getRowHeight(index);
 			var irHeight = this.labelRendererHeight;
@@ -1825,7 +1840,6 @@ function(
 					var maxH = this.expandRenderer ? (hasHiddenItems[i] ? cellH - this.expandRendererHeight: cellH) : cellH;
 					posY = hOffsets == null || hOffsets[i] == null ? this.cellPaddingTop : hOffsets[i] + this.verticalGap;
 					var celPos = domGeometry.position(this._getCellAt(index, i));
-					var dayStart = rd.dates[index][i];
 					var left = celPos.x - rd.gridTablePosX;
 					
 					for(var j=0; j<list.length; j++){
@@ -1882,14 +1896,16 @@ function(
 			var selected = this.isItemSelected(item);
 			var hovered = this.isItemHovered(item);
 			var focused = this.isItemFocused(item);
-
-			var renderer = ir.renderer;
+			
+			var renderer = ir.renderer;			
 
 			renderer.set("hovered", hovered);
 			renderer.set("selected", selected);
 			renderer.set("edited", edited);
 			renderer.set("focused", this.showFocus ? focused : false);
-			renderer.set("moveEnabled", this.isItemMoveEnabled(item, kind));
+			renderer.set("moveEnabled", this.isItemMoveEnabled(item._item, kind));
+			renderer.set("storeState", this.getItemStoreState(item));
+			
 			if(kind != "label"){
 				renderer.set("resizeEnabled", this.isItemResizeEnabled(item, kind));
 			}
@@ -1941,14 +1957,12 @@ function(
 			// tags:
 			//		private
 			
-			var d, ir;		
 			var rd = this.renderData;
-			var cal = rd.dateModule;
+			var d = lang.clone(rd.dates[rowIndex][colIndex]);
+			var ir = null;
 			var cell = rd.cells[rowIndex];					
 			
-			ir = this._getExpandRenderer(
-				lang.clone(rd.dates[rowIndex][colIndex]),
-				items, rowIndex, colIndex, expanded);
+			ir = this._getExpandRenderer(d,	items, rowIndex, colIndex, expanded);
 				
 			var dim = domGeometry.position(this._getCellAt(rowIndex, colIndex));
 			dim.x -= rd.gridTablePosX;
@@ -2291,3 +2305,5 @@ function(
 
 	});
 });
+require({cache:{
+'url:dojox/calendar/templates/MatrixView.html':"<div data-dojo-attach-events=\"keydown:_onKeyDown\">\n\t<div  class=\"dojoxCalendarYearColumnHeader\" data-dojo-attach-point=\"yearColumnHeader\">\n\t\t<table><tr><td><span data-dojo-attach-point=\"yearColumnHeaderContent\"></span></td></tr></table>\t\t\n\t</div>\t\n\t<div data-dojo-attach-point=\"columnHeader\" class=\"dojoxCalendarColumnHeader\">\n\t\t<table data-dojo-attach-point=\"columnHeaderTable\" class=\"dojoxCalendarColumnHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\t\n\t<div dojoAttachPoint=\"rowHeader\" class=\"dojoxCalendarRowHeader\">\n\t\t<table data-dojo-attach-point=\"rowHeaderTable\" class=\"dojoxCalendarRowHeaderTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div dojoAttachPoint=\"grid\" class=\"dojoxCalendarGrid\">\n\t\t<table data-dojo-attach-point=\"gridTable\" class=\"dojoxCalendarGridTable\" cellpadding=\"0\" cellspacing=\"0\"></table>\n\t</div>\t\n\t<div data-dojo-attach-point=\"itemContainer\" class=\"dojoxCalendarContainer\" data-dojo-attach-event=\"mousedown:_onGridMouseDown,mouseup:_onGridMouseUp,ondblclick:_onGridDoubleClick,touchstart:_onGridTouchStart,touchmove:_onGridTouchMove,touchend:_onGridTouchEnd\">\n\t\t<table data-dojo-attach-point=\"itemContainerTable\" class=\"dojoxCalendarContainerTable\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"></table>\n\t</div>\t\n</div>\n"}});

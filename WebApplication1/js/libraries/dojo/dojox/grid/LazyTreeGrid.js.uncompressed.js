@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/grid/resources/Expando.html':"<div class=\"dojoxGridExpando\"\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\n\t></div\n></div>\n"}});
 define("dojox/grid/LazyTreeGrid", [
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
@@ -261,7 +259,12 @@ var LazyTreeCell = lang.mixin(lang.clone(TreeCell), {
 		if(this.editable && (this.alwaysEditing || (info.rowIndex === rowIndex && info.cell === this))){
 			return this.formatEditing(d, rowIndex);
 		}else{
-			return this._defaultFormat(d, [d, rowIndex, level, this]);
+			var dir = this.textDir || this.grid.textDir;
+			var ret = this._defaultFormat(d, [d, rowIndex, level, this]);
+			if(dir && this._enforceTextDirWithUcc){
+			    ret = this._enforceTextDirWithUcc(dir, ret);
+			}
+			return ret;
 		}
 	}
 });
@@ -838,4 +841,5 @@ LazyTreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 
 return LazyTreeGrid;
 
-});
+});require({cache:{
+'url:dojox/grid/resources/Expando.html':"<div class=\"dojoxGridExpando\"\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\n\t></div\n></div>\n"}});

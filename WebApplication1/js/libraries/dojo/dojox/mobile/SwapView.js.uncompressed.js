@@ -7,13 +7,15 @@ define("dojox/mobile/SwapView", [
 	"dijit/registry",
 	"./View",
 	"./_ScrollableMixin",
-	"./sniff"
-], function(array, connect, declare, dom, domClass, registry, View, ScrollableMixin, has){
+	"./sniff",
+	"./_css3",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/SwapView"
+], function(array, connect, declare, dom, domClass, registry, View, ScrollableMixin, has, css3, BidiSwapView){
 
 	// module:
 	//		dojox/mobile/SwapView
 
-	return declare("dojox.mobile.SwapView", [View, ScrollableMixin], {
+	var SwapView = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiSwapView" : "dojox.mobile.SwapView", [View, ScrollableMixin], {
 		// summary:
 		//		A container that can be swiped horizontally.
 		// description:
@@ -251,17 +253,20 @@ define("dojox/mobile/SwapView", [
 						domClass.remove(c, "mblIn");
 						if(!c._isShowing){
 							c.style.display = "none";
-							c.style.webkitTransform = "";
+							c.style[css3.name("transform")] = "";
 							c.style.left = "0px"; // top/left mode needs this
+							// reset the temporaty padding on the container node
+							c.style.paddingTop = "";
 						}
 					}
 				}, this);
 				connect.publish("/dojox/mobile/viewChanged", [this]);
 				// Reset the temporary padding
 				this.containerNode.style.paddingTop = "";
-			}else if(!has("webkit")){
+			}else if(!has("css3-animations")){
 				this.containerNode.style.left = "0px"; // compat mode needs this
 			}
 		}
 	});
+	return has("dojo-bidi") ? declare("dojox.mobile.SwapView", [SwapView, BidiSwapView]) : SwapView;
 });

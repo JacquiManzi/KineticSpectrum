@@ -1,5 +1,5 @@
-define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./dom-attr", "./on"],
-		function(exports, dojo, has, win, dom, attr, on){
+define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./dom-attr"],
+		function(exports, dojo, has, win, dom, attr){
 	// module:
 	//		dojo/dom-construct
 	// summary:
@@ -35,6 +35,23 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 			tw.post = "</" + tw.reverse().join("></") + ">";
 			// the last line is destructive: it reverses the array,
 			// but we don't care at this point
+		}
+	}
+
+	var html5domfix;
+	if(has("ie") <= 8){
+		html5domfix = function(doc){
+			doc.__dojo_html5_tested = "yes";
+			var div = create('div', {innerHTML: "<nav>a</nav>", style: {visibility: "hidden"}}, doc.body);
+			if(div.childNodes.length !== 1){
+				('abbr article aside audio canvas details figcaption figure footer header ' +
+				'hgroup mark meter nav output progress section summary time video').replace(
+					/\b\w+\b/g, function(n){
+						doc.createElement(n);
+					}
+				);
+			}
+			destroy(div);
 		}
 	}
 
@@ -77,6 +94,12 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		if(!masterId){
 			doc[masterName] = masterId = ++masterNum + "";
 			masterNode[masterId] = doc.createElement("div");
+		}
+
+		if(has("ie") <= 8){
+			if(!doc.__dojo_html5_tested && doc.body){
+				html5domfix(doc);
+			}
 		}
 
 		// make sure the frag is a string.
@@ -188,7 +211,7 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		return node; // DomNode
 	};
 
-	exports.create = function create(/*DOMNode|String*/ tag, /*Object*/ attrs, /*DOMNode|String?*/ refNode, /*String?*/ pos){
+	var create = exports.create = function create(/*DOMNode|String*/ tag, /*Object*/ attrs, /*DOMNode|String?*/ refNode, /*String?*/ pos){
 		// summary:
 		//		Create an element, allowing for optional attribute decoration
 		//		and placement.
@@ -263,19 +286,22 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		return tag; // DomNode
 	};
 
-	var _empty = has("ie") ?
-		function(/*DomNode*/ node){
+	function _empty(/*DomNode*/ node){
+		if(node.canHaveChildren){
 			try{
-				node.innerHTML = ""; // really fast when it works
-			}catch(e){ // IE can generate Unknown Error
-				for(var c; c = node.lastChild;){ // intentional assignment
-					_destroy(c, node); // destroy is better than removeChild so TABLE elements are removed in proper order
-				}
+				// fast path
+				node.innerHTML = "";
+				return;
+			}catch(e){
+				// innerHTML is readOnly (e.g. TABLE (sub)elements in quirks mode)
+				// Fall through (saves bytes)
 			}
-		} :
-		function(/*DomNode*/ node){
-			node.innerHTML = "";
-		};
+		}
+		// SVG/strict elements don't support innerHTML/canHaveChildren, and OBJECT/APPLET elements in quirks node have canHaveChildren=false
+		for(var c; c = node.lastChild;){ // intentional assignment
+			_destroy(c, node); // destroy is better than removeChild so TABLE subelements are removed in proper order
+		}
+	}
 
 	exports.empty = function empty(/*DOMNode|String*/ node){
 		 // summary:
@@ -295,14 +321,19 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 
 
 	function _destroy(/*DomNode*/ node, /*DomNode*/ parent){
+		// in IE quirks, node.canHaveChildren can be false but firstChild can be non-null (OBJECT/APPLET)
 		if(node.firstChild){
 			_empty(node);
 		}
 		if(parent){
-			parent.removeChild(node);
+			// removeNode(false) doesn't leak in IE 6+, but removeChild() and removeNode(true) are known to leak under IE 8- while 9+ is TBD.
+			// In IE quirks mode, PARAM nodes as children of OBJECT/APPLET nodes have a removeNode method that does nothing and
+			// the parent node has canHaveChildren=false even though removeChild correctly removes the PARAM children.
+			// In IE, SVG/strict nodes don't have a removeNode method nor a canHaveChildren boolean.
+			has("ie") && parent.canHaveChildren && "removeNode" in node ? node.removeNode(false) : parent.removeChild(node);
 		}
 	}
-	exports.destroy = function destroy(/*DOMNode|String*/ node){
+	var destroy = exports.destroy = function destroy(/*DOMNode|String*/ node){
 		// summary:
 		//		Removes a node from its parent, clobbering it and all of its
 		//		children.

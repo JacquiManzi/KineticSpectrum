@@ -1,5 +1,3 @@
-require({cache:{
-'url:dojox/widget/Calendar/CalendarMonthYear.html':"<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t \t </td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t</tbody>\n\t\t</table>\n</div>\n"}});
 define("dojox/widget/_CalendarMonthYearView", [
 	"dojo/_base/declare",
 	"./_CalendarView",
@@ -105,9 +103,19 @@ define("dojox/widget/_CalendarMonthYearView", [
 		_populateMonths: function(){
 			// summary:
 			//		Populate the month names using the localized values.
-			var monthNames = this._getMonthNames('abbr');
+			var match,
+				monthNames = this._getMonthNames('abbr'),
+				currYear = this.get("value").getFullYear(),
+				currMonth = monthNames[this.get("value").getMonth()],
+				displayedYear = this.get("displayedYear");
+
 			query(".dojoxCalendarMonthLabel", this.monthContainer).forEach(lang.hitch(this, function(node, cnt){
 				this._setText(node, monthNames[cnt]);
+				match = ((currMonth === monthNames[cnt]) && (currYear === displayedYear));
+				// If this month in this year, style it accordingly.
+				// Don't use dojox/date stuff, we don't need it here
+				// http://bugs.dojotoolkit.org/ticket/15520
+				domClass.toggle(node.parentNode, ["dijitCalendarSelectedDate", "dijitCalendarCurrentDate"], match);
 			}));
 			var constraints = this.get('constraints');
 
@@ -138,22 +146,19 @@ define("dojox/widget/_CalendarMonthYearView", [
 							(node, 'dijitCalendarDisabledDate');
 				}));
 			}
-
-			var h = this.getHeader();
-			if(h){
-				this._setText(this.getHeader(), this.get("value").getFullYear());
-			}
 		},
 
 		_populateYears: function(year){
 			// summary:
 			//		Fills the list of years with a range of 12 numbers, with the current year
 			//		being the 6th number.
-			var constraints = this.get('constraints');
-			var dispYear = year || this.get("value").getFullYear();
-			var firstYear = dispYear - Math.floor(this.displayedYears/2);
-			var min = constraints && constraints.min ? constraints.min.getFullYear() : firstYear -10000;
-			firstYear = Math.max(min, firstYear);
+
+			var match,
+				constraints = this.get('constraints'),
+				thisYear = this.get("value").getFullYear(),
+				dispYear = year || thisYear,
+				firstYear = dispYear - Math.floor(this.displayedYears/2),
+				min = constraints && constraints.min ? constraints.min.getFullYear() : firstYear -10000;
 
 			this._displayedYear = dispYear;
 
@@ -161,12 +166,16 @@ define("dojox/widget/_CalendarMonthYearView", [
 
 			var max = constraints && constraints.max ? constraints.max.getFullYear() - firstYear :	yearLabels.length;
 			var disabledClass = 'dijitCalendarDisabledDate';
-
+			var today;
 			yearLabels.forEach(lang.hitch(this, function(node, cnt){
 				if(cnt <= max){
 					this._setText(node, firstYear + cnt);
 				}
+				today = (firstYear+cnt) == thisYear;
+				domClass.toggle(node.parentNode, ["dijitCalendarSelectedDate", "dijitCalendarCurrentDate"], today);
 				domClass.toggle(node, disabledClass, cnt > max);
+				match = (firstYear+cnt) == thisYear;
+				domClass.toggle(node.parentNode, ["dijitCalendarSelectedDate", "dijitCalendarCurrentDate"], match);
 			}));
 
 			if(this._incBtn){
@@ -266,3 +275,5 @@ define("dojox/widget/_CalendarMonthYearView", [
 		}
 	});
 });
+require({cache:{
+'url:dojox/widget/Calendar/CalendarMonthYear.html':"<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t \t </td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t</tbody>\n\t\t</table>\n</div>\n"}});
