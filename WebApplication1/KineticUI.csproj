@@ -63,11 +63,15 @@
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\FileMenu\FileMenu.js" />
     <Content Include="js\kui\LEDMenu\LEDMenu.js" />
+    <Content Include="js\kui\LEDMenu\LEDNode.js" />
     <Content Include="js\kui\ModelMenu\Model.js" />
     <Content Include="js\kui\ModelMenu\ModelMenu.js" />
     <Content Include="js\kui\ModelView\ModelSkeleton.js" />
     <Content Include="js\kui\ModelView\ModelView.js" />
     <Content Include="js\kui\ModelView\VertexSphere.js" />
+    <Content Include="js\kui\PatternMenu\KUIPatterns.js" />
+    <Content Include="js\kui\PatternMenu\Pattern.js" />
+    <Content Include="js\kui\PatternMenu\PatternMenu.js" />
     <Content Include="js\kui\util\CommonFormItems.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />
@@ -8293,7 +8297,7 @@
     <Content Include="js\kui\3DModels\doberman.js" />
     <Content Include="js\kui\3DModels\Snake.js" />
     <Content Include="js\kui\3DModels\Rabbit.js" />
-    <Content Include="js\kui\3DModels\Geodesic Dome.js" />
+    <Content Include="js\kui\3DModels\GeodesicDome.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

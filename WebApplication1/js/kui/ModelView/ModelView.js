@@ -123,10 +123,10 @@
                 var geometry = object.children[0].geometry;
                 three.GeometryUtils.center(geometry);
 
-                var modelSkeleton = new ModelSkeleton(geometry, this.domNode, scene, this.camera);
-                modelSkeleton.colorEachVertex();
+                this.modelSkeleton = new ModelSkeleton(geometry, this.domNode, scene, this.camera);
+                this.modelSkeleton.colorEachVertex();
 
-                var mesh = new three.Mesh(modelSkeleton.geometry, new three.MeshBasicMaterial(
+                var mesh = new three.Mesh(this.modelSkeleton.geometry, new three.MeshBasicMaterial(
                     {
                         color: 0x999999,
                         wireframe: true,

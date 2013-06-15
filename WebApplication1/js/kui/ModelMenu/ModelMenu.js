@@ -17,8 +17,9 @@
              *
              */
 
-            constructor: function () {
+            constructor: function (modelView) {
 
+            this.modelView = modelView;
 
             },
 
