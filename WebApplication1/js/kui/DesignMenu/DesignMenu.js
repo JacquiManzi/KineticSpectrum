@@ -25,7 +25,9 @@ define([
 
         constructor: function(obj, obj1, modelView) {
 
-            this.style = "background-color:transparent;";
+            this.style = "background-color:#1f1f1f;" +
+                "height:80%;" +
+                "border-right: solid 3  px #cccccc;";
             this.modelView = modelView;
 
 

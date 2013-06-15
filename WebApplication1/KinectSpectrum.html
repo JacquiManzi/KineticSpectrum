@@ -35,9 +35,11 @@
        "kui/DesignMenu/DesignMenu",
        "kui/ModelMenu/ModelMenu",
        "kui/ModelView/ModelView",
-       "dojo/on"
+       "dojo/on",
+       "kui/util/CommonHTML",
+       "dojo/dom-construct"
     ],
-           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu, ModelView, on) {
+           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu, ModelView, on, html, domConstruct) {
 
                var windowHeight = window.getBox().h - 20;
 
@@ -49,19 +51,7 @@
                    style:"height:"+ windowHeight+ "px;width:100%;"    
                }, "mainContainer");
 
-               /*Top content pane for the main border container*/
-               mainContainer.addChild(
-                       new ContentPane({
-                           region: "top",
-                           id: "topContainer",
-                           splitter: false,
-                           minSize: ".1",
-                           style: "height:5%;" +
-                                  "width:100%;" +
-                                  "background-color:black;"
-
-                       })
-               );
+             
 
                var centerContainer = new ContentPaneX({
                    region: "center",
@@ -82,24 +72,6 @@
 
                dojo.connect(modelView, 'onShow', dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/GeodesicDome.js")); 
 
-                   
-               var bottomContainer = new ContentPane({
-                   splitter: false,
-                   region: "bottom",
-                   id: "bottomContainer",
-                   minSize: ".1",
-                   style: "width:100%;" +
-                          "height:5%;" +
-                          "background-color:black;"
-               });
-
-             
-
-
-               /*The bottom content pane for the application bar*/
-               mainContainer.addChild(
-                       bottomContainer
-               );
 
                /*Left container*/
                var leftContainer = new ContentPane({
@@ -108,42 +80,29 @@
                    id: "leftContainer",
                    minSize: ".1",
                    style: "width:15%;" +
-                          "height:100%;" +
-                          "background-color:#1f1f1f;"
+                          "height:100%;" 
                });
 
                mainContainer.addChild(leftContainer);
-             
-
+            
+               var leftDiv = html.createDiv("height:100%;width:100%;background-color:black;overflow:hidden;");
+               var innerTopDiv = html.createDiv("height:10%;width:100%;background-color:black;");
+               var innerBottomDiv = html.createDiv("height:10%;width:100%;background-color:black;");
 
                //Create the left design menu
                var designMenu = new DesignMenu(null, null,  modelView);
-               leftContainer.set('content', designMenu.domNode); 
+              
                designMenu.createMenu();
 
-               /*Right container*/
-              /* mainContainer.addChild(
-                       new ContentPane({
-                           splitter: false,
-                           region: "right",
-                           id: "rightContainer",
-                           minSize: ".1",
-                           style: "height:100%;" +
-                                  "width:10%;" +
-                                  "background-color:black;"
-                       })
-               );*/
+               domConstruct.place(innerTopDiv, leftDiv);
+               domConstruct.place(designMenu.domNode, leftDiv);
+               domConstruct.place(innerBottomDiv, leftDiv);
 
-
-
+               leftContainer.set('content', leftDiv);
 
                mainContainer.startup();
            
-
            });
-
-
-   
 
 
 </script>
