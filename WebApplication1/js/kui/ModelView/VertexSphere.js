@@ -19,9 +19,9 @@
             constructor: function (x, y, z) {
 
 
-                this.radius = 0.005;
-                this.segmentsWidth = 3;
-                this.segmentsHeight = 2;
+                this.radius = 0.02;
+                this.segmentsWidth = 3; //max 8 min 3
+                this.segmentsHeight = 2; //max 6 min 2
                 this.projector = new three.Projector();
 
                 this.x = x;
@@ -30,8 +30,7 @@
 
 
                 this.sphere = this.createSphere();
-               
-            
+
             },
 
 
@@ -45,6 +44,7 @@
                 sphere.position.z = this.z;
 
                 sphere.isSelected = false;
+                sphere.coords = new three.Vector3(this.x, this.y, this.z);
 
                 return sphere;
 
@@ -111,10 +111,9 @@
 
                 var raycaster = new three.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
-                return raycaster.intersectObjects(spheres);
+                return raycaster.intersectObjects(spheres.toArray());
 
             }
-
 
 
 

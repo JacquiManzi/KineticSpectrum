@@ -31,6 +31,16 @@
             return numberBox;
         },
 
+        createTableNumberTextBox = function () {
+           
+            var numberBox = new NumberTextBox({
+                style: "width:70px;",
+                constraints: { pattern: "######.######" }
+            });
+                
+            return numberBox;
+        },
+
          createCheckBox = function (label, list) {
              var li = html.createLI("color:#3d8dd5;" +
                                     "padding-bottom:10px;");
@@ -91,6 +101,23 @@
              return dropDownMenu;
          },
 
+         createDropDown = function (label, style) {
+
+             var dropDownMenu = new DropDownMenu({
+             });
+
+             var dropDownButton = new DropDownButton({
+
+                 label: label,
+                 style: style,
+                 dropDown: dropDownMenu
+             });
+
+             return dropDownButton;
+
+
+         },
+
          createButton = function (label, func, div) {
              var button = new Button({
 
@@ -108,7 +135,9 @@
 
         return {
             createNumberTextBox: createNumberTextBox,
+            createTableNumberTextBox: createTableNumberTextBox,
             createCheckBox: createCheckBox,
+            createDropDown: createDropDown,
             createColorPalette: createColorPalette,
             createButton: createButton
         };
