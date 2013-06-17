@@ -49,7 +49,7 @@ define([
             modelmenu.create3DMenu(this);
 
             /*File Menu*/
-            var fileMenu = new FileMenu();
+            var fileMenu = new FileMenu(this.modelView);
             fileMenu.createFileMenu(this);
 
            

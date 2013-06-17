@@ -36,8 +36,9 @@
 
             container.addChild(contentPane);
 
-            var div = html.createDiv();
+            var div = html.createDiv("text-align:center;color:#3d8dd5;");
             this.create3DCameraSection(contentPane, div);
+            this.createResetModelSection(div);
                 // this.createLightingSection(contentPane, div);
 
             },
@@ -177,6 +178,14 @@
 
                 domConstruct.place(lightingDiv, div);
                 domConstruct.place(submitDiv, div);
+            },
+
+            createResetModelSection: function(div)
+            {
+                var resetButton = CommonForm.createButton('Reset Model', dojo.hitch(this, function () { this.modelView.resetObject(); }));
+
+                domConstruct.place(resetButton.domNode, div);
+
             },
 
 

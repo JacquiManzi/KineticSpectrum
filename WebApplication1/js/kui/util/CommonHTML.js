@@ -112,6 +112,25 @@
                     });
             },
 
+            createInput = function (type, size, name) {
+                return domConstruct.create("input",
+                    {
+                        size: size,
+                        type: type,
+                        name:name
+                    });
+            },
+
+            createOutput = function () {
+
+                return domConstruct.create("output",
+                    {
+                        
+                    });
+
+            },
+
+
         /*Create a dojox GFX SVG canvas element inside of a passed DOM DIV*/
             createSVGCanvas = function (div, width, height) {
 
@@ -266,6 +285,8 @@
             resizeDialogText: resizeDialogText,
             resizeSVGImage: resizeSVGImage,
             selectionOff: selectionOff,
-            resizeTextBelow: resizeTextBelow
+            resizeTextBelow: resizeTextBelow,
+            createInput: createInput,
+            createOutput: createOutput
         };
     });

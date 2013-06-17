@@ -59,11 +59,9 @@
                 
                 this.aspect = (paneWidth / paneHeight);
 
-
-                var scene = new three.Scene();
+                this.scene = new three.Scene();
                 this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
                 
-
                 this.camera.position.x = this.cameriaPositionX;
                 this.camera.position.y = this.cameriaPositionY;
                 this.camera.position.z = this.cameriaPositionZ;
@@ -82,31 +80,28 @@
                             'z': this.directionalLightX
                         };
 
-                    this.shineDirectionalLight(scene, this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance, 
+                    this.shineDirectionalLight(this.scene, this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance, 
                         positions);
                 }
 
                 if (this.hasAmbientLight)
                 {
-                    this.shineAmbientLight(scene, this.ambientColor)
+                    this.shineAmbientLight(this.scene, this.ambientColor);
                 }
 
 
-                var loader = new three.OBJLoader();
+                this.render = dojo.hitch(this, function () {
 
+                    requestAnimationFrame(this.render);
 
-                var render = dojo.hitch(this, function () {
-
-                    requestAnimationFrame(render);
-
-                    this.camera.lookAt(scene.position);
-                    renderer.render(scene, this.camera);
+                    this.camera.lookAt(this.scene.position);
+                    renderer.render(this.scene, this.camera);
                 });
 
                 var modelViewNode = this.domNode;
                 var orbitControl = new three.OrbitControls(this.camera, modelViewNode);
 
-                loader.load(fileLocation, dojo.hitch(this, this.loadObject, scene, render));
+                this.load(fileLocation, this.scene, this.render);
 
                 var animate = function () {
 
@@ -114,19 +109,43 @@
                     orbitControl.update();                    
                 }
 
-                animate();
+                animate(); 
+
+            },
+
+            load: function(fileLocation, scene, render)
+            {
+                var loader = new three.OBJLoader();
+               
+                this.loadObj = dojo.hitch(this,function () { loader.load(fileLocation, dojo.hitch(this, this.loadObject, scene, render)); });
+                this.loadObj();
+            },
+
+            loadFile: function(data, scene, render)
+            {
+                var loader = new three.OBJLoader();
+                var object = loader.parse(data);
+
+                this.loadObj = dojo.hitch(this, this.loadObject, scene, render, object);
+                this.loadObj();
 
             },
 
             loadObject: function(scene, render, object)
             {
+               
+                if (!!this.mesh) {
+
+                    this.removeAllMeshes();
+                }
+
                 var geometry = object.children[0].geometry;
                 three.GeometryUtils.center(geometry);
 
                 this.modelSkeleton = new ModelSkeleton(geometry, this.domNode, scene, this.camera);
                 this.modelSkeleton.colorEachVertex();
 
-                var mesh = new three.Mesh(this.modelSkeleton.geometry, new three.MeshBasicMaterial(
+                this.mesh = new three.Mesh(this.modelSkeleton.geometry, new three.MeshBasicMaterial(
                     {
                         color: 0x999999,
                         wireframe: true,
@@ -136,9 +155,27 @@
                     }));
 
 
-                scene.add(mesh);
+                scene.add(this.mesh);
 
                 render();
+            },
+
+            removeAllMeshes: function()
+            {
+                this.scene.remove(this.mesh);
+
+                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+
+                    this.scene.remove(this.modelSkeleton.spheres.item(i));
+
+                }
+            },
+
+            resetObject: function()
+            {
+                this.removeAllMeshes();
+
+                this.loadObj();
             },
 
 
