@@ -28,7 +28,7 @@
                 this.y = y;
                 this.z = z;
 
-
+                this.isVertex = true;
                 this.sphere = this.createSphere();
 
             },
@@ -44,6 +44,7 @@
                 sphere.position.z = this.z;
 
                 sphere.isSelected = false;
+                sphere.isVertex = this.isVertex;
                 sphere.coords = new three.Vector3(this.x, this.y, this.z);
 
                 return sphere;

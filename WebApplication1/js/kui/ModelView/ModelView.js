@@ -174,8 +174,49 @@
             resetObject: function()
             {
                 this.removeAllMeshes();
+                this.showHideButton.hidden = false;
+                this.showHideButton.set('label', "Hide Vertices");
 
                 this.loadObj();
+            },
+
+            showHideVertices: function(button)
+            {
+                this.showHideButton = button;
+                if (button.hidden) {
+
+                    this.showAllVertices();
+                    button.hidden = false;
+                    button.set('label', "Hide Vertices");
+                }
+                else {
+
+                    this.hideAllVertices();
+                    button.hidden = true;
+                    button.set('label', "Show Vertices");
+                }
+            },
+
+            hideAllVertices: function()
+            {
+                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+
+                    if (this.modelSkeleton.spheres.item(i).isVertex) {
+                        this.modelSkeleton.spheres.item(i).visible = false;
+                    }
+
+                }
+            },
+
+            showAllVertices: function()
+            {
+                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+
+                    if (this.modelSkeleton.spheres.item(i).isVertex) {
+                        this.modelSkeleton.spheres.item(i).visible = true;
+                    }
+
+                }
             },
 
 

@@ -17,9 +17,11 @@ define([
              *
              */
 
-            constructor: function () {
+            constructor: function (runTime, selectedNodes) {
 
               
+                this.runTime = runTime;
+                this.selectedNodes = selectedNodes;
                
                 
 
@@ -29,6 +31,8 @@ define([
             createPattern: function () {
                 
             }
+
+
 
 
 

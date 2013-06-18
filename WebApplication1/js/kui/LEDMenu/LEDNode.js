@@ -28,7 +28,21 @@ define([
                 this.radius = 0.009;
                 this.segmentsWidth = 8;
                 this.segmentsHeight = 6;
+
+                this.isVertex = false;
                 
+            },
+
+
+            changeColor: function (color) {
+
+                var material = new three.MeshBasicMaterial({
+
+                    color: 0xff0000
+                });
+
+                this.sphere.setMaterial(material);
+
             }
 
   

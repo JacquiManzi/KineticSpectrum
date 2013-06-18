@@ -130,6 +130,16 @@
 
             },
 
+            createOption = function (innerHTML) {
+
+                return domConstruct.create("option",
+                    {
+                        innerHTML: innerHTML
+
+                    });
+
+            },
+
 
         /*Create a dojox GFX SVG canvas element inside of a passed DOM DIV*/
             createSVGCanvas = function (div, width, height) {
@@ -287,6 +297,7 @@
             selectionOff: selectionOff,
             resizeTextBelow: resizeTextBelow,
             createInput: createInput,
-            createOutput: createOutput
+            createOutput: createOutput,
+            createOption: createOption
         };
     });

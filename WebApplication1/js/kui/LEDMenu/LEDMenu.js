@@ -41,6 +41,9 @@ define([
 
                 /*Node Removal Section*/
                 this.createRemoveNodeSection(contentPane);
+
+                /*Group Vertex Section*/
+                this.createGroupVertexSection(contentPane.domNode);
     
 
             },
@@ -50,20 +53,27 @@ define([
                 var nodeDiv = html.createDiv("text-align:center; color:#3d8dd5;");
                 var nodeCreationDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
-                    "background-color:#383838;" +
+                    "background-color:#2d2d2d;" +
                     "border-radisu:7px;");
 
                 nodeCreationDiv.innerHTML = "LED Node Creation";
                 var table = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
                     "padding-top:10px;"+
-                    "padding-bottom:10px;");
+                    "padding-bottom:10px;"+
+                    "border-spacing: 0px;");
+
+                var tableDiv = html.createDiv("width:100%;" +                    
+                    "margin-left:auto;" +
+                    "margin-right:auto;"+
+                    "border-radius:10px;");
 
 
                 domConstruct.place(nodeCreationDiv, nodeDiv);
                 this.createNodeAmountBox(table);
 
-                domConstruct.place(table, nodeDiv);
+                domConstruct.place(table, tableDiv);
+                domConstruct.place(tableDiv, nodeDiv); 
                 domConstruct.place(nodeDiv, contentPane.domNode);
 
 
@@ -73,7 +83,7 @@ define([
 
                 var removeNodeDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
-                    "background-color:#383838;" +
+                    "background-color:#2d2d2d;" +
                     "border-radisu:7px;");
 
                 removeNodeDiv.innerHTML = "LED Node Removal";
@@ -93,10 +103,25 @@ define([
             createNodeAmountBox: function (table) {
               
                
-                var titleCell = html.createCell();
-                var valueRow = html.createRow();
-                var valueCell = html.createCell("text-align:left;");
-                var checkButtonCell = html.createCell();               
+                var titleCell = html.createCell("border-bottom-left-radius: 7px;" +
+                    "border-top-left-radius: 7px;" +
+                    "border-left: 2px solid #424242;"+
+                    "border-top: 2px solid #424242;"+
+                    "border-bottom: 2px solid #424242;"+
+                    "color:#efefef;");
+
+                var valueRow = html.createRow("background-color:#333333;");
+
+                var valueCell = html.createCell("text-align:left;" +
+                    "border-top: 2px solid #424242;" +
+                    "border-bottom: 2px solid #424242;");
+
+                var checkButtonCell = html.createCell("border-top-right-radius: 7px;" +
+                    "border-bottom-right-radius: 7px;"+
+                    "border-top-right-radius: 7px;" +
+                    "border-right: 2px solid #424242;" +
+                    "border-top: 2px solid #424242;" +
+                    "border-bottom: 2px solid #424242;");
 
                 var nodeNumberTextBox = CommonForm.createTableNumberTextBox();
 
@@ -128,6 +153,39 @@ define([
                 });
 
                 domConstruct.place(removeButton.domNode, div);
+
+            },
+
+            createGroupVertexSection: function (div) {
+
+
+                var groupListBox = CommonForm.createListBox("width:50%;");
+
+                var obj = this;
+                var addVertexButton = CommonForm.createButton('Group Selected Vertices', function () {
+
+                    obj.modelView.modelSkeleton.addSelectedGroup(groupListBox);
+
+                    
+                });
+
+                domConstruct.place(addVertexButton.domNode, div);
+
+                var removeVertexButton = CommonForm.createButton('Remove Selected Vertices', function () {
+
+                    obj.modelView.modelSkeleton.removeSelectedGroup(groupListBox);
+
+                });
+
+                domConstruct.place(removeVertexButton.domNode, div);
+
+                var listDiv = html.createDiv("text-align:center;");
+                domConstruct.place(groupListBox.domNode, listDiv);
+                domConstruct.place(listDiv, div);
+
+                
+
+                
 
             }
 

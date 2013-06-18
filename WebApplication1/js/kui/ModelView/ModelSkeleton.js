@@ -7,9 +7,10 @@
     "threejs/three",
     "kui/ModelView/VertexSphere",
     "dojox/collections/ArrayList",
-    "kui/LEDMenu/LEDNode"
+    "kui/LEDMenu/LEDNode",
+    "dojo/on"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, VertexSphere, ArrayList, LEDNode) {
+    function (declare, html, dom, domStyle, domConstruct, three, VertexSphere, ArrayList, LEDNode, on) {
         "use strict";
         return declare("kui.ModelMenu.ModelSkeleton", null, {
 
@@ -32,8 +33,11 @@
                 this.camera = camera;
 
                 this.spheres = new ArrayList();
+                this.leds = new ArrayList();
 
                 this.selectedSpheres = new ArrayList();
+                this.selectedVertexGroups = new ArrayList();
+                this.selectedGroupVertexOptions = new ArrayList();
 
             },
 
@@ -79,7 +83,7 @@
                         var y = sphereTwo.y + i * deltaY;
                         var z = sphereTwo.z + i * deltaZ;
 
-                       lineSegments.add(new three.Vector3(x, y, z));
+                        lineSegments.add(new three.Vector3(x, y, z));
                     }
 
                     spheres.remove(spheres.item(0));
@@ -108,6 +112,23 @@
 
                 }
 
+            },
+
+            getSelectedVertices: function () {
+
+                var selectedVertices = new ArrayList();
+
+                for (var i = 0; i < this.spheres.count; i++) {
+
+                    if (this.spheres.item(i).isSelected && this.spheres.item(i).isVertex) {
+
+                        selectedVertices.add(this.spheres.item(i));
+
+                    }
+
+                }
+
+                return selectedVertices;
             },
 
             drawNodes: function (lineSegments) {
@@ -144,7 +165,125 @@
 
 
 
+            },
+
+            getLEDs: function () {
+
+                this.leds.clear();
+                for (var i = 0; i < this.spheres.count; i++) {
+
+                    if(!this.spheres.item(i).isVertex)
+                    {
+                        this.leds.add(this.spheres.item(i));
+                    }
+
+                }
+
+            },
+
+            addSelectedGroup: function (listBox) {
+
+               
+                var vertices = this.getSelectedVertices();
+                
+                if (vertices.count > 0 && !this.selectedVertexGroups.contains(vertices)) {
+
+                    var countAmount = this.selectedVertexGroups.count + 1;
+                    this.selectedVertexGroups.add(vertices);
+                    
+                    var option = html.createOption("Group" + " " + countAmount);
+                    option.list = vertices;
+                    listBox.domNode.appendChild(option);
+
+                    on(option, "click", dojo.hitch(this, function (listBox) {
+
+                        this.selectedGroupVertexOptions.clear();
+                        for (var i = 0; i < listBox.getSelected().length; i++) {
+                            this.selectedGroupVertexOptions.add(listBox.getSelected()[i]);
+                        }
+                        this.showSelectedVertexGroups();
+
+
+                    }, listBox));
+
+                }
+
+
+            },
+
+            removeSelectedGroup: function (listBox) {
+
+                listBox.destroyDescendants();
+
+               /* for (var i = 0; i < this.selectedVertexGroups.count; i++) {
+
+                    var option = html.createOption(vertices, "Group" + " " + countAmount);
+                    listBox.domNode.appendChild(option);
+
+                    on(option, "click", function () {
+
+                        this.selectedGroupVertexOptions.add(option);
+
+
+
+                    });*/
+
+            },
+
+            deselectAllVertexs: function()
+            {
+               
+                for(var i = 0; i < this.spheres.count; i++)
+                {
+
+                    if(this.spheres.item(i).isVertex)
+                    {
+                        this.spheres.item(i).isSelected = false;
+
+                        var material = new three.MeshNormalMaterial();
+
+                        this.spheres.item(i).setMaterial(material);
+
+                    }
+
+                }
+
+            },
+
+            showSelectedVertexGroups: function()
+            {
+
+                this.deselectAllVertexs();
+                for(var i = 0; i < this.selectedGroupVertexOptions.count; i++)
+                {
+
+                    var option = this.selectedGroupVertexOptions.item(i);
+
+                    for(var j = 0; j < option.list.count; j++)
+                    {
+                        option.list.item(j).isSelected = true;
+
+                        var selectionMaterial = new three.MeshBasicMaterial({
+
+                            color: 0xff0000
+                        });
+
+                        option.list.item(j).setMaterial(selectionMaterial);
+                    }
+
+                }
+
+
+
+
             }
+
+            
+                
+
+
+
+        
 
 
            

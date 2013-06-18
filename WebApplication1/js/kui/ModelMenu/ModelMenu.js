@@ -38,7 +38,13 @@
 
             var div = html.createDiv("text-align:center;color:#3d8dd5;");
             this.create3DCameraSection(contentPane, div);
-            this.createResetModelSection(div);
+            var hideDiv = html.createDiv("text-align:center;color:#3d8dd5;padding-bottom: 10px;");
+            domConstruct.place(hideDiv, contentPane.domNode);
+            this.createHideVerticesSection(hideDiv);
+            var resetDiv = html.createDiv("text-align:center;color:#3d8dd5;padding-bottom: 10px;");
+            domConstruct.place(resetDiv, contentPane.domNode);
+            this.createResetModelSection(resetDiv);
+
                 // this.createLightingSection(contentPane, div);
 
             },
@@ -180,9 +186,20 @@
                 domConstruct.place(submitDiv, div);
             },
 
+            createHideVerticesSection: function(div)
+            {
+                var hideButton = CommonForm.createButton('Hide Vertices', dojo.hitch(this, function () { this.modelView.showHideVertices(hideButton); }));
+                hideButton.hidden = false;
+
+                domConstruct.place(hideButton.domNode, div);
+
+
+            },
+
             createResetModelSection: function(div)
             {
-                var resetButton = CommonForm.createButton('Reset Model', dojo.hitch(this, function () { this.modelView.resetObject(); }));
+                var resetButton = CommonForm.createButton('Reset Model', dojo.hitch(this,
+                    function () { this.modelView.resetObject(); }));
 
                 domConstruct.place(resetButton.domNode, div);
 

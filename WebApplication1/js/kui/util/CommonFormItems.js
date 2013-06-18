@@ -7,9 +7,10 @@
     "dijit/MenuItem",
     "dijit/DropDownMenu",
     "dijit/form/Button",
-    "kui/util/CommonHTML"
+    "kui/util/CommonHTML",
+    "dijit/form/MultiSelect"
     ], function (domConstruct, NumberTextBox, CheckBox,
-        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html) {
+        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect) {
         "use strict";
 
         var createNumberTextBox = function (label, list, changeButton) {
@@ -32,12 +33,12 @@
         },
 
         createTableNumberTextBox = function () {
-           
+
             var numberBox = new NumberTextBox({
                 style: "width:70px;",
                 constraints: { pattern: "######.######" }
             });
-                
+
             return numberBox;
         },
 
@@ -118,11 +119,12 @@
 
          },
 
-         createButton = function (label, func, div) {
+         createButton = function (label, func, div, style) {
              var button = new Button({
 
                  label: label,
-                 onClick: func
+                 onClick: func,
+                 style: style
              });
 
              if (!!div) {
@@ -130,6 +132,17 @@
              }
 
              return button;
+         },
+
+         createListBox = function (style) {
+
+
+             var listBox = new MultiSelect({
+
+                style: style
+             });
+
+             return listBox;
          };
 
 
@@ -139,6 +152,7 @@
             createCheckBox: createCheckBox,
             createDropDown: createDropDown,
             createColorPalette: createColorPalette,
-            createButton: createButton
+            createButton: createButton,
+            createListBox: createListBox
         };
     });
