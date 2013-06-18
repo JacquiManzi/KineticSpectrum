@@ -23,6 +23,9 @@ define([
                 this.style = "background-color:transparent;";
                 this.modelView = modelView;
 
+                /*CSS Stylings*/
+                this.tableCellBorderColor = "#333333";
+
 
             },
 
@@ -53,15 +56,18 @@ define([
                 var nodeDiv = html.createDiv("text-align:center; color:#3d8dd5;");
                 var nodeCreationDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
-                    "background-color:#2d2d2d;" +
-                    "border-radisu:7px;");
+                    "border-radisu:7px;"+
+                    "background-color:#232323;" +
+                    "border-radisu:7px;" +
+                    "border: 2px solid #282828;");
 
                 nodeCreationDiv.innerHTML = "LED Node Creation";
                 var table = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
                     "padding-top:10px;"+
                     "padding-bottom:10px;"+
-                    "border-spacing: 0px;");
+                    "border-spacing: 0px;"+
+                    "width:95%;");
 
                 var tableDiv = html.createDiv("width:100%;" +                    
                     "margin-left:auto;" +
@@ -83,14 +89,17 @@ define([
 
                 var removeNodeDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
-                    "background-color:#2d2d2d;" +
-                    "border-radisu:7px;");
+                    "border-radisu:7px;"+
+                    "background-color:#232323;" +
+                    "border-radisu:7px;" +
+                    "border: 2px solid #282828;");
 
                 removeNodeDiv.innerHTML = "LED Node Removal";
 
                 var innerDiv = html.createDiv("text-align:center;" +
                    "color:#3d8dd5;"+
-                   "padding-top: 10px;");
+                   "padding-top: 10px;"+
+                   "padding-bottom: 10px;");
 
                 this.createRemoveButton(innerDiv);
 
@@ -105,25 +114,30 @@ define([
                
                 var titleCell = html.createCell("border-bottom-left-radius: 7px;" +
                     "border-top-left-radius: 7px;" +
-                    "border-left: 2px solid #424242;"+
-                    "border-top: 2px solid #424242;"+
-                    "border-bottom: 2px solid #424242;"+
-                    "color:#efefef;");
+                    "border-left: 2px solid" + this.tableCellBorderColor+";"+
+                    "border-top: 2px solid" + this.tableCellBorderColor + ";" +
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    "color:#efefef;"+
+                    "text-align: right;"+
+                    "width:30%;");
 
-                var valueRow = html.createRow("background-color:#333333;");
+                var valueRow = html.createRow("background-color:#282828;");
 
-                var valueCell = html.createCell("text-align:left;" +
-                    "border-top: 2px solid #424242;" +
-                    "border-bottom: 2px solid #424242;");
+                var valueCell = html.createCell("text-align:center;" +
+                    "border-top: 2px solid #2d2d2d;" +
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    "width:40%;");
 
                 var checkButtonCell = html.createCell("border-top-right-radius: 7px;" +
                     "border-bottom-right-radius: 7px;"+
                     "border-top-right-radius: 7px;" +
-                    "border-right: 2px solid #424242;" +
-                    "border-top: 2px solid #424242;" +
-                    "border-bottom: 2px solid #424242;");
+                    "border-right: 2px solid" + this.tableCellBorderColor + ";" +
+                    "border-top: 2px solid" + this.tableCellBorderColor + ";" +
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    "text-align:left;"+
+                    "width:30%;");
 
-                var nodeNumberTextBox = CommonForm.createTableNumberTextBox();
+                var nodeNumberTextBox = CommonForm.createTableNumberTextBox("width:90%;");
 
                 var obj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
@@ -158,35 +172,44 @@ define([
 
             createGroupVertexSection: function (div) {
 
+                var groupTitleDiv = html.createDiv("text-align:center; color:#3d8dd5;");
+                var groupTitleDiv = html.createDiv("text-align:center;" +
+                    "color:#3d8dd5;" +
+                    "background-color:#232323;" +
+                    "border-radisu:7px;"+
+                    "border: 2px solid #282828;");
+
+                groupTitleDiv.innerHTML = "Node Grouping";
+                domConstruct.place(groupTitleDiv, div); 
 
                 var groupListBox = CommonForm.createListBox("width:50%;");
 
                 var obj = this;
-                var addVertexButton = CommonForm.createButton('Group Selected Vertices', function () {
+                var addVertexButton = CommonForm.createButton('Add Group', function () {
 
                     obj.modelView.modelSkeleton.addSelectedGroup(groupListBox);
 
                     
-                });
+                },null, "color:#3d8dd5;");
 
-                domConstruct.place(addVertexButton.domNode, div);
+               
 
-                var removeVertexButton = CommonForm.createButton('Remove Selected Vertices', function () {
+                var removeVertexButton = CommonForm.createButton('Remove Group', function () {
 
                     obj.modelView.modelSkeleton.removeSelectedGroup(groupListBox);
 
-                });
+                }, null, "color:#3d8dd5;");             
 
-                domConstruct.place(removeVertexButton.domNode, div);
-
-                var listDiv = html.createDiv("text-align:center;");
+                var listDiv = html.createDiv("text-align:center;padding-top:10px;");
                 domConstruct.place(groupListBox.domNode, listDiv);
                 domConstruct.place(listDiv, div);
 
-                
+                var buttonDiv = html.createDiv("text-align:center;");
+                domConstruct.place(addVertexButton.domNode, buttonDiv);
+                domConstruct.place(removeVertexButton.domNode, buttonDiv);                
+                domConstruct.place(buttonDiv, div);
 
-                
-
+              
             }
 
 

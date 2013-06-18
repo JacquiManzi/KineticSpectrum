@@ -32,12 +32,12 @@
                 this.scene = scene;
                 this.camera = camera;
 
-                this.spheres = new ArrayList();
-                this.leds = new ArrayList();
+                this.spheres = new ArrayList(); //Vertex spheres and LED spheres currently drawn
+                this.leds = new ArrayList(); //VertexSpheres that are LED nodes
 
-                this.selectedSpheres = new ArrayList();
-                this.selectedVertexGroups = new ArrayList();
-                this.selectedGroupVertexOptions = new ArrayList();
+                this.selectedSpheres = new ArrayList(); //Selected vertex speheres and led nodes
+                this.selectedVertexGroups = new ArrayList(); //Selected Vetices that are grouped
+                this.selectedGroupVertexOptions = new ArrayList(); //The vertex group options that are selected in the list box
 
             },
 
@@ -213,21 +213,13 @@
 
             removeSelectedGroup: function (listBox) {
 
-                listBox.destroyDescendants();
+                var selectedOptions = listBox.getSelected();
 
-               /* for (var i = 0; i < this.selectedVertexGroups.count; i++) {
+                for (var i = 0; i < selectedOptions.length; i++) {
 
-                    var option = html.createOption(vertices, "Group" + " " + countAmount);
-                    listBox.domNode.appendChild(option);
-
-                    on(option, "click", function () {
-
-                        this.selectedGroupVertexOptions.add(option);
-
-
-
-                    });*/
-
+                    listBox.domNode.removeChild(selectedOptions[i]);
+                    this.selectedGroupVertexOptions.remove(selectedOptions[i]); 
+                }
             },
 
             deselectAllVertexs: function()

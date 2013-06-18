@@ -8,9 +8,8 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojox/form/Uploader",
      "dojo/on"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, Uploader, on) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on) {
         "use strict";
         return declare("kui.FileMenu.FileMenu", null, {
 
@@ -45,24 +44,6 @@ define([
 
             createUploadSection: function (div) {
 
-
-               /* var uploader = new Uploader({
-                    label: "Upload Model",
-                    multiple: false,
-                    uploadOnSelect: true,
-                    style: "color:#3d8dd5;",
-                    url:"FileUpload.aspx",
-                    onComplete: dojo.hitch(this, function(){
-
-                        var fileLocation = uploader.getFileList();
-                        this.modelView.load("/js/kui/3DModels/" + fileLocation[0].name, this.modelView.scene, this.modelView.render);
-                    
-                    
-                    })
-                });
-
-                domConstruct.place(uploader.domNode, div);*/
-
                 var func = function(event)
                 {
                     var file = event.target.files[0];
@@ -87,10 +68,6 @@ define([
                     
 
             }
-
-
-
-
 
 
         });

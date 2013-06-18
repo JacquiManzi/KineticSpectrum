@@ -32,10 +32,10 @@
             return numberBox;
         },
 
-        createTableNumberTextBox = function () {
+        createTableNumberTextBox = function (style) {
 
             var numberBox = new NumberTextBox({
-                style: "width:70px;",
+                style: style,
                 constraints: { pattern: "######.######" }
             });
 
