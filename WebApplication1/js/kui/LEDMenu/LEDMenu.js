@@ -33,7 +33,7 @@ define([
                 var contentPane = new ContentPane(
                   {
                       title: "LED Menu",
-                      style: "background-color:transparent;"
+                      style: "background-color:transparent;width:100%;"
 
                   });
 
@@ -41,12 +41,15 @@ define([
 
                 /*Node Creation Section*/
                 this.createNodeSection(contentPane);
+                this.createSelectAllSection(contentPane.domNode);
 
                 /*Node Removal Section*/
                 this.createRemoveNodeSection(contentPane);
 
                 /*Group Vertex Section*/
                 this.createGroupVertexSection(contentPane.domNode);
+
+                
     
 
             },
@@ -78,6 +81,18 @@ define([
                 domConstruct.place(nodeCreationDiv, nodeDiv);
                 this.createNodeAmountBox(table);
 
+                var ledModeDiv = html.createDiv("text-align:center;padding-top:20px;");
+                domConstruct.place(ledModeDiv, nodeDiv);
+                var obj = this;
+                var ledModeButton = CommonForm.createButton("Add Single LED ON", function () {
+
+                    obj.modelView.modelSkeleton.setAddMode(this);
+
+                }, null, "color:#3d8dd5;");
+
+                this.setButtonStyle(ledModeButton);
+                domConstruct.place(ledModeButton.domNode, ledModeDiv);
+
                 domConstruct.place(table, tableDiv);
                 domConstruct.place(tableDiv, nodeDiv); 
                 domConstruct.place(nodeDiv, contentPane.domNode);
@@ -86,16 +101,6 @@ define([
             },
 
             createRemoveNodeSection: function (contentPane) {
-
-                var removeNodeDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
-                    "border-radisu:7px;"+
-                    "background-color:#232323;" +
-                    "border-radisu:7px;" +
-                    "border: 2px solid #282828;");
-
-                removeNodeDiv.innerHTML = "LED Node Removal";
-
                 var innerDiv = html.createDiv("text-align:center;" +
                    "color:#3d8dd5;"+
                    "padding-top: 10px;"+
@@ -103,9 +108,7 @@ define([
 
                 this.createRemoveButton(innerDiv);
 
-                domConstruct.place(removeNodeDiv, contentPane.domNode);
                 domConstruct.place(innerDiv, contentPane.domNode);
-                
 
             },
 
@@ -166,7 +169,80 @@ define([
                     obj.modelView.modelSkeleton.removeNodes();
                 });
 
+                
+                this.setButtonStyle(removeButton);
+
                 domConstruct.place(removeButton.domNode, div);
+
+            },
+
+            createSelectAllSection: function(div)
+            {
+                /*Select All Vertices*/
+                var selectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+                var obj = this;
+                var selectAllNodeButton = CommonForm.createButton('Select All Vertices', function () {
+
+                    obj.modelView.modelSkeleton.selectAllVertexs();
+                });
+
+                this.setButtonStyle(selectAllNodeButton);
+                
+                domConstruct.place(selectAllNodeButton.domNode, selectAllDiv);
+                domConstruct.place(selectAllDiv, div);
+
+                /*Deselect All Vertices*/
+                var deselectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+                var deselectAllNodeButton = CommonForm.createButton('Deselect All Vertices', function () {
+
+                    obj.modelView.modelSkeleton.deselectAllVertexs();
+
+                });
+
+                this.setButtonStyle(deselectAllNodeButton);
+
+                domConstruct.place(deselectAllNodeButton.domNode, deselectAllDiv);
+                domConstruct.place(deselectAllDiv, div);
+
+
+                /*Select All LEDs*/
+                var selectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+                var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
+
+                    obj.modelView.modelSkeleton.selectAllLEDs();
+                });
+
+                this.setButtonStyle(selectLEDButton);
+
+                domConstruct.place(selectLEDButton.domNode, selectLEDDiv);
+                domConstruct.place(selectLEDDiv, div);
+
+                /* Deselect All LEDs*/
+                var deselectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+                var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
+
+                    obj.modelView.modelSkeleton.deselectAllLEDs();
+
+                });
+                this.setButtonStyle(deselectLEDButton);
+
+                domConstruct.place(deselectLEDButton.domNode, deselectLEDDiv);
+                domConstruct.place(deselectLEDDiv, div);
+
+
+
+            },
+
+            setButtonStyle: function(button)
+            {
+                domStyle.set(button.domNode.firstChild, "border", "1px solid #4c4c4c");
+                domStyle.set(button.domNode.firstChild, "background-image", "-ms-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode.firstChild, "background-image", "linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode.firstChild, "background-image", "-o-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode.firstChild, "background-image", "-moz-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode.firstChild, "background-image", "-webkit-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode, "width", "90%");
+                domStyle.set(button.domNode.firstChild, "width", "100%");
 
             },
 
@@ -182,7 +258,7 @@ define([
                 groupTitleDiv.innerHTML = "Node Grouping";
                 domConstruct.place(groupTitleDiv, div); 
 
-                var groupListBox = CommonForm.createListBox("width:50%;");
+                var groupListBox = CommonForm.createListBox("width:90%;");
 
                 var obj = this;
                 var addVertexButton = CommonForm.createButton('Add Group', function () {
@@ -190,15 +266,17 @@ define([
                     obj.modelView.modelSkeleton.addSelectedGroup(groupListBox);
 
                     
-                },null, "color:#3d8dd5;");
+                }, null, "color:#3d8dd5;");
 
-               
-
+                this.setButtonStyle(addVertexButton);
+             
                 var removeVertexButton = CommonForm.createButton('Remove Group', function () {
 
                     obj.modelView.modelSkeleton.removeSelectedGroup(groupListBox);
 
-                }, null, "color:#3d8dd5;");             
+                }, null, "color:#3d8dd5;");
+
+                this.setButtonStyle(removeVertexButton);
 
                 var listDiv = html.createDiv("text-align:center;padding-top:10px;");
                 domConstruct.place(groupListBox.domNode, listDiv);
@@ -210,7 +288,9 @@ define([
                 domConstruct.place(buttonDiv, div);
 
               
-            }
+            },
+
+            
 
 
 

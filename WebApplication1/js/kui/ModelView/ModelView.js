@@ -49,6 +49,7 @@
                 this.ambientColor = 0x101030;
 
 
+
             },
                    
             displayModel: function (fileLocation) {
@@ -153,6 +154,8 @@
                         opacity: 0.85,
                         vertexColors: true
                     }));
+
+                this.modelSkeleton.sceneMesh = this.mesh;
 
 
                 scene.add(this.mesh);

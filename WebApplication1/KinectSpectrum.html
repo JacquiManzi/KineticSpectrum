@@ -37,9 +37,11 @@
        "kui/ModelView/ModelView",
        "dojo/on",
        "kui/util/CommonHTML",
-       "dojo/dom-construct"
+       "dojo/dom-construct",
+       "kui/util/CommonFormItems"
     ],
-           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu, ModelMenu, ModelView, on, html, domConstruct) {
+           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu,
+               ModelMenu, ModelView, on, html, domConstruct, CommonForm) {
 
                var windowHeight = window.getBox().h - 20;
 
@@ -93,6 +95,8 @@
                var designMenu = new DesignMenu(null, null,  modelView);
               
                designMenu.createMenu();
+
+
 
                domConstruct.place(innerTopDiv, leftDiv);
                domConstruct.place(designMenu.domNode, leftDiv);

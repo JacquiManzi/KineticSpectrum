@@ -4,10 +4,9 @@
     "dojo/dom",
     "dojo/dom-style",
     "dojo/dom-construct",
-    "threejs/three",
-    "dojo/dom-geometry"
+    "threejs/three"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, domGeom) {
+    function (declare, html, dom, domStyle, domConstruct, three) {
         "use strict";
         return declare("kui.ModelMenu.VertexSphere", null, {
 
@@ -16,13 +15,13 @@
              *
              */
 
-            constructor: function (x, y, z) {
+            constructor: function (scene, x, y, z) {
 
 
                 this.radius = 0.02;
                 this.segmentsWidth = 3; //max 8 min 3
                 this.segmentsHeight = 2; //max 6 min 2
-                this.projector = new three.Projector();
+               
 
                 this.x = x;
                 this.y = y;
@@ -30,7 +29,9 @@
 
                 this.isVertex = true;
                 this.sphere = this.createSphere();
+                this.scene = scene;
 
+                this.addModeOn = true;
             },
 
 
@@ -49,73 +50,7 @@
 
                 return sphere;
 
-            },
-
-            findSelectionType: function (spheres, domElement, camera, event)
-            {
-                var intersects = this.findIntersects(spheres, domElement, camera, event);
-
-                if (intersects.length > 0) {
-
-                    if (!intersects[0].object.isSelected) {
-
-                        this.selectSphere(intersects);
-
-                    }
-                    else {
-
-                        this.deseletSphere(intersects);
-
-                    }
-
-                }
-
-            },
-
-            selectSphere: function (intersects) {
-
-
-                    var selectionMaterial = new three.MeshBasicMaterial({
-
-                        color: 0xff0000
-                    });
-
-
-                    intersects[0].object.setMaterial(selectionMaterial);
-
-                    intersects[0].object.isSelected = true;
-
-            },
-
-            deseletSphere: function (intersects) {
-
-             
-                    var selectionMaterial = new three.MeshNormalMaterial({
-
-                        
-                    });
-
-                    intersects[0].object.setMaterial(selectionMaterial);
-
-                    intersects[0].object.isSelected = false;
-
-
-            },
-
-            findIntersects: function (spheres, domElement, camera, event) {
-
-                var mouse = { x: (event.layerX / domGeom.getMarginSize(domElement).w) * 2 - 1, y: -(event.layerY / domGeom.getMarginSize(domElement).h) * 2 + 1 };
-
-                var vector = new three.Vector3(mouse.x, mouse.y, 1);
-
-                this.projector.unprojectVector(vector, camera);
-
-                var raycaster = new three.Raycaster(camera.position, vector.sub(camera.position).normalize());
-
-                return raycaster.intersectObjects(spheres.toArray());
-
             }
-
 
 
         });

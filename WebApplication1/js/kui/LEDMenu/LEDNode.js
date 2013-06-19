@@ -30,7 +30,6 @@ define([
                 this.segmentsHeight = 6;
 
                 this.isVertex = false;
-                
             },
 
 

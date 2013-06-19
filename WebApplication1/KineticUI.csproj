@@ -7742,7 +7742,9 @@
     <Content Include="KinectSpectrum.html">
       <BrowseToURL>~/KineticSpectrum.html</BrowseToURL>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileUpload.aspx.cs">

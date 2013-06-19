@@ -8,9 +8,10 @@
     "kui/ModelView/VertexSphere",
     "dojox/collections/ArrayList",
     "kui/LEDMenu/LEDNode",
-    "dojo/on"
+    "dojo/on",
+    "dojo/dom-geometry"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, VertexSphere, ArrayList, LEDNode, on) {
+    function (declare, html, dom, domStyle, domConstruct, three, VertexSphere, ArrayList, LEDNode, on, domGeom) {
         "use strict";
         return declare("kui.ModelMenu.ModelSkeleton", null, {
 
@@ -31,6 +32,7 @@
                 this.domNode = domNode;
                 this.scene = scene;
                 this.camera = camera;
+                this.projector = new three.Projector();
 
                 this.spheres = new ArrayList(); //Vertex spheres and LED spheres currently drawn
                 this.leds = new ArrayList(); //VertexSpheres that are LED nodes
@@ -39,6 +41,10 @@
                 this.selectedVertexGroups = new ArrayList(); //Selected Vetices that are grouped
                 this.selectedGroupVertexOptions = new ArrayList(); //The vertex group options that are selected in the list box
 
+                this.addModeOn = true;
+
+                this.sceneMesh = null;
+
             },
 
             colorEachVertex: function () {
@@ -46,7 +52,7 @@
                
                 for (var i = 0; i < this.vertices.length; i++) {
                     
-                    var vertexSphere = new VertexSphere(this.vertices[i].x, this.vertices[i].y, this.vertices[i].z); 
+                    var vertexSphere = new VertexSphere(this.scene, this.vertices[i].x, this.vertices[i].y, this.vertices[i].z); 
 
                     this.scene.add(vertexSphere.sphere);
 
@@ -54,7 +60,7 @@
                     
                 }
 
-                dojo.connect(this.domNode, "onmousedown", dojo.hitch(vertexSphere, vertexSphere.findSelectionType, this.spheres, this.domNode, this.camera));
+                dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
 
               
             },
@@ -242,6 +248,62 @@
 
             },
 
+            selectAllVertexs: function()
+            {
+                for (var i = 0; i < this.spheres.count; i++) {
+
+                    if (this.spheres.item(i).isVertex) {
+                        this.spheres.item(i).isSelected = true;
+
+                        var selectionMaterial = new three.MeshBasicMaterial({
+
+                            color: 0xff0000
+                        });
+
+
+                        this.spheres.item(i).setMaterial(selectionMaterial);
+                    }
+
+
+                }
+            },
+
+            selectAllLEDs: function()
+            {
+
+                for (var i = 0; i < this.spheres.count; i++) {
+
+                    if (!this.spheres.item(i).isVertex) {
+                        this.spheres.item(i).isSelected = true;
+
+                        var selectionMaterial = new three.MeshBasicMaterial({
+
+                            color: 0xff0000
+                        });
+
+
+                        this.spheres.item(i).setMaterial(selectionMaterial);
+                    }
+
+                }
+            },
+
+            deselectAllLEDs: function()
+            {
+                for (var i = 0; i < this.spheres.count; i++) {
+
+                    if (!this.spheres.item(i).isVertex) {
+                        this.spheres.item(i).isSelected = false;
+
+                        var material = new three.MeshNormalMaterial();
+
+                        this.spheres.item(i).setMaterial(material);
+
+                    }
+
+                }
+            },
+
             showSelectedVertexGroups: function()
             {
 
@@ -265,10 +327,128 @@
 
                 }
 
+            },
+
+            addSingleLED: function (intersects) {
+
+                var led = new LEDNode();
+                led.x = intersects[0].point.x;
+                led.y = intersects[0].point.y;
+                led.z = intersects[0].point.z;
+                var ledSphere = led.createSphere();
+
+                this.spheres.add(ledSphere);
+                this.scene.add(ledSphere);
+
+            },
+
+            findSelectionType: function (event) {
+                if (!this.addModeOn) {
+                    var intersects = this.findIntersects(this.spheres, event);
+
+                    if (intersects.length > 0) {
+
+                        if (!intersects[0].object.isSelected) {
+
+                            this.selectSphere(intersects);
+
+                        }
+                        else {
+
+                            this.deseletSphere(intersects);
+
+                        }
+
+                    }
+                }
+                else {
+
+                    var meshList = new ArrayList();
+                    meshList.add(this.sceneMesh);
+                    var intersects = this.findIntersects(meshList, event);
+                    this.addSingleLED(intersects);
+
+                }
+
+            },
+
+            selectSphere: function (intersects) {
 
 
+                var selectionMaterial = new three.MeshBasicMaterial({
 
+                    color: 0xff0000
+                });
+
+
+                intersects[0].object.setMaterial(selectionMaterial);
+
+                intersects[0].object.isSelected = true;
+
+            },
+
+            deseletSphere: function (intersects) {
+
+
+                var selectionMaterial = new three.MeshNormalMaterial({
+
+
+                });
+
+                intersects[0].object.setMaterial(selectionMaterial);
+
+                intersects[0].object.isSelected = false;
+
+
+            },
+
+            findIntersects: function (objects, event) {
+
+                var mouse = { x: (event.layerX / domGeom.getMarginSize(this.domNode).w) * 2 - 1, y: -(event.layerY / domGeom.getMarginSize(this.domNode).h) * 2 + 1 };
+
+                var vector = new three.Vector3(mouse.x, mouse.y, 1);
+
+                this.projector.unprojectVector(vector, this.camera);
+
+                var raycaster = new three.Raycaster(this.camera.position, vector.sub(this.camera.position).normalize());
+
+                return raycaster.intersectObjects(objects.toArray());
+
+            },
+
+            setAddMode: function(button)
+            {
+
+                if (this.addModeOn) {
+
+                    this.setAddModeOff(button);
+
+                }
+                else {
+
+                    this.setAddModeOn(button);
+
+                }
+            },
+
+            setAddModeOn: function (button) {
+
+                this.addModeOn = true;
+                button.set('label', "Add Single LED ON");
+                
+            },
+
+            setAddModeOff: function (button) {
+
+                this.addModeOn = false;
+                button.set('label', "Add Single LED OFF");
             }
+
+
+
+
+
+            
 
             
                 
