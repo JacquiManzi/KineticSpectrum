@@ -7751,7 +7751,6 @@
       <DependentUpon>FileUpload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FileUpload.cs" />
     <Compile Include="CSharp\ProccessModel.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

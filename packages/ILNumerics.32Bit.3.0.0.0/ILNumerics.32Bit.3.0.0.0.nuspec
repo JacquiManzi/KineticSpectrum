@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ILNumerics.32Bit</id>
+    <version>3.0.0.0</version>
+    <authors>Haymo Kutschbach,  ILNumerics</authors>
+    <owners>Haymo Kutschbach,  ILNumerics</owners>
+    <licenseUrl>http://www.gnu.org/copyleft/gpl.html</licenseUrl>
+    <projectUrl>http://ilnumerics.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ILNumerics brings Matlab-like syntax and high performance execution of numerical computations on .NET (C#,VB etc.).</description>
+    <releaseNotes>See release notes in changelog.txt</releaseNotes>
+    <copyright>Copyright 2012, ILNumerics</copyright>
+    <tags>C#, HPC, Performance, Matlab, Matrix, 3D, Complex, FFT, LAPACK, Scene Graph, Math, Algorithm, Numeric, PSModule</tags>
+    <references>
+      <reference file="ILNumerics32.dll" />
+    </references>
+  </metadata>
+</package>

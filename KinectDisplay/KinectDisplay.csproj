@@ -80,9 +80,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Blob.cs" />
     <Compile Include="BucketUpdater.cs" />
-    <Compile Include="CameraTransform.cs" />
     <Compile Include="ChangeTracker.cs" />
     <Compile Include="Background.cs" />
     <Compile Include="ForegroundCut.cs" />
@@ -125,6 +123,10 @@
     <ProjectReference Include="..\KinectAPI\KinectAPI.csproj">
       <Project>{329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D}</Project>
       <Name>KinectAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KinectCV\KinectCV.csproj">
+      <Project>{dcfee017-39b4-4443-a950-1099914a5cc6}</Project>
+      <Name>KinectCV</Name>
     </ProjectReference>
     <ProjectReference Include="..\KineticControl\KineticControl.csproj">
       <Project>{E37E554B-4741-4827-8162-733DE3AE02C6}</Project>
