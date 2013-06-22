@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using RevKitt.ks.KinectCV;
 
 namespace KinectDisplay
 {

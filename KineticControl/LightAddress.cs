@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KineticControl
 {
-    public class LightAddress : IEquatable<LightAddress>
+    public class LightAddress : IEquatable<LightAddress>, IComparable<LightAddress>
     {
         private readonly int _fixtureNumber;
         private readonly int _lightNumber;
@@ -33,6 +33,14 @@ namespace KineticControl
         }
 
         // Equals and HashCode Operators
+        public int CompareTo(LightAddress other)
+        {
+            int comp = _fixtureNumber - other._fixtureNumber;
+            if(comp == 0)
+                comp = _lightNumber - other._lightNumber;
+            return comp;
+        }
+
         public override String ToString()
         {
             return IsUnknown ? "?" : _fixtureNumber + "-" + _lightNumber;

@@ -8,6 +8,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using KinectAPI;
 using KineticControl;
+using RevKitt.ks.KinectCV;
 
 namespace KinectDisplay
 {

@@ -12,6 +12,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.VideoSurveillance;
 using KinectAPI;
+using RevKitt.ks.KinectCV;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
