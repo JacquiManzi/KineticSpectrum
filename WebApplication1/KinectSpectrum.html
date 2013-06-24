@@ -13,10 +13,10 @@
      
     <!-- CSS links -->
     <!-- Dojo dijit tundra themes -->
-    <link rel="stylesheet" href="js/libraries/dojo/dijit/themes/tundra/tundra.css" media="screen"/> 
+    <link rel="stylesheet" href="js/libraries/dojo/dijit/themes/claro/claro.css" media="screen"/> 
 
 </head>   
-<body class="tundra">
+<body class="claro" style="background-color:black;">
 
 <div id="mainContainer" style="height:100%;width:100%;">    
 
@@ -47,10 +47,9 @@
 
                /*The main border container for the entire EOS*/   
                var mainContainer = new BorderContainer({
-                   design: "headline",
-                   liveSplitters: false,
                    gutters: false,
-                   style:"height:"+ windowHeight+ "px;width:100%;"    
+                   design: "headline",                  
+                   style:"height:"+ windowHeight+ "px;width:100%;border:none;"    
                }, "mainContainer");
 
              
@@ -61,7 +60,8 @@
                    style: "width:90%;" +
                           "height:95%;" +
                           "background-color:black;"+
-                          "overflow: hidden;",
+                          "overflow: hidden;"+
+                          "border:none;",
                    executeScripts: true
                });
                /*The center content pane to the bottom content pane*/
@@ -77,7 +77,7 @@
 
                /*Left container*/
                var leftContainer = new ContentPane({
-                   splitter: false,
+                   isLayoutContainer: true,
                    region: "left",
                    id: "leftContainer",
                    minSize: ".1",

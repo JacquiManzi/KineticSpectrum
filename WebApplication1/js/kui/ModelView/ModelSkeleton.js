@@ -20,15 +20,14 @@
              *
              */
 
-            constructor: function (object, domNode, scene, camera) {
+            constructor: function (domNode, scene, camera, orbitControl) {
               
-                this.geometry = object;
-                this.vertices = this.geometry.vertices;
-                this.colors = this.geometry.colors;
-                this.normals = this.geometry.normals;
-                this.faces = this.geometry.faces;
-                this.faceUvs = this.geometry.faceUvs;
-                this.faceVertexUvs = this.geometry.faceVertexUvs;
+                this.geometryList = new ArrayList();
+                this.colors = null;
+                this.normals = null;
+                this.faces = null;
+                this.faceUvs = null;
+                this.faceVertexUvs = null;
                 this.domNode = domNode;
                 this.scene = scene;
                 this.camera = camera;
@@ -41,28 +40,44 @@
                 this.selectedVertexGroups = new ArrayList(); //Selected Vetices that are grouped
                 this.selectedGroupVertexOptions = new ArrayList(); //The vertex group options that are selected in the list box
 
-                this.addModeOn = true;
+                this.addModeOn = false;
 
                 this.sceneMesh = null;
-
+                this.orbitControl = orbitControl;
             },
 
             colorEachVertex: function () {
 
-               
-                for (var i = 0; i < this.vertices.length; i++) {
-                    
-                    var vertexSphere = new VertexSphere(this.scene, this.vertices[i].x, this.vertices[i].y, this.vertices[i].z); 
+                for (var i = 0; i < this.geometryList.count; i++) {
 
-                    this.scene.add(vertexSphere.sphere);
+                    var vertices = this.geometryList.item(i).vertices;
+                    for (var j = 0; j < vertices.length; j++) {
 
-                    this.spheres.add(vertexSphere.sphere);
-                    
+                        var distance = this.geometryList.item(i).boundingBox.min.distanceTo(this.geometryList.item(i).boundingBox.max);
+                        var radius = distance * .01;
+                        var vertexSphere = new VertexSphere( radius, vertices[j].x, vertices[j].y, vertices[j].z);
+
+                        /*Adjust the sphere radius according to model scale*/
+                        
+                        vertexSphere.radius = distance * 0.003;
+
+                        this.scene.add(vertexSphere.sphere);
+
+                        this.spheres.add(vertexSphere.sphere);
+
+                    }
                 }
 
+               
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
+                dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function (event) {
 
-              
+                    this.orbitControl.enabled = true;
+                    this.dragControls.enabled = false;
+
+                }));
+                this.dragControls = new three.DragControls(this.camera, this.spheres, this.domNode, domGeom);
+
             },
 
 
@@ -126,7 +141,7 @@
 
                 for (var i = 0; i < this.spheres.count; i++) {
 
-                    if (this.spheres.item(i).isSelected && this.spheres.item(i).isVertex) {
+                    if (this.spheres.item(i).isSelected) {
 
                         selectedVertices.add(this.spheres.item(i));
 
@@ -163,8 +178,10 @@
 
                 for (var i = 0; i < this.selectedSpheres.count; i++) {
 
-                    this.scene.remove(this.selectedSpheres.item(i));
-                    this.spheres.remove(this.selectedSpheres.item(i)); 
+                    if (!this.selectedSpheres.item(i).isVertex) {
+                        this.scene.remove(this.selectedSpheres.item(i));
+                        this.spheres.remove(this.selectedSpheres.item(i));
+                    }
 
 
                 }
@@ -308,6 +325,7 @@
             {
 
                 this.deselectAllVertexs();
+                this.deselectAllLEDs();
                 for(var i = 0; i < this.selectedGroupVertexOptions.count; i++)
                 {
 
@@ -330,12 +348,17 @@
             },
 
             addSingleLED: function (intersects) {
+                var distance = intersects[0].object.geometry.boundingBox.min.distanceTo(intersects[0].object.geometry.boundingBox.max);
 
                 var led = new LEDNode();
                 led.x = intersects[0].point.x;
                 led.y = intersects[0].point.y;
                 led.z = intersects[0].point.z;
+                led.radius = distance * .003;
+
                 var ledSphere = led.createSphere();
+
+                /*Adjust the sphere radius according to model scale*/
 
                 this.spheres.add(ledSphere);
                 this.scene.add(ledSphere);
@@ -344,10 +367,17 @@
 
             findSelectionType: function (event) {
                 if (!this.addModeOn) {
+
+
+                        this.orbitControl.enabled = !event.ctrlKey;
+                        this.dragControls.enabled = event.ctrlKey;
+     
+
                     var intersects = this.findIntersects(this.spheres, event);
 
-                    if (intersects.length > 0) {
 
+                    if (intersects.length > 0) {                      
+                       
                         if (!intersects[0].object.isSelected) {
 
                             this.selectSphere(intersects);
@@ -363,14 +393,21 @@
                 }
                 else {
 
-                    var meshList = new ArrayList();
-                    meshList.add(this.sceneMesh);
-                    var intersects = this.findIntersects(meshList, event);
-                    this.addSingleLED(intersects);
+                    
+                        var meshList = new ArrayList();
+                        for (var i = 0; i < this.sceneMesh.count; i++) {
+                            meshList.add(this.sceneMesh.item(i));
+                        }
+                        var intersects = this.findIntersects(meshList, event);
+                        if (intersects.length > 0) {
+                            this.addSingleLED(intersects);
+                        }
+                    
 
                 }
 
             },
+
 
             selectSphere: function (intersects) {
 

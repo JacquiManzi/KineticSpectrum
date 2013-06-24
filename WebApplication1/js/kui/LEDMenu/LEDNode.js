@@ -25,7 +25,7 @@ define([
                 this.green = 0;
                 this.blue = 0;
 
-                this.radius = 0.009;
+                this.radius = 0.02;
                 this.segmentsWidth = 8;
                 this.segmentsHeight = 6;
 

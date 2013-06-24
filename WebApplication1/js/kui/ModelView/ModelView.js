@@ -7,10 +7,11 @@
     "dojo/dom-construct",
     "threejs/three",
     "dojo/dom-geometry",
-    "kui/ModelView/ModelSkeleton"
+    "kui/ModelView/ModelSkeleton",
+    "dojox/collections/ArrayList"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -47,6 +48,8 @@
 
                 /*Ambient Color properties*/
                 this.ambientColor = 0x101030;
+
+                this.meshes = new ArrayList();
 
 
 
@@ -100,15 +103,15 @@
                 });
 
                 var modelViewNode = this.domNode;
-                var orbitControl = new three.OrbitControls(this.camera, modelViewNode);
+                this.orbitControl = new three.OrbitControls(this.camera, modelViewNode);
 
                 this.load(fileLocation, this.scene, this.render);
 
-                var animate = function () {
+                var animate = dojo.hitch(this, function () {
 
                     requestAnimationFrame(animate);
-                    orbitControl.update();                    
-                }
+                    this.orbitControl.update();
+                });
 
                 animate(); 
 
@@ -135,43 +138,52 @@
             loadObject: function(scene, render, object)
             {
                
-                if (!!this.mesh) {
+                if (this.meshes.count > 0) {
 
                     this.removeAllMeshes();
                 }
+            
+                this.modelSkeleton = new ModelSkeleton(this.domNode, scene, this.camera, this.orbitControl);
+                for (var i = 0; i < object.children.length; i++) {
 
-                var geometry = object.children[0].geometry;
-                three.GeometryUtils.center(geometry);
+                 
+                    three.GeometryUtils.center(object.children[i].geometry);
 
-                this.modelSkeleton = new ModelSkeleton(geometry, this.domNode, scene, this.camera);
+                    this.modelSkeleton.geometryList.add(object.children[i].geometry);
+                   
+                    var mesh = new three.Mesh(object.children[i].geometry, new three.MeshBasicMaterial(
+                        {
+                            color: 0x999999,
+                            wireframe: true,
+                            transparent: false,
+                            opacity: 0.85,
+                            vertexColors: true
+                        }));
+
+                    this.meshes.add(mesh);
+                                  
+                    scene.add(mesh);
+                }
+                this.modelSkeleton.sceneMesh = this.meshes;
                 this.modelSkeleton.colorEachVertex();
-
-                this.mesh = new three.Mesh(this.modelSkeleton.geometry, new three.MeshBasicMaterial(
-                    {
-                        color: 0x999999,
-                        wireframe: true,
-                        transparent: false,
-                        opacity: 0.85,
-                        vertexColors: true
-                    }));
-
-                this.modelSkeleton.sceneMesh = this.mesh;
-
-
-                scene.add(this.mesh);
 
                 render();
             },
 
             removeAllMeshes: function()
             {
-                this.scene.remove(this.mesh);
+                for (var i = 0; i < this.meshes.count; i++) {
+                    this.scene.remove(this.meshes.item(i));
+                }
 
                 for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
 
                     this.scene.remove(this.modelSkeleton.spheres.item(i));
 
                 }
+
+                this.meshes.clear();
+                this.modelSkeleton.spheres.clear();
             },
 
             resetObject: function()

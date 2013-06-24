@@ -37310,7 +37310,122 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 };
 
-THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+THREE.OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
+
+
+
+THREE.DragControls = function (_camera, _objects, _domElement, domGeom) {
+
+    //JMM: Commenting out because I amnow using dojox.collections.ArrayList instead of javascript arrays
+    /*if (_objects instanceof THREE.Scene) {
+        _objects = _objects.children;
+    }*/
+    var _projector = new THREE.Projector();
+
+    var _mouse = new THREE.Vector3(),
+        _offset = new THREE.Vector3();
+    var _selected;
+
+    var me = this;
+    this.enabled = false;
+
+    _domElement.addEventListener('mousemove', onDocumentMouseMove, false);
+    _domElement.addEventListener('mousedown', onDocumentMouseDown, false);
+    _domElement.addEventListener('mouseup', onDocumentMouseUp, false);
+
+    function onDocumentMouseMove(event) {
+
+        event.preventDefault();
+
+        _mouse.x = (event.layerX / domGeom.getMarginSize(_domElement).w) * 2 - 1;
+        _mouse.y = -(event.layerY / domGeom.getMarginSize(_domElement).h) * 2 + 1;
+
+        var ray = _projector.pickingRay(_mouse, _camera);
+
+        if (_selected) {
+            var targetPos = ray.ray.direction.clone().multiplyScalar(_selected.distance).add(ray.ray.origin);
+            targetPos.sub(_offset);
+            // _selected.object.position.copy(targetPos.subSelf(_offset));
+
+            var moveX, moveY, moveZ;
+
+            moveX = moveY = moveZ = true;
+
+            if (me.xLock) {
+                moveX = false;
+            } else if (me.yLock) {
+                moveY = false;
+            } else if (me.zLock) {
+                moveZ = false;
+            }
+
+            // Reverse Matrix?
+            if (moveX) _selected.object.position.x = targetPos.x;
+            if (moveY) _selected.object.position.y = targetPos.y;
+            if (moveZ) _selected.object.position.z = targetPos.z;
+
+            return;
+
+        }
+
+        var intersects = ray.intersectObjects(_objects.toArray());
+
+        if (intersects.length > 0) {
+
+            _domElement.style.cursor = 'pointer';
+
+        } else {
+
+            _domElement.style.cursor = 'auto';
+
+        }
+
+    }
+
+    function onDocumentMouseDown(event) {
+
+        if (me.enabled) {
+            event.preventDefault();
+
+            _mouse.x = (event.layerX / domGeom.getMarginSize(_domElement).w) * 2 - 1;
+            _mouse.y = -(event.layerY / domGeom.getMarginSize(_domElement).h) * 2 + 1;
+
+            var ray = _projector.pickingRay(_mouse, _camera);
+            var intersects = ray.intersectObjects(_objects.toArray());
+
+            if (intersects.length > 0) {
+                _selected = intersects[0];
+
+                _offset.copy(_selected.point).sub(_selected.object.position);
+
+                _domElement.style.cursor = 'move';
+
+            }
+
+            if (me.onHit) me.onHit(intersects.length > 0);
+        }
+
+
+
+    }
+
+    function onDocumentMouseUp(event) {
+
+        event.preventDefault();
+
+        if (_selected) {
+
+            if (me.onDragged) me.onDragged();
+
+            _selected = null;
+        }
+
+        _domElement.style.cursor = 'auto';
+
+    }
+
+
+}
 
 
     return THREE

@@ -20,7 +20,7 @@ define([
 
             constructor: function (modelView) {
 
-                this.style = "background-color:transparent;";
+                this.style = "background-color:#141414;";
                 this.modelView = modelView;
 
                 /*CSS Stylings*/
@@ -33,7 +33,14 @@ define([
                 var contentPane = new ContentPane(
                   {
                       title: "LED Menu",
-                      style: "background-color:transparent;width:100%;"
+                      style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,"+
+                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,"+
+                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,"+
+                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,"+
+                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px),"+
+                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);"+
+                "background-color: #131313;"+
+                "background-size: 20px 20px;width:100%;"
 
                   });
 
@@ -60,7 +67,7 @@ define([
                 var nodeCreationDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
                     "border-radisu:7px;"+
-                    "background-color:#232323;" +
+                    "background-color:#141414;" +
                     "border-radisu:7px;" +
                     "border: 2px solid #282828;");
 
@@ -84,7 +91,7 @@ define([
                 var ledModeDiv = html.createDiv("text-align:center;padding-top:20px;");
                 domConstruct.place(ledModeDiv, nodeDiv);
                 var obj = this;
-                var ledModeButton = CommonForm.createButton("Add Single LED ON", function () {
+                var ledModeButton = CommonForm.createButton("Add Single LED OFF", function () {
 
                     obj.modelView.modelSkeleton.setAddMode(this);
 
@@ -120,11 +127,11 @@ define([
                     "border-left: 2px solid" + this.tableCellBorderColor+";"+
                     "border-top: 2px solid" + this.tableCellBorderColor + ";" +
                     "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    "color:#efefef;"+
+                    "color:#3d8dd5;" +
                     "text-align: right;"+
                     "width:30%;");
 
-                var valueRow = html.createRow("background-color:#282828;");
+                var valueRow = html.createRow("background-color:#141414;");
 
                 var valueCell = html.createCell("text-align:center;" +
                     "border-top: 2px solid #2d2d2d;" +
@@ -168,6 +175,8 @@ define([
 
                     obj.modelView.modelSkeleton.removeNodes();
                 });
+
+                //dojo.addClass(removeButton, 'vertexImage');
 
                 
                 this.setButtonStyle(removeButton);
@@ -235,12 +244,12 @@ define([
 
             setButtonStyle: function(button)
             {
-                domStyle.set(button.domNode.firstChild, "border", "1px solid #4c4c4c");
+                /*domStyle.set(button.domNode.firstChild, "border", "1px solid #4c4c4c");
                 domStyle.set(button.domNode.firstChild, "background-image", "-ms-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
                 domStyle.set(button.domNode.firstChild, "background-image", "linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
                 domStyle.set(button.domNode.firstChild, "background-image", "-o-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
                 domStyle.set(button.domNode.firstChild, "background-image", "-moz-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
-                domStyle.set(button.domNode.firstChild, "background-image", "-webkit-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
+                domStyle.set(button.domNode.firstChild, "background-image", "-webkit-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");*/
                 domStyle.set(button.domNode, "width", "90%");
                 domStyle.set(button.domNode.firstChild, "width", "100%");
 
@@ -251,14 +260,14 @@ define([
                 var groupTitleDiv = html.createDiv("text-align:center; color:#3d8dd5;");
                 var groupTitleDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
-                    "background-color:#232323;" +
+                    "background-color:#141414;" +
                     "border-radisu:7px;"+
                     "border: 2px solid #282828;");
 
                 groupTitleDiv.innerHTML = "Node Grouping";
                 domConstruct.place(groupTitleDiv, div); 
 
-                var groupListBox = CommonForm.createListBox("width:90%;");
+                var groupListBox = CommonForm.createListBox("width:89%;");
 
                 var obj = this;
                 var addVertexButton = CommonForm.createButton('Add Group', function () {
@@ -267,8 +276,9 @@ define([
 
                     
                 }, null, "color:#3d8dd5;");
+                domStyle.set(addVertexButton.domNode.firstChild, "width", "100px");
 
-                this.setButtonStyle(addVertexButton);
+                //this.setButtonStyle(addVertexButton);
              
                 var removeVertexButton = CommonForm.createButton('Remove Group', function () {
 
@@ -276,23 +286,28 @@ define([
 
                 }, null, "color:#3d8dd5;");
 
-                this.setButtonStyle(removeVertexButton);
+                domStyle.set(removeVertexButton.domNode.firstChild, "width", "100px");
 
-                var listDiv = html.createDiv("text-align:center;padding-top:10px;");
+                //this.setButtonStyle(removeVertexButton);
+
+                var listDiv = html.createDiv("text-align:center;padding-top:10px;" +
+                    "margin-right:auto;" +
+                    "margin-left:auto;" +
+                    "background-color:#141414;"+
+                    "border: 2px solid #282828;"+
+                    "border-radius:7px;"+
+                    "margin-top:10px;");
+
                 domConstruct.place(groupListBox.domNode, listDiv);
                 domConstruct.place(listDiv, div);
 
                 var buttonDiv = html.createDiv("text-align:center;");
-                domConstruct.place(addVertexButton.domNode, buttonDiv);
-                domConstruct.place(removeVertexButton.domNode, buttonDiv);                
+                domConstruct.place(addVertexButton.domNode, listDiv);
+                domConstruct.place(removeVertexButton.domNode, listDiv);                
                 domConstruct.place(buttonDiv, div);
 
               
             },
-
-            
-
-
 
 
         });

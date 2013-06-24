@@ -15,10 +15,10 @@
              *
              */
 
-            constructor: function (scene, x, y, z) {
+            constructor: function (radius, x, y, z) {
 
 
-                this.radius = 0.02;
+                this.radius = radius
                 this.segmentsWidth = 3; //max 8 min 3
                 this.segmentsHeight = 2; //max 6 min 2
                
@@ -29,7 +29,6 @@
 
                 this.isVertex = true;
                 this.sphere = this.createSphere();
-                this.scene = scene;
 
                 this.addModeOn = true;
             },
