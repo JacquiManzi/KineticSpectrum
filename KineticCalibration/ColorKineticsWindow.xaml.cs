@@ -68,7 +68,7 @@ namespace KineticCalibration
                    if(pds.EndPoint.Address != System.Net.IPAddress.Any)
                         pds.UpdateSystem();
                }
-               catch(SocketException se)
+               catch(SocketException)
                {}
            }
         }
@@ -192,7 +192,7 @@ namespace KineticCalibration
             IPAddress ipAddress;
             if (System.Net.IPAddress.TryParse(IPAddress.Text, out ipAddress))
             {
-                _selectedPds.EndPoint = new IPEndPoint(ipAddress, _selectedPds.EndPoint.Port);
+//                _selectedPds.EndPoint = new IPEndPoint(ipAddress, _selectedPds.EndPoint.Port);
                 PowerSupplies.Items.Refresh();
 //                int index = PowerSupplies.Items.IndexOf(_selectedPds);
 //                PowerSupplies.Items.Remove(_selectedPds);
