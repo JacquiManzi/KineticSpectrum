@@ -1,6 +1,6 @@
 style: regexp
 (^|/)_ReSharper\.\w+/.*
 ^.*ReSharper.user$
-^[\w\d]+/obj/.*$
-^[\w\d]+?/bin/(Debug|Release)/.*$
+^[\w\d_-]+/obj/.*$
+^[\w\d_-]+?/bin/
 .*\.csproj\.user$
