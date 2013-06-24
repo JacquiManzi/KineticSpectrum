@@ -96,8 +96,8 @@ namespace RevKitt.ks.KinectCV
 
         public void ExportObj(string fileName)
         {
-            _scene.WriteScene(Path.Combine(Path.GetDirectoryName(fileName), "scene.obj"));
-            _scene.WriteObjs(Path.Combine(Path.GetDirectoryName(fileName), "base.obj"));
+            _scene.WriteScene(Path.Combine(Path.GetDirectoryName(fileName), "scene.obj"), _lightSystem);
+            _scene.WriteObjs(Path.Combine(Path.GetDirectoryName(fileName), "base.obj"), _lightSystem);
         }
 
         public void Reset()

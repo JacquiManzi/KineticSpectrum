@@ -9,7 +9,6 @@ namespace KineticControl
         private static Patterns pattern = new Patterns();
         public static void Main()
         {
-            NetworkInterface card;
             Network network = Network.GetInstance();
 
             network.RetrieveNetworkCards();

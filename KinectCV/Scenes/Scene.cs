@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media.Media3D;
 using ILNumerics;
+using KineticControl;
 
 namespace RevKitt.ks.KinectCV.Scenes
 {
@@ -16,7 +17,7 @@ namespace RevKitt.ks.KinectCV.Scenes
             _views.Add(new SceneView(lights));
         }
 
-        public void WriteObjs(String fileName)
+        public void WriteObjs(String fileName, LightSystem lightSystem)
         {
             StreamWriter writer = new StreamWriter(fileName);
             writer.WriteLine("#");
@@ -24,17 +25,16 @@ namespace RevKitt.ks.KinectCV.Scenes
             writer.WriteLine("#");
             writer.WriteLine();
 
-            int vertexCount = 0;
             IEnumerable<Light> lights = _views.SelectMany(view => view.Lights);
             foreach (var light in lights)
             {
-                if (!light.IsUnknown)
-                    WritePoint(writer, new ScenePoint{Address = light.Address, Vertex = light.LightBlob.Vertex});
+                var scenePoint = new ScenePoint {Address = light.Address, Vertex = light.LightBlob.Vertex};
+                WritePoint(writer, scenePoint, lightSystem.GetNetworkAddress(light.Address));
             }
             writer.Close();
         }
 
-        public void WriteScene(String fileName)
+        public void WriteScene(String fileName, LightSystem lightSystem)
         {
             StreamWriter writer = new StreamWriter(fileName);
             writer.WriteLine("#");
@@ -44,7 +44,7 @@ namespace RevKitt.ks.KinectCV.Scenes
             IEnumerable<ScenePoint> scenePoints = BuildScene();
             foreach (var point in scenePoints)
             {
-                WritePoint(writer, point);
+                WritePoint(writer, point, lightSystem.GetNetworkAddress(point.Address));
             }
             writer.Close();  
         }
@@ -137,11 +137,11 @@ namespace RevKitt.ks.KinectCV.Scenes
 
         
 
-        private void WritePoint(StreamWriter writer, ScenePoint point)
+        private void WritePoint(StreamWriter writer, ScenePoint point, String networkAddress)
         {
             writer.WriteLine();
             Point3D vertex = point.Vertex;
-            writer.WriteLine(point.Address + "\t" + vertex.X + "\t" + vertex.Y + "\t" + vertex.Z);
+            writer.WriteLine(networkAddress + ":" + point.Address + "\t" + vertex.X + "\t" + vertex.Y + "\t" + vertex.Z);
         }
 
         private void WriteLight(StreamWriter writer, Light light, ref int vertexCount)

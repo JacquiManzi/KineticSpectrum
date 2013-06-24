@@ -50,6 +50,7 @@
     <Compile Include="LightAddress.cs" />
     <Compile Include="LightSystem.cs" />
     <Compile Include="LightType.cs" />
+    <Compile Include="NoOpPDS.cs" />
     <Compile Include="Patterns.cs" />
     <Compile Include="ColorData.cs" />
     <Compile Include="Fixture.cs" />

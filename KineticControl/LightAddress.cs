@@ -8,18 +8,26 @@ namespace KineticControl
     public class LightAddress : IEquatable<LightAddress>, IComparable<LightAddress>
     {
         private readonly int _fixtureNumber;
+        private readonly int _portNumber;
         private readonly int _lightNumber;
-        public static readonly LightAddress Unknown = new LightAddress(-1,-1);
+        
+        public static readonly LightAddress Unknown = new LightAddress(-1,-1,-1);
 
-        public LightAddress(int fixtureNumber, int lightNumber)
+        public LightAddress(int fixtureNumber, int portNumber, int lightNumber)
         {
             _fixtureNumber = fixtureNumber;
+            _portNumber = portNumber;
             _lightNumber = lightNumber;
         }
 
         public int LightNo
         {
             get { return _lightNumber; }
+        }
+
+        public int PortNo
+        {
+            get { return _portNumber; }
         }
 
         public int FixtureNo
@@ -36,6 +44,8 @@ namespace KineticControl
         public int CompareTo(LightAddress other)
         {
             int comp = _fixtureNumber - other._fixtureNumber;
+            if (comp == 0) 
+                comp = _portNumber - other._portNumber;
             if(comp == 0)
                 comp = _lightNumber - other._lightNumber;
             return comp;
@@ -43,21 +53,23 @@ namespace KineticControl
 
         public override String ToString()
         {
-            return IsUnknown ? "?" : _fixtureNumber + "-" + _lightNumber;
+            return IsUnknown ? "?" : _fixtureNumber + "-" + _portNumber + "-" + _lightNumber;
         }
 
         public bool Equals(LightAddress other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _fixtureNumber == other._fixtureNumber && _lightNumber == other._lightNumber;
+            return _fixtureNumber == other._fixtureNumber && _lightNumber == other._lightNumber &&
+                   _portNumber == other._portNumber;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (_fixtureNumber * 397) ^ _lightNumber;
+                int hashcode = (_fixtureNumber * 397) ^ _lightNumber;
+                return (hashcode*397) ^ _portNumber;
             }
         }
 

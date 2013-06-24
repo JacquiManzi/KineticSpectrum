@@ -8,10 +8,12 @@ namespace KineticControl
 {
     public interface PDS
     {
-        List<ColorData> AllColorData { get; }
+        IList<ColorData> AllColorData { get; }
         void UpdateSystem();
         string getType();
 
-        IPEndPoint EndPoint { get; set; }
+        IPEndPoint EndPoint { get; }
+
+        ColorData this[int portNo] { get; }
     }
 }
