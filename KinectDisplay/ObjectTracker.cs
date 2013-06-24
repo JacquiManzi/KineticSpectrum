@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RevKitt.ks.KinectCV;
 
 namespace KinectDisplay
 {

@@ -53,16 +53,21 @@
             <Image Name="ColorImage" Width="640" Height="480"/>
         </Viewbox>
         <Viewbox Grid.Row="1" Grid.Column="1" Stretch="None" HorizontalAlignment="Right">
-            <Image Name="MaskImage" Width="640" Height="480"/>
+            <Image Name="MaskImage" Width="640" Height="480" MouseMove="UpdateDistance" />
         </Viewbox>
         <Slider Grid.Row="2" Name="ExposureSlider" Width="640" VerticalAlignment="Top"/>
         <Label Grid.Row="2" VerticalAlignment="Bottom" Content="Exposure" HorizontalAlignment="Center"/>
         <Button Grid.Row="2" Style="{StaticResource SnapshotButton}" Content="Screenshot" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10 10 0 10" Name="buttonScreenshot" Click="ButtonScreenshotClick" />
         <Button Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Begin Search" Name="SearchButton" Margin="20 0 0 0" IsEnabled="False"/>
+        <Button Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Reset" Name="ResetButton" Margin="120 0 0 0" IsEnabled="False"/>
+        <Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Save View" Name="ViewButton" Margin="20 0 0 0" IsEnabled="False"/>
+        <Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Save Scene" Name="SaveButton" Margin="120 0 0 0" IsEnabled="False"/>
         <Slider Grid.Row="3" Name="WBSlider" VerticalAlignment="Top" HorizontalAlignment="Center" Width="640" />
         <Label Grid.Row="3"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="White Balance"/>
         <StatusBar Height="40"  Grid.Row="4" VerticalAlignment="Top" Width="Auto">
             <Label Name="StatusBar" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Connecting to Kinect..."/>
         </StatusBar>
+        <Label HorizontalAlignment="Left"  Margin="171,98,0,0" Name="ellipse1" Visibility="Hidden" VerticalAlignment="Top" Content="Words" Background="White" />
     </Grid>
+    
 </Window>

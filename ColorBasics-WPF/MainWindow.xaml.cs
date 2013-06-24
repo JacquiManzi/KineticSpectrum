@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using KineticControl;
 using Microsoft.Kinect;
+using RevKitt.ks.KinectCV;
+using Point = System.Windows.Point;
 
 namespace RevKitt.LightBuilder
 {
@@ -35,8 +37,15 @@ namespace RevKitt.LightBuilder
         /// </summary>
         private byte[] colorPixels;
 
+        private DepthImagePixel[] depthPixels;
+        private DepthImagePoint[] depthPoints;
+
 
         private ImageProcessor _processor;
+
+
+        private const ColorImageFormat ColorFormat = ColorImageFormat.RgbResolution640x480Fps30;
+        private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution640x480Fps30;
 
 
         /// <summary>
@@ -72,8 +81,8 @@ namespace RevKitt.LightBuilder
             if (null != this.sensor)
             {
                 // Turn on the color stream to receive color frames
-                this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-                this.sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+                this.sensor.ColorStream.Enable(ColorFormat);
+                this.sensor.DepthStream.Enable(DepthFormat);
 
                 var cameraSettings = this.sensor.ColorStream.CameraSettings;
 
@@ -93,16 +102,21 @@ namespace RevKitt.LightBuilder
                 this.ExposureSlider.ValueChanged += ExposureAdjusted;
                 this.WBSlider.ValueChanged += WBAdjusted;
                 this.SearchButton.Click += (o, args) => _processor.BeginSearch();
+                this.SaveButton.Click += (o, args) => _processor.ExportObj(BuildFileName(".obj"));
+                this.ViewButton.Click += (o, args) => _processor.SaveView();
+                this.ResetButton.Click += (o, args) => _processor.Reset();
                 this.ColorImage.MouseLeftButtonUp += ColorImageOnMouseLeftButtonUp;
                 
 
                 // Allocate space to put the pixels we'll receive
                 this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
+                this.depthPixels = new DepthImagePixel[this.sensor.DepthStream.FramePixelDataLength];
+                this.depthPoints = new DepthImagePoint[this.sensor.DepthStream.FramePixelDataLength];
 
                 LightSystem lightSystem = InitCK();
                 _processor = new ImageProcessor(lightSystem, this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight);
                 // Add an event handler to be called whenever there is new color frame data
-                this.sensor.ColorFrameReady += this.SensorColorFrameReady;
+                this.sensor.AllFramesReady += this.AllFramesReady;
 
                 // Start the sensor!
                 try
@@ -123,9 +137,35 @@ namespace RevKitt.LightBuilder
             }
         }
 
+        private void UpdateDistance(object sender, MouseEventArgs e)
+        {
+                Point matPos = e.GetPosition(this.MaskImage);
+
+                matPos.X *= 640.0 / this.MaskImage.ActualWidth;
+                matPos.Y *= 480.0 / this.MaskImage.ActualHeight;
+                float value = this.depthPoints[(int)matPos.Y*640+(int)matPos.X].Depth;
+                if (Content.ToString() != value.ToString())
+                {
+                    this.StatusBar.Content = value;
+                }
+            
+        }
+
+       
+
+        
+        private string BuildFileName(string endsWith)
+        {
+            string myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            string time = DateTime.Now.ToString("hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
+
+            return Path.Combine(myPhotos, "KineticObj-" + time + endsWith);
+        }
+        
+
         private LightSystem InitCK()
         {
-            LightingManager lightingManager = new LightingManager();
+            LightingManager lightingManager = new LightingManager(Properties.Resources.HostInterface);
             if (lightingManager.NeedsPrompt)
                 throw new Exception("BOOOO! Network adapter not set properly. Options Include: \n" + String.Join("\n", lightingManager.LightSystem.NetworkInterfaces));
             Console.WriteLine("Querying for Lighting....");
@@ -170,21 +210,31 @@ namespace RevKitt.LightBuilder
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        private void AllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
             SearchButton.IsEnabled = !_processor.IsSearching;
+            ResetButton.IsEnabled = _processor.IsSearching || _processor.DoneSearching;
+            ViewButton.IsEnabled = _processor.DoneSearching;
+            SaveButton.IsEnabled = _processor.CanExport;
+
             if (!_processingFrame)
             {
                 using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+                using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
                 {
-                    if (colorFrame != null)
+                    if (colorFrame != null && depthFrame != null)
                     {
                         // Copy the pixel data from the image to a temporary array
                         colorFrame.CopyPixelDataTo(this.colorPixels);
-                        Bitmap processed = _processor.ProcessImage(this.colorPixels);
+                        depthFrame.CopyDepthImagePixelDataTo(this.depthPixels);
+
+                        this.sensor.CoordinateMapper.MapColorFrameToDepthFrame(
+                            ColorFormat, DepthFormat,
+                            this.depthPixels, depthPoints);
+
+                        Bitmap processed = _processor.ProcessImage(this.colorPixels, depthPoints);
                         UpdateColorImage(processed);
                         UpdateMaskImage(_processor.Mask.Bitmap);
-
                     }
                 }
                 _processingFrame = false;
