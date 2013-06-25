@@ -9,8 +9,9 @@ define([
     "dojo/dom-construct",
     "threejs/three",
     "kui/util/CommonFormItems",
-    "kui/PatternMenu/KUIPatterns"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, KUIPatterns) {
+    "kui/PatternMenu/KUIPatterns",
+    "dijit/TitlePane"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, KUIPatterns, TitlePane) {
         "use strict";
         return declare("kui.PatternMenu.PatternMenu", null, {
 
@@ -43,6 +44,15 @@ define([
 
                 this.patterns = new KUIPatterns();
 
+                this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
+                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
+                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
+                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
+                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
+                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
+                "background-color: #131313;" +
+                "background-size: 20px 20px;";
+
 
             },
 
@@ -50,14 +60,7 @@ define([
                 var contentPane = new ContentPane(
                   {
                       title: "Pattern Menu",
-                      style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
-                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
-                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
-                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
-                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
-                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
-                "background-color: #131313;" +
-                "background-size: 20px 20px;width:100%;"
+                      style: this.mainBackgroundColor
 
                   });
 
@@ -77,17 +80,17 @@ define([
 
                 var div = html.createDiv("text-align:center;");
                 var table = html.createTable(this.tableStyle);
-              
+             
 
-                /*Create pattern title divider*/
-                var patternCreateDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
-                    "background-color:#383838;" +
-                    "border-radisu:7px;");
+                var patternPropPane = new TitlePane({
 
-                patternCreateDiv.innerHTML = "Create Pattern";
-                domConstruct.place(patternCreateDiv, div);
-                domConstruct.place(html.createDiv(spacerDivStyle), div);
+                    title: "Pattern Properties",
+                    content: table
+                   
+                });
+
+                table.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(patternPropPane.domNode, div);
 
                 /*Pattern Name text box*/
                 var nameRow = this.createPatternNameSection();
@@ -101,18 +104,36 @@ define([
                 /*Priority Section*/
                 var priorityRow = this.createPrioritySection();
                 domConstruct.place(priorityRow, table);
-
-                domConstruct.place(table, div);
-                domConstruct.place(html.createDiv(spacerDivStyle), div);
-
+                       
                 /*Effect Section*/
                 var effectDiv = this.createEffectSection();
                 domConstruct.place(effectDiv, div);
+               
+
+                var effectPropPane = new TitlePane({
+
+                    title: "Effect Properties",
+                    content: effectDiv
+
+                });
+
+                effectDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(effectPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
                 /*Group Section*/
                 var groupSectionDiv = this.createGroupSection();
                 domConstruct.place(groupSectionDiv, div);
+            
+                var groupPropPane = new TitlePane({
+
+                    title: "Pattern Groups",
+                    content: groupSectionDiv
+
+                });
+
+                groupSectionDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(groupPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
                 /*Create pattern button*/
@@ -233,7 +254,7 @@ define([
                 var groupDiv = html.createDiv("width:100%;");
                 domConstruct.place(groupDiv, div);
 
-                var groupListBox = CommonForm.createListBox("width:0%;");
+                var groupListBox = CommonForm.createListBox("width:90%;");
                 domConstruct.place(groupListBox.domNode, groupDiv);
 
                 var groupButtonDiv = html.createDiv("width:100%;");
