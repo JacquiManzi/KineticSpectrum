@@ -5,10 +5,10 @@ using System.Net;
 
 namespace KineticControl
 {
-    public abstract class PDSca : PDS
+    public abstract class PDSca : PDS, IEquatable<PDSca>
     {
         private readonly Network _network;
-        public IPEndPoint EndPoint { get; set; }
+        public IPEndPoint EndPoint { get; private set; }
 
         private List<ColorData> _ports;
         private readonly List<String>    _initialHexs; 
@@ -40,6 +40,35 @@ namespace KineticControl
             _ports = new List<ColorData>(Enumerable.Zip(_initialHexs, lightTypes, rebuild));
         }
 
+        public bool Equals(PDSca other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(EndPoint, other.EndPoint);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((PDSca) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (EndPoint != null ? EndPoint.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(PDSca left, PDSca right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PDSca left, PDSca right)
+        {
+            return !Equals(left, right);
+        }
 
         public void UpdateSystem()
         {
@@ -53,9 +82,14 @@ namespace KineticControl
             return getType() + EndPoint.Address;
         }
 
-        public List<ColorData> AllColorData
+        public IList<ColorData> AllColorData
         {
             get { return new List<ColorData>(_ports); }
+        }
+
+        public ColorData this[int portNo]
+        {
+            get { return _ports[portNo]; }
         }
     }
 }

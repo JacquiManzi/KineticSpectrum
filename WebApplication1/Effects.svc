@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="WebApplication1.Effects" CodeBehind="Effects.svc.cs" %>

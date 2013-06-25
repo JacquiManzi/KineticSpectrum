@@ -52,6 +52,8 @@ namespace KineticControl
             set { _leds[pos].Color = value; }
         }
 
+        public IPAddress Address { get { return _deviceAddress; } }
+
         public IEnumerator<Color> GetEnumerator()
         {
            int length = Count;

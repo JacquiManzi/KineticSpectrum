@@ -6,3 +6,4 @@ style: regexp
 ^[\w\d-]+?/bin/
 .*\.csproj\.user$
 .cache$
+\.suo$
