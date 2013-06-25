@@ -84,9 +84,17 @@
     <Content Include="js\kui\ModelView\ModelSkeleton.js" />
     <Content Include="js\kui\ModelView\ModelView.js" />
     <Content Include="js\kui\ModelView\VertexSphere.js" />
+    <Content Include="js\kui\PatternMenu\Color.js" />
+    <Content Include="js\kui\PatternMenu\ColorEffect.js" />
+    <Content Include="js\kui\PatternMenu\Effect.js" />
+    <Content Include="js\kui\PatternMenu\Group.js" />
     <Content Include="js\kui\PatternMenu\KUIPatterns.js" />
+    <Content Include="js\kui\PatternMenu\LightAddress.js" />
+    <Content Include="js\kui\PatternMenu\models\PatternModel.js" />
     <Content Include="js\kui\PatternMenu\Pattern.js" />
     <Content Include="js\kui\PatternMenu\PatternMenu.js" />
+    <Content Include="js\kui\PatternMenu\PatternStart.js" />
+    <Content Include="js\kui\PatternMenu\TimeRange.js" />
     <Content Include="js\kui\util\CommonFormItems.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />

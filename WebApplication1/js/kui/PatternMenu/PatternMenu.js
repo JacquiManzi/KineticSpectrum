@@ -24,6 +24,22 @@ define([
                 this.style = "background-color:transparent;";
                 this.modelView = modelView;
                 
+                this.backgroundColor = "#141414";
+                this.textColor = "#3d8dd5";
+                this.tableStyle = "margin-left:auto;" +
+                    "margin-right:auto;" +
+                    "padding-top:5px;" +
+                    "padding-bottom:5px;" +
+                    "background-color:" + this.backgroundColor + ";" +
+                    "border-radius: 7px;" +
+                    "border: 3px solid #333333;" +
+                    "width:99%;" +
+                    "color:" + this.textColor + ";";
+
+                this.titleCellStyle = "background-color: #232323;" +
+                    "border-radius:5px;"+
+                    "width: 40%;";
+
 
                 this.patterns = new KUIPatterns();
 
@@ -47,65 +63,195 @@ define([
 
                 container.addChild(contentPane);
 
-                var patternDiv = html.createDiv();
-                this.createPatternCreateSection(patternDiv);
+            
+                var patternSection = this.createPatternCreateSection();
+                domConstruct.place(patternSection, contentPane.domNode);
 
-                domConstruct.place(patternDiv, contentPane.domNode);
+                var applySection = this.createApplyPattern();
+                domConstruct.place(applySection, contentPane.domNode);
 
-                var applyDiv = html.createDiv();
-                this.createApplyPattern(applyDiv);
+            }, 
+            createPatternCreateSection: function () {
 
-                domConstruct.place(applyDiv, contentPane.domNode);
+                var spacerDivStyle = "width:100%;height:7px;";
 
-            },
+                var div = html.createDiv("text-align:center;");
+                var table = html.createTable(this.tableStyle);
+              
 
-            createPatternCreateSection: function (div) {
-
+                /*Create pattern title divider*/
                 var patternCreateDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
                     "background-color:#383838;" +
                     "border-radisu:7px;");
+
                 patternCreateDiv.innerHTML = "Create Pattern";
-
-                var innerDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;"+
-                    "padding-bottom: 10px;");
-
-
-                var table = html.createTable("margin-left:auto;" +
-                    "margin-right:auto;" +
-                    "padding-top:10px;" +
-                    "padding-bottom:10px;");
-                var timeRow = html.createDiv();
-                var timeTitle = html.createCell();
-                
-                timeTitle.innerHTML = "Run Time (ms)";
-
-                var timeValue = html.createCell();
-                var timeBox = CommonForm.createTableNumberTextBox();
-
                 domConstruct.place(patternCreateDiv, div);
-                domConstruct.place(innerDiv, div);
-                domConstruct.place(table, innerDiv);
-                domConstruct.place(timeRow, table);
-                domConstruct.place(timeTitle, timeRow);
-                domConstruct.place(timeValue, timeRow);
-                domConstruct.place(timeBox.domNode, timeValue);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
 
-              
-                var obj = this;
-                var createButton = CommonForm.createButton('Create Pattern', function () {
+                /*Pattern Name text box*/
+                var nameRow = this.createPatternNameSection();
+                domConstruct.place(nameRow, table);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
 
-                   
-                });
+                /*Run time text box*/
+                var runTimeRow = this.createRunTimeSection();
+                domConstruct.place(runTimeRow, table);
 
-                domConstruct.place(createButton.domNode, innerDiv); 
+                /*Priority Section*/
+                var priorityRow = this.createPrioritySection();
+                domConstruct.place(priorityRow, table);
+
+                domConstruct.place(table, div);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
+
+                /*Effect Section*/
+                var effectDiv = this.createEffectSection();
+                domConstruct.place(effectDiv, div);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
+
+                /*Group Section*/
+                var groupSectionDiv = this.createGroupSection();
+                domConstruct.place(groupSectionDiv, div);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
+
+                /*Create pattern button*/
+                var createPatternButtonDiv = this.createPatternButtonSection();
+                domConstruct.place(createPatternButtonDiv, div);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
+
+             
+                return div;
+            },
+
+            createPrioritySection: function()
+            {
+
+                var row = html.createRow();
+
+                var titleCell = html.createCell(this.titleCellStyle);
+                titleCell.innerHTML = "Priority";
+                domConstruct.place(titleCell, row);
+
+                var valueCell = html.createCell();
+                domConstruct.place(valueCell, row);
+
+                var priorityDropDown = CommonForm.createDropDown("0");
+                domConstruct.place(priorityDropDown.domNode, valueCell);
+
+                return row;
 
 
             },
 
-            createApplyPattern: function (div) {
+            createRunTimeSection: function()
+            {
+              
+                var timeRow = html.createRow();
+                var timeTitle = html.createCell(this.titleCellStyle);
 
+                timeTitle.innerHTML = "Run Time (ms)";
+
+                var timeValue = html.createCell("text-align:left;width:100%;");
+                var timeBox = CommonForm.createTableNumberTextBox("width:100%;");
+
+                domConstruct.place(timeTitle, timeRow);
+                domConstruct.place(timeValue, timeRow);
+                domConstruct.place(timeBox.domNode, timeValue);
+
+                return timeRow;
+            },
+
+            createPatternButtonSection: function()
+            {
+                var div = html.createDiv();
+                var obj = this;
+                var createButton = CommonForm.createButton('Create Pattern', function () {
+
+
+                });
+
+                domConstruct.place(createButton.domNode, div);
+
+                return div;
+            },
+
+            createEffectSection: function()
+            {
+
+                var div = html.createDiv();
+
+                var table = html.createTable(this.tableStyle)
+                domConstruct.place(table, div);
+
+                var effectNameRow = this.createEffectNameSection();
+                domConstruct.place(effectNameRow, table);
+
+                
+                return div;
+            },
+
+            createEffectNameSection: function()
+            {
+                var row = html.createRow();
+                
+                var titleCell = html.createCell(this.titleCellStyle);
+                titleCell.innerHTML = "Effect";
+                domConstruct.place(titleCell, row);
+
+                var valueCell = html.createCell("width:60%;");
+                domConstruct.place(valueCell, row);
+
+                var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
+                domConstruct.place(effectDropDown.domNode, valueCell);
+
+                return row;
+            },
+
+            createGroupSection: function()
+            {
+                var div = html.createDiv(this.tableStyle);
+
+                var table = html.createTable("margin-right:auto;margin-left:auto;");
+                domConstruct.place(table, div);
+
+                var row = html.createRow();
+                domConstruct.place(row, table);
+
+                var dropDownCell = html.createCell();
+                domConstruct.place(dropDownCell, row);
+
+                var addCell = html.createCell();
+                domConstruct.place(addCell, row);
+
+                var groupDropDown = CommonForm.createDropDown("Select Group");
+                domConstruct.place(groupDropDown.domNode, dropDownCell);
+
+                var addButton = CommonForm.createButton("+");
+                domConstruct.place(addButton.domNode, addCell);
+
+                var groupDiv = html.createDiv("width:100%;");
+                domConstruct.place(groupDiv, div);
+
+                var groupListBox = CommonForm.createListBox("width:0%;");
+                domConstruct.place(groupListBox.domNode, groupDiv);
+
+                var groupButtonDiv = html.createDiv("width:100%;");
+                domConstruct.place(groupButtonDiv, groupDiv);
+
+                var addAllGroupButton = CommonForm.createButton("Add All");
+                domConstruct.place(addAllGroupButton.domNode, groupButtonDiv);
+
+                var removeGroupButton = CommonForm.createButton("Remove");
+                domConstruct.place(removeGroupButton.domNode, groupButtonDiv);
+
+
+                return div;
+            },
+
+            createApplyPattern: function () {
+
+                var div = html.createDiv();
 
                 var patternApplyDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
@@ -115,9 +261,6 @@ define([
 
                 var innerDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;");
-
-                domConstruct.place(patternApplyDiv, div);
-                domConstruct.place(innerDiv, div);
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
 
@@ -134,7 +277,29 @@ define([
 
                 domConstruct.place(applyButton.domNode, innerDiv);
 
+                domConstruct.place(patternApplyDiv, div);
+                domConstruct.place(innerDiv, div);
 
+                return div;
+
+            },
+
+            createPatternNameSection: function()
+            {
+                var tableRow = html.createRow();
+                var titleCell = html.createCell(this.titleCellStyle);
+                var valueCell = html.createCell("text-align: left;width:60%;");
+
+                domConstruct.place(titleCell, tableRow);
+                domConstruct.place(valueCell, tableRow)
+
+                titleCell.innerHTML = "Name: ";
+
+                var nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;");
+
+                domConstruct.place(nameField.domNode, valueCell);
+
+                return tableRow;
             },
 
             populatePatternDropDown: function () {

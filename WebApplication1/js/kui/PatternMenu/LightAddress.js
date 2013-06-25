@@ -8,29 +8,32 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojox/collections/ArrayList"],
+    "dojox/collections/ArrayList"
+],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.PatternMenu.Pattern", null, {
+        return declare("kui.PatternMenu.LightAddress", null, {
 
             /*
-             *   
+             *  Group
              *
              */
 
             constructor: function () {
 
-  
-                this.name = "";
-                this.groups = new ArrayList();
-                this.priority = 0;
-                this.effectName = "";
-                this.effectProperties = {};
-                this.id = 0;
 
-
-
+                this.fixtureNo = 0;
+                this.portNo = 0;
+                this.lightNo = 0;
             }
+
+
+
+
+
+
+
+
 
 
         });

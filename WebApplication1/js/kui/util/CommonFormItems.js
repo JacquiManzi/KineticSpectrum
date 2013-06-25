@@ -8,9 +8,10 @@
     "dijit/DropDownMenu",
     "dijit/form/Button",
     "kui/util/CommonHTML",
-    "dijit/form/MultiSelect"
+    "dijit/form/MultiSelect",
+    "dijit/form/TextBox"
     ], function (domConstruct, NumberTextBox, CheckBox,
-        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect) {
+        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect, TextBox) {
         "use strict";
 
         var createNumberTextBox = function (label, list, changeButton) {
@@ -139,11 +140,24 @@
 
              var listBox = new MultiSelect({
 
-                style: style
+                 style: style
              });
 
              return listBox;
+         },
+
+         createTextBox = function (value, placeHolder, style) {
+             
+            var textBox = new TextBox({
+                 value: value /* no or empty value! */,
+                 placeHolder: placeHolder,
+                 style: style
+            });
+
+            return textBox;
          };
+
+
 
 
         return {
@@ -153,6 +167,7 @@
             createDropDown: createDropDown,
             createColorPalette: createColorPalette,
             createButton: createButton,
-            createListBox: createListBox
+            createListBox: createListBox,
+            createTextBox: createTextBox
         };
     });

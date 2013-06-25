@@ -11,7 +11,7 @@ define([
     "dojox/collections/ArrayList"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.PatternMenu.Pattern", null, {
+        return declare("kui.PatternMenu.TimeRange", null, {
 
             /*
              *   
@@ -20,14 +20,8 @@ define([
 
             constructor: function () {
 
-  
-                this.name = "";
-                this.groups = new ArrayList();
-                this.priority = 0;
-                this.effectName = "";
-                this.effectProperties = {};
-                this.id = 0;
-
+                this.startTime = 0;
+                this.endTime = 0;
 
 
             }

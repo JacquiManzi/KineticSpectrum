@@ -29,6 +29,10 @@ define([
                 this.segmentsWidth = 8;
                 this.segmentsHeight = 6;
 
+                this.address = "";
+                this.position = new three.Vector3();
+                this.color = 0x00;
+
                 this.isVertex = false;
             },
 
