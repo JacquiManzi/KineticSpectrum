@@ -8,5 +8,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     interface IEffect
     {
+        string Name { get; }
+
+        EffectProperties Properties { get; }
     }
 }

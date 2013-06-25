@@ -6,32 +6,44 @@ using System.Threading.Tasks;
 
 namespace RevKitt.KS.KineticEnvironment.Tweening
 {
-    class Tween
+    public class Tween
     {
-        public enum Type {In, Out, OutIn}
-
         private readonly EasingFunc _easing;
+        private readonly string     _name;
+        private readonly TweenType       _type;
 
-        public Tween(IEasing easing, Type easingType = Type.In)
+        public Tween(IEasing easing, TweenType easingType = TweenType.In)
         {
+            _name = easing.Name;
+            _type = easingType;
             switch (easingType)
             {
-                    case Type.In:
+                    case TweenType.In:
                     _easing = easing.In;
                     break;
-                    case Type.Out:
+                    case TweenType.Out:
                     _easing = easing.Out;
                     break;
-                    case Type.OutIn:
+                    case TweenType.OutIn:
                     _easing = easing.OutIn;
                     break;
                 default:
-                    throw new ArgumentException("easingType must be one of [Tween.Type.In, Tween.Type.Out, Tween.Type.OutIn]. Value: " + easingType);
+                    throw new ArgumentException("easingType must be one of [Tween.TweenType.In, Tween.TweenType.Out, Tween.TweenType.OutIn]. Value: " + easingType);
             }
             StartTime = 0;
             EndTime = 1000;
             StartValue = 0;
             EndValue = 1;
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public TweenType Type
+        {
+            get { return _type; }
         }
 
         public bool Applies(int time)
@@ -66,4 +78,6 @@ namespace RevKitt.KS.KineticEnvironment.Tweening
         public double StartValue { get; set; }
         public double EndValue { get; set; }
     }
+
+    public enum TweenType {In, Out, OutIn}
 }

@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JetbrainsAnnotations.cs" />
     <Compile Include="HexStrings.cs" />
     <Compile Include="Led.cs" />
     <Compile Include="LedPosition.cs" />

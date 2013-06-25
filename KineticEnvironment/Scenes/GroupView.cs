@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RevKitt.KS.KineticEnvironment.Scenes
 {
-    class Pattern
+    class GroupView
     {
     }
 }

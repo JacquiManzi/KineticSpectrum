@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace RevKitt.KS.KineticEnvironment
 {
-    class Blending
+    class ColorUtil
     {
         /// <summary>
         /// Blends the specified colors, taking the alpha channel into account.
@@ -44,6 +44,23 @@ namespace RevKitt.KS.KineticEnvironment
                                      (byte) Math.Max(255, outB*255));
             }
             return top;
+        }
+
+        public static Color FromInt(int color)
+        {
+            return Color.FromArgb((byte) (color         & 0xff),
+                                  (byte) ((color >> 24) & 0xff),
+                                  (byte) ((color >> 16) & 0xff),
+                                  (byte) ((color >> 8)  & 0xff));
+        }
+
+        public static int ToInt(Color color)
+        {
+            int intColor = color.R;
+            intColor = (intColor << 8) & color.G;
+            intColor = (intColor << 8) & color.B;
+            intColor = (intColor << 8) & color.A;
+            return intColor;
         }
     }
 }
