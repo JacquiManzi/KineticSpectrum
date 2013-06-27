@@ -3,18 +3,14 @@
 
 define([   
     "dojo/_base/declare",
-    "kui/util/CommonHTML",
-    "dojo/dom",
-    "dijit/layout/ContentPane",
-    "dojo/dom-style",
-    "dojo/dom-construct",
     "dijit/layout/AccordionContainer",
     "threejs/three",
-    "kui/ModelMenu/ModelMenu",
-    "kui/FileMenu/FileMenu",
-    "kui/LEDMenu/LEDMenu",
-    "kui/PatternMenu/PatternMenu"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, AccordionContainer,three, ModelMenu, FileMenu, LEDMenu, PatternMenu) {
+    "kui/DesignMenu/ModelMenu",
+    "kui/DesignMenu/FileMenu",
+    "kui/DesignMenu/LEDMenu",
+    "kui/DesignMenu/PatternMenu"
+],
+    function (declare, AccordionContainer,three, ModelMenu, FileMenu, LEDMenu, PatternMenu) {
     "use strict";
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -28,8 +24,8 @@ define([
             this.style = "background-color:#1f1f1f;" +
                 "height:80%;" +
                 "border-right: solid 3  px #cccccc;";
-            this.modelView = modelView;
 
+            this.modelView = modelView;
 
         },
          
@@ -39,7 +35,7 @@ define([
             /*LED Menu*/
             var ledMenu = new LEDMenu(this.modelView);
             ledMenu.createLEDMenu(this);
-
+            
             /*Pattern Menu*/
             var patternMenu = new PatternMenu(this.modelView);
             patternMenu.createPatternMenu(this);

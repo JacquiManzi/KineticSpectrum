@@ -12,7 +12,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.PatternMenu.Group", null, {
+        return declare("kui.LED.LightAddress", null, {
 
             /*
              *  Group
@@ -21,11 +21,19 @@ define([
 
             constructor: function () {
 
-                
-                this.name = "";
-                this.lights = new ArrayList();
-                this.groups = new ArrayList();              
+
+                this.fixtureNo = 0;
+                this.portNo = 0;
+                this.lightNo = 0;
             }
+
+
+
+
+
+
+
+
 
 
         });

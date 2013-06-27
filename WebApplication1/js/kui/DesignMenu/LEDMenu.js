@@ -11,7 +11,7 @@ define([
     "kui/util/CommonFormItems"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm) {
         "use strict";
-        return declare("kui.LEDMenu.LEDMenu", null, {
+        return declare("kui.DesignMenu.LEDMenu", null, {
 
             /*
              *   Left menu for Kinect 3D model design 
@@ -93,7 +93,7 @@ define([
                 var obj = this;
                 var ledModeButton = CommonForm.createButton("Add Single LED OFF", function () {
 
-                    obj.modelView.modelSkeleton.setAddMode(this);
+                    obj.modelView.sceneInteraction.setAddMode(this);
 
                 }, null, "color:#3d8dd5;");
 
@@ -152,8 +152,8 @@ define([
                 var obj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
-                   var lineSegments = obj.modelView.modelSkeleton.findConnectingLines(nodeNumberTextBox.get('value'));
-                   obj.modelView.modelSkeleton.drawNodes(lineSegments);
+                   var lineSegments = obj.modelView.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
+                   obj.modelView.sceneInteraction.drawNodes(lineSegments);
 
                 });
 
@@ -173,7 +173,7 @@ define([
                 var obj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
 
-                    obj.modelView.modelSkeleton.removeNodes();
+                    obj.modelView.sceneInteraction.removeNodes();
                 });
 
                 //dojo.addClass(removeButton, 'vertexImage');
@@ -192,7 +192,7 @@ define([
                 var obj = this;
                 var selectAllNodeButton = CommonForm.createButton('Select All Vertices', function () {
 
-                    obj.modelView.modelSkeleton.selectAllVertexs();
+                    obj.modelView.sceneInteraction.selectAllVertexs();
                 });
 
                 this.setButtonStyle(selectAllNodeButton);
@@ -204,7 +204,7 @@ define([
                 var deselectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectAllNodeButton = CommonForm.createButton('Deselect All Vertices', function () {
 
-                    obj.modelView.modelSkeleton.deselectAllVertexs();
+                    obj.modelView.sceneInteraction.deselectAllVertexs();
 
                 });
 
@@ -218,7 +218,7 @@ define([
                 var selectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
 
-                    obj.modelView.modelSkeleton.selectAllLEDs();
+                    obj.modelView.sceneInteraction.selectAllLEDs();
                 });
 
                 this.setButtonStyle(selectLEDButton);
@@ -230,7 +230,7 @@ define([
                 var deselectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
 
-                    obj.modelView.modelSkeleton.deselectAllLEDs();
+                    obj.modelView.sceneInteraction.deselectAllLEDs();
 
                 });
                 this.setButtonStyle(deselectLEDButton);
@@ -257,7 +257,6 @@ define([
 
             createGroupVertexSection: function (div) {
 
-                var groupTitleDiv = html.createDiv("text-align:center; color:#3d8dd5;");
                 var groupTitleDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;" +
                     "background-color:#141414;" +
@@ -272,7 +271,7 @@ define([
                 var obj = this;
                 var addVertexButton = CommonForm.createButton('Add Group', function () {
 
-                    obj.modelView.modelSkeleton.addSelectedGroup(groupListBox);
+                    obj.modelView.sceneInteraction.addSelectedGroup(groupListBox);
 
                     
                 }, null, "color:#3d8dd5;");
@@ -282,7 +281,7 @@ define([
              
                 var removeVertexButton = CommonForm.createButton('Remove Group', function () {
 
-                    obj.modelView.modelSkeleton.removeSelectedGroup(groupListBox);
+                    obj.modelView.sceneInteraction.removeSelectedGroup(groupListBox);
 
                 }, null, "color:#3d8dd5;");
 

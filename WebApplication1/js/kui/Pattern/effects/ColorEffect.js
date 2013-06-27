@@ -11,7 +11,7 @@ define([
     "dojox/collections/ArrayList"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.PatternMenu.ColorEffect", null, {
+        return declare("kui.PatternMenu.effects.ColorEffect", null, {
 
             /*
              *   

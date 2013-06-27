@@ -8,10 +8,11 @@
     "threejs/three",
     "dojo/dom-geometry",
     "kui/ModelView/ModelSkeleton",
-    "dojox/collections/ArrayList"
+    "dojox/collections/ArrayList",
+    "kui/ModelView/SceneInteraction"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -50,8 +51,8 @@
                 this.ambientColor = 0x101030;
 
                 this.meshes = new ArrayList();
-
-
+                
+                this.sceneInteraction = new SceneInteraction();
 
             },
                    
@@ -143,7 +144,8 @@
                     this.removeAllMeshes();
                 }
             
-                this.modelSkeleton = new ModelSkeleton(this.domNode, scene, this.camera, this.orbitControl);
+            
+                this.modelSkeleton = new ModelSkeleton();
                 for (var i = 0; i < object.children.length; i++) {
 
                  
@@ -164,8 +166,15 @@
                                   
                     scene.add(mesh);
                 }
-                this.modelSkeleton.sceneMesh = this.meshes;
-                this.modelSkeleton.colorEachVertex();
+
+                /*Set scene interaction properties once they have been established*/
+                this.sceneInteraction.domNode = this.domNode;
+                this.sceneInteraction.camera = this.camera;
+                this.sceneInteraction.scene = this.scene;
+                this.sceneInteraction.orbitControl = this.orbitControl;
+                this.sceneInteraction.modelSkeleton = this.modelSkeleton;
+                this.sceneInteraction.sceneMesh = this.meshes;
+                this.sceneInteraction.createVertexSpheres();
 
                 render();
             },
@@ -176,14 +185,14 @@
                     this.scene.remove(this.meshes.item(i));
                 }
 
-                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
 
-                    this.scene.remove(this.modelSkeleton.spheres.item(i));
+                    this.scene.remove(this.sceneInteraction.spheres.item(i));
 
                 }
 
                 this.meshes.clear();
-                this.modelSkeleton.spheres.clear();
+               this.sceneInteraction.nodes.clear();
             },
 
             resetObject: function()
@@ -214,10 +223,10 @@
 
             hideAllVertices: function()
             {
-                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
 
-                    if (this.modelSkeleton.spheres.item(i).isVertex) {
-                        this.modelSkeleton.spheres.item(i).visible = false;
+                    if (this.sceneInteraction.nodes.item(i).isVertex) {
+                       this.sceneInteraction.nodes.item(i).visible = false;
                     }
 
                 }
@@ -225,10 +234,10 @@
 
             showAllVertices: function()
             {
-                for (var i = 0; i < this.modelSkeleton.spheres.count; i++) {
+                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
 
-                    if (this.modelSkeleton.spheres.item(i).isVertex) {
-                        this.modelSkeleton.spheres.item(i).visible = true;
+                    if (this.sceneInteraction.nodes.item(i).isVertex) {
+                       this.sceneInteraction.nodes.item(i).visible = true;
                     }
 
                 }

@@ -10,7 +10,7 @@
 ],
     function (declare, html, BorderContainer, dom, ContentPane, domStyle, domConstruct, CommonForm) {
         "use strict";
-        return declare("kui.ModelMenu.ModelMenu", null, {
+        return declare("kui.DesignMenu.ModelMenu", null, {
 
             /*
              *   Bottom menu for Kinect 3D model files

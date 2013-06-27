@@ -27,86 +27,13 @@
 
 <script id=" ">
 
-    require(["dijit/registry",
-       "dijit/layout/BorderContainer",    
-       "dijit/layout/ContentPane",
-       "dojox/layout/ContentPane",
-       "dojo/window",
-       "kui/DesignMenu/DesignMenu",
-       "kui/ModelMenu/ModelMenu",
-       "kui/ModelView/ModelView",
-       "dojo/on",
-       "kui/util/CommonHTML",
-       "dojo/dom-construct",
-       "kui/util/CommonFormItems"
-    ],
-           function (registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu,
-               ModelMenu, ModelView, on, html, domConstruct, CommonForm) {
+    require(["dijit/registry", "kui/KUIEnvironment"],
+           function (registry, KUIEnvironment) {
 
-               var windowHeight = window.getBox().h - 20;
+               /*Create and startup layout*/
+               new KUIEnvironment().createKUILayout();
 
-               /*The main border container for the entire EOS*/   
-               var mainContainer = new BorderContainer({
-                   gutters: false,
-                   design: "headline",                  
-                   style:"height:"+ windowHeight+ "px;width:100%;border:none;"    
-               }, "mainContainer");
-
-             
-
-               var centerContainer = new ContentPaneX({
-                   region: "center",
-                   id: "centerContainer",
-                   style: "width:90%;" +
-                          "height:95%;" +
-                          "background-color:black;"+
-                          "overflow: hidden;"+
-                          "border:none;",
-                   executeScripts: true
-               });
-               /*The center content pane to the bottom content pane*/
-               mainContainer.addChild(centerContainer);
-
-               /*Create and place the model view content pane into center container*/
-               var modelView = new ModelView();
-               centerContainer.set('content', modelView.domNode);
-                
-
-               dojo.connect(modelView, 'onShow', dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/GeodesicDome.js")); 
-
-
-               /*Left container*/
-               var leftContainer = new ContentPane({
-                   isLayoutContainer: true,
-                   region: "left",
-                   id: "leftContainer",
-                   minSize: ".1",
-                   style: "width:15%;" +
-                          "height:100%;" 
-               });
-
-               mainContainer.addChild(leftContainer);
-            
-               var leftDiv = html.createDiv("height:100%;width:100%;background-color:black;overflow:hidden;");
-               var innerTopDiv = html.createDiv("height:10%;width:100%;background-color:black;");
-               var innerBottomDiv = html.createDiv("height:10%;width:100%;background-color:black;");
-
-               //Create the left design menu
-               var designMenu = new DesignMenu(null, null,  modelView);
-              
-               designMenu.createMenu();
-
-
-
-               domConstruct.place(innerTopDiv, leftDiv);
-               domConstruct.place(designMenu.domNode, leftDiv);
-               domConstruct.place(innerBottomDiv, leftDiv);
-
-               leftContainer.set('content', leftDiv);
-
-               mainContainer.startup();
-           
            });
-
+               
 
 </script>

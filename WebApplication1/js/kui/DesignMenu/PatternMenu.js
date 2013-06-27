@@ -9,21 +9,23 @@ define([
     "dojo/dom-construct",
     "threejs/three",
     "kui/util/CommonFormItems",
-    "kui/PatternMenu/KUIPatterns",
-    "dijit/TitlePane"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, KUIPatterns, TitlePane) {
+    "dijit/TitlePane",
+    "dijit/DropDownMenu"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
+    DropDownMenu) {
         "use strict";
-        return declare("kui.PatternMenu.PatternMenu", null, {
+        return declare("kui.DesignMenu.PatternMenu", null, {
 
             /*
              *   
              *
              */
 
-            constructor: function (obj, obj1, modelView) {
+            constructor: function (modelView) {
 
                 this.style = "background-color:transparent;";
                 this.modelView = modelView;
+                this.patternModel = this.modelView.sceneInteraction.patternModel;
                 
                 this.backgroundColor = "#141414";
                 this.textColor = "#3d8dd5";
@@ -41,9 +43,6 @@ define([
                     "border-radius:5px;"+
                     "width: 40%;";
 
-
-                this.patterns = new KUIPatterns();
-
                 this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
                           "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
                           "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
@@ -52,7 +51,7 @@ define([
                           "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                 "background-color: #131313;" +
                 "background-size: 20px 20px;";
-
+                               
 
             },
 
@@ -247,6 +246,10 @@ define([
 
                 var groupDropDown = CommonForm.createDropDown("Select Group");
                 domConstruct.place(groupDropDown.domNode, dropDownCell);
+
+                this.patternModel.groupDropDown = groupDropDown;
+                this.patternModel.groupDropDownMenu = new DropDownMenu();
+                this.patternModel.groupDropDown.set('dropDown', this.patternModel.groupDropDownMenu); 
 
                 var addButton = CommonForm.createButton("+");
                 domConstruct.place(addButton.domNode, addCell);

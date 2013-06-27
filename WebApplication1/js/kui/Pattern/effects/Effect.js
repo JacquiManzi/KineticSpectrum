@@ -11,7 +11,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, VertexSphere) {
         "use strict";
-        return declare("kui.PatternMenu.Effect", null, {
+        return declare("kui.PatternMenu.effects.Effect", null, {
 
             /*
              *  Effect

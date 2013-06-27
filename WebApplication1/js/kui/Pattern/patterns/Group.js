@@ -8,22 +8,23 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojox/collections/ArrayList"],
+    "dojox/collections/ArrayList"
+],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.PatternMenu.TimeRange", null, {
+        return declare("kui.PatternMenu.patterns.Group", null, {
 
             /*
-             *   
+             *  Group
              *
              */
 
             constructor: function () {
 
-                this.startTime = 0;
-                this.endTime = 0;
-
-
+                
+                this.name = "";
+                this.lights = new ArrayList();
+                this.groups = new ArrayList();              
             }
 
 

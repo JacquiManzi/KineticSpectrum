@@ -10,7 +10,7 @@
 ],
     function (declare, html, BorderContainer, dom, ContentPane, domStyle, domConstruct) {
         "use strict";
-        return declare("kui.ModelMenu.Model", null, {
+        return declare("kui.Model.Model", null, {
 
             /*
              *   3D Model file

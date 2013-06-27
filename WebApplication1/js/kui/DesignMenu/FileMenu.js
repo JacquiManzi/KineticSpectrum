@@ -11,7 +11,7 @@ define([
      "dojo/on"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on) {
         "use strict";
-        return declare("kui.FileMenu.FileMenu", null, {
+        return declare("kui.DesignMenu.FileMenu", null, {
 
             /*
              *   Left menu for Kinect 3D model design 

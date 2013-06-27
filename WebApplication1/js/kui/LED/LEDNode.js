@@ -12,7 +12,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, VertexSphere) {
         "use strict";
-        return declare("kui.LEDMenu.LEDNode", [VertexSphere], {
+        return declare("kui.LED.LEDNode", [VertexSphere], {
 
             /*
              *   LED Node Object
@@ -49,13 +49,6 @@ define([
             }
 
   
-
-
-         
-
-
-
-
         });
 
     });
