@@ -31,8 +31,8 @@ define([
                 this.vertexSpheres = new ArrayList();
                 this.ledNodes = new ArrayList();
 
-                this.selectedNodes = new ArrayList();
-                this.selectedGroups = new ArrayList(); //Selected Vetices that are grouped
+                this.selectedGroupOptions = new ArrayList();
+                this.groupOptionList = new ArrayList(); 
 
                 this.projector = new three.Projector();
                 this.camera = null;
@@ -92,13 +92,12 @@ define([
 
                 var lineSegments = new ArrayList();
 
-                this.getSelectedNodes();
-                var nodes = this.selectedNodes;
+                var selectedNodes = this.getSelectedNodes();
 
-                while (nodes.count > 1) {
+                while (selectedNodes.count > 1) {
 
-                    var sphereOne = nodes.item(0).coords;
-                    var sphereTwo = nodes.item(1).coords;
+                    var sphereOne = selectedNodes.item(0).coords;
+                    var sphereTwo = selectedNodes.item(1).coords;
 
                     var deltaX = (sphereOne.x - sphereTwo.x) / (amount + 1);
                     var deltaY = (sphereOne.y - sphereTwo.y) / (amount + 1);
@@ -112,13 +111,13 @@ define([
                         lineSegments.add(new three.Vector3(x, y, z));
                     }
 
-                    nodes.remove(nodes.item(0));
+                    selectedNodes.remove(selectedNodes.item(0));
 
                 }
 
-                this.x = this.selectedNodes.item(0).position.x;
-                this.y = this.selectedNodes.item(0).position.y;
-                this.z = this.selectedNodes.item(0).position.z;
+                this.x = selectedNodes.item(0).position.x;
+                this.y = selectedNodes.item(0).position.y;
+                this.z = selectedNodes.item(0).position.z;
 
                 return lineSegments;
 
@@ -126,17 +125,19 @@ define([
 
             getSelectedNodes: function () {
 
-                this.selectedNodes.clear();
+                var selectedNodes = new ArrayList();
                 for (var i = 0; i < this.nodes.count; i++) {
 
                     if (this.nodes.item(i).isSelected) {
 
-                        this.selectedNodes.add(this.nodes.item(i));
+                        selectedNodes.add(this.nodes.item(i));
 
                     }
 
 
                 }
+
+                return selectedNodes;
 
             },
          
@@ -162,19 +163,17 @@ define([
 
             removeNodes: function () {
 
-                this.getSelectedNodes();
+                var selectedNodes = this.getSelectedNodes();
 
-                for (var i = 0; i < this.selectedNodes.count; i++) {
+                for (var i = 0; i < selectedNodes.count; i++) {
 
-                    if (!this.selectedNodes.item(i).isVertex) {
-                        this.scene.remove(this.selectedNodes.item(i));
-                        this.nodes.remove(this.selectedNodes.item(i));
+                    if (!selectedNodes.item(i).isVertex) {
+                        this.scene.remove(selectedNodes.item(i));
+                        this.nodes.remove(selectedNodes.item(i));
                     }
 
 
                 }
-
-
 
             },
 
@@ -193,17 +192,17 @@ define([
 
             addSelectedGroup: function (listBox) {
 
+                var selectedNodes = this.getSelectedNodes();
+                               
+                if (selectedNodes.count > 0) {
 
-                this.getSelectedNodes();
-                
-                if (this.selectedNodes.count > 0 && !this.selectedGroups.contains(this.selectedNodes)) {
-
-                    var countAmount = this.selectedGroups.count + 1;
-                    this.selectedGroups.add(this.selectedNodes);
+                    var countAmount = this.groupOptionList.count + 1;
 
                     var option = html.createOption("Group" + " " + countAmount);
-                    option.list = this.selectedNodes;
+                    option.list = selectedNodes;
                     listBox.domNode.appendChild(option);
+
+                    this.groupOptionList.add(option);
 
                     on(option, "click", dojo.hitch(this, function (listBox) {
 
@@ -231,6 +230,7 @@ define([
 
                     listBox.domNode.removeChild(selectedOptions[i]);
                     this.selectedGroupOptions.remove(selectedOptions[i]);
+                    this.groupOptionList.remove(selectedOptions[i]); 
                 }
             },
 
