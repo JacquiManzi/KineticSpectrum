@@ -180,7 +180,7 @@ define([
                         for (var i = 0; i < listBox.getSelected().length; i++) {
                             this.selectedGroupOptions.add(listBox.getSelected()[i]);
                         }
-                        this.showSelectedVertexGroups();
+                        this.showSelectedVertexGroups(this.selectedGroupOptions);
 
 
                     }, listBox));
@@ -275,13 +275,13 @@ define([
                 }
             },
 
-            showSelectedVertexGroups: function () {
+            showSelectedVertexGroups: function (selectedGroupOptions) {
 
                 this.deselectAllVertexs();
                 this.deselectAllLEDs();
-                for (var i = 0; i < this.selectedGroupOptions.count; i++) {
+                for (var i = 0; i < selectedGroupOptions.count; i++) {
 
-                    var option = this.selectedGroupOptions.item(i);
+                    var option = selectedGroupOptions.item(i);
 
                     for (var j = 0; j < option.list.count; j++) {
                         option.list.item(j).isSelected = true;
@@ -289,7 +289,7 @@ define([
                         var selectionMaterial = new three.MeshBasicMaterial({
 
                             color: 0xff0000
-                        });
+                        });   
 
                         option.list.item(j).setMaterial(selectionMaterial);
                     }

@@ -56,13 +56,16 @@ define([
                     var menuItem = new MenuItem({
 
                         label: label,
-                        onClick: dojo.hitch(this, function (label) {
+                        onClick: dojo.hitch(this, function (label, selectedGroupOption) {
+                            
+                            var newList = new ArrayList();
+                            newList.add(selectedGroupOption);
+                            
+                            this.groupDropDown.set('label', label);
+                            this.sceneInteraction.showSelectedVertexGroups(newList);
+                        }, label, groupList.item(i))
 
-                            this.groupDropDown.set('label', label); 
-
-                        }, label)
-
-                    });
+                    });   
 
 
                     this.groupDropDownMenu.addChild(menuItem);
