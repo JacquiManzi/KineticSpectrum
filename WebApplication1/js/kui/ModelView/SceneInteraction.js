@@ -203,6 +203,8 @@ define([
                     this.selectedGroupOptions.remove(selectedOptions[i]);
                     this.groupOptionList.remove(selectedOptions[i]);
                 }
+                
+                this.patternModel.updateGroupDropDown();
             },
 
             deselectAllVertexs: function () {

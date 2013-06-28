@@ -48,7 +48,9 @@ define([
 
             updateGroupDropDown: function()
             {
-                this.groupDropDownMenu.destroyDescendants(); 
+                this.groupDropDownMenu.destroyDescendants();
+                this.groupDropDown.set('label', "Select Group");
+                
 
                 var groupList = this.sceneInteraction.getGroupOptions();                
                 for (var i = 0; i < groupList.count; i++) {
