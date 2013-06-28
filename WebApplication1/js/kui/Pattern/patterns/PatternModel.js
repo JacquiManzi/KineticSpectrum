@@ -50,16 +50,17 @@ define([
             {
                 this.groupDropDownMenu.destroyDescendants(); 
 
-                var groupList = this.sceneInteraction.groupOptionList;
+                var groupList = this.sceneInteraction.getGroupOptions();                
                 for (var i = 0; i < groupList.count; i++) {
+                    var label = groupList.item(i).label;
                     var menuItem = new MenuItem({
 
-                        label: groupList.item(i).label,
-                        onClick: dojo.hitch(this, function () {
+                        label: label,
+                        onClick: dojo.hitch(this, function (label) {
 
-                            this.groupDropDown.set('label', menuItem.get('label')); 
+                            this.groupDropDown.set('label', label); 
 
-                        })
+                        }, label)
 
                     });
 

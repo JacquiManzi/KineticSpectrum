@@ -123,23 +123,6 @@ define([
 
             },
 
-            getSelectedNodes: function () {
-
-                var selectedNodes = new ArrayList();
-                for (var i = 0; i < this.nodes.count; i++) {
-
-                    if (this.nodes.item(i).isSelected) {
-
-                        selectedNodes.add(this.nodes.item(i));
-
-                    }
-
-
-                }
-
-                return selectedNodes;
-
-            },
          
             drawNodes: function (lineSegments) {
 
@@ -176,24 +159,11 @@ define([
                 }
 
             },
-
-            getLEDs: function () {
-
-                this.leds.clear();
-                for (var i = 0; i < this.nodes.count; i++) {
-
-                    if (!this.nodes.item(i).isVertex) {
-                        this.leds.add(this.nodes.item(i));
-                    }
-
-                }
-
-            },
-
+            
             addSelectedGroup: function (listBox) {
 
                 var selectedNodes = this.getSelectedNodes();
-                               
+
                 if (selectedNodes.count > 0) {
 
                     var countAmount = this.groupOptionList.count + 1;
@@ -221,6 +191,7 @@ define([
 
 
             },
+            
 
             removeSelectedGroup: function (listBox) {
 
@@ -230,7 +201,7 @@ define([
 
                     listBox.domNode.removeChild(selectedOptions[i]);
                     this.selectedGroupOptions.remove(selectedOptions[i]);
-                    this.groupOptionList.remove(selectedOptions[i]); 
+                    this.groupOptionList.remove(selectedOptions[i]);
                 }
             },
 
@@ -432,6 +403,53 @@ define([
                 return raycaster.intersectObjects(objects.toArray());
 
             },
+            
+            /*GETTERS/SETTERS HERE*/
+
+
+            getLEDs: function () {
+
+                this.leds.clear();
+                for (var i = 0; i < this.nodes.count; i++) {
+
+                    if (!this.nodes.item(i).isVertex) {
+                        this.leds.add(this.nodes.item(i));
+                    }
+
+                }
+
+            },
+
+            getSelectedNodes: function () {
+
+                var selectedNodes = new ArrayList();
+                for (var i = 0; i < this.nodes.count; i++) {
+
+                    if (this.nodes.item(i).isSelected) {
+
+                        selectedNodes.add(this.nodes.item(i));
+
+                    }
+
+                }
+
+                return selectedNodes;
+
+            },
+
+            getGroupOptions: function () {
+
+                var groupOptions = new ArrayList();
+                
+                for (var i = 0; i < this.groupOptionList.count; i++) {
+
+                    groupOptions.add(this.groupOptionList.item(i));
+                }
+
+                return groupOptions;
+                
+            },
+          
 
             setAddMode: function (button) {
 
