@@ -1,6 +1,6 @@
-﻿using KineticControl;
+﻿
 
-namespace RevKitt.ks.KinectCV
+namespace KineticControl
 {
     public class LightingManager
     {

@@ -30,7 +30,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
                                                                                         ColorUtil.ToInt(Colors.Green)
                                                                                     }}
                                                                             }; 
-        public static readonly ColorEffectDefinition DefaultFixed = new ColorEffectDefinition("Fixed", new Dictionary<string, object>
+        public static readonly ColorEffectDefinition DefaultFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
                                                                         {
                                                                             {
                                                                                 ColorProperty,
@@ -43,5 +43,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
 
         public static readonly ColorEffectDefinition DefaultFade = new ColorEffectDefinition("ColorFade", TwoColors);
         public static readonly ColorEffectDefinition DefaultChasing = new ColorEffectDefinition("ChasingColors", TwoColors);
+
+        public static readonly IEnumerable<ColorEffectDefinition> AllDefaults = new List<ColorEffectDefinition>{DefaultFixed, DefaultRainbow, DefaultFade, DefaultChasing}; 
     }
 }

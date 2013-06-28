@@ -49,6 +49,7 @@
     <Compile Include="Led.cs" />
     <Compile Include="LedPosition.cs" />
     <Compile Include="LightAddress.cs" />
+    <Compile Include="LightingManager.cs" />
     <Compile Include="LightSystem.cs" />
     <Compile Include="LightType.cs" />
     <Compile Include="NoOpPDS.cs" />

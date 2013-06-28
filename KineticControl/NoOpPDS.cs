@@ -11,13 +11,14 @@ namespace KineticControl
 
         public NoOpPDS(int[] lightsPerPort, IPAddress ipAddress)
         {
+            EndPoint = new IPEndPoint(ipAddress, 6038);
             List<ColorData> allColorData = new List<ColorData>(lightsPerPort.Count());
             foreach (var i in lightsPerPort)
             {
                 allColorData.Add(new ColorData(this, new byte[0],LightType.Long ));
             }
             AllColorData = allColorData.AsReadOnly();
-            EndPoint = new IPEndPoint(ipAddress, 6038);
+            
         }
         public IList<ColorData> AllColorData { get; private set; }
 

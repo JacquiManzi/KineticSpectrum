@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,29 +10,30 @@ using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
-    class Sweep : IEffect
+    class Pulse : IEffect
     {
-        public const string EffectName = "Sweep";
+        public const string EffectName = "Pulse";
 
         private readonly Group _group;
 
         private EffectProperties _properties;
-        private IColorEffect _startColorEffect;
-        private IColorEffect _endColorEffect;
+        private IColorEffect _backgroundColor;
+        private IColorEffect _pulseColor;
         private int _durration;
         private int _repeatCount;
-        private bool _reverse; 
+        private bool _reverse;
+        private double _width;
         private IOrdering _ordering;
         private Tween _tween;
 
-        public Sweep(Group group)
+        public Pulse(Group group)
         {
             if(group == null)
                 throw new ArgumentNullException("group");
             _group = group;
         }
 
-        public static EffectFactroy SweepFactory = g=>new Sweep(g);
+        public static EffectFactroy PulseFactory = g=> new Pulse(g);
 
         public string Name { get { return EffectName; } }
 
@@ -47,10 +47,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             _properties = value;
             _durration = value.GetTime(PropertyDefinition.Durration.Name);
             _repeatCount = value.GetRepeatCount();
-            _startColorEffect = value.GetColorEffect("startColor");
-            _endColorEffect = value.GetColorEffect("endColor");
+            _backgroundColor = value.GetColorEffect("background");
+            _pulseColor = value.GetColorEffect("pulseColor");
             _reverse = RepeatMethods.Reverse.Equals(value.GetRepeatMethod());
             _ordering = value.GetOrdering(_group);
+            _width = value.GetFloat("width");
 
             IEasing easing = value.GetEasing(PropertyDefinition.Easing.Name);
             _tween = new Tween(easing);
@@ -80,23 +81,30 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         {
             double pos = _tween.GetValue(time);
 
-            if (_ordering.GetLEDPosition(ledNode) <= pos)
-                return _endColorEffect;
-            
-            return _startColorEffect;
-            
+            double rangeStart = pos - _width/2;
+            double rangeEnd = pos + _width/2;
+            double ledPos = _ordering.GetLEDPosition(ledNode);
+
+
+            if(ledPos < rangeStart || ledPos > rangeEnd)
+                return _backgroundColor;
+
+            return _pulseColor;
+
         }
 
-        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory,
+        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, PulseFactory,
                         new List<PropertyDefinition>
                             {
                                 PropertyDefinition.Durration,
-                                new PropertyDefinition("startColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
-                                new PropertyDefinition("endColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                new PropertyDefinition("background", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                new PropertyDefinition("pulseColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
                                 PropertyDefinition.RepeatCount,
                                 PropertyDefinition.RepeatMethod,
                                 PropertyDefinition.Ordering,
-                                PropertyDefinition.Easing
+                                PropertyDefinition.Easing,
+                                new PropertyDefinition("width", EffectPropertyTypes.Float, 6)
                             });
     }
+    
 }

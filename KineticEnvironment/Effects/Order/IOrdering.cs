@@ -8,8 +8,15 @@ using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects.Order
 {
-    interface IOrdering
+    public interface IOrdering
     {
-        Point GetLEDPosition(LEDNode ledNode);
+        Group Group { get; set; } 
+        string OrderingType { get; }
+        string Ordering { get; }
+        bool Runnable { get; }
+
+        double GetLEDPosition(LEDNode ledNode);
+        double GetMax();
+        double GetMin();
     }
 }

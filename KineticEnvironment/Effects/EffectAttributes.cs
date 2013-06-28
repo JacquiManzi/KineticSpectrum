@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
 
+    public delegate IEffect EffectFactroy(Group group);
 
-    class EffectAttributes
+    public class EffectAttributes
     {
         public readonly string Name;
         public readonly IDictionary<string, PropertyDefinition> PropertyMap;
+        private readonly EffectFactroy _factory;
 
-        public EffectAttributes(string name, IEnumerable<PropertyDefinition> properties )
+        public EffectAttributes(string name, EffectFactroy factory, IEnumerable<PropertyDefinition> properties )
         {
             Name = name;
             PropertyMap = properties.ToDictionary(p => p.Name);
+            _factory = factory;
+        }
+
+        public EffectFactroy EffectFactory
+        {
+            get { return _factory; }
         }
 
         public IEnumerable<string> PropertyNames()

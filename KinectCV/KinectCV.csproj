@@ -69,7 +69,6 @@
     <Compile Include="LambdaComparer.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="LightDetector.cs" />
-    <Compile Include="LightingManager.cs" />
     <Compile Include="LightMatch\BinarySearchMethod.cs" />
     <Compile Include="LightMatch\LightMatcher.cs" />
     <Compile Include="LightMatch\LinearSearchMethod.cs" />
