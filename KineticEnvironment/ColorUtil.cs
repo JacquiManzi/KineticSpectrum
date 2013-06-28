@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace RevKitt.KS.KineticEnvironment
 {
-    class ColorUtil
+    public class ColorUtil
     {
         /// <summary>
         /// Blends the specified colors, taking the alpha channel into account.
@@ -61,6 +61,22 @@ namespace RevKitt.KS.KineticEnvironment
             intColor = (intColor << 8) & color.B;
             intColor = (intColor << 8) & color.A;
             return intColor;
+        }
+
+        
+
+        public static Color Interpolate(Color color1, Color color2, double fraction)
+        {
+            double a = Interpolate(color1.A, color2.A, fraction);
+            double r = Interpolate(color1.R, color2.R, fraction);
+            double g = Interpolate(color1.G, color2.G, fraction);
+            double b = Interpolate(color1.B, color2.B, fraction);
+            return Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
+        }
+
+        private static double Interpolate(double d1, double d2, double fraction)
+        {
+            return d1 + (d1 - d2) * fraction;
         }
     }
 }

@@ -74,6 +74,12 @@ namespace KineticControl
             return LightAddresses;
         }
 
+        public bool AutoUpdate
+        {
+            get { return _updateTimer.Enabled; }
+            set { _updateTimer.Enabled = value; }
+        }
+
         public String GetNetworkAddress(LightAddress address)
         {
             return _pdss[address.FixtureNo].EndPoint.Address.ToString();
@@ -88,7 +94,7 @@ namespace KineticControl
         /// <returns>A list of IP addresses that aren't detected on the current network</returns>
         public IEnumerable<String> SetFixtureAddresses(IDictionary<String, int> ipToFixtureNo )
         {
-            int max = ipToFixtureNo.Values.Max() + _pdss.Count;
+            int max = ipToFixtureNo.Values.Max() + 1 + _pdss.Count;
             ipToFixtureNo = new Dictionary<string, int>(ipToFixtureNo);
 
             PDS[] newPDSs = new PDS[max];

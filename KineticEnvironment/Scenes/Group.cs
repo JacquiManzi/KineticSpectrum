@@ -4,23 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KineticControl;
+using Newtonsoft.Json;
 
 namespace RevKitt.KS.KineticEnvironment.Scenes
 {
-    class Group
+    [JsonObject(MemberSerialization.OptIn)]
+    public class Group
     {
         private readonly string _name;
-        private readonly IList<LightAddress> _lights; 
+        private readonly IList<LEDNode> _ledNodes; 
 
 
-        public Group(string name, IEnumerable<LightAddress> lights )
+        public Group(string name, IEnumerable<LEDNode> ledNodes )
         {
             _name = name;
-            _lights = new List<LightAddress>(lights).AsReadOnly();
+            _ledNodes = new List<LEDNode>(ledNodes).AsReadOnly();
         }
 
+        [JsonProperty]
         public string Name { get { return _name; } }
 
-        public IList<LightAddress> Lights { get { return _lights; } } 
+        [JsonProperty]
+        public IList<LightAddress> Lights { get { return new List<LightAddress>(_ledNodes.Select(l => l.Address)); } } 
+
+        public IList<LEDNode> LEDNodes
+        {
+            get { return _ledNodes; }
+        } 
     }
 }

@@ -12,24 +12,24 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         {
             List<EffectAttributes> effects = new List<EffectAttributes>
                                                  {
-                                                     Sweep.Attributes
+                                                     Sweep.Attributes,
+                                                     Pulse.Attributes
                                                  };
 
-            _effectAttributes = new Dictionary<string, EffectAttributes>(effects.ToDictionary(e=>e.Name));
-            
+            EffectAttributes = new Dictionary<string, EffectAttributes>(effects.ToDictionary(e=>e.Name));
         }
 
-        private static readonly Dictionary<string, EffectAttributes> _effectAttributes = new Dictionary<string, EffectAttributes>();
+        public static readonly Dictionary<string, EffectAttributes> EffectAttributes;
         
 
         public static IList<string> Effects
         {
-            get { return new List<string>(_effectAttributes.Keys); }
+            get { return new List<string>(EffectAttributes.Keys); }
         }
 
         public static IList<PropertyDefinition> GetProperties(string effectName)
         {
-            return new List<PropertyDefinition>(_effectAttributes[effectName].PropertyMap.Values);
+            return new List<PropertyDefinition>(EffectAttributes[effectName].PropertyMap.Values);
         }
     }
 }

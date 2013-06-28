@@ -21,6 +21,10 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             Position = position;
         }
 
+        public LightAddress Address
+        {
+            get { return _address; }
+        }
         public Vector3D Position { 
         get { return _position; }
             set

@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using Newtonsoft.Json;
+using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.Scenes;
+using RevKitt.KS.KineticEnvironment.Sim;
 
 namespace WebApplication1
 {
@@ -12,31 +16,17 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string fileName = Request.Files[0].FileName; //name of file I pass in
-            byte[] rawFile;
 
+            Stream stream = Request.Browser.Browser == "IE"
+                                ? Request.Files[0].InputStream
+                                : Request.InputStream;
 
-            if (Request.Browser.Browser == "IE")
-            {
-                using (var binaryReader = new BinaryReader(Request.Files[0].InputStream))
-                {
-                    rawFile = binaryReader.ReadBytes(Request.Files[0].ContentLength);
-                }
-            }
-            else
-            {
-                using (var binaryReader = new BinaryReader(Request.InputStream))
-                {
-                    rawFile = binaryReader.ReadBytes((int)Request.InputStream.Length);
-
-                }
-            }
-
-            StreamWriter writer = new StreamWriter("C:\\kui\\files\\" + fileName);
-            writer.Write(rawFile);
-            writer.Close();
-
-            Response.Write("{\"success\": true}");
+            LightSystemProvider.ParseProps(stream);
+            State.Scene = new Scene();
+            State.PatternSim = new Simulation(State.Scene);
+            State.Simulation = new Simulation(State.Scene);
+            
+            Response.Write(JsonConvert.SerializeObject(LightSystemProvider.Lights));
         }
 
         #region Web Form Designer generated code

@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment.Effects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
 
 namespace WebApplication1
 {
@@ -34,6 +35,11 @@ namespace WebApplication1
         public string GetEffectDef(string effectName)
         {
             return JsonConvert.SerializeObject(EffectRegistry.GetProperties(effectName));
+        }
+
+        public string GetColorEffects()
+        {
+            return JsonConvert.SerializeObject(ColorEffectDefinition.AllDefaults.Select(d => d.Name));
         }
 
         // Add more operations here and mark them with [OperationContract]

@@ -40,6 +40,32 @@ namespace KineticControl
             get { return Equals(Unknown); }
         }
 
+        private const string splitChar = "-";
+        private const string UnknownString = "?";
+
+        public static bool TryParse(string addressString, out LightAddress lightAddress)
+        {
+            lightAddress = null;
+            if(UnknownString.Equals(addressString))
+            {
+                lightAddress = Unknown;
+                return true;
+            }
+            string[] split = addressString.Split(splitChar.ToCharArray());
+            if(split.Count() != 3) return false;
+            int fixtureNo, portNo, lightNo;
+            bool success = int.TryParse(split[0], out fixtureNo);
+            success &= int.TryParse(split[1], out portNo);
+            success &= int.TryParse(split[2], out lightNo);
+
+            if(success)
+            {
+                lightAddress = new LightAddress(fixtureNo, portNo, lightNo);
+                return true;
+            }
+            return false;
+        }
+
         // Equals and HashCode Operators
         public int CompareTo(LightAddress other)
         {
@@ -87,7 +113,7 @@ namespace KineticControl
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((LightAddress) obj);
         }
     }
