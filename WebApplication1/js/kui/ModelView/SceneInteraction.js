@@ -86,6 +86,23 @@ define([
 
             },
 
+            createLEDNodes: function(ledList){
+
+                ledList.forEach(dojo.hitch(this, function (item) {
+
+                    var ledNode = new LEDNode();
+                    ledNode.updatePosition(item.Position);
+
+                    var ledSphere = ledNode.createSphere();
+                    this.scene.add(ledSphere);
+                    this.nodes.add(ledSphere);
+                    this.nodes.add(ledSphere);
+
+                }))
+
+
+            },
+
 
             /*Find the line segments between selected VertexSpheres*/
             findConnectingLines: function (amount) {
@@ -142,6 +159,20 @@ define([
                 }
 
 
+            },
+
+            removeAllNodes: function()
+            {
+                this.selectAllLEDs();
+                this.selectAllVertexs();
+                var selectedNodes = this.getSelectedNodes();
+
+                for (var i = 0; i < selectedNodes.count; i++) {
+
+                        this.scene.remove(selectedNodes.item(i));
+                        this.nodes.remove(selectedNodes.item(i));
+        
+                }
             },
 
             removeNodes: function () {

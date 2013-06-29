@@ -1,4 +1,5 @@
-﻿define([
+﻿/// <reference path="ModelSkeleton.js" />
+define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "dojo/dom",
