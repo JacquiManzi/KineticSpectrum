@@ -43,6 +43,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -7784,6 +7788,9 @@
     </Compile>
     <Compile Include="JSConverters\GroupConverter.cs" />
     <Compile Include="JSConverters\LightAddressConverter.cs" />
+    <Compile Include="JSConverters\LightAddressConverterTest.cs" />
+    <Compile Include="JSConverters\Serializer.cs" />
+    <Compile Include="JSConverters\Vector3Converter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Effects.svc.cs">
       <DependentUpon>Effects.svc</DependentUpon>

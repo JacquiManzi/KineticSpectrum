@@ -48,6 +48,5 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             if (OnChanged != null)
                 OnChanged(this);
         }
-
     }
 }

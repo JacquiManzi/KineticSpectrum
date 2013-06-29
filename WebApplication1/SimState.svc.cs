@@ -9,6 +9,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using Newtonsoft.Json;
 using WebApplication1.CSharp;
+using WebApplication1.JSConverters;
 
 namespace WebApplication1
 {
@@ -34,12 +35,10 @@ namespace WebApplication1
 
         [OperationContract]
         [WebGet]
-        public string GetLightState()
+        public Stream GetLightState()
         {
             var states = State.Active.LightState.Select(l => new LightState {Address = l.Key, Color = l.Value});
-            var sw = new StringWriter();
-            SceneService.Serializer.Serialize(sw, states);
-            return sw.ToString();
+            return Serializer.ToStream(states);
         }
 
         [OperationContract]

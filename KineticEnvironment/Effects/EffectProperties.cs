@@ -13,11 +13,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     public class EffectProperties
     {
-
-        public EffectProperties()
-        {
-        }
-
         public IDictionary<string, object> Properties { get; private set; }
 
         public object this[string propertyName]
@@ -43,12 +38,21 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public string GetRepeatMethod()
         {
-            return (string) this[PropertyDefinition.RepeatMethod.Name];
+            if (Properties.ContainsKey(PropertyDefinition.RepeatMethod.Name))
+                return (string) this[PropertyDefinition.RepeatMethod.Name];
+            return RepeatMethods.Restart;
         }
 
         public int GetRepeatCount()
         {
-            return (int) this[PropertyDefinition.RepeatCount.Name];
+            if (Properties.ContainsKey(PropertyDefinition.RepeatCount.Name))
+                return (int) this[PropertyDefinition.RepeatCount.Name];
+            return 1;
+        }
+
+        public int GetDurration()
+        {
+            return GetTime(PropertyDefinition.Durration.Name);
         }
 
         public IOrdering GetOrdering(Group group )

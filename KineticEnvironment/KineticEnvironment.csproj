@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorUtil.cs" />
+    <Compile Include="Effects\AbstractEffect.cs" />
+    <Compile Include="Effects\AbstractLinearEffect.cs" />
     <Compile Include="Effects\ColorEffects\ColorEffectDefinition.cs" />
     <Compile Include="Effects\ColorEffects\ColorFade.cs" />
     <Compile Include="Effects\ColorEffects\FixedColor.cs" />
