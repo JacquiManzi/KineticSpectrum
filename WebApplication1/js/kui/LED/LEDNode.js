@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="../ModelView/ModelSkeleton.js" />
+
 
 define([
     "dojo/_base/declare",
@@ -45,6 +46,16 @@ define([
                 });
 
                 this.sphere.setMaterial(material);
+
+            },
+
+            updatePosition: function (position) {
+
+                this.position = position;
+                this.x = this.position.x;
+                this.y = this.position.y;
+                this.z = this.position.z;
+
 
             }
 

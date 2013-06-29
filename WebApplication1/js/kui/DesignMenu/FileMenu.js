@@ -87,9 +87,20 @@ define([
                     multiple: false, 
                     uploadOnSelect: true,
                     url: "FileUpload.aspx",
-                    onComplete: function(){
-                        fileInterface.loadLightConfig();
-                    }
+                    onComplete: dojo.hitch(this, function(){
+
+                      var onSuccessFunc = dojo.hitch(this,function (lightList) {
+
+                            this.modelView.sceneInteraction.removeAllNodes();
+                            this.modelView.sceneInteraction.createLEDNodes(lightList);
+
+                        });
+
+                       
+                        fileInterface.getLightConfigList(onSuccessFunc);
+                      
+
+                    })
                
 
 
