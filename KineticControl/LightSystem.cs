@@ -67,7 +67,7 @@ namespace KineticControl
             
             foreach (var pds in pdss)
             {
-                if (!_pdss.Contains(pds))
+                if (!_pdss.Contains(pds, new PDSAddressComparitor()))
                     _pdss.Add(pds);
             }
             _updateTimer.Enabled = true;

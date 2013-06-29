@@ -17,9 +17,14 @@ namespace RevKitt.KS.KineticEnvironment
         public static void Init(String hostInterface)
         {
             Console.WriteLine("Attempting to set network interface to: " + hostInterface);
-            if(!LightSystem.NetworkInterfaces.Contains(hostInterface))
-                throw new ArgumentException("Host Interface '"+hostInterface+"' does not exist on this computer. Available options are:\n"+
-                                             String.Join("\n", LightSystem.NetworkInterfaces), "hostInterface");
+            if (!LightSystem.NetworkInterfaces.Contains(hostInterface))
+            {
+                Console.WriteLine(
+                    "Host Interface '" + hostInterface + "' does not exist on this computer. Available options are:\n" +
+                    String.Join("\n", LightSystem.NetworkInterfaces), "hostInterface");
+                Console.WriteLine("Starting without any network interfaces.");
+                return;
+            }
 
             LightSystem.SelectedInterface = hostInterface;
 
@@ -37,7 +42,7 @@ namespace RevKitt.KS.KineticEnvironment
             IDictionary<LightAddress, LEDNode> mapping = new Dictionary<LightAddress, LEDNode>();
             foreach (var lightAddress in addresses)
             {
-                mapping.Add(lightAddress, _nodes[lightAddress]);
+                mapping[lightAddress] =  _nodes[lightAddress];
             }
             return mapping;
         }
@@ -70,7 +75,6 @@ namespace RevKitt.KS.KineticEnvironment
             if (reader.EndOfStream) return null;
             if (((char)reader.Peek()).Equals('#')) return null;
 
-            
             return reader.ReadLine();
         }
 

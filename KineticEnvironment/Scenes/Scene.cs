@@ -10,7 +10,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 {
     public delegate void PatternDeletedHandler(Pattern pattern);
 
-    public class Scene
+    public class Scene : IStateProvider
     { 
         private Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
         private Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
@@ -166,5 +166,24 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         {
             return _patterns[patternName];
         }
+
+
+
+        public int Time 
+        { 
+            get { return 0; }
+            set { }
+        }
+        public bool IsPlaying {
+            get { return false; }
+            set { }
+        }
+
+        public IDictionary<LightAddress, Color> LightState
+        {
+            get { return new Dictionary<LightAddress, Color>(); }
+        }
+
+        public int EndTime { get; private set; }
     }
 }

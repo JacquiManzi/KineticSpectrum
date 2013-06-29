@@ -12,7 +12,7 @@ using Timer = System.Timers.Timer;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
 {
-    public class Simulation
+    public class Simulation : IStateProvider
     {
         private readonly Scene _scene;
         private readonly List<PatternStart> _patternStarts = new List<PatternStart>();
@@ -30,12 +30,34 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _updateTimer.Elapsed += (o, args) => AdvanceTime();
             _updateTimer.Interval = 1000/60;
             GC.KeepAlive(_updateTimer);
+
+            foreach (var light in LightSystemProvider.Lights)
+            {
+                _colors[light.Address] = light.Color;
+            }
+        }
+
+        public void Clear()
+        {
+            _patternStarts.Clear();
+            _endTime = _currentTime = 0;
+            foreach (var color in _colors)
+            {
+                _colors[color.Key] = Colors.Black;
+            }
         }
 
         public IList<PatternStart> PatternStarts
         {
             get { return _patternStarts; }
-        }  
+        }
+
+
+        public PatternStart AddPattern(string patternName, int startTime)
+        {
+            Pattern pattern = _scene.Patterns.First(p => p.Name.Equals(patternName));
+            return AddPattern(pattern, startTime);
+        }
 
         public PatternStart AddPattern(Pattern pattern, int startTime)
         {
@@ -89,6 +111,10 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             get { return _currentTime; }
             set
             {
+                if (value >= _endTime)
+                    value = _endTime - 1;
+                else if (value < 0)
+                    value = 0;
                 _currentTime = value;
                 UpdateState(value);
             }
@@ -105,15 +131,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
-        public int GetTime()
-        {
-            return _currentTime;
-        }
-
-        public void SetTime(int time)
-        {
-            UpdateState(time);
-        }
+        public int EndTime { get { return _endTime; } }
 
         public IDictionary<LightAddress, Color> LightState
         {
@@ -137,6 +155,12 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
             starts.Sort(PatternStart.PriorityComparer);
             ActivePatterns = starts;
+
+            foreach (var light in LightSystemProvider.Lights)
+            {
+                light.Color = Colors.Black;
+            }
+
             foreach (var patternStart in starts)
             {
                 patternStart.Apply(time);
@@ -146,6 +170,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 _colors[light.Address] = light.Color;
             }
+            LightSystemProvider.LightSystem.UpdateLights();
         }
 
     }

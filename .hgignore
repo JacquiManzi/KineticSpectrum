@@ -7,3 +7,4 @@ style: regexp
 .*\.csproj\.user$
 .cache$
 \.suo$
+\.orig$

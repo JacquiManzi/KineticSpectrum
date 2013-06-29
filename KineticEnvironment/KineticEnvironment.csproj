@@ -64,6 +64,7 @@
     <Compile Include="Effects\PropertyDefinition.cs" />
     <Compile Include="Effects\Pulse.cs" />
     <Compile Include="Effects\Sweep.cs" />
+    <Compile Include="IStateProvider.cs" />
     <Compile Include="LightSystemProvider.cs" />
     <Compile Include="LightSystemProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
