@@ -9,8 +9,9 @@ define([
     "dojo/dom-construct",
     "threejs/three",
      "dojo/on",
-"dojox/form/Uploader"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on, FileUploader) {
+"dojox/form/Uploader",
+"kui/ajax/FileInterface"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on, FileUploader, FileInterface) {
         "use strict";
         return declare("kui.DesignMenu.FileMenu", null, {
 
@@ -62,9 +63,8 @@ define([
                     var render = this.modelView.render;
                     var modelView = this.modelView;
                     fileReader.onload = ( function (e) {
-                     
-                       
-                        modelView.loadFile(e.target.result, scene, render);
+                                            
+                     modelView.loadFile(e.target.result, scene, render);
                        
                     });
                     var fileToLoad = fileReader.readAsText(file);
@@ -80,12 +80,17 @@ define([
 
             createLightUploadSection: function (div) {
 
+                var fileInterface = new FileInterface();
                 var fileUploader = new FileUploader({
 
                     label: "Choose Light Configuration",
                     multiple: false, 
                     uploadOnSelect: true,
-                    url: "FileUpload.aspx"
+                    url: "FileUpload.aspx",
+                    onComplete: function(){
+                        fileInterface.loadLightConfig();
+                    }
+               
 
 
                 });

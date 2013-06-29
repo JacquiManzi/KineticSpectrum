@@ -81,6 +81,7 @@
     <Content Include="Env.svc" />
     <Content Include="FileUpload.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="js\kui\ajax\FileInterface.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
@@ -7787,7 +7788,6 @@
     <Compile Include="Effects.svc.cs">
       <DependentUpon>Effects.svc</DependentUpon>
     </Compile>
-    <Compile Include="SimCommon.cs" />
     <Compile Include="SimState.svc.cs">
       <DependentUpon>SimState.svc</DependentUpon>
     </Compile>

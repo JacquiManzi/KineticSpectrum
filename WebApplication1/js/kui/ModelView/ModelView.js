@@ -9,10 +9,11 @@
     "dojo/dom-geometry",
     "kui/ModelView/ModelSkeleton",
     "dojox/collections/ArrayList",
-    "kui/ModelView/SceneInteraction"
+    "kui/ModelView/SceneInteraction",
+    "kui/ajax/FileInterface"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction, FileInterface) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -177,6 +178,8 @@
                 this.sceneInteraction.createVertexSpheres();
 
                 render();
+
+                
             },
 
             removeAllMeshes: function()
@@ -187,7 +190,7 @@
 
                 for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
 
-                    this.scene.remove(this.sceneInteraction.spheres.item(i));
+                    this.scene.remove(this.sceneInteraction.nodes.item(i));
 
                 }
 
@@ -223,7 +226,7 @@
 
             hideAllVertices: function()
             {
-                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.nodes.count; i++) {
 
                     if (this.sceneInteraction.nodes.item(i).isVertex) {
                        this.sceneInteraction.nodes.item(i).visible = false;
@@ -234,7 +237,7 @@
 
             showAllVertices: function()
             {
-                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.nodes.count; i++) {
 
                     if (this.sceneInteraction.nodes.item(i).isVertex) {
                        this.sceneInteraction.nodes.item(i).visible = true;
