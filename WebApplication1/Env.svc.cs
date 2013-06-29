@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using WebApplication1.JSConverters;
+using System.ServiceModel.Channels;
 
 namespace WebApplication1
 {
@@ -108,12 +109,15 @@ namespace WebApplication1
         }
 
         [OperationContract]
+       // [WebGet(BodyStyle = WebMessageBodyStyle.Bare)]
         [WebGet]
-        public string GetLEDNodes()
+        public Stream GetLEDNodes()
         {
             var sw = new StringWriter();
             Serializer.Serialize(sw, LightSystemProvider.Lights);
-            return sw.ToString();
+            //MessageVersion ver = OperationContext.Current.IncomingMessageVersion;
+            //return Message.CreateMessage(ver, "GetLEDNodesResponse", sw.ToString());
+            return new MemoryStream(ASCIIEncoding.Default.GetBytes(sw.ToString()));
         }
 
         [OperationContract]

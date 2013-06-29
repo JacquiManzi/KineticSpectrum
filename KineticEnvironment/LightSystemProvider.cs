@@ -21,7 +21,7 @@ namespace RevKitt.KS.KineticEnvironment
             {
                 Console.WriteLine(
                     "Host Interface '" + hostInterface + "' does not exist on this computer. Available options are:\n" +
-                    String.Join("\n", LightSystem.NetworkInterfaces), "hostInterface");
+                    String.Join("\n", LightSystem.NetworkInterfaces));
                 Console.WriteLine("Starting without any network interfaces.");
                 return;
             }
