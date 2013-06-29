@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="../util/CommonHTML.js" />
+
 
 define([
     "dojo/_base/declare",
@@ -259,6 +260,8 @@ define([
 
                 var groupListBox = CommonForm.createListBox("width:90%;");
                 domConstruct.place(groupListBox.domNode, groupDiv);
+
+                this.patternModel.groupListBox = groupListBox;
 
                 var groupButtonDiv = html.createDiv("width:100%;");
                 domConstruct.place(groupButtonDiv, groupDiv);

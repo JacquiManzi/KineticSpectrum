@@ -32,16 +32,18 @@ define([
 
                 this.groupDropDown = null;
                 this.groupDropDownMenu = null;
+                this.groupListBox = null;
 
                 this.sceneInteraction = sceneInteraction;
 
                
             },
 
-            updateGroupList: function(listBox)
+            updateGroupListBox: function(selectedGroupOptions)
             {
-
-               
+                for (var i = 0; i < selectedGroupOptions.count; i++) {
+                    this.groupListBox.domNode.appendChild(selectedGroupOptions.item(i));
+                }
 
 
             },
@@ -65,6 +67,9 @@ define([
                             
                             this.groupDropDown.set('label', label);
                             this.sceneInteraction.showSelectedVertexGroups(newList);
+
+                            this.updateGroupListBox(newList);
+
                         }, label, groupList.item(i))
 
                     });   
