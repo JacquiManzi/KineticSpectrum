@@ -7778,7 +7778,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="JSConverters\Deserializer.cs" />
     <Compile Include="JSConverters\GroupConverter.cs" />
     <Compile Include="JSConverters\LightAddressConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

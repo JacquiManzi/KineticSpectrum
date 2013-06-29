@@ -8,8 +8,9 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-     "dojo/on"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on) {
+     "dojo/on",
+"dojox/form/Uploader"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on, FileUploader) {
         "use strict";
         return declare("kui.DesignMenu.FileMenu", null, {
 
@@ -45,6 +46,7 @@ define([
                  container.addChild(contentPane);
 
                  this.createUploadSection(contentPane.domNode);
+                 this.createLightUploadSection(contentPane.domNode); 
 
             },
 
@@ -73,6 +75,23 @@ define([
                 on(input, "change", dojo.hitch(this, func));
                 
                     
+
+            },
+
+            createLightUploadSection: function (div) {
+
+                var fileUploader = new FileUploader({
+
+                    label: "Choose Light Configuration",
+                    multiple: false, 
+                    uploadOnSelect: true,
+                    url: "FileUpload.aspx"
+
+
+                });
+            
+                domConstruct.place(fileUploader.domNode, div);
+
 
             }
 

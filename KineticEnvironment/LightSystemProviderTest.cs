@@ -21,7 +21,7 @@ namespace RevKitt.KS.KineticEnvironment
         public void TestAssignment()
         {
             TestInit();
-            var nodes = LightSystemProvider.ParseProps(new StreamReader(new MemoryStream(Encoding.ASCII.GetBytes(TestFile))));
+            var nodes = LightSystemProvider.ParseProps(new MemoryStream(Encoding.ASCII.GetBytes(TestFile)));
 
             Assert.IsTrue(800==nodes.Count);
         }
