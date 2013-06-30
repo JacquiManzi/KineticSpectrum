@@ -28,7 +28,7 @@ namespace WebApplication1.JSConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Color);
+            return typeof (Color).IsAssignableFrom(objectType);
         }
     }
 }

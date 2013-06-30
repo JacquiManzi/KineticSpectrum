@@ -40,7 +40,7 @@ namespace WebApplication1.JSConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Vector3D);
+            return typeof(Vector3D).IsAssignableFrom(objectType);
         }
     }
 }

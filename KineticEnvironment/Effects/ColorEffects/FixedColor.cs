@@ -9,9 +9,9 @@ using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
 {
-    class FixedColor : IColorEffect
+    public class FixedColor : IColorEffect
     {
-        public const string EffectName = "fixed";
+        public const string EffectName = "Fixed";
 
         public readonly Color Color;
 

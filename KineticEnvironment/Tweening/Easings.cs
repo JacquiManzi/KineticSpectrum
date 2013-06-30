@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace RevKitt.KS.KineticEnvironment.Tweening
 {
-    class Easings
+    public class Easings
     {
 
         public static IEasing GetEasingForName(string name)
         {
             return _easingNameMap[name];
         }
+
+        public static bool IsEasingNameValid(string name)
+        {
+            return _easingNameMap.ContainsKey(name);
+        }
+
         public static IDictionary<string, IEasing> EasingNameMap
         {
             get { return _easingNameMap; }

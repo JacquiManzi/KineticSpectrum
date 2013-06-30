@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WebApplication1.JSConverters
 {
@@ -12,10 +13,22 @@ namespace WebApplication1.JSConverters
         static Serializer()
         {
             Ser = new JsonSerializer();
-            Ser.Converters.Add(new LightAddressConverter());
-            Ser.Converters.Add(new GroupConverter());
-            Ser.Converters.Add(new Vector3Converter());
+            foreach (var jsonConverter in Converters)
+            {
+                Ser.Converters.Add(jsonConverter);
+            }
+            Ser.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
+
+        public static readonly IList<JsonConverter> Converters = new List<JsonConverter>
+                                                                     {
+                                                                         new LightAddressConverter(),
+                                                                         new GroupConverter(),
+                                                                         new Vector3Converter(),
+                                                                         new ColorEffectConverter(),
+                                                                         new ColorConverter(),
+                                                                         new PatternConverter()
+                                                                     }.AsReadOnly();
 
         public static readonly JsonSerializer Ser;
 

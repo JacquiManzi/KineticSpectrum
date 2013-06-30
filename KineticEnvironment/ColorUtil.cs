@@ -57,9 +57,9 @@ namespace RevKitt.KS.KineticEnvironment
         public static int ToInt(Color color)
         {
             int intColor = color.R;
-            intColor = (intColor << 8) & color.G;
-            intColor = (intColor << 8) & color.B;
-            intColor = (intColor << 8) & color.A;
+            intColor = (intColor << 8) | color.G;
+            intColor = (intColor << 8) | color.B;
+            intColor = (intColor << 8) | color.A;
             return intColor;
         }
 

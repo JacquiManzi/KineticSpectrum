@@ -49,7 +49,7 @@ namespace WebApplication1.JSConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Group);
+            return typeof (Group).IsAssignableFrom(objectType);
         }
     }
 }

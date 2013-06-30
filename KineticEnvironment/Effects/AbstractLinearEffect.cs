@@ -9,7 +9,7 @@ using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
-    abstract class AbstractLinearEffect : AbstractEffect
+    public abstract class AbstractLinearEffect : AbstractEffect
     {
 
         protected IOrdering Ordering;

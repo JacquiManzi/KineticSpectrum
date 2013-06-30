@@ -11,7 +11,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
     public class Pattern
     {
-        private List<string> _groups; 
+        private List<string> _groups = new List<string>(); 
 
         public string Name { get; set; }
 
