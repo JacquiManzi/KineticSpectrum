@@ -6,6 +6,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     public class Sweep : AbstractLinearEffect
     {
+        private const string StartEffectName = "Sweep Start";
+        private const string EndEffectName = "Sweep End";
+
         public const string EffectName = "Sweep";
 
        
@@ -22,8 +25,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected override void ApplyProperties(EffectProperties properties)
         {
             base.ApplyProperties(properties);
-            _startColorEffect = properties.GetColorEffect("startColor");
-            _endColorEffect = properties.GetColorEffect("endColor");
+            _startColorEffect = properties.GetColorEffect(StartEffectName);
+            _endColorEffect = properties.GetColorEffect(EndEffectName);
         }
 
 
@@ -38,11 +41,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             
         }
 
-        public static readonly PropertyDefinition StartColor = new PropertyDefinition("startColor",
+        public static readonly PropertyDefinition StartColor = new PropertyDefinition(StartEffectName,
                                                                                       EffectPropertyTypes.ColorEffect,
                                                                                       ColorEffectDefinition.DefaultFixed);
 
-        public static readonly PropertyDefinition EndColor = new PropertyDefinition("endColor",
+        public static readonly PropertyDefinition EndColor = new PropertyDefinition(EndEffectName,
                                                                                     EffectPropertyTypes.ColorEffect,
                                                                                     ColorEffectDefinition.DefaultFixed);
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory,

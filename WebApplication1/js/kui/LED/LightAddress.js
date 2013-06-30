@@ -21,9 +21,9 @@ define([
 
             constructor: function (address) {
                 address = address ? address : {};
-                this.fixtureNo = 0;
-                this.portNo = 0;
-                this.lightNo = 0;
+                this.fixtureNo = -1;
+                this.portNo = -1;
+                this.lightNo = -1;
                 dojo.mixin(this, address);
             },
 

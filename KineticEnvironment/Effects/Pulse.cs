@@ -12,6 +12,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     class Pulse : AbstractLinearEffect
     {
+        private const string BackgroundEffectName = "Background";
+        private const string PulseEffectName = "Pulse";
+        private const string WidthName = "Width";
+
         public const string EffectName = "Pulse";
 
         private IColorEffect _backgroundColor;
@@ -28,9 +32,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected override void ApplyProperties(EffectProperties properties)
         {
             base.ApplyProperties(properties);
-            _backgroundColor = properties.GetColorEffect("background");
-            _pulseColor = properties.GetColorEffect("pulseColor");
-            _width = properties.GetFloat("width");
+            _backgroundColor = properties.GetColorEffect(BackgroundEffectName);
+            _pulseColor = properties.GetColorEffect(PulseEffectName);
+            _width = properties.GetFloat(WidthName);
         }
 
 
@@ -53,9 +57,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, PulseFactory,
                         new List<PropertyDefinition>(DefaultDefs)
                             {
-                                new PropertyDefinition("background", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
-                                new PropertyDefinition("pulseColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
-                                new PropertyDefinition("width", EffectPropertyTypes.Float, 6)
+                                new PropertyDefinition(BackgroundEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                new PropertyDefinition(PulseEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                new PropertyDefinition(WidthName, EffectPropertyTypes.Float, 6)
                             });
     }
     

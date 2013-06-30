@@ -352,6 +352,7 @@ define([
                 led.y = intersects[0].point.y;
                 led.z = intersects[0].point.z;
                 led.radius = distance * .003;
+                led.address = new LightAddress();
 
                 var ledSphere = led.createSphere();
 
@@ -360,6 +361,10 @@ define([
                 this.nodes.add(ledSphere);
                 this.scene.add(ledSphere);
 
+            },
+            
+            getLEDNode: function(lightAddress) {
+                return this.addressToLED[lightAddress.toString()];
             },
 
             doSelect: function (event) {
@@ -479,6 +484,14 @@ define([
 
                 }
 
+            },
+            
+            applyColorState: function(lightStateList) {
+
+                var addressToLED = this.addressToLED;
+                array.forEach(lightStateList, function(state) {
+                    addressToLED[state.address.toString()].setColor(state.color);
+                });
             },
 
             getSelectedNodes: function () {
