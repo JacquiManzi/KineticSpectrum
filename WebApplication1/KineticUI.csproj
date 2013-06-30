@@ -91,6 +91,8 @@
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectArea.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectSection.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\IntItem.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\OrderingItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\TimeItem.js" />
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />

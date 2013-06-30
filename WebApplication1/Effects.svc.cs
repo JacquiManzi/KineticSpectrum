@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
 using System.IO;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
 using WebApplication1.JSConverters;
 
 namespace WebApplication1
@@ -38,6 +39,20 @@ namespace WebApplication1
         public Stream GetColorEffects()
         {
             return Serializer.ToStream(ColorEffectDefinition.AllDefaults.Select(d => d.Name));
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetOrderingTypes()
+        {
+            return Serializer.ToStream(OrderingTypes.All);
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetOrderingForType(string type)
+        {
+            return Serializer.ToStream(OrderingTypes.GetOrderingSubTypes(type));
         }
 
         // Add more operations here and mark them with [OperationContract]

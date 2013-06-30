@@ -33,11 +33,20 @@
             return numberBox;
         },
 
+        createIntNumberTextBox = function(style) {
+            var numberBox = new NumberTextBox({
+                style: style,
+                constraints: { pattern: "######" }
+            });
+
+            return numberBox;
+        },
+            
         createTableNumberTextBox = function (style) {
 
             var numberBox = new NumberTextBox({
                 style: style,
-                constraints: { pattern: "######.######" }
+                constraints: { pattern: "######.##" }
             });
 
             return numberBox;
@@ -166,6 +175,7 @@
             createColorPalette: createColorPalette,
             createButton: createButton,
             createListBox: createListBox,
-            createTextBox: createTextBox
+            createTextBox: createTextBox,
+            createIntNumberTextBox: createIntNumberTextBox
         };
     });

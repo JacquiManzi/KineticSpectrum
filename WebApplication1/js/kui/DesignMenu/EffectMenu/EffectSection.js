@@ -56,8 +56,8 @@
 
         effectSelectionChanged : function(effectName)
         {
-            Effects.getEffectDefinition(effectName, dojo.hitch(this,function (effectDef) {
-                this.effectArea.rebuildProperties(effectDef);
+            Effects.getEffectDefinition(effectName, dojo.hitch(this,function (effectDefs) {
+                this.effectArea.buildFromDefaults(effectDefs);
             }));
         },
 

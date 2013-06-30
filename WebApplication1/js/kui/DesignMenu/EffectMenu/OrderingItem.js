@@ -8,7 +8,7 @@
     return declare("TimeItem", [EffectItem], {
 
         timeBox: null,
-        
+
         buildRendering: function () {
             // create the DOM for this widget
             this.domNode = html.createRow();
@@ -17,7 +17,7 @@
             timeTitle.innerHTML = this.key;
 
             var timeValue = html.createCell("text-align:left;width:100%;");
-            this.timeBox = CommonForm.createTableNumberTextBox("width:100%;");
+            this.timeBox = CommonForm.createIntNumberTextBox("width:100%;");
             this.timeBox.set('value', this.value);
 
             domConstruct.place(timeTitle, this.domNode);
@@ -26,7 +26,7 @@
         },
 
         postCreate: function () {
-            this.connect(this.timeBox, "onChange", dojo.hitch(this, function(newValue) {
+            this.connect(this.timeBox, "onChange", dojo.hitch(this, function (newValue) {
                 this.value = newValue;
                 this.onUpdate(this.key, newValue);
             }));
