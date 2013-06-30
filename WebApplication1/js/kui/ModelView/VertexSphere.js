@@ -18,7 +18,7 @@
             constructor: function (radius, x, y, z) {
 
 
-                this.radius = radius
+                this.radius = radius;
                 this.segmentsWidth = 3; //max 8 min 3
                 this.segmentsHeight = 2; //max 6 min 2
                
@@ -32,6 +32,8 @@
 
                 this.addModeOn = true;
             },
+
+
 
 
             createSphere: function () {
@@ -48,6 +50,29 @@
                 sphere.coords = new three.Vector3(this.x, this.y, this.z);
                 sphere.geometry.computeFaceNormals();
                 sphere.address = this.address;
+
+                sphere.setColor = function(color) {
+                    var material = new three.MeshBasicMaterial({
+                        color: color
+                    });
+                    this.setMaterial(material);
+                    this.isSelected = false;
+                };
+
+                sphere.select = function() {
+                    var material = new three.MeshBasicMaterial({
+                        color: 0xff0000
+                    });
+
+                    this.setMaterial(material);
+                    this.isSelected = true;
+                };
+
+                sphere.unselect = function() {
+                    var material = new three.MeshNormalMaterial();
+                    this.setMaterial(material);
+                    this.isSelected = false;
+                };
 
                 return sphere;
 

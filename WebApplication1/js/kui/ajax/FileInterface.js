@@ -7,9 +7,10 @@
     "threejs/three",
     "dojo/_base/xhr",
     "dojox/collections/ArrayList",
-    "dojo/_base/array"
+    "dojo/_base/array",
+    "kui/LED/LightAddress"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr, ArrayList, array) {
+    function (declare, html, dom, domStyle, domConstruct, three, xhr, ArrayList, array, LightAddress) {
         "use strict";
         return declare("kui.ajax.FileInterface", null, {
 
@@ -32,11 +33,10 @@
                     handleAs: "json",
                     load: function (jsonData) {
 
-                        array.forEach(jsonData, function (item) {
-
+                        array.forEach(jsonData, function(item) {
+                            item.address = new LightAddress(item.address);
                             lightInfoList.add(item);
-
-                        })
+                        });
 
                         
                         onSuccessFunc(lightInfoList);

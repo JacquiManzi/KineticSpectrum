@@ -19,23 +19,17 @@ define([
              *
              */
 
-            constructor: function () {
-
-
+            constructor: function (address) {
+                address = address ? address : {};
                 this.fixtureNo = 0;
                 this.portNo = 0;
                 this.lightNo = 0;
+                dojo.mixin(this, address);
+            },
+
+            toString: function() {
+                return this.fixtureNo + '-' + this.portNo + '-' + this.lightNo;
             }
-
-
-
-
-
-
-
-
-
-
         });
 
     });

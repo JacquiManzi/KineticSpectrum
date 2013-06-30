@@ -7,8 +7,9 @@
     "dojo/_base/array",
     "kui/DesignMenu/EffectMenu/TimeItem",
     "kui/DesignMenu/EffectMenu/IntItem",
-    "kui/DesignMenu/EffectMenu/OrderingItem"
-], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem, OrderingItem) {
+    "kui/DesignMenu/EffectMenu/OrderingItem",
+    "kui/DesignMenu/EffectMenu/SelectItem"
+], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem, OrderingItem, SelectItem) {
     return declare("EffectArea", [_WidgetBase], {
        
         items: null,
@@ -69,6 +70,17 @@
             if (type === "Ordering") {
                 return new OrderingItem(obj);
             }
+            if (type === "RepeatMethod") {
+                var rItem = new SelectItem(obj);
+                Effects.getRepeatMethods(dojo.hitch(rItem, rItem.setItems));
+                return rItem;
+            }
+            if (type === "Easing") {
+                var eItem = new SelectItem(obj);
+                Effects.getEasings(dojo.hitch(eItem, eItem.setItems));
+                return eItem;
+            }
+                
             return null;
         },
         
@@ -79,12 +91,8 @@
             array.forEach(this.handles, function(handle) {
                 dojo.disconnect(handle);
             });
-
         },
         
-
-        
-
         postCreate: function () {
             // every time the user clicks the button, increment the counter
             //this.connect(this.domNode, "onclick", "increment");

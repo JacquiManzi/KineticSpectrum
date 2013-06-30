@@ -5,6 +5,7 @@ define([
     "kui/ModelView/ModelSkeleton",
     "dojox/collections/ArrayList",
     "kui/LED/LEDNode",
+    "kui/LED/LightAddress",
     "threejs/three",
     "dojo/dom-geometry",
     "kui/ModelView/VertexSphere",
@@ -14,7 +15,7 @@ define([
      "kui/ModelView/groups/Group"
 
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, three, domGeom, VertexSphere, html, PatternModel, on, Group) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -28,9 +29,10 @@ define([
 
                 this.modelSkeleton = null;
 
+
+                this.addressToLED = [];
                 this.nodes = new ArrayList();
                 this.vertexSpheres = new ArrayList();
-                this.ledNodes = new ArrayList();
 
                 this.selectedGroupOptions = new ArrayList();
                 this.groupOptionList = new ArrayList(); 
@@ -96,23 +98,20 @@ define([
 
             },
 
-            createLEDNodes: function(ledList){
+            createLEDNodes: function(ledList) {
 
-                ledList.forEach(dojo.hitch(this, function (item) {
+                ledList.forEach(dojo.hitch(this, function(item) {
 
                     var ledNode = new LEDNode();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.radius =3;
+                    ledNode.radius = 3;
 
                     var ledSphere = ledNode.createSphere();
                     this.scene.add(ledSphere);
                     this.nodes.add(ledSphere);
-                    this.nodes.add(ledSphere);
-
-                }))
-
-               
+                    this.addressToLED[item.address.toString()] = ledSphere;
+                }));
             },
 
 

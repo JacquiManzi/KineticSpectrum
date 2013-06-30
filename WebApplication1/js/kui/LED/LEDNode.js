@@ -41,7 +41,6 @@ define([
             changeColor: function (color) {
 
                 var material = new three.MeshBasicMaterial({
-
                     color: 0xff0000
                 });
 

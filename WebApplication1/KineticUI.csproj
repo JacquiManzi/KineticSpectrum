@@ -93,11 +93,13 @@
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectSection.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\IntItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\OrderingItem.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\SelectItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\TimeItem.js" />
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
     <Content Include="js\kui\ModelView\groups\Group.js" />
+    <Content Include="js\kui\ModelView\LEDSet.js" />
     <Content Include="js\kui\ModelView\SceneInteraction.js" />
     <Content Include="js\kui\Model\Model.js" />
     <Content Include="js\kui\DesignMenu\ModelMenu.js" />
