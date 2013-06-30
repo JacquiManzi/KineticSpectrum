@@ -311,9 +311,10 @@ define([
 
                 var groupNameValueCell = html.createCell("text-align:center;" +
                     "border-top: 2px solid #2d2d2d;" +
-                    "border-top-right: 2px solid #2d2d2d;" +
-                    "border-bottom-right: 2px solid #2d2d2d;" +
-                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";"+
+                    "border-right: 2px solid #2d2d2d;" +                  
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    "border-left-radius: 7px;" +
+                    "border-right-radius: 7px;" +
                     "width: 60%");
 
                 domConstruct.place(groupNameValueCell, groupNameRow);
@@ -324,7 +325,7 @@ define([
                 var obj = this;
                 var addButton = CommonForm.createButton('Add Group', function () {
 
-                    obj.modelView.sceneInteraction.addSelectedGroup(groupListBox);
+                    obj.modelView.sceneInteraction.addSelectedGroup(groupListBox, groupNameTextBox.getValue());
 
                     
                 }, null, "color:#3d8dd5;");

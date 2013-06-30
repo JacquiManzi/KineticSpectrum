@@ -10,10 +10,11 @@ define([
     "kui/ModelView/VertexSphere",
      "kui/util/CommonHTML",
      "kui/Pattern/patterns/PatternModel",
-        "dojo/on"
+     "dojo/on",
+     "kui/ModelView/groups/Group"
 
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, three, domGeom, VertexSphere, html, PatternModel, on) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, three, domGeom, VertexSphere, html, PatternModel, on, Group) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -72,7 +73,6 @@ define([
                         var vertexSphere = new VertexSphere(radius, vertices[j].x, vertices[j].y, vertices[j].z);
 
                         /*Adjust the sphere radius according to model scale*/
-
                         vertexSphere.radius = distance * 0.003;
 
                         this.scene.add(vertexSphere.sphere);
@@ -98,10 +98,7 @@ define([
 
             createLEDNodes: function(ledList){
 
-
-
                 ledList.forEach(dojo.hitch(this, function (item) {
-
 
                     var ledNode = new LEDNode();
                     ledNode.updatePosition(item.Position);
@@ -114,9 +111,7 @@ define([
 
                 }))
 
-                
-
-
+               
             },
 
 
@@ -207,7 +202,7 @@ define([
 
             },
             
-            addSelectedGroup: function (listBox) {
+            addSelectedGroup: function (listBox, groupName) {
 
                 var selectedNodes = this.getSelectedNodes();
 
@@ -215,13 +210,13 @@ define([
 
                     var countAmount = this.groupOptionList.count + 1;
 
-                    var option = html.createOption("Group" + " " + countAmount);
-                    option.list = selectedNodes;
-                    listBox.domNode.appendChild(option);
+                    var group = new Group(countAmount, selectedNodes, groupName);
+                  
+                    listBox.domNode.appendChild(group.groupOption);
 
-                    this.groupOptionList.add(option);
+                    this.groupOptionList.add(group.groupOption);
 
-                    on(option, "click", dojo.hitch(this, function (listBox) {
+                    on(group.groupOption, "click", dojo.hitch(this, function (listBox) {
 
                         this.selectedGroupOptions.clear();
                         for (var i = 0; i < listBox.getSelected().length; i++) {
