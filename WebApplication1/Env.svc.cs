@@ -30,9 +30,9 @@ namespace WebApplication1
         //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
         [OperationContract]
         [WebGet]
-        public void EditGroup(string group)
+        public void EditGroup(Stream group)
         {
-            Group groupObj = Serializer.Ser.Deserialize<Group>(new JsonTextReader(new StringReader(group)));
+            Group groupObj = Serializer.FromStream<Group>(group);
             State.Scene.SetGroup(groupObj);
         }
 
@@ -53,9 +53,9 @@ namespace WebApplication1
 
         [OperationContract]
         [WebGet]
-        public void SetPattern(string pattern)
+        public void SetPattern(Stream pattern)
         {
-            var patternObj = Serializer.Ser.Deserialize<Pattern>(new JsonTextReader(new StringReader(pattern)));
+            var patternObj = Serializer.FromStream<Pattern>(pattern);
             State.Scene.SetPattern(patternObj);
         }
 
@@ -68,9 +68,9 @@ namespace WebApplication1
 
         [OperationContract]
         [WebGet]
-        public void RenamePattern(string oldName, string newPattern)
+        public void RenamePattern(string oldName, Stream newPattern)
         {
-            var patternObj = Serializer.Ser.Deserialize<Pattern>(new JsonTextReader(new StringReader(newPattern)));
+            var patternObj = Serializer.FromStream<Pattern>(newPattern);
             State.Scene.RenamePattern(oldName, patternObj);
         }
 
@@ -130,8 +130,7 @@ namespace WebApplication1
         [WebGet]
         public void SelectLights(Stream lightAddresses)
         {
-            var reader = new JsonTextReader(new StreamReader(lightAddresses));
-            var las = Serializer.Ser.Deserialize<IEnumerable<LightAddress>>(reader);
+            var las = Serializer.FromStream<IEnumerable<LightAddress>>(lightAddresses);
             State.Scene.SelectLights(las);
         }
 
