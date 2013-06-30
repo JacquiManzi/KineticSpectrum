@@ -50,6 +50,15 @@ define([
 
             },
 
+            getIdealLEDRadius: function()
+            {
+                var distance = this.modelSkeleton.geometryList.item(0).boundingBox.min.distanceTo(this.modelSkeleton.geometryList.item(0).boundingBox.max);
+                var radius = distance * .01;
+
+                return radius;
+
+            },
+
             createVertexSpheres: function () {
 
                 var geometryList =  this.modelSkeleton.geometryList;
@@ -75,6 +84,7 @@ define([
 
                 this.dragControls = new three.DragControls(this.camera, this.nodes, this.domNode, domGeom);
 
+                dojo.connect(this.domNode, "onmousemove", dojo.hitch(this, this.doSelect));
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
                 dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function (event) {
 
@@ -88,10 +98,14 @@ define([
 
             createLEDNodes: function(ledList){
 
+
+
                 ledList.forEach(dojo.hitch(this, function (item) {
+
 
                     var ledNode = new LEDNode();
                     ledNode.updatePosition(item.Position);
+                    ledNode.radius =3;
 
                     var ledSphere = ledNode.createSphere();
                     this.scene.add(ledSphere);
@@ -99,6 +113,8 @@ define([
                     this.nodes.add(ledSphere);
 
                 }))
+
+                
 
 
             },
@@ -349,31 +365,46 @@ define([
 
             },
 
+            doSelect: function (event) {
+                if (event.altKey)
+                {
+                    var intersects = this.findIntersects(this.nodes, event);
+                    if (intersects.length > 0 && this._inObject != intersects[0].object.id) {
+                        this._inObject = intersects[0].object.id;
+                        if (!intersects[0].object.isSelected) {
+                            this.selectSphere(intersects);
+                        }
+                        else {
+                            this.deseletSphere(intersects);
+                        }
+                    }
+                }
+            },
+
+
+            mouseSelect: function(event)
+            {
+                var intersects = this.findIntersects(this.nodes, event);
+                if (intersects.length > 0) {
+
+                    if (!intersects[0].object.isSelected) {
+                        this.selectSphere(intersects);
+                    }
+                    else {
+                        this.deseletSphere(intersects);
+                    }
+                }
+            },
+
             findSelectionType: function (event) {
                 if (!this.addModeOn) {
 
 
                     this.orbitControl.enabled = !event.ctrlKey;
                     this.dragControls.enabled = event.ctrlKey;
+                    this.mouseSelect(event);
 
-
-                    var intersects = this.findIntersects(this.nodes, event);
-
-
-                    if (intersects.length > 0) {
-
-                        if (!intersects[0].object.isSelected) {
-
-                            this.selectSphere(intersects);
-
-                        }
-                        else {
-
-                            this.deseletSphere(intersects);
-
-                        }
-
-                    }
+                    
                 }
                 else {
 

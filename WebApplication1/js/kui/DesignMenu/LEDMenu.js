@@ -8,8 +8,9 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "kui/util/CommonFormItems"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm) {
+    "kui/util/CommonFormItems",
+    "dijit/TitlePane"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu", null, {
 
@@ -26,6 +27,15 @@ define([
                 /*CSS Stylings*/
                 this.tableCellBorderColor = "#333333";
 
+                this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
+                         "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
+                         "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
+                         "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
+                         "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
+                         "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
+               "background-color: #131313;" +
+               "background-size: 20px 20px;";
+
 
             },
 
@@ -33,59 +43,80 @@ define([
                 var contentPane = new ContentPane(
                   {
                       title: "LED Menu",
-                      style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,"+
-                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,"+
-                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,"+
-                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,"+
-                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px),"+
-                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);"+
-                "background-color: #131313;"+
-                "background-size: 20px 20px;width:100%;"
+                      style: this.mainBackgroundColor
 
                   });
 
+                var spacerDivStyle = "width:100%;height:7px;";
+
                 container.addChild(contentPane);
 
+                var titlePaneDiv = html.createDiv("width:100%;height:100%;");
+                domConstruct.place(titlePaneDiv, contentPane.domNode);
+
+                var nodeDiv = this.createNodeSection();
+                              
                 /*Node Creation Section*/
-                this.createNodeSection(contentPane);
-                this.createSelectAllSection(contentPane.domNode);
+                var nodePane = new TitlePane({
 
+                    title: "Create / Select Nodes",
+                    content: nodeDiv
+
+                });
+
+                nodeDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(nodePane.domNode, titlePaneDiv);
+                domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
+
+                          
                 /*Node Removal Section*/
-                this.createRemoveNodeSection(contentPane);
+                var removalDiv = this.createRemoveNodeSection();
 
-                /*Group Vertex Section*/
-                this.createGroupVertexSection(contentPane.domNode);
+                var removePane = new TitlePane({
 
-                
-    
+                    title: "Remove Nodes",
+                    content: removalDiv
+
+                });
+
+                removalDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(removePane.domNode, titlePaneDiv);
+                domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
+
+                /*Group Section*/            
+                var groupDiv = this.createGroupVertexSection();
+
+                var groupPane = new TitlePane({
+
+                    title: "Group Nodes",
+                    content: groupDiv
+
+                });
+
+                groupDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(groupPane.domNode, titlePaneDiv);
+                domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
+
+               
 
             },
 
-            createNodeSection: function (contentPane) {
+            createNodeSection: function () {
 
-                var nodeDiv = html.createDiv("text-align:center; color:#3d8dd5;");
-                var nodeCreationDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
-                    "border-radisu:7px;"+
-                    "background-color:#141414;" +
-                    "border-radisu:7px;" +
-                    "border: 2px solid #282828;");
-
-                nodeCreationDiv.innerHTML = "LED Node Creation";
+                var nodeDiv = html.createDiv("text-align:center; color:#3d8dd5;width:100%;height:100%;");
+                
                 var table = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
                     "padding-top:10px;"+
                     "padding-bottom:10px;"+
                     "border-spacing: 0px;"+
-                    "width:95%;");
+                    "width:95%;h");
 
                 var tableDiv = html.createDiv("width:100%;" +                    
                     "margin-left:auto;" +
                     "margin-right:auto;"+
                     "border-radius:10px;");
 
-
-                domConstruct.place(nodeCreationDiv, nodeDiv);
                 this.createNodeAmountBox(table);
 
                 var ledModeDiv = html.createDiv("text-align:center;padding-top:20px;");
@@ -101,13 +132,17 @@ define([
                 domConstruct.place(ledModeButton.domNode, ledModeDiv);
 
                 domConstruct.place(table, tableDiv);
-                domConstruct.place(tableDiv, nodeDiv); 
-                domConstruct.place(nodeDiv, contentPane.domNode);
+                domConstruct.place(tableDiv, nodeDiv);
+
+                var selectionDiv = this.createSelectAllSection();
+                domConstruct.place(selectionDiv, nodeDiv);
+
+                return nodeDiv;
 
 
             },
 
-            createRemoveNodeSection: function (contentPane) {
+            createRemoveNodeSection: function () {
                 var innerDiv = html.createDiv("text-align:center;" +
                    "color:#3d8dd5;"+
                    "padding-top: 10px;"+
@@ -115,8 +150,8 @@ define([
 
                 this.createRemoveButton(innerDiv);
 
-                domConstruct.place(innerDiv, contentPane.domNode);
 
+                return innerDiv;
             },
 
             createNodeAmountBox: function (table) {
@@ -185,8 +220,10 @@ define([
 
             },
 
-            createSelectAllSection: function(div)
+            createSelectAllSection: function()
             {
+                var div = html.createDiv();
+
                 /*Select All Vertices*/
                 var selectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var obj = this;
@@ -238,8 +275,7 @@ define([
                 domConstruct.place(deselectLEDButton.domNode, deselectLEDDiv);
                 domConstruct.place(deselectLEDDiv, div);
 
-
-
+                return div;
             },
 
             setButtonStyle: function(button)
@@ -255,17 +291,9 @@ define([
 
             },
 
-            createGroupVertexSection: function (div) {
+            createGroupVertexSection: function () {
 
-                var groupTitleDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
-                    "background-color:#141414;" +
-                    "border-radisu:7px;"+
-                    "border: 2px solid #282828;");
-
-                groupTitleDiv.innerHTML = "Node Grouping";
-                domConstruct.place(groupTitleDiv, div); 
-
+                var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
 
                 var obj = this;
@@ -304,6 +332,8 @@ define([
                 domConstruct.place(addVertexButton.domNode, listDiv);
                 domConstruct.place(removeVertexButton.domNode, listDiv);                
                 domConstruct.place(buttonDiv, div);
+
+                return div;
 
               
             },

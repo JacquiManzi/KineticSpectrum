@@ -30,10 +30,10 @@ define([
                 this.fov = 45;
                 this.aspect = 0;
                 this.near = 0.09;
-                this.far = 1000;
-                this.cameriaPositionX = 3;
-                this.cameriaPositionY = 3;
-                this.cameriaPositionZ = 3;
+                this.far = 10000;
+                this.cameriaPositionX = 100;
+                this.cameriaPositionY = 100;
+                this.cameriaPositionZ = 100;
 
                 /*Lighting Properties*/
                 this.hasDirectionalLight = true;

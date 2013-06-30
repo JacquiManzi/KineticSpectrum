@@ -90,6 +90,7 @@
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
+    <Content Include="js\kui\ModelView\groups\Group.js" />
     <Content Include="js\kui\ModelView\SceneInteraction.js" />
     <Content Include="js\kui\Model\Model.js" />
     <Content Include="js\kui\DesignMenu\ModelMenu.js" />

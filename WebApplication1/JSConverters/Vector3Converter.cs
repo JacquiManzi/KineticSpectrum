@@ -15,13 +15,13 @@ namespace WebApplication1.JSConverters
         {
             var la = (Vector3D)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("X");
+            writer.WritePropertyName("x");
             serializer.Serialize(writer, la.X);
             //            writer.WriteValue(la.FixtureNo);
-            writer.WritePropertyName("Y");
+            writer.WritePropertyName("y");
             serializer.Serialize(writer, la.Y);
             //            writer.WriteValue(la.PortNo);
-            writer.WritePropertyName("Z");
+            writer.WritePropertyName("z");
             serializer.Serialize(writer, la.Z);
             //            writer.WriteValue(la.LightNo);
             writer.WriteEndObject();
@@ -32,9 +32,9 @@ namespace WebApplication1.JSConverters
         {
 
             JObject obj = JObject.Load(reader);
-            return new Vector3D((double)obj["X"],
-                                    (double)obj["Y"],
-                                    (double)obj["Z"]);
+            return new Vector3D((double)obj["x"],
+                                    (double)obj["y"],
+                                    (double)obj["z"]);
 
         }
 

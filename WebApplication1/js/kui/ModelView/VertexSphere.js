@@ -46,6 +46,7 @@
                 sphere.isSelected = false;
                 sphere.isVertex = this.isVertex;
                 sphere.coords = new three.Vector3(this.x, this.y, this.z);
+                sphere.geometry.computeFaceNormals();
 
                 return sphere;
 

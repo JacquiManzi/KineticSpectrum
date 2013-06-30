@@ -91,9 +91,12 @@ define([
 
                       var onSuccessFunc = dojo.hitch(this,function (lightList) {
 
-                            this.modelView.sceneInteraction.removeAllNodes();
+                            
+                          this.modelView.sceneInteraction.removeAllNodes();
+                          this.modelView.removeAllMeshes();
                             this.modelView.sceneInteraction.createLEDNodes(lightList);
 
+                           
                         });
 
                        
