@@ -116,8 +116,6 @@
              });
 
              return dropDownButton;
-
-
          },
 
          createButton = function (label, func, div, style) {

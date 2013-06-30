@@ -9,6 +9,8 @@ using System.Text;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using System.IO;
+using WebApplication1.JSConverters;
 
 namespace WebApplication1
 {
@@ -16,30 +18,26 @@ namespace WebApplication1
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class Effects
     {
-      
-        // To use HTTP GET, add [WebGet] attribute. (Default ResponseFormat is WebMessageFormat.Json)
-        // To create an operation that returns XML,
-        //     add [WebGet(ResponseFormat=WebMessageFormat.Xml)],
-        //     and include the following line in the operation body:
-        //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
+
         [OperationContract]
         [WebGet]
-        public IEnumerable<string> GetEffects()
+        public Stream GetEffects()
         {
-            // Add your operation implementation here
-             return EffectRegistry.Effects;
+             return Serializer.ToStream(EffectRegistry.Effects);
         }
 
         [OperationContract]
         [WebGet]
-        public string GetEffectDef(string effectName)
+        public Stream GetEffectDef(string effectName)
         {
-            return JsonConvert.SerializeObject(EffectRegistry.GetProperties(effectName));
+            return Serializer.ToStream(EffectRegistry.GetProperties(effectName));
         }
 
-        public string GetColorEffects()
+        [OperationContract]
+        [WebGet]
+        public Stream GetColorEffects()
         {
-            return JsonConvert.SerializeObject(ColorEffectDefinition.AllDefaults.Select(d => d.Name));
+            return Serializer.ToStream(ColorEffectDefinition.AllDefaults.Select(d => d.Name));
         }
 
         // Add more operations here and mark them with [OperationContract]

@@ -101,7 +101,8 @@ define([
                 ledList.forEach(dojo.hitch(this, function (item) {
 
                     var ledNode = new LEDNode();
-                    ledNode.updatePosition(item.Position);
+                    ledNode.updatePosition(item.position);
+                    ledNode.address = item.address;
                     ledNode.radius =3;
 
                     var ledSphere = ledNode.createSphere();
@@ -215,6 +216,8 @@ define([
                     listBox.domNode.appendChild(group.groupOption);
 
                     this.groupOptionList.add(group.groupOption);
+
+                    group.applyGroup();
 
                     on(group.groupOption, "click", dojo.hitch(this, function (listBox) {
 

@@ -15,6 +15,7 @@ using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using WebApplication1.JSConverters;
 using System.ServiceModel.Channels;
+using System.Net;
 
 namespace WebApplication1
 {
@@ -29,10 +30,9 @@ namespace WebApplication1
         //     and include the following line in the operation body:
         //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
         [OperationContract]
-        [WebGet]
         public void EditGroup(Stream group)
         {
-            Group groupObj = Serializer.FromStream<Group>(group);
+            Group groupObj = Serializer.FromPost<Group>(group);
             State.Scene.SetGroup(groupObj);
         }
 

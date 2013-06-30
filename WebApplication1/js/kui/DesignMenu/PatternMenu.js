@@ -11,9 +11,13 @@ define([
     "threejs/three",
     "kui/util/CommonFormItems",
     "dijit/TitlePane",
-    "dijit/DropDownMenu"],
+    "dijit/DropDownMenu",
+    "kui/ajax/Effects",
+    "dijit/MenuItem",
+    "dojo/_base/array",
+    "kui/DesignMenu/EffectMenu/EffectSection"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu", null, {
 
@@ -106,18 +110,20 @@ define([
                 domConstruct.place(priorityRow, table);
                        
                 /*Effect Section*/
-                var effectDiv = this.createEffectSection();
-                domConstruct.place(effectDiv, div);
+                var effectSection = new EffectSection();
+                effectSection.placeAt(div);
+                //var effectDiv = this.createEffectSection();
+                //domConstruct.place(effectDiv, div);
                
 
                 var effectPropPane = new TitlePane({
 
                     title: "Effect Properties",
-                    content: effectDiv
+                    content: effectSection.domNode
 
                 });
 
-                effectDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                effectSection.domNode.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(effectPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
@@ -206,7 +212,7 @@ define([
                 domConstruct.place(table, div);
 
                 var effectNameRow = this.createEffectNameSection();
-                domConstruct.place(effectNameRow, table);
+                domConstruct.placeAt(effectNameRow, table);
 
                 
                 return div;
@@ -225,6 +231,14 @@ define([
 
                 var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
                 domConstruct.place(effectDropDown.domNode, valueCell);
+
+                Effects.getEffects(function (effects) {
+                    array.forEach(effects, function(effect) {
+                        effectDropDown.dropDown.addChild(new MenuItem({
+                            label: effect
+                            }));
+                        });
+                    });
 
                 return row;
             },

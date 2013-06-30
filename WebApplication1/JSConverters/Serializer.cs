@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Net;
 
 namespace WebApplication1.JSConverters
 {
@@ -44,7 +45,6 @@ namespace WebApplication1.JSConverters
         public static string ToString(object obj)
         {
             var stream = ToStream(obj);
-            stream.Position = 0;
             return new StreamReader(stream).ReadToEnd();
         }
 
@@ -55,8 +55,14 @@ namespace WebApplication1.JSConverters
 
         public static T FromStream<T>(Stream stream)
         {
-            stream.Position = 0;
             return Ser.Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
+        }
+
+        public static T FromPost<T>(Stream stream)
+        {
+            string str = new StreamReader(stream).ReadToEnd();
+            str = WebUtility.UrlDecode(str.Substring(2));
+            return FromString<T>(str);
         }
     }
 }

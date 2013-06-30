@@ -85,8 +85,13 @@
     <Content Include="Env.svc" />
     <Content Include="FileUpload.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="js\kui\ajax\Effects.js" />
     <Content Include="js\kui\ajax\FileInterface.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\EffectArea.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\EffectItem.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\EffectSection.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\TimeItem.js" />
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
@@ -8379,7 +8384,9 @@
     <Content Include="js\kui\3DModels\Rabbit.js" />
     <Content Include="js\kui\3DModels\GeodesicDome.js" />
     <Content Include="packages.config" />
-    <Content Include="refs\FFDomeLights.obj" />
+    <Content Include="refs\FFDomeLights.obj">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

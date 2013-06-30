@@ -27,9 +27,6 @@ define([
                 this.effectName = "";
                 this.effectProperties = {};
                 this.id = 0;
-
-
-
             }
 
 

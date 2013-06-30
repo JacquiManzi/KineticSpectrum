@@ -15,10 +15,10 @@ namespace WebApplication1.JSConverters
         {
             var la = (Group)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("Name");
+            writer.WritePropertyName("name");
             writer.WriteValue(la.Name);
-            writer.WritePropertyName("Lights");
-            writer.WriteValue(la.Lights);
+            writer.WritePropertyName("lights");
+            serializer.Serialize(writer, la.Lights);
             writer.WriteEnd();
         }
 
@@ -28,7 +28,6 @@ namespace WebApplication1.JSConverters
             string name = null;
             IEnumerable<LightAddress> addresses = null;
 
-
             while (reader.Read())
             {
                 if (reader.Value != null)
@@ -36,9 +35,12 @@ namespace WebApplication1.JSConverters
                     if (reader.TokenType == JsonToken.PropertyName)
                     {
                         string pName = (string)reader.Value;
-                        if (pName.Equals("Name"))
-                            name = serializer.Deserialize<string>(reader);
-                        if (pName.Equals("Lights"))
+                        reader.Read();
+                        if (pName.Equals("name"))
+                        {
+                            name = (string)reader.Value;
+                        }
+                        if (pName.Equals("lights"))
                             addresses = serializer.Deserialize<IEnumerable<LightAddress>>(reader);
                     }
                 }

@@ -117,7 +117,7 @@
                     {
                         size: size,
                         type: type,
-                        name:name
+                        name: name
                     });
             },
 
@@ -125,7 +125,7 @@
 
                 return domConstruct.create("output",
                     {
-                        
+
                     });
 
             },
@@ -263,10 +263,37 @@
                     canvas.setTransform(dojox.gfx.matrix.scale(scale, scale));
                     canvas.applyTransform(dojox.gfx.matrix.translate((width / 2 - scale * imageWidth / 2) / scale, (height / 2 - scale * imageHeight / 2) / scale));
                 }
-            },
+            };
+
+        var backgroundColor = "#141414";
+
+        var textColor = "#3d8dd5";
+
+        var tableStyle = "margin-left:auto;" +
+                "margin-right:auto;" +
+                "padding-top:5px;" +
+                "padding-bottom:5px;" +
+                "background-color:" + backgroundColor + ";" +
+                "border-radius: 7px;" +
+                "border: 3px solid #333333;" +
+                "width:99%;" +
+                "color:" + textColor + ";";
+
+        var titleCellStyle = "background-color: #232323;" +
+                "border-radius:5px;" +
+                "width: 40%;";
+        var mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
+                      "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
+                      "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
+                      "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
+                      "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
+                      "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
+            "background-color: #131313;" +
+            "background-size: 20px 20px;";
+           
 
         /*Remove dom elements*/
-            removeDomChildren = function (element) {
+           var removeDomChildren = function (element) {
                 element = asDomNode(element);
 
                 if (element != null) {
@@ -298,6 +325,11 @@
             resizeTextBelow: resizeTextBelow,
             createInput: createInput,
             createOutput: createOutput,
-            createOption: createOption
+            createOption: createOption,
+            backgroundColor: backgroundColor,
+            textColor: textColor,
+            tableStyle: tableStyle,
+            titleCellstyle: titleCellStyle,
+            mainBackgroundColor: mainBackgroundColor
         };
     });
