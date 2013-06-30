@@ -11,6 +11,7 @@ using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
 using System.IO;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
+using RevKitt.KS.KineticEnvironment.Tweening;
 using WebApplication1.JSConverters;
 
 namespace WebApplication1
@@ -47,7 +48,21 @@ namespace WebApplication1
         {
             return Serializer.ToStream(OrderingTypes.All);
         }
-        
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetRepeatMethods()
+        {
+            return Serializer.ToStream(RepeatMethods.All);
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetEasings()
+        {
+            return Serializer.ToStream(Easings.EasingNameMap.Select(k=>k.Key));
+        }
+
         [OperationContract]
         [WebGet]
         public Stream GetOrderingForType(string type)
