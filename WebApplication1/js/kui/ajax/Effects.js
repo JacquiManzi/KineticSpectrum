@@ -10,36 +10,57 @@
     function (declare, html, dom, domStyle, domConstruct, three, xhr) {
         "use strict";
 
-        var getEffects = function (onLoad) {
-            var file = xhr.get({
-
+        var getEffects = function(onLoad) {
+            xhr.get({
                 url: "Effects.svc/GetEffects",
+                handleAs: "json",
+                load: onLoad,
+                error: function(err1, err2) {
+                    console.log("Error Getting list of effects");
+                }
+            });
+        };
+        
+        var getOrderingTypes = function (onLoad) {
+            xhr.get({
+                url: "Effects.svc/GetOrderingTypes",
                 handleAs: "json",
                 load: onLoad,
                 error: function (err1, err2) {
                     console.log("Error Getting list of effects");
                 }
-
-
             });
-        }
+        };
 
-        var getEffectDefinition = function (effectName, onLoad) {
-            var file = xhr.get({
-
+        var getEffectDefinition = function(effectName, onLoad) {
+            xhr.get({
                 url: "Effects.svc/GetEffectDef",
                 handleAs: "json",
-                content:{effectName:effectName},
+                content: { effectName: effectName },
+                load: onLoad,
+                error: function(err1, err2) {
+                    console.log("Error Getting Effect Definition for effect " + effectName);
+                }
+            });
+        };
+        
+        var getOrderingForType = function (orderingType, onLoad) {
+            xhr.get({
+                url: "Effects.svc/GetOrderingForType",
+                handleAs: "json",
+                content: { type: orderingType },
                 load: onLoad,
                 error: function (err1, err2) {
                     console.log("Error Getting Effect Definition for effect " + effectName);
                 }
             });
-        }
+        };
 
         return {
             getEffects: getEffects,
-            getEffectDefinition: getEffectDefinition
-        }
+            getEffectDefinition: getEffectDefinition,
+            getOrderingForType: getOrderingForType,
+            getOrderingTypes: getOrderingTypes
+        };
 
     });

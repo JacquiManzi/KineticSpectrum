@@ -6,8 +6,9 @@
     "kui/util/CommonFormItems",
     "dojo/_base/array",
     "kui/DesignMenu/EffectMenu/TimeItem",
-    "kui/DesignMenu/EffectMenu/IntItem"
-], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem) {
+    "kui/DesignMenu/EffectMenu/IntItem",
+    "kui/DesignMenu/EffectMenu/OrderingItem"
+], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem, OrderingItem) {
     return declare("EffectArea", [_WidgetBase], {
        
         items: null,
@@ -64,6 +65,9 @@
             }
             if (type == "Int") {
                 return new IntItem(obj);
+            }
+            if (type === "Ordering") {
+                return new OrderingItem(obj);
             }
             return null;
         },

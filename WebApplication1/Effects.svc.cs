@@ -47,7 +47,7 @@ namespace WebApplication1
         {
             return Serializer.ToStream(OrderingTypes.All);
         }
-
+        
         [OperationContract]
         [WebGet]
         public Stream GetOrderingForType(string type)
