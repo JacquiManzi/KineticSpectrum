@@ -14,13 +14,13 @@ namespace WebApplication1.JSConverters
         {
             var la = (LightAddress) value;
             writer.WriteStartObject();
-            writer.WritePropertyName("FixtureNo");
+            writer.WritePropertyName("fixtureNo");
             serializer.Serialize(writer, la.FixtureNo);
 //            writer.WriteValue(la.FixtureNo);
-            writer.WritePropertyName("PortNo");
+            writer.WritePropertyName("portNo");
             serializer.Serialize(writer, la.PortNo);
 //            writer.WriteValue(la.PortNo);
-            writer.WritePropertyName("LightNo");
+            writer.WritePropertyName("lightNo");
             serializer.Serialize(writer, la.LightNo);
 //            writer.WriteValue(la.LightNo);
             writer.WriteEndObject();
@@ -31,9 +31,9 @@ namespace WebApplication1.JSConverters
         {
 
             JObject obj = JObject.Load(reader);
-            return new LightAddress((int) obj["FixtureNo"],
-                                    (int) obj["PortNo"],
-                                    (int) obj["LightNo"]);
+            return new LightAddress((int) obj["fixtureNo"],
+                                    (int) obj["portNo"],
+                                    (int) obj["lightNo"]);
 //            int fixture=-1, port=-1, light=-1;
 //            while(reader.Read())
 //            {
@@ -59,7 +59,7 @@ namespace WebApplication1.JSConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof (LightAddress);
+            return typeof (LightAddress).IsAssignableFrom(objectType);
         }
     }
 }

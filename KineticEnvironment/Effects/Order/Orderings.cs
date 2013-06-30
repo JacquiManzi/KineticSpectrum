@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RevKitt.KS.KineticEnvironment.Effects.Order
 {
-    class Orderings
+    public class Orderings
     {
         public static IOrdering GetOrdering(string orderingType, string ordering)
         {

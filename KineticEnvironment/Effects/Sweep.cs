@@ -4,7 +4,7 @@ using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
-    class Sweep : AbstractLinearEffect
+    public class Sweep : AbstractLinearEffect
     {
         public const string EffectName = "Sweep";
 
@@ -38,11 +38,18 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             
         }
 
+        public static readonly PropertyDefinition StartColor = new PropertyDefinition("startColor",
+                                                                                      EffectPropertyTypes.ColorEffect,
+                                                                                      ColorEffectDefinition.DefaultFixed);
+
+        public static readonly PropertyDefinition EndColor = new PropertyDefinition("endColor",
+                                                                                    EffectPropertyTypes.ColorEffect,
+                                                                                    ColorEffectDefinition.DefaultFixed);
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory,
                         new List<PropertyDefinition>(DefaultDefs)
                             {
-                                new PropertyDefinition("startColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
-                                new PropertyDefinition("endColor", EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                StartColor,
+                                EndColor
                             });
     }
 }

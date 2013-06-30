@@ -13,6 +13,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     public class EffectProperties
     {
+        public EffectProperties()
+        {
+            Properties = new Dictionary<string, object>();
+        }
+
         public IDictionary<string, object> Properties { get; private set; }
 
         public object this[string propertyName]
@@ -57,12 +62,15 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public IOrdering GetOrdering(Group group )
         {
-            string[] orderings = (string[]) this[PropertyDefinition.Ordering.Name];
-            if(orderings.Count() != 2)
-                throw new InvalidDataException("Invalid EffectProperties. Ordering is not an array of two strings.");
-            IOrdering ordering = Orderings.GetOrdering(orderings[0], orderings[1]);
+            var ordering = (IOrdering) this[PropertyDefinition.Ordering.Name];
             ordering.Group = group;
             return ordering;
+//            string[] orderings = (string[]) this[PropertyDefinition.Ordering.Name];
+//            if(orderings.Count() != 2)
+//                throw new InvalidDataException("Invalid EffectProperties. Ordering is not an array of two strings.");
+//            IOrdering ordering = Orderings.GetOrdering(orderings[0], orderings[1]);
+//            ordering.Group = group;
+//            return ordering;
         }
 
         public double GetFloat(string propertyName)
@@ -72,7 +80,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public IEasing GetEasing(string propertyName)
         {
-            return Easings.GetEasingForName((string) this[propertyName]);
+            return (IEasing) this[propertyName];
         }
     }
 }

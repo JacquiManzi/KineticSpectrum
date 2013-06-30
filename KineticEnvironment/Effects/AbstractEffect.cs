@@ -10,7 +10,7 @@ using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
-    abstract class AbstractEffect : IEffect
+    public abstract class AbstractEffect : IEffect
     {
 
         private readonly Group _group;
