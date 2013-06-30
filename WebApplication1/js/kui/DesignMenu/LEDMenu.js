@@ -84,7 +84,7 @@ define([
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
 
                 /*Group Section*/            
-                var groupDiv = this.createGroupVertexSection();
+                var groupDiv = this.createGroupSection();
 
                 var groupPane = new TitlePane({
 
@@ -96,21 +96,22 @@ define([
                 groupDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(groupPane.domNode, titlePaneDiv);
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
-
-               
-
+              
             },
 
             createNodeSection: function () {
 
-                var nodeDiv = html.createDiv("text-align:center; color:#3d8dd5;width:100%;height:100%;");
+                var nodeDiv = html.createDiv("text-align:center;" +
+                    "color:#3d8dd5;" +
+                    "width:100%;" +
+                    "height:100%;");
                 
                 var table = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
                     "padding-top:10px;"+
                     "padding-bottom:10px;"+
                     "border-spacing: 0px;"+
-                    "width:95%;h");
+                    "width:95%;");
 
                 var tableDiv = html.createDiv("width:100%;" +                    
                     "margin-left:auto;" +
@@ -211,9 +212,6 @@ define([
                     obj.modelView.sceneInteraction.removeNodes();
                 });
 
-                //dojo.addClass(removeButton, 'vertexImage');
-
-                
                 this.setButtonStyle(removeButton);
 
                 domConstruct.place(removeButton.domNode, div);
@@ -280,57 +278,79 @@ define([
 
             setButtonStyle: function(button)
             {
-                /*domStyle.set(button.domNode.firstChild, "border", "1px solid #4c4c4c");
-                domStyle.set(button.domNode.firstChild, "background-image", "-ms-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
-                domStyle.set(button.domNode.firstChild, "background-image", "linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
-                domStyle.set(button.domNode.firstChild, "background-image", "-o-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
-                domStyle.set(button.domNode.firstChild, "background-image", "-moz-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");
-                domStyle.set(button.domNode.firstChild, "background-image", "-webkit-linear-gradient(bottom, rgb(33,33,33) 21%, rgb(46,45,46) 57%)");*/
                 domStyle.set(button.domNode, "width", "90%");
                 domStyle.set(button.domNode.firstChild, "width", "100%");
-
             },
 
-            createGroupVertexSection: function () {
+            createGroupSection: function () {
 
                 var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
 
+
+                var groupNameTable = html.createTable("margin-left:auto;" +
+                    "margin-right:auto;" +
+                    "border-spacing: 0px;"+
+                    "width:95%;");
+                domConstruct.place(groupNameTable, div);
+
+                var groupNameRow = html.createRow("background-color:#141414;");
+                domConstruct.place(groupNameRow, groupNameTable);
+
+                var groupNameTitleCell = html.createCell("border-bottom-left-radius: 7px;" +
+                    "border-top-left-radius: 7px;" +
+                    "border-left: 2px solid" + this.tableCellBorderColor+";"+
+                    "border-top: 2px solid" + this.tableCellBorderColor + ";" +
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    "color:#3d8dd5;" +
+                    "width:40%;"+
+                    "text-align: center");
+
+                domConstruct.place(groupNameTitleCell, groupNameRow);
+                groupNameTitleCell.innerHTML = "Group Name";
+
+                var groupNameValueCell = html.createCell("text-align:center;" +
+                    "border-top: 2px solid #2d2d2d;" +
+                    "border-top-right: 2px solid #2d2d2d;" +
+                    "border-bottom-right: 2px solid #2d2d2d;" +
+                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";"+
+                    "width: 60%");
+
+                domConstruct.place(groupNameValueCell, groupNameRow);
+
+                var groupNameTextBox = CommonForm.createTextBox("", "Group Name", "width:100%;");
+                domConstruct.place(groupNameTextBox.domNode, groupNameValueCell);
+                
                 var obj = this;
-                var addVertexButton = CommonForm.createButton('Add Group', function () {
+                var addButton = CommonForm.createButton('Add Group', function () {
 
                     obj.modelView.sceneInteraction.addSelectedGroup(groupListBox);
 
                     
                 }, null, "color:#3d8dd5;");
-                domStyle.set(addVertexButton.domNode.firstChild, "width", "100px");
-
-                //this.setButtonStyle(addVertexButton);
+                domStyle.set(addButton.domNode.firstChild, "width", "100px");
              
-                var removeVertexButton = CommonForm.createButton('Remove Group', function () {
+                var removeButton = CommonForm.createButton('Remove Group', function () {
 
                     obj.modelView.sceneInteraction.removeSelectedGroup(groupListBox);
 
                 }, null, "color:#3d8dd5;");
 
-                domStyle.set(removeVertexButton.domNode.firstChild, "width", "100px");
+                domStyle.set(removeButton.domNode.firstChild, "width", "100px");
 
-                //this.setButtonStyle(removeVertexButton);
-
-                var listDiv = html.createDiv("text-align:center;padding-top:10px;" +
+                var listDiv = html.createDiv("text-align:center;" +
                     "margin-right:auto;" +
                     "margin-left:auto;" +
                     "background-color:#141414;"+
                     "border: 2px solid #282828;"+
-                    "border-radius:7px;"+
-                    "margin-top:10px;");
+                    "border-radius:7px;");
 
                 domConstruct.place(groupListBox.domNode, listDiv);
                 domConstruct.place(listDiv, div);
 
                 var buttonDiv = html.createDiv("text-align:center;");
-                domConstruct.place(addVertexButton.domNode, listDiv);
-                domConstruct.place(removeVertexButton.domNode, listDiv);                
+                domConstruct.place(addButton.domNode, listDiv);
+                domConstruct.place(removeButton.domNode, listDiv);                
                 domConstruct.place(buttonDiv, div);
 
                 return div;
