@@ -101,12 +101,12 @@ namespace WebApplication1.JSConverters
             if (obj.Type != JTokenType.Object)
                 return false;
             var jobj = (JObject) obj;
-            if (jobj["orderingType"].Type != JTokenType.String)
+            if (jobj[Orderings.OrderingTypeKey].Type != JTokenType.String)
                 return false;
-            if (jobj["ordering"].Type != JTokenType.String)
+            if (jobj[Orderings.OrderingKey].Type != JTokenType.String)
                 return false;
 
-            ordering = Orderings.GetOrdering((string) jobj["orderingType"], (string) jobj["ordering"]);
+            ordering = Orderings.GetOrdering((string) jobj[Orderings.OrderingTypeKey], (string) jobj[Orderings.OrderingKey]);
             return true;
         }
 
