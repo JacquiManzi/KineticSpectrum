@@ -9,9 +9,10 @@
     "dijit/form/Button",
     "kui/util/CommonHTML",
     "dijit/form/MultiSelect",
-    "dijit/form/TextBox"
+    "dijit/form/TextBox",
+    "dojo/dom-style"
     ], function (domConstruct, NumberTextBox, CheckBox,
-        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect, TextBox) {
+        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect, TextBox, domStyle) {
         "use strict";
 
         var createNumberTextBox = function (label, list, changeButton) {
@@ -72,45 +73,24 @@
 
          },
 
-         createColorPalette = function (label, list, clickFunc) {
-             var li = html.createLI("color:#3d8dd5;" +
-                                    "padding-bottom:10px;");
-
-
-             var dropDownMenu = new DropDownMenu({
-
-
-             });
-
-             var dropDownButton = new DropDownButton({
-
-                 label: label,
-                 style: "color:#3d8dd5;",
-                 dropDown: dropDownMenu
-
-             });
-
+         createColorPalette = function (clickFunc, style) {
 
              var colorPalette = new ColorPalette({
 
-                 onChange: clickFunc
+                 onChange: clickFunc,
+                 style: style
 
              });
 
-             var colorItem = new MenuItem({
-
-
-             });
-
-             dropDownMenu.addChild(colorItem);
-
-
-             domConstruct.place(colorPalette.domNode, colorItem.domNode);
-             domConstruct.place(dropDownButton.domNode, li);
-             domConstruct.place(li, list);
-
-             return dropDownMenu;
+             return colorPalette
          },
+
+         setButtonStyle = function(button)
+             {
+                 domStyle.set(button.domNode, "width", "90%");
+                 domStyle.set(button.domNode.firstChild, "width", "100%");
+             },
+
 
          createDropDown = function (label, style) {
 
@@ -176,6 +156,7 @@
             createButton: createButton,
             createListBox: createListBox,
             createTextBox: createTextBox,
-            createIntNumberTextBox: createIntNumberTextBox
+            createIntNumberTextBox: createIntNumberTextBox,
+            setButtonStyle: setButtonStyle
         };
     });

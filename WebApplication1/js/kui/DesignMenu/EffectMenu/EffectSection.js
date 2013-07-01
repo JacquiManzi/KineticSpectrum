@@ -16,7 +16,7 @@
             // create the DOM for this widget
             this.domNode = html.createDiv();
 
-            var table = html.createTable(html.tableStyle);
+            var table = html.createTable(html.tableStyle + "width:90%;");
             domConstruct.place(table, this.domNode);
 
             var effectNameRow = this.buildEffectNameSection();
@@ -30,7 +30,7 @@
         buildEffectNameSection: function(){
             var row = html.createRow();
 
-            var titleCell = html.createCell(this.titleCellStyle);
+            var titleCell = html.createCell(html.titleCellStyle);
             titleCell.innerHTML = "Effect";
             domConstruct.place(titleCell, row);
 
@@ -38,6 +38,7 @@
             domConstruct.place(valueCell, row);
 
             var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
+            CommonForm.setButtonStyle(effectDropDown);
             domConstruct.place(effectDropDown.domNode, valueCell);
 
             var me = this;

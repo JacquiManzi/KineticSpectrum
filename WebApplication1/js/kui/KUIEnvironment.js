@@ -69,7 +69,7 @@
                           region: "left",
                           id: "leftContainer",
                           minSize: ".1",
-                          style: "width:15%;" +
+                          style: "width:20%;" +
                                  "height:100%;"
                       });
 

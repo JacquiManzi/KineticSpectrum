@@ -8,8 +8,10 @@
     "kui/DesignMenu/EffectMenu/TimeItem",
     "kui/DesignMenu/EffectMenu/IntItem",
     "kui/DesignMenu/EffectMenu/OrderingItem",
-    "kui/DesignMenu/EffectMenu/SelectItem"
-], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem, OrderingItem, SelectItem) {
+    "kui/DesignMenu/EffectMenu/SelectItem",
+    "kui/DesignMenu/EffectMenu/ColorEffectItem"
+], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem,
+    OrderingItem, SelectItem, ColorEffectItem) {
     return declare("EffectArea", [_WidgetBase], {
        
         items: null,
@@ -61,10 +63,10 @@
         selectItem: function(effectDef) {
             var type = effectDef.propertyType;
             var obj = { key: effectDef.name, value: effectDef.defaultValue };
-            if (type === "Time" || type=="Float") {
+            if (type === "Time" || type ==="Float") {
                 return new TimeItem(obj);
             }
-            if (type == "Int") {
+            if (type === "Int") {
                 return new IntItem(obj);
             }
             if (type === "Ordering") {
@@ -79,6 +81,10 @@
                 var eItem = new SelectItem(obj);
                 Effects.getEasings(dojo.hitch(eItem, eItem.setItems));
                 return eItem;
+            }
+            if (type === "ColorEffect") {
+
+                return new ColorEffectItem(obj);
             }
                 
             return null;

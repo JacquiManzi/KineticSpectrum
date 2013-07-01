@@ -88,6 +88,7 @@
     <Content Include="js\kui\ajax\Effects.js" />
     <Content Include="js\kui\ajax\FileInterface.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
+    <Content Include="js\kui\DesignMenu\EffectMenu\ColorEffectItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectArea.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectSection.js" />

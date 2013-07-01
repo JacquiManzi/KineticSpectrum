@@ -1,6 +1,4 @@
-﻿/// <reference path="../util/CommonHTML.js" />
-
-
+﻿/// <reference path="LEDMenu.js" />
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
@@ -71,21 +69,20 @@ define([
                 container.addChild(contentPane);
 
             
-                var patternSection = this.createPatternCreateSection();
+                var patternSection = this._createPatternSection();
                 domConstruct.place(patternSection, contentPane.domNode);
 
-                var applySection = this.createApplyPattern();
+                var applySection = this._createApplyPattern();
                 domConstruct.place(applySection, contentPane.domNode);
 
             }, 
-            createPatternCreateSection: function () {
+
+            _createPatternSection: function () {
 
                 var spacerDivStyle = "width:100%;height:7px;";
-
                 var div = html.createDiv("text-align:center;");
                 var table = html.createTable(this.tableStyle);
              
-
                 var patternPropPane = new TitlePane({
 
                     title: "Pattern Properties",
@@ -97,23 +94,21 @@ define([
                 domConstruct.place(patternPropPane.domNode, div);
 
                 /*Pattern Name text box*/
-                var nameRow = this.createPatternNameSection();
+                var nameRow = this._createPatternNameSection();
                 domConstruct.place(nameRow, table);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
                 /*Run time text box*/
-                var runTimeRow = this.createRunTimeSection();
+                var runTimeRow = this._createRunTimeSection();
                 domConstruct.place(runTimeRow, table);
 
                 /*Priority Section*/
-                var priorityRow = this.createPrioritySection();
+                var priorityRow = this._createPrioritySection();
                 domConstruct.place(priorityRow, table);
                        
                 /*Effect Section*/
                 var effectSection = new EffectSection();
                 effectSection.placeAt(div);
-                //var effectDiv = this.createEffectSection();
-                //domConstruct.place(effectDiv, div);
                
 
                 var effectPropPane = new TitlePane({
@@ -128,7 +123,7 @@ define([
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
                 /*Group Section*/
-                var groupSectionDiv = this.createGroupSection();
+                var groupSectionDiv = this._createGroupSection();
                 domConstruct.place(groupSectionDiv, div);
             
                 var groupPropPane = new TitlePane({
@@ -143,7 +138,7 @@ define([
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
                 /*Create pattern button*/
-                var createPatternButtonDiv = this.createPatternButtonSection();
+                var createPatternButtonDiv = this._createPatternButtonSection();
                 domConstruct.place(createPatternButtonDiv, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
@@ -151,7 +146,7 @@ define([
                 return div;
             },
 
-            createPrioritySection: function()
+            _createPrioritySection: function()
             {
 
                 var row = html.createRow();
@@ -171,7 +166,7 @@ define([
 
             },
 
-            createRunTimeSection: function()
+            _createRunTimeSection: function()
             {
               
                 var timeRow = html.createRow();
@@ -179,7 +174,8 @@ define([
 
                 timeTitle.innerHTML = "Run Time (ms)";
 
-                var timeValue = html.createCell("text-align:left;width:100%;");
+                var timeValue = html.createCell("text-align:left;" +
+                    "width:100%;");
                 var timeBox = CommonForm.createTableNumberTextBox("width:100%;");
 
                 domConstruct.place(timeTitle, timeRow);
@@ -189,7 +185,7 @@ define([
                 return timeRow;
             },
 
-            createPatternButtonSection: function()
+            _createPatternButtonSection: function()
             {
                 var div = html.createDiv();
                 var obj = this;
@@ -202,48 +198,8 @@ define([
 
                 return div;
             },
-
-            createEffectSection: function()
-            {
-
-                var div = html.createDiv();
-
-                var table = html.createTable(this.tableStyle)
-                domConstruct.place(table, div);
-
-                var effectNameRow = this.createEffectNameSection();
-                domConstruct.placeAt(effectNameRow, table);
-
-                
-                return div;
-            },
-
-            createEffectNameSection: function()
-            {
-                var row = html.createRow();
-                
-                var titleCell = html.createCell(this.titleCellStyle);
-                titleCell.innerHTML = "Effect";
-                domConstruct.place(titleCell, row);
-
-                var valueCell = html.createCell("width:60%;");
-                domConstruct.place(valueCell, row);
-
-                var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
-                domConstruct.place(effectDropDown.domNode, valueCell);
-
-                Effects.getEffects(function (effects) {
-                    array.forEach(effects, function(effect) {
-                        effectDropDown.dropDown.addChild(new MenuItem({
-                            label: effect
-                            }));
-                        });
-                    });
-
-                return row;
-            },
-
-            createGroupSection: function()
+        
+            _createGroupSection: function()
             {
                 var div = html.createDiv(this.tableStyle);
 
@@ -290,7 +246,7 @@ define([
                 return div;
             },
 
-            createApplyPattern: function () {
+            _createApplyPattern: function () {
 
                 var div = html.createDiv();
 
@@ -325,7 +281,7 @@ define([
 
             },
 
-            createPatternNameSection: function()
+            _createPatternNameSection: function()
             {
                 var tableRow = html.createRow();
                 var titleCell = html.createCell(this.titleCellStyle);

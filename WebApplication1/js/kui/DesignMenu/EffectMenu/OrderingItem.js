@@ -9,8 +9,6 @@
 ], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem) {
     return declare("TimeItem", [EffectItem], {
 
-        timeBox: null,
-
         buildRendering: function () {
             // create the DOM for this widget
             this.domNode = html.createRow();
@@ -18,9 +16,16 @@
 
             orderingTitle.innerHTML = this.key;
 
-            var orderingTypeCell = html.createCell("text-align:left;width:33%%;");
+            var orderingCell = html.createCell("width:60%");
+            var orderingTypeUL = html.createUL("list-style-type: none;"+
+                "padding: 0px;");
+            domConstruct.place(orderingTypeUL, orderingCell);
+         
+            var orderingTypeLI = html.createLI();
+           
             var typeBox = this.typeBox = CommonForm.createDropDown(this.value.type, "width:100%;");
-            typeBox.placeAt(orderingTypeCell);
+            typeBox.placeAt(orderingTypeLI);
+            CommonForm.setButtonStyle(typeBox);
 
             var me = this;
             Effects.getOrderingTypes(function(types) {
@@ -32,13 +37,14 @@
                 });
             });
 
-
-            var orderingCell = html.createCell("text-align:right;width:33%");
-            this.orderingBox = CommonForm.createDropDown(this.value.ordering, "width:100%");
-            this.orderingBox.placeAt(orderingCell);
+            var orderingLI = html.createLI();
+            this.orderingBox = CommonForm.createDropDown(this.value.ordering, "width:100%;");
+            CommonForm.setButtonStyle(this.orderingBox);
+            this.orderingBox.placeAt(orderingLI);
 
             domConstruct.place(orderingTitle, this.domNode);
-            domConstruct.place(orderingTypeCell, this.domNode);
+            domConstruct.place(orderingTypeLI, orderingTypeUL);
+            domConstruct.place(orderingLI, orderingTypeUL);
             domConstruct.place(orderingCell, this.domNode);
             this.typeUpdated(this.value.type);
         },

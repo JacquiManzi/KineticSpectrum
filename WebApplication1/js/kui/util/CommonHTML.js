@@ -329,7 +329,7 @@
             backgroundColor: backgroundColor,
             textColor: textColor,
             tableStyle: tableStyle,
-            titleCellstyle: titleCellStyle,
+            titleCellStyle: titleCellStyle,
             mainBackgroundColor: mainBackgroundColor
         };
     });

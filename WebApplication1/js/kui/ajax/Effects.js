@@ -16,7 +16,7 @@
                 handleAs: "json",
                 load: onLoad,
                 error: function(err1, err2) {
-                    console.log("Error Getting list of effects");
+                    console.log(err1.stack);
                 }
             });
         };
@@ -27,7 +27,7 @@
                 handleAs: "json",
                 load: onLoad,
                 error: function (err1, err2) {
-                    console.log("Error Getting list of effects");
+                    console.log(err1.stack);
                 }
             });
         };
@@ -38,7 +38,7 @@
                 handleAs: "json",
                 load: onLoad,
                 error: function (err1, err2) {
-                    console.log("Error Getting list of effects");
+                    console.log(err1.stack);
                 }
             });
         };
@@ -49,7 +49,7 @@
                 handleAs: "json",
                 load: onLoad,
                 error: function (err1, err2) {
-                    console.log("Error Getting list of effects");
+                    console.log(err1.stack);
                 }
             });
         };
@@ -61,7 +61,7 @@
                 content: { effectName: effectName },
                 load: onLoad,
                 error: function(err1, err2) {
-                    console.log("Error Getting Effect Definition for effect " + effectName);
+                    console.log(err1.stack);
                 }
             });
         };
@@ -73,10 +73,22 @@
                 content: { type: orderingType },
                 load: onLoad,
                 error: function (err1, err2) {
-                    console.log("Error Getting Effect Definition for effect " + effectName);
+                    console.log(err1.stack);
                 }
             });
         };
+
+        var getColorEffects = function (onLoad) {
+            xhr.get({
+                url: "Effects.svc/GetColorEffects",
+                handleAs: "json",
+                load: onLoad,
+                error: function (err1, err2) {
+                    console.log(err1.stack);
+                }
+            });
+        };
+
 
         return {
             getEffects: getEffects,
@@ -84,7 +96,8 @@
             getOrderingForType: getOrderingForType,
             getOrderingTypes: getOrderingTypes,
             getRepeatMethods: getRepeatMethods,
-            getEasings: getEasings
+            getEasings: getEasings,
+            getColorEffects: getColorEffects
         };
 
     });

@@ -9,7 +9,6 @@
 ], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem) {
     return declare("TimeItem", [EffectItem], {
 
-        timeBox: null,
 
         buildRendering: function () {
             // create the DOM for this widget

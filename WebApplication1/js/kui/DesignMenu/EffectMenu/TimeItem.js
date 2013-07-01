@@ -12,11 +12,11 @@
         buildRendering: function () {
             // create the DOM for this widget
             this.domNode = html.createRow();
-            var timeTitle = html.createCell(this.titleCellStyle);
+            var timeTitle = html.createCell(html.titleCellStyle);
 
             timeTitle.innerHTML = this.key;
 
-            var timeValue = html.createCell("text-align:left;width:100%;");
+            var timeValue = html.createCell("text-align:left;width:60%;");
             this.timeBox = CommonForm.createTableNumberTextBox("width:100%;");
             this.timeBox.set('value', this.value);
 
