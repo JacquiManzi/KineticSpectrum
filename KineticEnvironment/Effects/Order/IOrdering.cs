@@ -14,7 +14,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
     {
         Group Group { get; set; } 
         [JsonProperty]
-        string OrderingType { get; }
+        string Type { get; }
         [JsonProperty]
         string Ordering { get; }
         bool Runnable { get; }

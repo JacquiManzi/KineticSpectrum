@@ -16,20 +16,14 @@ namespace WebApplication1
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class PatternService
     {
-        // To use HTTP GET, add [WebGet] attribute. (Default ResponseFormat is WebMessageFormat.Json)
-        // To create an operation that returns XML,
-        //     add [WebGet(ResponseFormat=WebMessageFormat.Xml)],
-        //     and include the following line in the operation body:
-        //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
+        
         [OperationContract]
-        [WebGet]
-        public void TryPattern(Stream stream)
+        public void TryPattern(Stream pattern)
         {
-            var pattern = Serializer.FromStream<Pattern>(stream);
+            var pObj = Serializer.FromPost<Pattern>(pattern);
             State.PatternSim.Clear();
-            State.PatternSim.AddPattern(pattern, 0);
+            State.PatternSim.AddPattern(pObj, 0);
         }
 
-        // Add more operations here and mark them with [OperationContract]
     }
 }

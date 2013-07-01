@@ -8,7 +8,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
 {
     public class Orderings
     {
-        public const string OrderingTypeKey = "orderingType";
+        public const string OrderingTypeKey = "type";
         public const string OrderingKey = "ordering";
 
         public static IOrdering GetOrdering(string orderingType, string ordering)

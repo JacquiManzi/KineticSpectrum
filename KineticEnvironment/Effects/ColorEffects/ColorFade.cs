@@ -20,7 +20,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
 
 
         public string Name { get; private set; }
-        public IDictionary<string, object> Properties { get; set; }
         public IOrdering Ordering { get; set; }
         public void SetColor(int time, LEDNode led)
         {

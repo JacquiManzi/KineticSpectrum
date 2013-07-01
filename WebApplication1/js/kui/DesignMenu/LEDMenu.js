@@ -9,8 +9,11 @@ define([
     "dojo/dom-construct",
     "threejs/three",
     "kui/util/CommonFormItems",
-    "dijit/TitlePane"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane) {
+    "dijit/TitlePane",
+    "dojo/on",
+    "dojo/_base/array",
+    "kui/ajax/Scenes"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu", null, {
 
@@ -97,7 +100,6 @@ define([
                 groupDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(groupPane.domNode, titlePaneDiv);
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
-              
             },
 
             createNodeSection: function () {
@@ -322,19 +324,22 @@ define([
 
                 var groupNameTextBox = CommonForm.createTextBox("", "Group Name", "width:100%;");
                 domConstruct.place(groupNameTextBox.domNode, groupNameValueCell);
+
+                this.groupListBox = groupListBox;
                 
                 var obj = this;
+
+                
+                
                 var addButton = CommonForm.createButton('Add Group', function () {
-
-                    obj.modelView.sceneInteraction.addSelectedGroup(groupListBox, groupNameTextBox.getValue());
-
-                    
+                    var group = obj.modelView.sceneInteraction.createGroupFromSelected(groupNameTextBox.get('value'));
+                    obj.addGroup(group);
                 }, null, "color:#3d8dd5;");
                 domStyle.set(addButton.domNode.firstChild, "width", "100px");
              
                 var removeButton = CommonForm.createButton('Remove Group', function () {
 
-                    obj.modelView.sceneInteraction.removeSelectedGroup(groupListBox);
+                    obj.removeSelected();
 
                 }, null, "color:#3d8dd5;");
 
@@ -355,12 +360,45 @@ define([
                 domConstruct.place(removeButton.domNode, listDiv);                
                 domConstruct.place(buttonDiv, div);
 
-                return div;
+                this.setGroupNames();
 
-              
+                return div;
+            },
+            
+            setGroupNames: function () {
+                var obj = this;
+
+                dojo.empty(this.groupListBox.domNode.children);
+                
+                Scenes.getGroupNames(function (groupNames) {
+                    array.forEach(groupNames, function (groupName) {
+                        obj.addGroup(groupName);
+                    });
+                });
             },
 
+            addGroup: function(groupName) {
+                var option = html.createOption(groupName);
+                var thisObj = this;
+                this.groupListBox.domNode.appendChild(option);
 
+                on(option, "click", function () {
+                    var selected = [];
+                    array.forEach(thisObj.groupListBox.getSelected(), function (node) {
+                        selected.push(node.innerHTML);
+                    });
+                    thisObj.modelView.sceneInteraction.selectGroups(selected);
+                });
+            },
+            
+            removeSelected: function () {
+                var thisObj = this;
+                array.forEach(this.groupListBox.getSelected(), function (node) {
+                    thisObj.modelView.sceneInteraction.removeGroup(node.innerHTML);
+                    thisObj.groupListBox.domNode.removeChild(node);
+                });
+                
+            }
         });
 
     });

@@ -87,6 +87,7 @@
     <Content Include="Global.asax" />
     <Content Include="js\kui\ajax\Effects.js" />
     <Content Include="js\kui\ajax\FileInterface.js" />
+    <Content Include="js\kui\ajax\Scenes.js" />
     <Content Include="js\kui\ajax\SimState.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\ColorEffectItem.js" />
@@ -7789,7 +7790,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Config.resx</DependentUpon>
     </Compile>
-    <Compile Include="CSharp\LightState.cs" />
     <Compile Include="Env.svc.cs">
       <DependentUpon>Env.svc</DependentUpon>
     </Compile>

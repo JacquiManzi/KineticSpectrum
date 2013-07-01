@@ -79,7 +79,13 @@ namespace WebApplication1
         public Stream GetGroups()
         {
             return Serializer.ToStream(State.Scene.Groups);
-            
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetGroupNames()
+        {
+            return Serializer.ToStream(State.Scene.Groups.Select(g => g.Name));
         }
 
         [OperationContract]
@@ -87,6 +93,13 @@ namespace WebApplication1
         public Stream GetPatterns()
         {
             return Serializer.ToStream(State.Scene.Patterns);
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetPatternNames()
+        {
+            return Serializer.ToStream(State.Scene.Patterns.Select(p=>p.Name));
         }
 
         [OperationContract]

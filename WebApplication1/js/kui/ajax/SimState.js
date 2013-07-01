@@ -44,11 +44,10 @@
                 url: "SimState.svc/GetLightState",
                 handleAs: "json",
                 load: function(states) {
-                    var statesList = new ArrayList();
                     array.forEach(states, function(state) {
                         state.address = new LightAddress(state.address);
                     });
-                    onLoad(statesList);
+                    onLoad(states);
                 },
                 error: function (err1) {
                     if (!!err1) {
@@ -84,7 +83,7 @@
             xhr.get({
                 url: "SimState.svc/IsPlaying",
                 handleAs: "json",
-                load: onLoad,
+                load: function (data) { onLoad(data.d); },
                 error: function (err1) {
                     if (!!err1) {
                         console.log(err1.stack);
@@ -97,7 +96,7 @@
             xhr.get({
                 url: "SimState.svc/GetTime",
                 handleAs: "json",
-                load: onLoad,
+                load: function (data) { onLoad(data.d); },
                 error: function(err1) {
                     if (!!err1) {
                         console.log(err1.stack);
@@ -122,7 +121,7 @@
             xhr.get({
                 url: "SimState.svc/GetEndTime",
                 handleAs: "json",
-                load: onLoad,
+                load: function (data) { onLoad(data.d); },
                 error: function (err1) {
                     if (!!err1) {
                         console.log(err1.stack);

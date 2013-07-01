@@ -12,7 +12,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
     {
         string Name { get; }
 
-        IDictionary<string, object> Properties { get; set; }
 
         IOrdering Ordering { get; set; }
 

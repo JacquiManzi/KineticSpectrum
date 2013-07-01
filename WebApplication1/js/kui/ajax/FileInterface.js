@@ -23,7 +23,36 @@
 
               
             },
+            getGroups: function (onSuccessFunc) {
 
+                
+                xhr.get({
+
+                    url: "Env.svc/GetGroups",
+                    handleAs: "json",
+                    load: function (jsonData) {
+                        var groupList = new ArrayList();
+                        
+                        array.forEach(jsonData, function (group) {
+                            var lightList = new ArrayList();
+                            array.forEach(group.lights, function(lightAddress) {
+                                lightList.add(new LightAddress(lightAddress));
+                            });
+                            group.lights = lightList;
+                            groupList.add(group);
+                        });
+                        onSuccessFunc(groupList);
+
+                    },
+                    error: function (err1, err2) {
+                        console.log(err1.stack);
+                    }
+
+
+                });
+
+
+            },
             getLightConfigList: function (onSuccessFunc) {
 
                 var lightInfoList = new ArrayList();

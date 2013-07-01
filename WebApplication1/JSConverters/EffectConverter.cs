@@ -139,6 +139,11 @@ namespace WebApplication1.JSConverters
         {
             easing = null;
             string name;
+            if (obj.Type == JTokenType.String)
+            {
+                easing = Easings.GetEasingForName((string) obj);
+                return true;
+            }
             if (obj.Type != JTokenType.Object)
                 return false;
             if (obj["name"] == null)

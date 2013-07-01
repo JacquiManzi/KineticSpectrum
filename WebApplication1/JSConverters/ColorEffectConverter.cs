@@ -38,6 +38,8 @@ namespace WebApplication1.JSConverters
         {
             var jobj = JObject.Load(reader);
             string type = (string)jobj["type"];
+            if (type == null)
+                type = (string) jobj["name"];
 
             if (type.Equals(FixedColor.EffectName))
             {

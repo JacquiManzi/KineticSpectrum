@@ -10,7 +10,6 @@
 ], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox,Button, xhr) {
     return declare("SimPane", [_WidgetBase], {
 
-        enabled: false,
         slider: null,
         simulation: null,
 
@@ -36,10 +35,7 @@
                 value: 0,
                 minimum: 0,
                 maximum: 0,
-                intermediateChanges: true,
-                onChange: function(value){
-                    dom.byId("sliderValue").value = value;
-                }
+                intermediateChanges: true
             }, "timeSlider");
 
             this.button = new Button({
@@ -87,11 +83,9 @@
         
         _playPressed: function() {
             if (this.button.get('label') === "play") {
-                this.button.set('label', 'pause');
-                this.simulation.pause();
-            } else {
-                this.button.set('label', 'play');
                 this.simulation.play();
+            } else {
+                this.simulation.pause();
             }
         },
         
@@ -109,6 +103,7 @@
         },
 
         postCreate: function () {
+            this._setEnabled(false);
             //// First handle changes to UI Elements
             //handle the slider being moved
             dojo.connect(this.slider, "onChange", dojo.hitch(this, this._sliderChanged));

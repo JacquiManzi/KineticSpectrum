@@ -11,6 +11,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, xhr) {
         "use strict";
+
         return declare("kui.LED.LEDNode", null, {
 
             /*
@@ -18,47 +19,39 @@ define([
              *
              */
 
-            constructor: function (groupCount, selectedNodes, groupName) {
-
+            constructor: function (groupName, selectedNodes) {
 
                 this.name = groupName;
-                this.defaultName = "Group" +  " " + groupCount;
-                this.address = null;
-                this.groupOption = this.createGroupOption();
-                this.groupOption.list = selectedNodes;
+                this.selectedNodes = selectedNodes;
+                var addresses = this.addresses = [];
+                
+                this.selectedNodes.forEach(function (item) {
 
+                    if (!!item.address) {
+                        addresses.push(item.address);
+                    }
+                });
             },
-
-            createGroupOption: function () {
-                
-                
-                if (!this.name) {
-                    this.name = this.defaultName;
-                }
-
-
-                var option = html.createOption(this.name);
-
-                return option;
+            
+            selectAll: function () {
+                this.selectedNodes.forEach(function(node) {
+                    node.select();
+                });
+            },
+            
+            deselectAll: function() {
+                this.selectedNodes.forEach(function(node) {
+                    node.unselect();
+                });
             },
 
             applyGroup: function () {
 
-                var addresses = [];
-
-                this.groupOption.list.forEach(function(item){
-                
-                    if(!!item.address)
-                    {
-                        addresses.push(item.address);
-                    }
-                })
-
-                var group = 
-                    {
-                        name: this.name, 
-                        lights: addresses
-                    }
+                var group =
+                {
+                    name: this.name,
+                    lights: this.addresses
+                };
 
                 xhr.post({
 
@@ -66,8 +59,14 @@ define([
                     content: { d: JSON.stringify(group) }
                 });
 
-
-            }
+            },
+            
+            remove: function() {
+                xhr.get({
+                    url: "Env.svc/DeleteGroup",
+                    content: { groupName: this.name }
+                });
+            },
 
 
            

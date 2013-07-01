@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KineticControl;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -26,7 +27,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static readonly PropertyDefinition RepeatCount = new PropertyDefinition("Repeat Count", EffectPropertyTypes.Int, 1);
         public static readonly PropertyDefinition RepeatMethod = new PropertyDefinition("Repeat Method", EffectPropertyTypes.RepeatMethod, RepeatMethods.Reverse);
         public static readonly PropertyDefinition Durration = new PropertyDefinition("Durration", EffectPropertyTypes.Time, 5);
-        public static readonly PropertyDefinition Ordering = new PropertyDefinition("Ordering", EffectPropertyTypes.Ordering, new Dictionary<string, string>{{"type", OrderingTypes.Group},{"ordering",GroupOrderingTypes.Forward}});
+        public static readonly PropertyDefinition Ordering = new PropertyDefinition("Ordering", EffectPropertyTypes.Ordering, new Dictionary<string, string>{{Orderings.OrderingTypeKey, OrderingTypes.Group},{Orderings.OrderingKey,GroupOrderingTypes.Forward}});
         public static readonly PropertyDefinition Easing = new PropertyDefinition("Tween", EffectPropertyTypes.Easing, Easings.Linear.Name );
     }
 }

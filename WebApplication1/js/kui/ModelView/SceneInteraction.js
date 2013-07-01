@@ -12,10 +12,11 @@ define([
      "kui/util/CommonHTML",
      "kui/Pattern/patterns/PatternModel",
      "dojo/on",
-     "kui/ModelView/groups/Group"
+     "kui/ModelView/groups/Group",
+     "dojo/_base/array"
 
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group, array) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -31,6 +32,8 @@ define([
 
 
                 this.addressToLED = [];
+                this.nameToGroup = [];
+                this.selectedGroupNames = [];
                 this.nodes = new ArrayList();
                 this.vertexSpheres = new ArrayList();
 
@@ -202,6 +205,51 @@ define([
 
             },
             
+            generateGroupName: function() {
+                var largest = 0;
+                var pattern = /group\s(\d+)/;
+                array.forEach(Object.keys(this.nameToGroup), function(groupName) {
+                    var match = pattern.exec(groupName);
+                    if (!!match) {
+                        largest = Math.max(largest, match[1]);
+                    }
+                });
+                return "group " + (largest + 1);
+            },
+
+            getGroups:function() {
+                return Object.keys(this.nameToGroup);
+            },
+            
+            deleteGroup: function(groupName) {
+                delete this.nameToGroup[groupName];
+            },
+
+            createGroupFromSelected: function(groupName) {
+                groupName = groupName ? groupName : this.generateGroupName();
+                var selectedNodes = this.getSelectedNodes();
+
+                var group = new Group(groupName, selectedNodes);
+
+                this.nameToGroup[groupName] = group;
+                group.applyGroup();
+
+                return groupName;
+            },
+            
+            addGroups: function (serialGroups) {
+                var thisObj = this;
+                serialGroups.forEach(function (serialGroup) {
+                    var selectedNodes = new ArrayList();
+                    var name = serialGroup.name;
+                    serialGroup.lights.forEach(function(lightAddress) {
+                        var node = thisObj.getLEDNode(lightAddress);
+                        selectedNodes.add(node);
+                    });
+                    thisObj.nameToGroup[name] = new Group(name, selectedNodes);
+                });
+            },
+            
             addSelectedGroup: function (listBox, groupName) {
 
                 var selectedNodes = this.getSelectedNodes();
@@ -232,6 +280,23 @@ define([
                 }
 
                 this.patternModel.updateGroupDropDown();
+            },
+            
+            selectGroups: function (groupNames) {
+                this.deselectAllVertexs();
+                this.deselectAllLEDs();
+                var nameToGroup = this.nameToGroup;
+                array.forEach(groupNames, function(groupName) {
+                    var group = nameToGroup[groupName];
+                    group.selectAll();
+                });
+            },
+            
+            removeGroup: function (groupName) {
+                var group = this.nameToGroup[groupName];
+                group.deselectAll();
+                group.remove();
+                delete this.nameToGroup[groupName];
             },
             
 

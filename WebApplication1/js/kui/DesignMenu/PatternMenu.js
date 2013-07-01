@@ -13,9 +13,10 @@ define([
     "kui/ajax/Effects",
     "dijit/MenuItem",
     "dojo/_base/array",
-    "kui/DesignMenu/EffectMenu/EffectSection"],
+    "kui/DesignMenu/EffectMenu/EffectSection",
+    "kui/ajax/Scenes"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection, Scenes) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu", null, {
 
@@ -64,7 +65,10 @@ define([
                   {
                       title: "Pattern Menu",
                       style: this.mainBackgroundColor,
-                      onShow: dojo.hitch(container.simulation,container.simulation.setPatternMode)
+                      onShow: dojo.hitch(this, function() {
+                          this.setGroupNames();
+                          container.simulation.setPatternMode();
+                      })
                       
                   });
 
@@ -107,6 +111,21 @@ define([
                 /*Priority Section*/
                 var priorityRow = this._createPrioritySection();
                 domConstruct.place(priorityRow, table);
+                
+                /*Group Section*/
+                var groupSectionDiv = this._createGroupSection();
+                domConstruct.place(groupSectionDiv, div);
+
+                var groupPropPane = new TitlePane({
+
+                    title: "Pattern Groups",
+                    content: groupSectionDiv
+
+                });
+
+                groupSectionDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(groupPropPane.domNode, div);
+                domConstruct.place(html.createDiv(spacerDivStyle), div);
                        
                 /*Effect Section*/
                 var effectSection = new EffectSection();
@@ -124,20 +143,9 @@ define([
                 domConstruct.place(effectPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
-                /*Group Section*/
-                var groupSectionDiv = this._createGroupSection();
-                domConstruct.place(groupSectionDiv, div);
-            
-                var groupPropPane = new TitlePane({
+                dojo.connect(effectSection, "onUpdate", dojo.hitch(this, this._effectUpdated));
 
-                    title: "Pattern Groups",
-                    content: groupSectionDiv
-
-                });
-
-                groupSectionDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
-                domConstruct.place(groupPropPane.domNode, div);
-                domConstruct.place(html.createDiv(spacerDivStyle), div);
+                
 
                 /*Create pattern button*/
                 var createPatternButtonDiv = this._createPatternButtonSection();
@@ -146,6 +154,20 @@ define([
 
              
                 return div;
+            },
+            
+            _effectUpdated: function (patternDef) {
+                var pProps = this._getPatternProps();
+                patternDef.groups = pProps.groups;
+                Scenes.tryPattern(patternDef);
+            },
+            
+            _getPatternProps: function () {
+                var patternDef = {};
+                patternDef.name = this.nameField.get('value');
+                patternDef.groups = this.getSelectedGroups();
+                patternDef.priority = this.priorityDropDown.get('label')*1.0;
+                return patternDef;
             },
 
             _createPrioritySection: function()
@@ -162,6 +184,8 @@ define([
 
                 var priorityDropDown = CommonForm.createDropDown("0");
                 domConstruct.place(priorityDropDown.domNode, valueCell);
+
+                this.priorityDropDown = priorityDropDown;
 
                 return row;
 
@@ -220,9 +244,11 @@ define([
                 var groupDropDown = CommonForm.createDropDown("Select Group");
                 domConstruct.place(groupDropDown.domNode, dropDownCell);
 
+                
+
                 this.patternModel.groupDropDown = groupDropDown;
-                this.patternModel.groupDropDownMenu = new DropDownMenu();
-                this.patternModel.groupDropDown.set('dropDown', this.patternModel.groupDropDownMenu); 
+//                this.patternModel.groupDropDownMenu = new DropDownMenu();
+//                this.patternModel.groupDropDown.set('dropDown', this.patternModel.groupDropDownMenu); 
 
                 var addButton = CommonForm.createButton("+");
                 domConstruct.place(addButton.domNode, addCell);
@@ -232,6 +258,7 @@ define([
 
                 var groupListBox = CommonForm.createListBox("width:90%;");
                 domConstruct.place(groupListBox.domNode, groupDiv);
+                
 
                 this.patternModel.groupListBox = groupListBox;
 
@@ -244,9 +271,38 @@ define([
                 var removeGroupButton = CommonForm.createButton("Remove");
                 domConstruct.place(removeGroupButton.domNode, groupButtonDiv);
 
-
                 return div;
             },
+            
+            setGroupNames: function() {
+                var thisObj = this;
+
+                var menu = this.patternModel.groupDropDown.dropDown;
+                array.forEach(menu.getChildren(), function(child) {
+                    menu.removeChild(child);
+                });
+
+                Scenes.getGroupNames(function(groupNames) {
+                    array.forEach(groupNames, function(groupName) {
+                        menu.addChild(new MenuItem({
+                            label: groupName,
+                            onClick: function() {
+                                var option = html.createOption(groupName);
+                                thisObj.patternModel.groupListBox.domNode.appendChild(option);
+                            }
+                        }));
+                    });
+                });
+            },
+            
+            getSelectedGroups: function () {
+                var selected = [];
+                array.forEach(this.patternModel.groupListBox.domNode.children, function (node) {
+                    selected.push(node.innerHTML);
+                });
+                return selected;
+            },
+            
 
             _createApplyPattern: function () {
 
@@ -294,9 +350,9 @@ define([
 
                 titleCell.innerHTML = "Name: ";
 
-                var nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;");
+                this.nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;");
 
-                domConstruct.place(nameField.domNode, valueCell);
+                domConstruct.place(this.nameField.domNode, valueCell);
 
                 return tableRow;
             },

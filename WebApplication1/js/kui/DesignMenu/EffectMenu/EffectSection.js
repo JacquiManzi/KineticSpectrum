@@ -1,4 +1,5 @@
-﻿define([
+﻿/// <reference path="../LEDMenu.js" />
+define([
     "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
     "dijit/_WidgetBase",
     "kui/util/CommonHTML",
@@ -11,6 +12,8 @@
     return declare("EffectSection", [_WidgetBase], {
 
         effectArea: null,
+        effectName: null,
+        patternDef: null,
       
         buildRendering: function () {
             // create the DOM for this widget
@@ -55,16 +58,31 @@
             return row;
         },
 
-        effectSelectionChanged : function(effectName)
-        {
+        effectSelectionChanged : function(effectName) {
+            this.effectName = effectName;
             Effects.getEffectDefinition(effectName, dojo.hitch(this,function (effectDefs) {
                 this.effectArea.buildFromDefaults(effectDefs);
             }));
         },
+        
+        onUpdate:function(patternDef) {
+            
+        },
+        
+        updateProperties: function (effectProperties) {
+            this.patternDef = {
+                groups: [],
+                effectName: this.effectName,
+                effectProperties: effectProperties,
+                name: "TempPattern",
+                priority: 0
+            };
+            this.onUpdate(this.patternDef);
+        },
 
         postCreate: function () {
             // every time the user clicks the button, increment the counter
-            //this.connect(this.domNode, "onclick", "increment");
+            dojo.connect(this.effectArea, "onUpdate", dojo.hitch(this,this.updateProperties));
         },
 
     });

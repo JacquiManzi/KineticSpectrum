@@ -71,7 +71,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
         {
             
             private PositionFunc Position { get;  set; }
-            public string OrderingType { get { return OrderingTypes.Group; } }
+            public string Type { get { return OrderingTypes.Group; } }
             public string Ordering { get; private set; }
             public bool Runnable { get { return Group != null; } }
 

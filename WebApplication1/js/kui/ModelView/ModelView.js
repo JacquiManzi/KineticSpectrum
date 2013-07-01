@@ -22,7 +22,7 @@
              *
              */
 
-            constructor: function (simulation, obj2) {
+            constructor: function (obj1, obj2) {
 
                 this.style = "overflow:hidden"; 
                 /*Camera properties*/
@@ -47,7 +47,6 @@
                 this.directionalLightX = 1;
                 this.directionalLightY = 0;
                 this.directionalLightZ = 1;
-                this.simulation = simulation;
 
                 /*Ambient Color properties*/
                 this.ambientColor = 0x101030;
@@ -55,7 +54,7 @@
                 this.meshes = new ArrayList();
                 
                 this.sceneInteraction = new SceneInteraction();
-                dojo.connect(simulation, "onStateChange", dojo.hitch(this.sceneInteraction, this.sceneInteraction.applyColorState));
+                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction, this.sceneInteraction.applyColorState));
 
             },
                    
@@ -128,8 +127,14 @@
                         this.sceneInteraction.removeAllNodes();
                         this.removeAllMeshes();
                         this.sceneInteraction.createLEDNodes(lightList);
+                        this.loadServerGroups();
                     }
                 }));
+            },
+            
+            loadServerGroups: function() {
+                var fileInterface = new FileInterface();
+                fileInterface.getGroups(dojo.hitch(this.sceneInteraction, this.sceneInteraction.addGroups));
             },
 
             load: function(fileLocation, scene, render)
