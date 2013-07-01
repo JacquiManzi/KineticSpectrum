@@ -57,8 +57,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, PulseFactory,
                         new List<PropertyDefinition>(DefaultDefs)
                             {
-                                new PropertyDefinition(BackgroundEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
-                                new PropertyDefinition(PulseEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.DefaultFixed),
+                                new PropertyDefinition(BackgroundEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.RedFixed),
+                                new PropertyDefinition(PulseEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.GreenFixed),
                                 new PropertyDefinition(WidthName, EffectPropertyTypes.Float, 6)
                             });
     }

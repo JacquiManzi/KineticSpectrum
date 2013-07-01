@@ -26,9 +26,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             _id = id;
             StartTime = startTime;
-            _pattern = pattern;
             _priority = priority;
             _scene = scene;
+            Pattern = pattern;
         }
 
         public Pattern Pattern

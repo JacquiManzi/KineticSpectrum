@@ -88,7 +88,6 @@
                 return eItem;
             }
             else if (type === "ColorEffect") {
-
                 return new ColorEffectItem(obj);
             }
             else {

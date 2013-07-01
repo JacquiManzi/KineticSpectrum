@@ -19,6 +19,8 @@
             this.colorDropDownList = new ArrayList();
             this.addButton = CommonForm.createButton();
 
+            dojo.mixin(this.value, this.value.properties);
+
             colorTitle.innerHTML = this.key;
 
             var colorCell = html.createCell("width:60%");
@@ -111,7 +113,6 @@
 
         _typeUpdated: function (name) {
             this.value.name = name;
-            this.onUpdate(this.key, this.value);
             this.typeBox.set('label', name);           
            
             this._clearColorDropDownList();

@@ -8,6 +8,7 @@ using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
 using Newtonsoft.Json;
+using RevKitt.KS.KineticEnvironment;
 using WebApplication1.CSharp;
 using WebApplication1.JSConverters;
 
@@ -37,7 +38,7 @@ namespace WebApplication1
         [WebGet]
         public Stream GetLightState()
         {
-            var states = State.Active.LightState.Select(l => new LightState {Address = l.Key, Color = l.Value});
+            var states = State.Active.LightState;
             return Serializer.ToStream(states);
         }
 
@@ -64,23 +65,23 @@ namespace WebApplication1
 
         [OperationContract]
         [WebGet]
-        public int GetTime()
+        public double GetTime()
         {
-            return State.Active.Time;
+            return State.Active.Time/1000.0;
         }
 
         [OperationContract]
         [WebGet]
-        public void SetTime(int time)
+        public void SetTime(double time)
         {
-            State.Active.Time = time;
+            State.Active.Time = (int)(time*1000);
         }
 
         [OperationContract]
         [WebGet]
-        public int GetEndTime()
+        public double GetEndTime()
         {
-            return State.Active.EndTime;
+            return State.Active.EndTime/1000.0;
         }
 
     }

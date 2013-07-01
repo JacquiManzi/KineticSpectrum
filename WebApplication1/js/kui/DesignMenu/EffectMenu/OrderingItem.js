@@ -27,6 +27,7 @@
             typeBox.placeAt(orderingTypeLI);
             CommonForm.setButtonStyle(typeBox);
 
+            typeBox.set('label', this.value.type);
             var me = this;
             Effects.getOrderingTypes(function(types) {
                 array.forEach(types, function(type) {
@@ -41,18 +42,24 @@
             this.orderingBox = CommonForm.createDropDown(this.value.ordering, "width:100%;");
             CommonForm.setButtonStyle(this.orderingBox);
             this.orderingBox.placeAt(orderingLI);
+            this.orderingBox.set('label', this.value.ordering);
 
             domConstruct.place(orderingTitle, this.domNode);
             domConstruct.place(orderingTypeLI, orderingTypeUL);
             domConstruct.place(orderingLI, orderingTypeUL);
             domConstruct.place(orderingCell, this.domNode);
-            this.typeUpdated(this.value.type);
+            this.setOrdering(this.value.type, false);
         },
         
         typeUpdated: function(type) {
             this.value.type = type;
             this.onUpdate(this.key, this.value);
-            this.typeBox.set('label', type); 
+            this.typBox.set('label', type);
+            this.setOrdering(type, true);
+        },
+
+        setOrdering: function (type, update) {
+            
             var me = this;
 
             array.forEach(this.orderingBox.dropDown.getChildren(), function(child) {
@@ -64,7 +71,9 @@
                         label: ordering,
                         onClick: dojo.hitch(me, me.orderingUpdated, ordering)
                     }));
-                    me.orderingUpdated(orderings[0]);
+                    if (update) {
+                        me.orderingUpdated(orderings[0]);
+                    }
                 });
             });
         },

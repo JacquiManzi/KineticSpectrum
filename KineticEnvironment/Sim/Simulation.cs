@@ -17,7 +17,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly Scene _scene;
         private readonly List<PatternStart> _patternStarts = new List<PatternStart>();
         private int _idCounter = 1;
-        private readonly IDictionary<LightAddress, Color> _colors = new Dictionary<LightAddress, Color>();
+        private readonly IDictionary<LightAddress, LightState> _stateMap = new Dictionary<LightAddress, LightState>();
+        private readonly List<LightState> _lightState = new List<LightState>();
 
         private readonly Timer _updateTimer;
         private int _currentTime;
@@ -33,7 +34,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
             foreach (var light in LightSystemProvider.Lights)
             {
-                _colors[light.Address] = light.Color;
+                var lState = new LightState() {Address = light.Address, Color = light.Color};
+                _stateMap[light.Address] = lState;
+                _lightState.Add(lState);
             }
         }
 
@@ -41,9 +44,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             _patternStarts.Clear();
             _endTime = _currentTime = 0;
-            foreach (var color in _colors)
+            foreach (var state in _lightState)
             {
-                _colors[color.Key] = Colors.Black;
+                state.Color = Colors.Black;
             }
         }
 
@@ -133,9 +136,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         public int EndTime { get { return _endTime; } }
 
-        public IDictionary<LightAddress, Color> LightState
+        public IEnumerable<LightState> LightState
         {
-            get { return _colors; }
+            get { return _lightState.AsReadOnly(); }
         }
 
         private DateTime _lastRun = DateTime.Now;
@@ -168,7 +171,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
             foreach (var light in LightSystemProvider.Lights)
             {
-                _colors[light.Address] = light.Color;
+                _stateMap[light.Address].Color = light.Color;
             }
             LightSystemProvider.LightSystem.UpdateLights();
         }

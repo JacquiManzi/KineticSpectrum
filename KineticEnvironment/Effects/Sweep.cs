@@ -43,11 +43,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public static readonly PropertyDefinition StartColor = new PropertyDefinition(StartEffectName,
                                                                                       EffectPropertyTypes.ColorEffect,
-                                                                                      ColorEffectDefinition.DefaultFixed);
+                                                                                      ColorEffectDefinition.RedFixed);
 
         public static readonly PropertyDefinition EndColor = new PropertyDefinition(EndEffectName,
                                                                                     EffectPropertyTypes.ColorEffect,
-                                                                                    ColorEffectDefinition.DefaultFixed);
+                                                                                    ColorEffectDefinition.GreenFixed);
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory,
                         new List<PropertyDefinition>(DefaultDefs)
                             {

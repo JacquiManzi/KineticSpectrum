@@ -30,7 +30,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
                                                                                         ColorUtil.ToInt(Colors.Green)
                                                                                     }}
                                                                             }; 
-        public static readonly ColorEffectDefinition DefaultFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
+        public static readonly ColorEffectDefinition RedFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
                                                                         {
                                                                             {
                                                                                 ColorProperty,
@@ -39,11 +39,20 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
                                                                             }
                                                                         });
 
+        public static readonly ColorEffectDefinition GreenFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
+                                                                        {
+                                                                            {
+                                                                                ColorProperty,
+                                                                                ColorUtil.ToInt(
+                                                                                    Colors.Green)
+                                                                            }
+                                                                        });
+
         public static readonly ColorEffectDefinition DefaultRainbow = new ColorEffectDefinition("Rainbow", new Dictionary<string, object>());
 
         public static readonly ColorEffectDefinition DefaultFade = new ColorEffectDefinition("ColorFade", TwoColors);
         public static readonly ColorEffectDefinition DefaultChasing = new ColorEffectDefinition("ChasingColors", TwoColors);
 
-        public static readonly IEnumerable<ColorEffectDefinition> AllDefaults = new List<ColorEffectDefinition>{DefaultFixed, DefaultRainbow, DefaultFade, DefaultChasing}; 
+        public static readonly IEnumerable<ColorEffectDefinition> AllDefaults = new List<ColorEffectDefinition>{RedFixed, DefaultRainbow, DefaultFade, DefaultChasing}; 
     }
 }

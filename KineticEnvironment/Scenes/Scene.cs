@@ -179,9 +179,9 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             set { }
         }
 
-        public IDictionary<LightAddress, Color> LightState
+        public IEnumerable<LightState> LightState
         {
-            get { return new Dictionary<LightAddress, Color>(); }
+            get { return Enumerable.Empty<LightState>(); }
         }
 
         public int EndTime { get; private set; }

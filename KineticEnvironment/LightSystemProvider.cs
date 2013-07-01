@@ -94,7 +94,8 @@ namespace RevKitt.KS.KineticEnvironment
                                        || !double.TryParse(fixture[3], out z))
                     continue;
 
-                _nodes[address] = new LEDNode(address, new Vector3D(x,y,z));
+                if(!_nodes.ContainsKey(address))
+                    _nodes[address] = new LEDNode(address, new Vector3D(x,y,z));
             }
         }
 
