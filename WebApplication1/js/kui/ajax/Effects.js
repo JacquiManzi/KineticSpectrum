@@ -60,18 +60,7 @@
                 url: "Effects.svc/GetEffectDef",
                 handleAs: "json",
                 content: { effectName: effectName },
-                load: function(defs) {
-                    array.forEach(defs, function(def) {
-                        for (key in def) {
-                            var newKey = key.charAt(0).toUpperCase() + key.slice(1);
-                            if (newKey !== key) {
-                                def[newKey] = def[key];
-                                delete def[key];
-                            }
-                        }
-                    });
-                    onLoad(defs);
-                },
+                load: onLoad,
                 error: function(err1, err2) {
                     console.log(err1.stack);
                 }

@@ -33,7 +33,7 @@
                       /*The main border container for the entire KUI*/
                       var mainContainer = new BorderContainer({
                           gutters: false,
-                          design: "headline",
+                          design: "sidebar",
                           style: "height:" + windowHeight + "px;width:100%;border:none;"
                       }, "mainContainer");
 
@@ -83,8 +83,8 @@
                       mainContainer.addChild(leftContainer);
                       
                       var leftDiv = html.createDiv("height:100%;width:100%;background-color:black;overflow:hidden;");
-                      var innerTopDiv = html.createDiv("height:10%;width:100%;background-color:black;");
-                      var innerBottomDiv = html.createDiv("height:10%;width:100%;background-color:black;");
+                      var innerTopDiv = html.createDiv("height:5%;width:100%;background-color:black;");
+                      var innerBottomDiv = html.createDiv("height:5%;width:100%;background-color:black;");
 
                      
 
