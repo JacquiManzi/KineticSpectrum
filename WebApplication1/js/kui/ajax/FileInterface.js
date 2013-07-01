@@ -43,7 +43,7 @@
 
                     },
                     error: function (err1, err2) {
-                        console.log("Error!");
+                        console.log(err1.stack);
                     }
 
 

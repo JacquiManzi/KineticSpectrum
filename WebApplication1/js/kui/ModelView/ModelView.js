@@ -125,9 +125,9 @@
                 var fileInterface = new FileInterface();
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
                     if (lightList.count > 0) {
-                        this.modelView.sceneInteraction.removeAllNodes();
-                        this.modelView.removeAllMeshes();
-                        this.modelView.sceneInteraction.createLEDNodes(lightList);
+                        this.sceneInteraction.removeAllNodes();
+                        this.removeAllMeshes();
+                        this.sceneInteraction.createLEDNodes(lightList);
                     }
                 }));
             },

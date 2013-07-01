@@ -48,14 +48,19 @@
             if (!!item) {
                 this.items.push(item);
                 this.propertyMap[item.key] = item.value;
-                this.handles.push(dojo.connect(item, "onUpdate", dojo.partial(this._updateMapping, this.propertyMap)));
+                this.handles.push(dojo.connect(item, "onUpdate", dojo.hitch(this, this._updateMapping)));
             }
 
             return item;
         },
         
+        onUpdate: function(effectProperties) {
+            
+        },
+
         _updateMapping : function(propMap, key, value) {
-            propMap[key] = value;
+            this.propertyMap[key] = value;
+            this.onUpdate(this.propertyMap);
         },
         
         selectItem: function(effectDef) {
