@@ -50,14 +50,19 @@
             if (!!item) {
                 this.items.push(item);
                 this.propertyMap[item.key] = item.value;
-                this.handles.push(dojo.connect(item, "onUpdate", dojo.partial(this._updateMapping, this.propertyMap)));
+                this.handles.push(dojo.connect(item, "onUpdate", dojo.hitch(this, this._updateMapping)));
             }
 
             return item;
         },
         
+        onUpdate: function(effectProperties) {
+            
+        },
+
         _updateMapping : function(propMap, key, value) {
-            propMap[key] = value;
+            this.propertyMap[key] = value;
+            this.onUpdate(this.propertyMap);
         },
         
         selectItem: function(effectDef) {
@@ -66,25 +71,28 @@
             if (type === "Time" || type ==="Float") {
                 return new TimeItem(obj);
             }
-            if (type === "Int") {
+            else if (type === "Int") {
                 return new IntItem(obj);
             }
-            if (type === "Ordering") {
+            else if (type === "Ordering") {
                 return new OrderingItem(obj);
             }
-            if (type === "RepeatMethod") {
+            else if (type === "RepeatMethod") {
                 var rItem = new SelectItem(obj);
                 Effects.getRepeatMethods(dojo.hitch(rItem, rItem.setItems));
                 return rItem;
             }
-            if (type === "Easing") {
+            else if (type === "Easing") {
                 var eItem = new SelectItem(obj);
                 Effects.getEasings(dojo.hitch(eItem, eItem.setItems));
                 return eItem;
             }
-            if (type === "ColorEffect") {
+            else if (type === "ColorEffect") {
 
                 return new ColorEffectItem(obj);
+            }
+            else {
+                this.propertyMap[obj.key] = obj.value;
             }
                 
             return null;

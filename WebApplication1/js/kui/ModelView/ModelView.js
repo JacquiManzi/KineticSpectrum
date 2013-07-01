@@ -1,5 +1,4 @@
-﻿/// <reference path="ModelSkeleton.js" />
-define([
+﻿define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "dojo/dom",
@@ -23,7 +22,7 @@ define([
              *
              */
 
-            constructor: function (obj, obj2) {
+            constructor: function (simulation, obj2) {
 
                 this.style = "overflow:hidden"; 
                 /*Camera properties*/
@@ -48,6 +47,7 @@ define([
                 this.directionalLightX = 1;
                 this.directionalLightY = 0;
                 this.directionalLightZ = 1;
+                this.simulation = simulation;
 
                 /*Ambient Color properties*/
                 this.ambientColor = 0x101030;
@@ -55,6 +55,7 @@ define([
                 this.meshes = new ArrayList();
                 
                 this.sceneInteraction = new SceneInteraction();
+                dojo.connect(simulation, "onStateChange", dojo.hitch(this.sceneInteraction, this.sceneInteraction.applyColorState));
 
             },
                    
@@ -119,6 +120,17 @@ define([
                 animate(); 
 
             },
+            
+            loadServerLEDs:function() {
+                var fileInterface = new FileInterface();
+                fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
+                    if (lightList.count > 0) {
+                        this.sceneInteraction.removeAllNodes();
+                        this.removeAllMeshes();
+                        this.sceneInteraction.createLEDNodes(lightList);
+                    }
+                }));
+            },
 
             load: function(fileLocation, scene, render)
             {
@@ -177,6 +189,8 @@ define([
                 this.sceneInteraction.modelSkeleton = this.modelSkeleton;
                 this.sceneInteraction.sceneMesh = this.meshes;
                 this.sceneInteraction.createVertexSpheres();
+
+                this.loadServerLEDs();
 
                 render();
 

@@ -59,11 +59,13 @@ define([
             },
 
             createPatternMenu: function (container) {
+
                 var contentPane = new ContentPane(
                   {
                       title: "Pattern Menu",
-                      style: this.mainBackgroundColor
-
+                      style: this.mainBackgroundColor,
+                      onShow: dojo.hitch(container.simulation,container.simulation.setPatternMode)
+                      
                   });
 
                 container.addChild(contentPane);

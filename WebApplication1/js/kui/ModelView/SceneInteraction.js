@@ -232,8 +232,6 @@ define([
                 }
 
                 this.patternModel.updateGroupDropDown();
-
-
             },
             
 
@@ -489,8 +487,11 @@ define([
             applyColorState: function(lightStateList) {
 
                 var addressToLED = this.addressToLED;
-                array.forEach(lightStateList, function(state) {
-                    addressToLED[state.address.toString()].setColor(state.color);
+                array.forEach(lightStateList, function (state) {
+                    var addressStr = state.address.toString();
+                    if (!!addressToLED[addressStr]) {
+                        addressToLED[state.address.toString()].setColor(state.color);
+                    }
                 });
             },
 
