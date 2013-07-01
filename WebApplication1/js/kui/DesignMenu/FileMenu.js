@@ -40,7 +40,8 @@ define([
                           "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
                           "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                 "background-color: #131313;" +
-                "background-size: 20px 20px;width:100%;"
+                "background-size: 20px 20px;width:100%;",
+                     onShow: dojo.hitch(container.simulation, container.simulation.setSceneMode)
 
                   });
 
@@ -54,21 +55,20 @@ define([
 
             createUploadSection: function (div) {
 
-                var func = function(event)
-                {
+                var func = function(event) {
                     var file = event.target.files[0];
                     var fileReader = new FileReader();
 
                     var scene = this.modelView.scene;
                     var render = this.modelView.render;
                     var modelView = this.modelView;
-                    fileReader.onload = ( function (e) {
-                                            
-                     modelView.loadFile(e.target.result, scene, render);
-                       
+                    fileReader.onload = (function(e) {
+
+                        modelView.loadFile(e.target.result, scene, render);
+
                     });
                     var fileToLoad = fileReader.readAsText(file);
-                }
+                };
 
                 var input = html.createInput('file', 200, 'model');
                 domConstruct.place(input, div);
@@ -87,26 +87,7 @@ define([
                     multiple: false, 
                     uploadOnSelect: true,
                     url: "FileUpload.aspx",
-                    onComplete: dojo.hitch(this, function(){
-
-                      var onSuccessFunc = dojo.hitch(this,function (lightList) {
-
-                            
-                          this.modelView.sceneInteraction.removeAllNodes();
-                          this.modelView.removeAllMeshes();
-                            this.modelView.sceneInteraction.createLEDNodes(lightList);
-
-                           
-                        });
-
-                       
-                        fileInterface.getLightConfigList(onSuccessFunc);
-                      
-
-                    })
-               
-
-
+                    onComplete: dojo.hitch(this.modelView,this.modelView.loadServerLEDs)
                 });
             
                 domConstruct.place(fileUploader.domNode, div);

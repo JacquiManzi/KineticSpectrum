@@ -64,21 +64,23 @@
             if (type === "Time" || type=="Float") {
                 return new TimeItem(obj);
             }
-            if (type == "Int") {
+            else if (type == "Int") {
                 return new IntItem(obj);
             }
-            if (type === "Ordering") {
+            else if (type === "Ordering") {
                 return new OrderingItem(obj);
             }
-            if (type === "RepeatMethod") {
+            else if (type === "RepeatMethod") {
                 var rItem = new SelectItem(obj);
                 Effects.getRepeatMethods(dojo.hitch(rItem, rItem.setItems));
                 return rItem;
             }
-            if (type === "Easing") {
+            else if (type === "Easing") {
                 var eItem = new SelectItem(obj);
                 Effects.getEasings(dojo.hitch(eItem, eItem.setItems));
                 return eItem;
+            } else {
+                this.propertyMap[obj.key] = obj.value;
             }
                 
             return null;

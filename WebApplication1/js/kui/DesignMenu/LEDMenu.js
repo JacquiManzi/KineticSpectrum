@@ -43,7 +43,8 @@ define([
                 var contentPane = new ContentPane(
                   {
                       title: "LED Menu",
-                      style: this.mainBackgroundColor
+                      style: this.mainBackgroundColor,
+                      onShow: dojo.hitch(container.simulation, container.simulation.setSceneMode)
 
                   });
 

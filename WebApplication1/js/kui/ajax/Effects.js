@@ -6,8 +6,9 @@
     "dojo/dom-construct",
     "threejs/three",
     "dojo/_base/xhr",
+    "dojo/_base/array"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr) {
+    function (declare, html, dom, domStyle, domConstruct, three, xhr, array) {
         "use strict";
 
         var getEffects = function(onLoad) {
@@ -59,7 +60,18 @@
                 url: "Effects.svc/GetEffectDef",
                 handleAs: "json",
                 content: { effectName: effectName },
-                load: onLoad,
+                load: function(defs) {
+                    array.forEach(defs, function(def) {
+                        for (key in def) {
+                            var newKey = key.charAt(0).toUpperCase() + key.slice(1);
+                            if (newKey !== key) {
+                                def[newKey] = def[key];
+                                delete def[key];
+                            }
+                        }
+                    });
+                    onLoad(defs);
+                },
                 error: function(err1, err2) {
                     console.log("Error Getting Effect Definition for effect " + effectName);
                 }

@@ -87,6 +87,7 @@
     <Content Include="Global.asax" />
     <Content Include="js\kui\ajax\Effects.js" />
     <Content Include="js\kui\ajax\FileInterface.js" />
+    <Content Include="js\kui\ajax\SimState.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectArea.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectItem.js" />
@@ -116,6 +117,8 @@
     <Content Include="js\kui\DesignMenu\PatternMenu.js" />
     <Content Include="js\kui\Pattern\patterns\PatternStart.js" />
     <Content Include="js\kui\Pattern\patterns\TimeRange.js" />
+    <Content Include="js\kui\Simulation\SimPane.js" />
+    <Content Include="js\kui\Simulation\Simulation.js" />
     <Content Include="js\kui\util\CommonFormItems.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />

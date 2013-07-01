@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment.Effects;
@@ -29,12 +27,10 @@ namespace WebApplication1.JSConverters
             JObject effectProps = JObject.Load(reader);
             foreach (var propDef in _attributes.PropertyMap.Values)
             {
-                JToken value = effectProps[propDef.Name];
+                JToken value = TryGetToken(effectProps, propDef);
                 if (null == value)
                 {
-                    if(propDef.IsOptional)
-                        continue;
-                    throw new JsonReaderException("Invalid Effect properties for effect '"+_attributes.Name+"', Required property '"+propDef.Name+"' is missing.");
+                    continue;
                 }
                 if (propDef.PropertyType.Equals(EffectPropertyTypes.Time)
                     || propDef.PropertyType.Equals(EffectPropertyTypes.Float))
@@ -52,15 +48,28 @@ namespace WebApplication1.JSConverters
                 else if (propDef.PropertyType.Equals(EffectPropertyTypes.ColorEffect))
                 {
                     props[propDef.Name] = Serializer.Ser.Deserialize<IColorEffect>(new JTokenReader(value)); 
-//                    var sw = new StreamWriter(new MemoryStream());
-//                    new JObject(value).WriteTo(new JsonTextWriter(sw));
-//                    sw.Flush();
-//                    sw.BaseStream.Position = 0;
-//                    props[propDef.Name] =
-//                        serializer.Deserialize<IColorEffect>(new JsonTextReader(new StreamReader(sw.BaseStream)));
                 }
             }
             return props;
+        }
+
+        private JToken TryGetToken(JObject effectProps, PropertyDefinition propDef)
+        {
+            JToken value = effectProps[propDef.Name];
+            if (value == null)
+            {
+                char[] propDefChars = propDef.Name.ToCharArray();
+                propDefChars[0] = char.ToLower(propDefChars[0]);
+                string propDefName = new string(propDefChars);
+
+                value = effectProps[propDefName];
+            }
+            if (null == value && !propDef.IsOptional)
+            {
+                throw new JsonReaderException("Invalid Effect properties for effect '" + _attributes.Name +
+                                                  "', Required property '" + propDef.Name + "' is missing.");
+            }
+            return value;
         }
 
         private T TryConvert<T>(Convert<T> convert, JToken obj, PropertyDefinition propDef)
