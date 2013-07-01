@@ -16,7 +16,7 @@
             // create the DOM for this widget
             this.domNode = html.createDiv();
 
-            var table = html.createTable(html.tableStyle + "width:90%;");
+            var table = html.createTable(html.tableStyle + "margin-bottom: 10px;");
             domConstruct.place(table, this.domNode);
 
             var effectNameRow = this.buildEffectNameSection();

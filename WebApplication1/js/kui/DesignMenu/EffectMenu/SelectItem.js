@@ -17,9 +17,10 @@
 
             orderingTitle.innerHTML = this.key;
 
-            var itemCell = html.createCell("text-align:left;width:100%;");
+            var itemCell = html.createCell("width:100%;");
             this.itemBox = CommonForm.createDropDown(this.value, "width:100%;");
             this.itemBox.placeAt(itemCell);
+            CommonForm.setButtonStyle(this.itemBox);
 
             domConstruct.place(orderingTitle, this.domNode);
             domConstruct.place(itemCell, this.domNode);
