@@ -55,7 +55,8 @@ define([
                           "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                 "background-color: #131313;" +
                 "background-size: 20px 20px;";
-                               
+
+                this.simulation = modelView.simulation;
 
             },
 
@@ -157,9 +158,16 @@ define([
             },
             
             _effectUpdated: function (patternDef) {
+
+                this.patternDef = patternDef;
+            },
+            _appplyEffect: function () {
+                var patternDef = {};
+                dojo.mixin(patternDef, this.patternDef);
+                
                 var pProps = this._getPatternProps();
                 patternDef.groups = pProps.groups;
-                Scenes.tryPattern(patternDef);
+                this.simulation.simulatePattern(patternDef);
             },
             
             _getPatternProps: function () {
@@ -219,6 +227,12 @@ define([
 
 
                 });
+                var applyButton = CommonForm.createButton('Apply Pattern', function () {
+                    obj._appplyEffect();
+
+                });
+
+                domConstruct.place(applyButton.domNode, div);
 
                 domConstruct.place(createButton.domNode, div);
 
@@ -325,12 +339,7 @@ define([
                 domConstruct.place(patternDropDownDiv, innerDiv);
 
                 var obj = this;
-                var applyButton = CommonForm.createButton('Apply Pattern', function () {
-
-
-                });
-
-                domConstruct.place(applyButton.domNode, innerDiv);
+                
 
                 domConstruct.place(patternApplyDiv, div);
                 domConstruct.place(innerDiv, div);

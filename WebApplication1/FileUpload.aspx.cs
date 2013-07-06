@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
+using WebApplication1.JSConverters;
 
 namespace WebApplication1
 {
@@ -21,10 +22,29 @@ namespace WebApplication1
                                 ? Request.Files[0].InputStream
                                 : Request.InputStream;
 
-            LightSystemProvider.ParseProps(stream);
+            IDictionary<string, string> nameToSection;
+            LightSystemProvider.ParseProps(stream, out nameToSection);
             State.Scene = new Scene();
             State.PatternSim = new Simulation(State.Scene);
             State.Simulation = new Simulation(State.Scene);
+
+            if (nameToSection.ContainsKey("Groups"))
+            {
+                string section = nameToSection["Groups"];
+                foreach (var group in Serializer.FromString<IEnumerable<Group>>(section))
+                {
+                    State.Scene.SetGroup(group);
+                }
+            }
+
+            if (nameToSection.ContainsKey("Patterns"))
+            {
+                string section = nameToSection["Patterns"];
+                foreach (var pattern in Serializer.FromString<IEnumerable<Pattern>>(section))
+                {
+                    State.Scene.SetPattern(pattern);
+                }
+            }
             
             Response.Write(JsonConvert.SerializeObject(LightSystemProvider.Lights));
         }

@@ -32,15 +32,15 @@
         buildSliderRow: function() {
             this.slider = new HorizontalSlider({
                 name: "timeSlider",
-                value: 0,
+                value: this.simulation.getTime(),
                 minimum: 0,
-                maximum: 0,
+                maximum: this.simulation.endTime,
                 intermediateChanges: true
             }, "timeSlider");
 
             this.button = new Button({
                 name: "playButton",
-                label: "play"
+                label: this.simulation.isPlaying?"pause":"play"
             });
             
             var sliderRow = html.createRow();
@@ -78,7 +78,7 @@
         
         _sliderChanged: function(newValue) {
             this.textBox.set('value', newValue);
-            this.simulation.setTime(newValue);
+            this.simulation.setTime(newValue);s
         },
         
         _playPressed: function() {
@@ -106,7 +106,7 @@
             this._setEnabled(false);
             //// First handle changes to UI Elements
             //handle the slider being moved
-            dojo.connect(this.slider, "onChange", dojo.hitch(this, this._sliderChanged));
+            //dojo.connect(this.slider, "onChange", dojo.hitch(this, this._sliderChanged));
             //handle the play button being pressed
             dojo.connect(this.button, "onClick", dojo.hitch(this, this._playPressed));
             

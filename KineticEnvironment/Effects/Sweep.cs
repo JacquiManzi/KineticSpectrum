@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media;
+using KineticControl;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
@@ -37,8 +40,36 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if (Ordering.GetLEDPosition(ledNode) <= pos)
                 return _endColorEffect;
             
-            return _startColorEffect;
+            return _startColorEffect;   
+        }
+
+        private static void ApplyColors(IEnumerable<IEffect> colorEffect, int numCycles)
+        {
+            colorEffect = colorEffect.ToList();
+            List<Color> startColors = new List<Color>();
+            List<Color> endColors = new List<Color>();
+            Patterns patt = new Patterns();
+            startColors.Add(patt.RandomColor());
             
+            for (int i = 0; i < (numCycles-1); i++)
+            {
+                Color next = patt.RandomColor();
+                startColors.Add(next);
+                endColors.Add(next);
+            }
+            endColors.Add(patt.RandomColor());
+            IColorEffect startEffect = ((Sweep)(colorEffect.First()))._startColorEffect;
+            IColorEffect endEffect = ((Sweep)(colorEffect.First()))._endColorEffect;
+            if(startEffect.GetType() == typeof(ColorFade))
+                startColors.Add(patt.RandomColor());
+            if (endEffect.GetType() == typeof(ColorFade))
+                endColors.Add(patt.RandomColor());
+
+            foreach (var effect in colorEffect)
+            {
+                ((Sweep) effect)._startColorEffect.Colors = startColors;
+                ((Sweep) effect)._endColorEffect.Colors = endColors;
+            }
         }
 
         public static readonly PropertyDefinition StartColor = new PropertyDefinition(StartEffectName,
@@ -48,7 +79,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static readonly PropertyDefinition EndColor = new PropertyDefinition(EndEffectName,
                                                                                     EffectPropertyTypes.ColorEffect,
                                                                                     ColorEffectDefinition.GreenFixed);
-        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory,
+        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, SweepFactory, ApplyColors,
                         new List<PropertyDefinition>(DefaultDefs)
                             {
                                 StartColor,

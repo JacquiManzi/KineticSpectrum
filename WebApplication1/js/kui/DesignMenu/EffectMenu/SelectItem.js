@@ -31,7 +31,7 @@
             array.forEach(items, function (item) {
                 me.itemBox.dropDown.addChild(new MenuItem({
                     label: item,
-                    onClick: dojo.hitch(me, me.typeUpdated, item)
+                    onClick: dojo.hitch(me, me.valueUpdated, item)
                 }));
             });
         },
@@ -39,7 +39,7 @@
         valueUpdated: function (value) {
             this.value = value;
             this.onUpdate(this.key, this.value);
-            this.typeBox.set('label', type);
+            this.itemBox.set('label', value);
         },
 
 

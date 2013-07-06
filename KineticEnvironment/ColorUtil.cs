@@ -48,10 +48,11 @@ namespace RevKitt.KS.KineticEnvironment
 
         public static Color FromInt(int color)
         {
-            return Color.FromArgb((byte) (color         & 0xff),
-                                  (byte) ((color >> 24) & 0xff),
+//            return Color.FromArgb((byte) (color         & 0xff),
+            return Color.FromArgb((byte) 255,
                                   (byte) ((color >> 16) & 0xff),
-                                  (byte) ((color >> 8)  & 0xff));
+                                  (byte) ((color >> 8) & 0xff),
+                                  (byte) (color & 0xff));
         }
 
         public static int ToInt(Color color)
@@ -59,7 +60,7 @@ namespace RevKitt.KS.KineticEnvironment
             int intColor = color.R;
             intColor = (intColor << 8) | color.G;
             intColor = (intColor << 8) | color.B;
-            intColor = (intColor << 8) | color.A;
+//            intColor = (intColor << 8) | color.B;
             return intColor;
         }
 

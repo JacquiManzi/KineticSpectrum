@@ -14,7 +14,6 @@ namespace WebApplication1
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class SimService
     {
-
         [OperationContract]
         [WebGet]
         public int AddStart(string patternName, double startTime)

@@ -194,6 +194,13 @@ namespace KineticControl
             Yellows.Add(Colors.YellowGreen);
         }
 
+
+        private Random _random = new Random();
+        public Color RandomColor()
+        {
+            return AllColors[_random.Next(AllColors.Count)];
+        }
+
         /*
          * This is an effect that displays a color to its max and the nto its mix
          */

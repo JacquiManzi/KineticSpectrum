@@ -6,9 +6,10 @@
     "dojo/dom-construct",
     "threejs/three",
     "dojo/_base/xhr",
-    "dojo/_base/array"
+    "dojo/_base/array",
+    "kui/LED/LightAddress"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr, array) {
+    function (declare, html, dom, domStyle, domConstruct, three, xhr, array, LightAddress) {
         "use strict";
 
 
@@ -35,14 +36,27 @@
             });
         };
 
-        var tryPattern = function(pattern) {
+        var tryPattern = function(pattern, onLoad) {
             xhr.post({
                 url: "PatternService.svc/TryPattern",
-                content: { d: JSON.stringify(pattern) }
+                content: { d: JSON.stringify(pattern) },
+                handleAs: "json",
+                load: function (lightStates) {
+                    var time;
+                    var endTime = 0;
+                    for (time in lightStates) {
+                        endTime = Math.max(time, endTime);
+                        array.forEach(lightStates[time], function (lightState) {
+                            lightState.address = new LightAddress(lightState.address);
+                        });
+                    }
+                    onLoad(lightStates, endTime);  
+                },
+                error: function(err) {
+                    console.log(err.stack);
+                }
             });
         };
-
-       
 
         return {
             getGroupNames: getGroupNames,

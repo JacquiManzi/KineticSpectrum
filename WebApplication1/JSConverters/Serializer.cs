@@ -42,6 +42,7 @@ namespace WebApplication1.JSConverters
             ms.Position = 0;
             return ms;
         }
+
         public static string ToString(object obj)
         {
             var stream = ToStream(obj);

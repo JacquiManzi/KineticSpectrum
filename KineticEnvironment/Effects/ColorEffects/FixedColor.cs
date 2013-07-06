@@ -13,20 +13,20 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
     {
         public const string EffectName = "Fixed";
 
-        public readonly Color Color;
+        public IList<Color> Colors { get; set; }
 
         public FixedColor(Color color)
         {
-            Color = color;
+            Colors = new List<Color> {color};
         }
 
         public string Name { get { return EffectName; } }
         public IOrdering Ordering { get; set; }
 
 
-        public void SetColor(int time, LEDNode led)
+        public void SetColor(int time, int endTime, LEDNode led)
         {
-            led.Color = Color;
+            led.Color = Colors[time/endTime];
         }
     }
 }

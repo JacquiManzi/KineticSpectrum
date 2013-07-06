@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media.Media3D;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using RevKitt.ks.KinectCV;
@@ -126,7 +127,7 @@ namespace KinectDisplay
                 XMax = xmax,
                 YMax = ymax,
                 Area = area,
-                Center = new Point(xsum/area, ysum/area),
+                Center = new Point3D(xsum/area, ysum/area, zsum/area),
                 ZCenter = zsum/area,
                 //BlobImg = new Image<Gray, byte>(bData)
             };

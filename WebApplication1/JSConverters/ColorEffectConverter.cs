@@ -29,7 +29,7 @@ namespace WebApplication1.JSConverters
             else if (value is FixedColor)
             {
                 objWriter.WritePropertyName("color");
-                serializer.Serialize(objWriter, ((FixedColor) val).Color);
+                serializer.Serialize(objWriter, ((FixedColor) val).Colors[0]);
             }
             jobj.WriteTo(writer);
         }
@@ -46,7 +46,6 @@ namespace WebApplication1.JSConverters
                 if(jobj["color"].Type != JTokenType.Integer)
                     throw new JsonReaderException("Invalid Fixed Color Effect. 'color' property must be an int, but was: " + jobj["color"]);
                 var colorInt = (int) jobj["color"];
-                colorInt = colorInt << 8 | 0xFF;
                 var color = ColorUtil.FromInt(colorInt);
                 return new FixedColor(color);
             }
@@ -59,7 +58,7 @@ namespace WebApplication1.JSConverters
                 JArray jarr = (JArray) jobj["colors"];
                 if(jarr.Any(t => t.Type != JTokenType.Integer))
                     throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was:" +jobj["colors"]);
-                var colors = jarr.Select(t => ColorUtil.FromInt(((int) t) << 8 | 0xFF));
+                var colors = jarr.Select(t => ColorUtil.FromInt((int) t));
                 return new ColorFade(colors);
             }
 

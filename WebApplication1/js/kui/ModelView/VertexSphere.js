@@ -51,20 +51,20 @@
                 sphere.geometry.computeFaceNormals();
                 sphere.address = this.address;
 
-                sphere.setColor = function(color) {
-                    var material = new three.MeshBasicMaterial({
-                        color: color
-                    });
-                    this.setMaterial(material);
-                    this.isSelected = false;
+                sphere.setColor = function (color) {
+
+                    if (!this.material.color) {
+                        var material = new three.MeshBasicMaterial({
+                            color: color
+                        });
+                        this.setMaterial(material);
+                    } else if(this.material.color.getHex() !== color) {
+                        this.material.color.set(color);
+                    }
                 };
 
                 sphere.select = function() {
-                    var material = new three.MeshBasicMaterial({
-                        color: 0xff0000
-                    });
-
-                    this.setMaterial(material);
+                    this.setColor(0xff0000);
                     this.isSelected = true;
                 };
 
@@ -72,6 +72,7 @@
                     var material = new three.MeshNormalMaterial();
                     this.setMaterial(material);
                     this.isSelected = false;
+                    this.hasColor = false;
                 };
 
                 return sphere;

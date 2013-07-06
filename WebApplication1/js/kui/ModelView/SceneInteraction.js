@@ -36,6 +36,7 @@ define([
                 this.selectedGroupNames = [];
                 this.nodes = new ArrayList();
                 this.vertexSpheres = new ArrayList();
+                this.selectedNodes = new ArrayList();
 
                 this.selectedGroupOptions = new ArrayList();
                 this.groupOptionList = new ArrayList(); 
@@ -53,7 +54,6 @@ define([
                 this.fileSelectionType = null;
 
                 this.patternModel = new PatternModel(this);
-
             },
 
             getIdealLEDRadius: function()
@@ -123,7 +123,7 @@ define([
 
                 var lineSegments = new ArrayList();
 
-                var selectedNodes = this.getSelectedNodes();
+                var selectedNodes = this.selectedNodes;
 
                 while (selectedNodes.count > 1) {
 
@@ -179,7 +179,7 @@ define([
             {
                 this.selectAllLEDs();
                 this.selectAllVertexs();
-                var selectedNodes = this.getSelectedNodes();
+                var selectedNodes = this.selectedNodes;
 
                 for (var i = 0; i < selectedNodes.count; i++) {
 
@@ -187,6 +187,7 @@ define([
                         this.nodes.remove(selectedNodes.item(i));
         
                 }
+                this.selectedNodes.clear();
             },
 
             removeNodes: function () {
@@ -199,9 +200,8 @@ define([
                         this.scene.remove(selectedNodes.item(i));
                         this.nodes.remove(selectedNodes.item(i));
                     }
-
-
                 }
+                this.selectedNodes.clear();
 
             },
             
@@ -227,7 +227,7 @@ define([
 
             createGroupFromSelected: function(groupName) {
                 groupName = groupName ? groupName : this.generateGroupName();
-                var selectedNodes = this.getSelectedNodes();
+                var selectedNodes = this.selectedNodes;
 
                 var group = new Group(groupName, selectedNodes);
 
@@ -285,34 +285,29 @@ define([
             selectGroups: function (groupNames) {
                 this.deselectAllVertexs();
                 this.deselectAllLEDs();
-                var nameToGroup = this.nameToGroup;
-                array.forEach(groupNames, function(groupName) {
-                    var group = nameToGroup[groupName];
-                    group.selectAll();
-                });
+                array.forEach(groupNames, dojo.hitch(this, this.selectGroup));
+            },
+            
+            selectGroup: function(groupName) {
+                var group = this.nameToGroup[groupName];
+                this.selectSpheres(group.selectedNodes);
+            },
+            
+            deselectGroup: function(groupName) {
+                var group = this.nameToGroup[groupName];
+                this.deselectSpheres(group.selectedNodes);
             },
             
             removeGroup: function (groupName) {
                 var group = this.nameToGroup[groupName];
                 group.deselectAll();
+                this.deselecteSperes(group.selectedNodes);
                 group.remove();
                 delete this.nameToGroup[groupName];
             },
             
 
-            removeSelectedGroup: function (listBox) {
-
-                var selectedOptions = listBox.getSelected();
-
-                for (var i = 0; i < selectedOptions.length; i++) {
-
-                    listBox.domNode.removeChild(selectedOptions[i]);
-                    this.selectedGroupOptions.remove(selectedOptions[i]);
-                    this.groupOptionList.remove(selectedOptions[i]);
-                }
-                
-                this.patternModel.updateGroupDropDown();
-            },
+            
 
             deselectAllVertexs: function () {
 
@@ -333,52 +328,54 @@ define([
 
             selectAllVertexs: function () {
                 for (var i = 0; i < this.nodes.count; i++) {
-
-                    if (this.nodes.item(i).isVertex) {
-                        this.nodes.item(i).isSelected = true;
+                    var node = this.nodes.item(i);
+                    if (node.isVertex) {
+                        node.isSelected = true;
 
                         var selectionMaterial = new three.MeshBasicMaterial({
 
                             color: 0xff0000
                         });
+                        
 
 
                         this.nodes.item(i).setMaterial(selectionMaterial);
                     }
-
-
                 }
             },
 
             selectAllLEDs: function () {
 
                 for (var i = 0; i < this.nodes.count; i++) {
+                    var node = this.nodes.item(i);
 
-                    if (!this.nodes.item(i).isVertex) {
-                        this.nodes.item(i).isSelected = true;
+                    if (!node.isVertex) {
+                        node.isSelected = true;
 
                         var selectionMaterial = new three.MeshBasicMaterial({
 
                             color: 0xff0000
                         });
+                        
+                        this.selectedNodes.add(node);
 
-
-                        this.nodes.item(i).setMaterial(selectionMaterial);
+                        node.setMaterial(selectionMaterial);
                     }
-
                 }
             },
 
             deselectAllLEDs: function () {
+                this.selectedNodes.clear();
+                
                 for (var i = 0; i < this.nodes.count; i++) {
+                    var node = this.nodes.item(i);
 
-                    if (!this.nodes.item(i).isVertex) {
-                        this.nodes.item(i).isSelected = false;
+                    if (!node.isVertex) {
+                        node.isSelected = false;
 
                         var material = new three.MeshNormalMaterial();
 
-                        this.nodes.item(i).setMaterial(material);
-
+                        node.setMaterial(material);
                     }
 
                 }
@@ -437,10 +434,10 @@ define([
                     if (intersects.length > 0 && this._inObject != intersects[0].object.id) {
                         this._inObject = intersects[0].object.id;
                         if (!intersects[0].object.isSelected) {
-                            this.selectSphere(intersects);
+                            this.selectSphere(intersects[0].object);
                         }
                         else {
-                            this.deseletSphere(intersects);
+                            this.deseletSphere(intersects[0].object);
                         }
                     }
                 }
@@ -453,10 +450,10 @@ define([
                 if (intersects.length > 0) {
 
                     if (!intersects[0].object.isSelected) {
-                        this.selectSphere(intersects);
+                        this.selectSphere(intersects[0].object);
                     }
                     else {
-                        this.deseletSphere(intersects);
+                        this.deseletSphere(intersects[0].object);
                     }
                 }
             },
@@ -488,35 +485,38 @@ define([
 
             },
 
-
-            selectSphere: function (intersects) {
-
-
-                var selectionMaterial = new three.MeshBasicMaterial({
-
-                    color: 0xff0000
+            selecteSperes: function(nodes) {
+                if (!(nodes instanceof ArrayList)) {
+                    nodes = new ArrayList(nodes);
+                }
+                var thisObj = this;
+                nodes.forEach(function(node) {
+                    thisObj.selectSphere(node);
                 });
-
-
-                intersects[0].object.setMaterial(selectionMaterial);
-
-                intersects[0].object.isSelected = true;
-
+            },
+            
+            selectSphere: function (node) {
+                
+                node.select();
+                if (!node.isVertex) {
+                    this.selectedNodes.add(node);
+                }
             },
 
-            deseletSphere: function (intersects) {
+            deseletSphere: function (node) {
 
-
-                var selectionMaterial = new three.MeshNormalMaterial({
-
-
+                node.unselect();
+                this.selectedNodes.remove(node);
+            },
+            
+            deselecteSperes: function(nodes) {
+                if (!(nodes instanceof ArrayList)) {
+                    nodes = new ArrayList(nodes);
+                }
+                var thisObj = this;
+                nodes.forEach(function(node) {
+                    thisObj.deselectSphere(node);
                 });
-
-                intersects[0].object.setMaterial(selectionMaterial);
-
-                intersects[0].object.isSelected = false;
-
-
             },
 
             findIntersects: function (objects, event) {

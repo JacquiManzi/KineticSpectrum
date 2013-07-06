@@ -60,7 +60,7 @@
             
         },
 
-        _updateMapping : function(propMap, key, value) {
+        _updateMapping : function( key, value) {
             this.propertyMap[key] = value;
             this.onUpdate(this.propertyMap);
         },

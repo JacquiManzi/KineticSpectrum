@@ -33,13 +33,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emgu.CV">
-      <HintPath>Z:\Users\JCU\personal\ks\KineticSpectrum\lib\Emgu.CV.dll</HintPath>
+      <HintPath>..\lib\Emgu.CV.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.UI">
-      <HintPath>Z:\Users\JCU\personal\ks\KineticSpectrum\lib\Emgu.CV.UI.dll</HintPath>
+      <HintPath>..\lib\Emgu.CV.UI.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.Util">
-      <HintPath>Z:\Users\JCU\personal\ks\KineticSpectrum\lib\Emgu.Util.dll</HintPath>
+      <HintPath>..\lib\Emgu.Util.dll</HintPath>
     </Reference>
     <Reference Include="ILNumerics32">
       <HintPath>..\packages\ILNumerics.32Bit.3.0.0.0\lib\ILNumerics32.dll</HintPath>

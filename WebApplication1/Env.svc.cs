@@ -147,6 +147,30 @@ namespace WebApplication1
             State.Scene.SelectLights(las);
         }
 
+        [OperationContract]
+        [WebGet]
+        public Stream Save()
+        {
+            Stream s = new MemoryStream();
+            Serializer.Ser.Formatting = Formatting.Indented;
+            string groups = Serializer.ToString(State.Scene.Groups);
+            string patterns = Serializer.ToString(State.Scene.Patterns);
+            Serializer.Ser.Formatting = Formatting.None;
+
+            var writer = new StreamWriter(s);
+            writer.WriteLine("\n\n### Groups");
+            writer.Write(groups);
+
+            writer.WriteLine("\n\n### Patterns");
+            writer.WriteLine(patterns);
+            writer.Flush();
+
+            s.Position = 0;
+            return s;
+        }
+
+
+
         
 
         // Add more operations here and mark them with [OperationContract]

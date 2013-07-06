@@ -44,8 +44,8 @@ namespace KineticControl
 
         private Network()
         {
-//            _pdss.Add(new PDS60ca(this, new IPEndPoint(IPAddress.Parse( "169.254.49.154" ),6038 )));
-//            _pdss.Add(new PDS60ca(this, new IPEndPoint(IPAddress.Parse( "169.254.49.160" ),6038 )));
+            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse( "192.168.1.51" ),6038 )));
+            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse( "192.168.1.52" ),6038 )));
 //            _pdss.Add(new PDS150e(this, new IPEndPoint(IPAddress.Parse( "169.254.49.149" ),6038)));
         }
 
@@ -161,32 +161,32 @@ namespace KineticControl
  */
         public void BroadCast()
         {
-            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6038);
-            IPEndPoint localBroadCastIp = new IPEndPoint(GetLocalIP(0xff), 6038);
-
-            //arbitrary IP address that we tell the remote device to reply from...
-            IPAddress mscNetworkIP = GetLocalIP(0xC0);
-
-            _socket.Bind(_ipEndPoint);
-            _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-
-            NetworkState state = new NetworkState(_socket);
-
-
-            //update this to accept connections, which will trigger the BeginReceive
-            _socket.BeginReceive(state.Buffer, 0, NetworkState.BUFFER_SIZE, 0, HandleCallback, state); 
-            
-            for (int i = 0; i < 5; i++)
-                _socket.SendTo(HexStrings.FullSearch, broadCastIp);
-
-            Thread.Sleep(1000);
-
-            for (int i = 0; i < 4; i++)
-                _socket.SendTo(HexStrings.PartialSearch, localBroadCastIp);
-                
-            Thread.Sleep(10);
-            _socket.SendTo(HexStrings.LocalRequestHex(mscNetworkIP), localBroadCastIp);
-            Thread.Sleep(1000);
+//            IPEndPoint broadCastIp = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 6038);
+//            IPEndPoint localBroadCastIp = new IPEndPoint(GetLocalIP(0xff), 6038);
+//
+//            //arbitrary IP address that we tell the remote device to reply from...
+//            IPAddress mscNetworkIP = GetLocalIP(0xC0);
+//
+//            _socket.Bind(_ipEndPoint);
+//            _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+//
+//            NetworkState state = new NetworkState(_socket);
+//
+//
+//            //update this to accept connections, which will trigger the BeginReceive
+//            _socket.BeginReceive(state.Buffer, 0, NetworkState.BUFFER_SIZE, 0, HandleCallback, state); 
+//            
+//            for (int i = 0; i < 5; i++)
+//                _socket.SendTo(HexStrings.FullSearch, broadCastIp);
+//
+//            Thread.Sleep(1000);
+//
+//            for (int i = 0; i < 4; i++)
+//                _socket.SendTo(HexStrings.PartialSearch, localBroadCastIp);
+//                
+//            Thread.Sleep(10);
+//            _socket.SendTo(HexStrings.LocalRequestHex(mscNetworkIP), localBroadCastIp);
+//            Thread.Sleep(1000);
             
         }
 

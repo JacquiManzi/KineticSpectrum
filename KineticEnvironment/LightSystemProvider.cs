@@ -42,15 +42,17 @@ namespace RevKitt.KS.KineticEnvironment
             IDictionary<LightAddress, LEDNode> mapping = new Dictionary<LightAddress, LEDNode>();
             foreach (var lightAddress in addresses)
             {
-                mapping[lightAddress] =  _nodes[lightAddress];
+                if(!mapping.ContainsKey(lightAddress))
+                    mapping[lightAddress] =  _nodes[lightAddress];
             }
             return mapping;
         }
 
         private const string LineMarker = "###";
-        public static IDictionary<LightAddress, LEDNode> ParseProps(Stream stream)
+        public static IDictionary<LightAddress, LEDNode> ParseProps(Stream stream, out IDictionary<string, string> nameToSection )
         {
             StreamReader reader = new StreamReader(stream);
+            nameToSection = new Dictionary<string, string>();
 
             while(!reader.EndOfStream)
             {
@@ -64,6 +66,11 @@ namespace RevKitt.KS.KineticEnvironment
                     else if(line.Contains("Lights"))
                     {
                         ParseLights(reader);
+                    }
+                    else
+                    {
+                        string sectionName = line.Substring(LineMarker.Length + 1);
+                        nameToSection.Add(sectionName, ParseSection(reader));
                     }
                 }
             }
@@ -79,6 +86,17 @@ namespace RevKitt.KS.KineticEnvironment
         }
 
         private const string Separater = " ";
+
+        private static string ParseSection(StreamReader reader)
+        {
+            StringBuilder builder = new StringBuilder();
+            string line;
+            while (null != (line = ReadSectionLine(reader)))
+            {
+                builder.Append(line);
+            }
+            return builder.ToString();
+        }
 
         private static void ParseLights(StreamReader reader)
         {

@@ -60,7 +60,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             foreach (var ledNode in _group.LEDNodes)
             {
                 IColorEffect colorEffect = ApplyCycle(cycleTime, ledNode);
-                colorEffect.SetColor(time, ledNode);
+                colorEffect.SetColor(time, time*Durration, ledNode);
             }
         }
 

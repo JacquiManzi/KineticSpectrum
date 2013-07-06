@@ -15,7 +15,7 @@ namespace WebApplication1.JSConverters
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var la = (Color)value;
-            writer.WriteValue(ColorUtil.ToInt(la)>>8);
+            writer.WriteValue(ColorUtil.ToInt(la));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
@@ -25,7 +25,6 @@ namespace WebApplication1.JSConverters
             int color = 0;
             if (nullable.HasValue)
                 color = nullable.Value;
-            color = color << 8 | 0xFF;
             return ColorUtil.FromInt(color);
 
         }

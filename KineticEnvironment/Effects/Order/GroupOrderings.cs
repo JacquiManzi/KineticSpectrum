@@ -113,7 +113,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                     _group = value;
                     _addressToPos.Clear();
                     var addresses = _group.Lights;
-                    _last = addresses.Count - 1;
+                    _last = addresses.Count;
                     for (int i = 0; i < addresses.Count; i++)
                     {
                         if (!_addressToPos.ContainsKey(addresses[i]))

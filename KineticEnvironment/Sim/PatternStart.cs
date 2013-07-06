@@ -72,6 +72,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _groupToEffect = groupToEffect;
         }
 
+
         public bool Applies(int time)
         {
             return time >= StartTime && time < EndTime;

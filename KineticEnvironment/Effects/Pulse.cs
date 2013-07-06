@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using KineticControl;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
@@ -54,7 +56,38 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         }
 
-        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, PulseFactory,
+        private static void ApplyColors(IEnumerable<IEffect> colorEffect, int numCycles)
+        {
+
+            colorEffect = colorEffect.ToList();
+            IColorEffect startEffect = ((Pulse)(colorEffect.First()))._backgroundColor;
+            IColorEffect endEffect = ((Pulse)(colorEffect.First()))._pulseColor;
+            
+            List<Color> startColors = new List<Color>();
+            List<Color> endColors = new List<Color>();
+            Patterns patt = new Patterns();
+            startColors.Add(patt.RandomColor());
+
+            for (int i = 0; i < (numCycles - 1); i++)
+            {
+                Color next = patt.RandomColor();
+                startColors.Add(next);
+                endColors.Add(next);
+            }
+            endColors.Add(patt.RandomColor());
+            if (startEffect.GetType() == typeof(ColorFade))
+                startColors.Add(patt.RandomColor());
+            if (endEffect.GetType() == typeof(ColorFade))
+                endColors.Add(patt.RandomColor());
+
+            foreach (var effect in colorEffect)
+            {
+                ((Pulse)effect)._backgroundColor.Colors = startColors;
+                ((Pulse)effect)._pulseColor.Colors = endColors;
+            }
+        }
+
+        public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, PulseFactory,ApplyColors,
                         new List<PropertyDefinition>(DefaultDefs)
                             {
                                 new PropertyDefinition(BackgroundEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.RedFixed),
