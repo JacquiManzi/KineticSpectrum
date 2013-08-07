@@ -17,12 +17,10 @@
 
             constructor: function (radius, x, y, z) {
 
-
                 this.radius = radius;
                 this.segmentsWidth = 3; //max 8 min 3
                 this.segmentsHeight = 2; //max 6 min 2
                
-
                 this.x = x;
                 this.y = y;
                 this.z = z;
@@ -32,8 +30,6 @@
 
                 this.addModeOn = true;
             },
-
-
 
 
             createSphere: function () {

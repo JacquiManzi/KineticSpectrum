@@ -54,7 +54,8 @@
                 this.meshes = new ArrayList();
                 
                 this.sceneInteraction = new SceneInteraction();
-                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction, this.sceneInteraction.applyColorState));
+                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction,
+                    this.sceneInteraction.ledSet.applyColorState));
 
             },
                    
@@ -126,7 +127,7 @@
                     if (lightList.count > 0) {
                         this.sceneInteraction.removeAllNodes();
                         this.removeAllMeshes();
-                        this.sceneInteraction.createLEDNodes(lightList);
+                        this.sceneInteraction.ledSet.createLEDNodes(lightList);
                         this.loadServerGroups();
                     }
                 }));
@@ -208,14 +209,12 @@
                     this.scene.remove(this.meshes.item(i));
                 }
 
-                for (var i = 0; i <this.sceneInteraction.nodes.count; i++) {
-
-                    this.scene.remove(this.sceneInteraction.nodes.item(i));
-
+                for (var i = 0; i <this.sceneInteraction.ledSet.nodes.count; i++) {
+                    this.scene.remove(this.sceneInteraction.ledSet.nodes.item(i));
                 }
 
-                this.meshes.clear();
-               this.sceneInteraction.nodes.clear();
+               this.meshes.clear();
+               this.sceneInteraction.ledSet.nodes.clear();
             },
 
             resetObject: function()
@@ -246,10 +245,10 @@
 
             hideAllVertices: function()
             {
-                for (var i = 0; i < this.sceneInteraction.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.ledSet.nodes.count; i++) {
 
-                    if (this.sceneInteraction.nodes.item(i).isVertex) {
-                       this.sceneInteraction.nodes.item(i).visible = false;
+                    if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
+                       this.sceneInteraction.ledSet.nodes.item(i).visible = false;
                     }
 
                 }
@@ -257,10 +256,10 @@
 
             showAllVertices: function()
             {
-                for (var i = 0; i < this.sceneInteraction.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.ledSet.nodes.count; i++) {
 
-                    if (this.sceneInteraction.nodes.item(i).isVertex) {
-                       this.sceneInteraction.nodes.item(i).visible = true;
+                    if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
+                       this.sceneInteraction.ledSet.nodes.item(i).visible = true;
                     }
 
                 }

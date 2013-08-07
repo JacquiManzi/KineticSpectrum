@@ -54,7 +54,7 @@
         typeUpdated: function(type) {
             this.value.type = type;
             this.onUpdate(this.key, this.value);
-            this.typBox.set('label', type);
+            this.typeBox.set('label', type);
             this.setOrdering(type, true);
         },
 

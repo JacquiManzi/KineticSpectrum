@@ -13,10 +13,11 @@ define([
      "kui/Pattern/patterns/PatternModel",
      "dojo/on",
      "kui/ModelView/groups/Group",
-     "dojo/_base/array"
+     "dojo/_base/array",
+     "kui/ModelView/LEDSet"
 
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group, array) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group, array, LEDSet) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -30,13 +31,9 @@ define([
 
                 this.modelSkeleton = null;
 
-
                 this.addressToLED = [];
                 this.nameToGroup = [];
                 this.selectedGroupNames = [];
-                this.nodes = new ArrayList();
-                this.vertexSpheres = new ArrayList();
-                this.selectedNodes = new ArrayList();
 
                 this.selectedGroupOptions = new ArrayList();
                 this.groupOptionList = new ArrayList(); 
@@ -54,6 +51,8 @@ define([
                 this.fileSelectionType = null;
 
                 this.patternModel = new PatternModel(this);
+                this.ledSet = new LEDSet(this.scene);
+                
             },
 
             getIdealLEDRadius: function()
@@ -81,13 +80,13 @@ define([
                         vertexSphere.radius = distance * 0.003;
 
                         this.scene.add(vertexSphere.sphere);
-                        this.nodes.add(vertexSphere.sphere);
-                        this.vertexSpheres.add(vertexSphere.sphere);
+                        this.ledSet.nodes.add(vertexSphere.sphere);
+                        this.ledSet.vertexSpheres.add(vertexSphere.sphere);
 
                     }
                 }
 
-                this.dragControls = new three.DragControls(this.camera, this.nodes, this.domNode, domGeom);
+                this.dragControls = new three.DragControls(this.camera, this.ledSet.nodes, this.domNode, domGeom);
 
                 dojo.connect(this.domNode, "onmousemove", dojo.hitch(this, this.doSelect));
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
@@ -97,33 +96,17 @@ define([
                     this.dragControls.enabled = false;
 
                 }));
-                
 
+                //Set LEDSet scene here since we now have a scene to draw on.
+                this.ledSet.scene = this.scene;
             },
-
-            createLEDNodes: function(ledList) {
-
-                ledList.forEach(dojo.hitch(this, function(item) {
-
-                    var ledNode = new LEDNode();
-                    ledNode.updatePosition(item.position);
-                    ledNode.address = item.address;
-                    ledNode.radius = 3;
-
-                    var ledSphere = ledNode.createSphere();
-                    this.scene.add(ledSphere);
-                    this.nodes.add(ledSphere);
-                    this.addressToLED[item.address.toString()] = ledSphere;
-                }));
-            },
-
 
             /*Find the line segments between selected VertexSpheres*/
             findConnectingLines: function (amount) {
 
                 var lineSegments = new ArrayList();
 
-                var selectedNodes = this.selectedNodes;
+                var selectedNodes = ledSet.getSelectedNodes();
 
                 while (selectedNodes.count > 1) {
 
@@ -168,7 +151,7 @@ define([
 
                     var sphere = ledNode.createSphere();
 
-                    this.nodes.add(sphere);
+                    this.ledSet.nodes.add(sphere);
                     this.scene.add(sphere);
                 }
 
@@ -177,32 +160,29 @@ define([
 
             removeAllNodes: function()
             {
-                this.selectAllLEDs();
-                this.selectAllVertexs();
-                var selectedNodes = this.selectedNodes;
+                this.ledSet.selectAllLEDs();
+                this.ledSet.selectAllVertexs();
+                var selectedNodes = this.ledSet.getSelectedNodes();
 
                 for (var i = 0; i < selectedNodes.count; i++) {
 
                         this.scene.remove(selectedNodes.item(i));
-                        this.nodes.remove(selectedNodes.item(i));
+                        this.ledSet.nodes.remove(selectedNodes.item(i));
         
                 }
-                this.selectedNodes.clear();
             },
 
             removeNodes: function () {
 
-                var selectedNodes = this.getSelectedNodes();
+                var selectedNodes = this.ledSet.getSelectedNodes();
 
                 for (var i = 0; i < selectedNodes.count; i++) {
 
                     if (!selectedNodes.item(i).isVertex) {
                         this.scene.remove(selectedNodes.item(i));
-                        this.nodes.remove(selectedNodes.item(i));
+                        this.ledSet.nodes.remove(selectedNodes.item(i));
                     }
                 }
-                this.selectedNodes.clear();
-
             },
             
             generateGroupName: function() {
@@ -227,7 +207,7 @@ define([
 
             createGroupFromSelected: function(groupName) {
                 groupName = groupName ? groupName : this.generateGroupName();
-                var selectedNodes = this.selectedNodes;
+                var selectedNodes = this.ledSet.getSelectedNodes();
 
                 var group = new Group(groupName, selectedNodes);
 
@@ -243,7 +223,7 @@ define([
                     var selectedNodes = new ArrayList();
                     var name = serialGroup.name;
                     serialGroup.lights.forEach(function(lightAddress) {
-                        var node = thisObj.getLEDNode(lightAddress);
+                        var node = thisObj.ledSet.getLEDNode(lightAddress);
                         selectedNodes.add(node);
                     });
                     thisObj.nameToGroup[name] = new Group(name, selectedNodes);
@@ -252,7 +232,7 @@ define([
             
             addSelectedGroup: function (listBox, groupName) {
 
-                var selectedNodes = this.getSelectedNodes();
+                var selectedNodes = this.ledSet.getSelectedNodes();
 
                 if (selectedNodes.count > 0) {
 
@@ -283,8 +263,8 @@ define([
             },
             
             selectGroups: function (groupNames) {
-                this.deselectAllVertexs();
-                this.deselectAllLEDs();
+                this.ledSet.deselectAllVertexs();
+                this.ledSet.deselectAllLEDs();
                 array.forEach(groupNames, dojo.hitch(this, this.selectGroup));
             },
             
@@ -301,90 +281,15 @@ define([
             removeGroup: function (groupName) {
                 var group = this.nameToGroup[groupName];
                 group.deselectAll();
-                this.deselecteSperes(group.selectedNodes);
+                this.deselectSpheres(group.selectedNodes);
                 group.remove();
                 delete this.nameToGroup[groupName];
             },
-            
-
-            
-
-            deselectAllVertexs: function () {
-
-                for (var i = 0; i < this.nodes.count; i++) {
-
-                    if (this.nodes.item(i).isVertex) {
-                        this.nodes.item(i).isSelected = false;
-
-                        var material = new three.MeshNormalMaterial();
-
-                        this.nodes.item(i).setMaterial(material);
-
-                    }
-
-                }
-
-            },
-
-            selectAllVertexs: function () {
-                for (var i = 0; i < this.nodes.count; i++) {
-                    var node = this.nodes.item(i);
-                    if (node.isVertex) {
-                        node.isSelected = true;
-
-                        var selectionMaterial = new three.MeshBasicMaterial({
-
-                            color: 0xff0000
-                        });
-                        
-
-
-                        this.nodes.item(i).setMaterial(selectionMaterial);
-                    }
-                }
-            },
-
-            selectAllLEDs: function () {
-
-                for (var i = 0; i < this.nodes.count; i++) {
-                    var node = this.nodes.item(i);
-
-                    if (!node.isVertex) {
-                        node.isSelected = true;
-
-                        var selectionMaterial = new three.MeshBasicMaterial({
-
-                            color: 0xff0000
-                        });
-                        
-                        this.selectedNodes.add(node);
-
-                        node.setMaterial(selectionMaterial);
-                    }
-                }
-            },
-
-            deselectAllLEDs: function () {
-                this.selectedNodes.clear();
-                
-                for (var i = 0; i < this.nodes.count; i++) {
-                    var node = this.nodes.item(i);
-
-                    if (!node.isVertex) {
-                        node.isSelected = false;
-
-                        var material = new three.MeshNormalMaterial();
-
-                        node.setMaterial(material);
-                    }
-
-                }
-            },
-
+         
             showSelectedVertexGroups: function (selectedGroupOptions) {
 
-                this.deselectAllVertexs();
-                this.deselectAllLEDs();
+                this.ledSet.deselectAllVertexs();
+                this.ledSet.deselectAllLEDs();
                 for (var i = 0; i < selectedGroupOptions.count; i++) {
 
                     var option = selectedGroupOptions.item(i);
@@ -404,40 +309,17 @@ define([
 
             },
 
-            addSingleLED: function (intersects) {
-                var distance = intersects[0].object.geometry.boundingBox.min.distanceTo(intersects[0].object.geometry.boundingBox.max);
-
-                var led = new LEDNode();
-                led.x = intersects[0].point.x;
-                led.y = intersects[0].point.y;
-                led.z = intersects[0].point.z;
-                led.radius = distance * .003;
-                led.address = new LightAddress();
-
-                var ledSphere = led.createSphere();
-
-                /*Adjust the sphere radius according to model scale*/
-
-                this.nodes.add(ledSphere);
-                this.scene.add(ledSphere);
-
-            },
-            
-            getLEDNode: function(lightAddress) {
-                return this.addressToLED[lightAddress.toString()];
-            },
-
             doSelect: function (event) {
                 if (event.altKey)
                 {
-                    var intersects = this.findIntersects(this.nodes, event);
+                    var intersects = this.findIntersects(this.ledSet.nodes, event);
                     if (intersects.length > 0 && this._inObject != intersects[0].object.id) {
                         this._inObject = intersects[0].object.id;
                         if (!intersects[0].object.isSelected) {
                             this.selectSphere(intersects[0].object);
                         }
                         else {
-                            this.deseletSphere(intersects[0].object);
+                            this.deselectSphere(intersects[0].object);
                         }
                     }
                 }
@@ -446,14 +328,14 @@ define([
 
             mouseSelect: function(event)
             {
-                var intersects = this.findIntersects(this.nodes, event);
+                var intersects = this.findIntersects(this.ledSet.nodes, event);
                 if (intersects.length > 0) {
 
                     if (!intersects[0].object.isSelected) {
                         this.selectSphere(intersects[0].object);
                     }
                     else {
-                        this.deseletSphere(intersects[0].object);
+                        this.deselectSphere(intersects[0].object);
                     }
                 }
             },
@@ -477,15 +359,17 @@ define([
                     }
                     var intersects = this.findIntersects(meshList, event);
                     if (intersects.length > 0) {
-                        this.addSingleLED(intersects);
+
+                        this.ledSet.addSingleLED(intersects);
                     }
-
-
+                    
+                    //@TODO: Jacqui- This does not work on loaded light configuration files since they do not have meshes,
+                    //Make this work without meshes.
                 }
 
             },
 
-            selecteSperes: function(nodes) {
+            selectSpheres: function(nodes) {
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
@@ -495,21 +379,15 @@ define([
                 });
             },
             
-            selectSphere: function (node) {
-                
+            selectSphere: function (node) {               
                 node.select();
-                if (!node.isVertex) {
-                    this.selectedNodes.add(node);
-                }
             },
 
-            deseletSphere: function (node) {
-
+            deselectSphere: function (node) {
                 node.unselect();
-                this.selectedNodes.remove(node);
             },
             
-            deselecteSperes: function(nodes) {
+            deselectSpheres: function(nodes) {
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
@@ -539,44 +417,16 @@ define([
             getLEDs: function () {
 
                 this.leds.clear();
-                for (var i = 0; i < this.nodes.count; i++) {
+                for (var i = 0; i < this.ledSet.nodes.count; i++) {
 
-                    if (!this.nodes.item(i).isVertex) {
-                        this.leds.add(this.nodes.item(i));
+                    if (!this.ledSet.nodes.item(i).isVertex) {
+                        this.leds.add(this.ledSet.nodes.item(i));
                     }
 
                 }
 
             },
             
-            applyColorState: function(lightStateList) {
-
-                var addressToLED = this.addressToLED;
-                array.forEach(lightStateList, function (state) {
-                    var addressStr = state.address.toString();
-                    if (!!addressToLED[addressStr]) {
-                        addressToLED[state.address.toString()].setColor(state.color);
-                    }
-                });
-            },
-
-            getSelectedNodes: function () {
-
-                var selectedNodes = new ArrayList();
-                for (var i = 0; i < this.nodes.count; i++) {
-
-                    if (this.nodes.item(i).isSelected) {
-
-                        selectedNodes.add(this.nodes.item(i));
-
-                    }
-
-                }
-
-                return selectedNodes;
-
-            },
-
             getGroupOptions: function () {
 
                 var groupOptions = new ArrayList();

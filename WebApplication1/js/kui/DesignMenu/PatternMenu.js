@@ -322,12 +322,6 @@ define([
 
                 var div = html.createDiv();
 
-                var patternApplyDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
-                    "background-color:#383838;" +
-                    "border-radisu:7px;");
-                patternApplyDiv.innerHTML = "Apply Pattern";
-
                 var innerDiv = html.createDiv("text-align:center;" +
                     "color:#3d8dd5;");
 
@@ -340,8 +334,6 @@ define([
 
                 var obj = this;
                 
-
-                domConstruct.place(patternApplyDiv, div);
                 domConstruct.place(innerDiv, div);
 
                 return div;

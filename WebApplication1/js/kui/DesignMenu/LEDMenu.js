@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="../ModelView/SceneInteraction.js" />
+
 
 define([
     "dojo/_base/declare",
@@ -230,7 +231,7 @@ define([
                 var obj = this;
                 var selectAllNodeButton = CommonForm.createButton('Select All Vertices', function () {
 
-                    obj.modelView.sceneInteraction.selectAllVertexs();
+                    obj.modelView.sceneInteraction.ledSet.selectAllVertexs();
                 });
 
                 this.setButtonStyle(selectAllNodeButton);
@@ -242,7 +243,7 @@ define([
                 var deselectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectAllNodeButton = CommonForm.createButton('Deselect All Vertices', function () {
 
-                    obj.modelView.sceneInteraction.deselectAllVertexs();
+                    obj.modelView.sceneInteraction.ledSet.deselectAllVertexs();
 
                 });
 
@@ -256,7 +257,7 @@ define([
                 var selectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
 
-                    obj.modelView.sceneInteraction.selectAllLEDs();
+                    obj.modelView.sceneInteraction.ledSet.selectAllLEDs();
                 });
 
                 this.setButtonStyle(selectLEDButton);
@@ -268,7 +269,7 @@ define([
                 var deselectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
 
-                    obj.modelView.sceneInteraction.deselectAllLEDs();
+                    obj.modelView.sceneInteraction.ledSet.deselectAllLEDs();
 
                 });
                 this.setButtonStyle(deselectLEDButton);
@@ -381,6 +382,8 @@ define([
                 var option = html.createOption(groupName);
                 var thisObj = this;
                 this.groupListBox.domNode.appendChild(option);
+
+                this.modelView.sceneInteraction.createGroupFromSelected(groupName);
 
                 on(option, "click", function () {
                     var selected = [];

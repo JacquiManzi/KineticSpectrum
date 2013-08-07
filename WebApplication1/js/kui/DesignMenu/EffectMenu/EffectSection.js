@@ -50,7 +50,7 @@ define([
                 array.forEach(effects, function (effect) {
                     effectDropDown.dropDown.addChild(new MenuItem({
                         label: effect,
-                        onClick: dojo.hitch(me, me.effectSelectionChanged, effect)
+                        onClick: dojo.hitch(me, me.effectSelectionChanged, effect, effectDropDown)
                     }));
                 });
             });
@@ -58,8 +58,10 @@ define([
             return row;
         },
 
-        effectSelectionChanged : function(effectName) {
+        effectSelectionChanged : function(effectName, effectDropDown) {
             this.effectName = effectName;
+            effectDropDown.set('label', effectName);
+
             Effects.getEffectDefinition(effectName, dojo.hitch(this,function (effectDefs) {
                 this.effectArea.buildFromDefaults(effectDefs);
             }));

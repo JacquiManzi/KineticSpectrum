@@ -82,13 +82,16 @@
             },
             
             
-            addSingleLED: function (position, address) {
+            addSingleLED: function (intersects, address) {
                 address = address ? address : new LightAddress();
                 
+                var distance = intersects[0].object.geometry.boundingBox.min.distanceTo(intersects[0].object.geometry.boundingBox.max);
+                var position = intersects[0].point;
 
                 var led = new LEDNode();
                 led.updatePosition(position);
-                led.radius = this.ledRadius;
+                led.radius = distance * .003;
+                this.ledRadius = led.radius;
                 led.address = address;
 
                 var ledSphere = led.createSphere();

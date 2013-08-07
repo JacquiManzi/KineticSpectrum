@@ -11,7 +11,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
 {
     public class ColorFade : IColorEffect
     {
-        public const string EffectName = "Color Fade";
+        public const string EffectName = "ColorFade";
 
         public ColorFade(IEnumerable<Color> colors)
         {

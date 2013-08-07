@@ -7,9 +7,10 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojo/_base/xhr"
+    "dojo/_base/xhr",
+    "dojox/collections/ArrayList"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, xhr) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, xhr, ArrayList) {
         "use strict";
 
         return declare("kui.LED.LEDNode", null, {
@@ -21,15 +22,18 @@ define([
 
             constructor: function (groupName, selectedNodes) {
 
-                this.name = groupName;
-                this.selectedNodes = selectedNodes;
+                this.name = groupName;               
                 var addresses = this.addresses = [];
                 
-                this.selectedNodes.forEach(function (item) {
+                this.selectedNodes = new ArrayList();
+                var obj = this;
+                selectedNodes.forEach(function (item) {
 
                     if (!!item.address) {
                         addresses.push(item.address);
                     }
+
+                    obj.selectedNodes.add(item);
                 });
             },
             
