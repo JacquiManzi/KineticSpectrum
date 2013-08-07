@@ -21,8 +21,6 @@ define([
 
             constructor: function (sceneInteraction) {
 
-
-
                 this.name = "";
                 this.groupList = null;
                 this.priority = 0;

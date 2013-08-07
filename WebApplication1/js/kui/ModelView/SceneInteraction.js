@@ -1,5 +1,9 @@
 ﻿
-
+/*
+* @author: Jacqui Manzi
+* August 6th, 2013
+* SceneInteraction - All node interaction with the scene happens here.
+*/
 define([
     "dojo/_base/declare",
     "kui/ModelView/ModelSkeleton",
@@ -28,7 +32,6 @@ define([
 
             constructor: function () {
 
-
                 this.modelSkeleton = null;
 
                 this.addressToLED = [];
@@ -53,15 +56,6 @@ define([
                 this.patternModel = new PatternModel(this);
                 this.ledSet = new LEDSet(this.scene);
                 
-            },
-
-            getIdealLEDRadius: function()
-            {
-                var distance = this.modelSkeleton.geometryList.item(0).boundingBox.min.distanceTo(this.modelSkeleton.geometryList.item(0).boundingBox.max);
-                var radius = distance * .01;
-
-                return radius;
-
             },
 
             createVertexSpheres: function () {
@@ -137,52 +131,50 @@ define([
 
             },
 
-         
+         /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
             drawNodes: function (lineSegments) {
 
-
-                for (var i = 0; i < lineSegments.count; i++) {
+                lineSegments.forEach(function (segment) {
 
                     var ledNode = new LEDNode();
 
-                    ledNode.x = lineSegments.item(i).x;
-                    ledNode.y = lineSegments.item(i).y;
-                    ledNode.z = lineSegments.item(i).z;
+                    ledNode.x = segment.x;
+                    ledNode.y = segment.y;
+                    ledNode.z = segment.z;
 
                     var sphere = ledNode.createSphere();
 
                     this.ledSet.nodes.add(sphere);
                     this.scene.add(sphere);
-                }
-
-
+                });
             },
 
+            /*Removes all nodes from the scene- LEDs and Vertices*/
             removeAllNodes: function()
             {
                 this.ledSet.selectAllLEDs();
                 this.ledSet.selectAllVertexs();
                 var selectedNodes = this.ledSet.getSelectedNodes();
 
-                for (var i = 0; i < selectedNodes.count; i++) {
-
-                        this.scene.remove(selectedNodes.item(i));
-                        this.ledSet.nodes.remove(selectedNodes.item(i));
-        
-                }
+                var thisObj = this;
+                selectedNodes.forEach(function(node) {
+                    thisObj.scene.remove(node);
+                    thisObj.ledSet.nodes.remove(node);
+                });
             },
 
-            removeNodes: function () {
+            /*Removes all selected LED nodes- not vertices*/
+            removeLEDNodes: function () {
 
                 var selectedNodes = this.ledSet.getSelectedNodes();
 
-                for (var i = 0; i < selectedNodes.count; i++) {
-
-                    if (!selectedNodes.item(i).isVertex) {
-                        this.scene.remove(selectedNodes.item(i));
-                        this.ledSet.nodes.remove(selectedNodes.item(i));
+                var thisObj = this;
+                selectedNodes.forEach(function (node) {
+                    if (!node.isVertex) {
+                        thisObj.scene.remove(node);
+                        thisObj.ledSet.nodes.remove(node);
                     }
-                }
+                });
             },
             
             generateGroupName: function() {
@@ -237,11 +229,9 @@ define([
                 if (selectedNodes.count > 0) {
 
                     var countAmount = this.groupOptionList.count + 1;
-
                     var group = new Group(countAmount, selectedNodes, groupName);
                   
                     listBox.domNode.appendChild(group.groupOption);
-
                     this.groupOptionList.add(group.groupOption);
 
                     group.applyGroup();
@@ -254,7 +244,6 @@ define([
                         }
                         this.showSelectedVertexGroups(this.selectedGroupOptions);
 
-
                     }, listBox));
 
                 }
@@ -262,22 +251,26 @@ define([
                 this.patternModel.updateGroupDropDown();
             },
             
+            /*Select all associated nodes with the groups selected in the group list box*/
             selectGroups: function (groupNames) {
                 this.ledSet.deselectAllVertexs();
                 this.ledSet.deselectAllLEDs();
                 array.forEach(groupNames, dojo.hitch(this, this.selectGroup));
             },
             
+            /*Select all associated nodes with the group selected in the group list box*/
             selectGroup: function(groupName) {
                 var group = this.nameToGroup[groupName];
                 this.selectSpheres(group.selectedNodes);
             },
             
+            /*Deselect all associated nodes with the group selected in the group list box*/
             deselectGroup: function(groupName) {
                 var group = this.nameToGroup[groupName];
                 this.deselectSpheres(group.selectedNodes);
             },
             
+            /*Remove all associated nodes with the group selected in the group list box and remove the group from the list box*/
             removeGroup: function (groupName) {
                 var group = this.nameToGroup[groupName];
                 group.deselectAll();
@@ -343,23 +336,20 @@ define([
             findSelectionType: function (event) {
                 if (!this.addModeOn) {
 
-
                     this.orbitControl.enabled = !event.ctrlKey;
                     this.dragControls.enabled = event.ctrlKey;
                     this.mouseSelect(event);
-
-                    
                 }
                 else {
 
-
                     var meshList = new ArrayList();
-                    for (var i = 0; i < this.sceneMesh.count; i++) {
-                        meshList.add(this.sceneMesh.item(i));
-                    }
-                    var intersects = this.findIntersects(meshList, event);
-                    if (intersects.length > 0) {
+                    this.sceneMesh.forEach(function (mesh) {
+                        meshList.add(mesh);
+                    });
 
+                    var intersects = this.findIntersects(meshList, event);
+
+                    if (intersects.length > 0) {
                         this.ledSet.addSingleLED(intersects);
                     }
                     

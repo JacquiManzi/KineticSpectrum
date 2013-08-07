@@ -213,7 +213,7 @@ define([
                 var obj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
 
-                    obj.modelView.sceneInteraction.removeNodes();
+                    obj.modelView.sceneInteraction.removeLEDNodes();
                 });
 
                 this.setButtonStyle(removeButton);
