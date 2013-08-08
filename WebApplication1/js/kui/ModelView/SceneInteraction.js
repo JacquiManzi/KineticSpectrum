@@ -16,14 +16,12 @@ define([
      "kui/util/CommonHTML",
      "kui/Pattern/patterns/PatternModel",
      "dojo/on",
-     "kui/ModelView/groups/Group",
-     "dojo/_base/array",
      "kui/ModelView/LEDSet",
      "kui/ModelView/groups/GroupSet"
 
 ],
     function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
-        PatternModel, on, Group, array, LEDSet, GroupSet) {
+        PatternModel, on, LEDSet, GroupSet) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -98,7 +96,6 @@ define([
             findConnectingLines: function (amount) {
 
                 var lineSegments = new ArrayList();
-
                 var selectedNodes = this.ledSet.getSelectedNodes();
 
                 while (selectedNodes.count > 1) {
@@ -119,7 +116,6 @@ define([
                     }
 
                     selectedNodes.remove(selectedNodes.item(0));
-
                 }
 
                 this.x = selectedNodes.item(0).position.x;
@@ -127,7 +123,6 @@ define([
                 this.z = selectedNodes.item(0).position.z;
 
                 return lineSegments;
-
             },
 
          /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
@@ -278,9 +273,6 @@ define([
                 this.addModeOn = false;
                 button.set('label', "Add Single LED OFF");
             }
-
-
-
 
         });
 

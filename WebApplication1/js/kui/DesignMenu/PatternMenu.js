@@ -258,8 +258,6 @@ define([
                 var groupDropDown = CommonForm.createDropDown("Select Group");
                 domConstruct.place(groupDropDown.domNode, dropDownCell);
 
-                
-
                 this.patternModel.groupDropDown = groupDropDown;
 //                this.patternModel.groupDropDownMenu = new DropDownMenu();
 //                this.patternModel.groupDropDown.set('dropDown', this.patternModel.groupDropDownMenu); 
@@ -291,7 +289,9 @@ define([
             setGroupNames: function() {
                 var thisObj = this;
 
+                var dropDown = this.patternModel.groupDropDown;
                 var menu = this.patternModel.groupDropDown.dropDown;
+
                 array.forEach(menu.getChildren(), function(child) {
                     menu.removeChild(child);
                 });
@@ -302,7 +302,7 @@ define([
                             label: groupName,
                             onClick: function() {
                                 var option = html.createOption(groupName);
-                                thisObj.patternModel.groupListBox.domNode.appendChild(option);
+                                dropDown.set('label', groupName);
                             }
                         }));
                     });

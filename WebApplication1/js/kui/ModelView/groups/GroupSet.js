@@ -1,6 +1,6 @@
 ﻿/*
-* Jacqui Manzi
-*
+* @author: Jacqui Manzi
+* August, 7th 2013
 */
 
 define([
