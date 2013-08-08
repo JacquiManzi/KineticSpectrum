@@ -18,10 +18,12 @@ define([
      "dojo/on",
      "kui/ModelView/groups/Group",
      "dojo/_base/array",
-     "kui/ModelView/LEDSet"
+     "kui/ModelView/LEDSet",
+     "kui/ModelView/groups/GroupSet"
 
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group, array, LEDSet) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
+        PatternModel, on, Group, array, LEDSet, GroupSet) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -35,12 +37,7 @@ define([
                 this.modelSkeleton = null;
 
                 this.addressToLED = [];
-                this.nameToGroup = [];
-                this.selectedGroupNames = [];
-
-                this.selectedGroupOptions = new ArrayList();
-                this.groupOptionList = new ArrayList(); 
-
+                
                 this.projector = new three.Projector();
                 this.camera = null;
                 this.domNode = null;
@@ -53,8 +50,10 @@ define([
 
                 this.fileSelectionType = null;
 
+                /*Models*/
                 this.patternModel = new PatternModel(this);
                 this.ledSet = new LEDSet(this.scene);
+                this.groupSet = new GroupSet(this.ledSet);
                 
             },
 
@@ -100,7 +99,7 @@ define([
 
                 var lineSegments = new ArrayList();
 
-                var selectedNodes = ledSet.getSelectedNodes();
+                var selectedNodes = this.ledSet.getSelectedNodes();
 
                 while (selectedNodes.count > 1) {
 
@@ -134,8 +133,9 @@ define([
          /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
             drawNodes: function (lineSegments) {
 
+                var thisObj = this;
                 lineSegments.forEach(function (segment) {
-
+                   
                     var ledNode = new LEDNode();
 
                     ledNode.x = segment.x;
@@ -144,8 +144,8 @@ define([
 
                     var sphere = ledNode.createSphere();
 
-                    this.ledSet.nodes.add(sphere);
-                    this.scene.add(sphere);
+                    thisObj.ledSet.nodes.add(sphere);
+                    thisObj.scene.add(sphere);
                 });
             },
 
@@ -176,131 +176,6 @@ define([
                     }
                 });
             },
-            
-            generateGroupName: function() {
-                var largest = 0;
-                var pattern = /group\s(\d+)/;
-                array.forEach(Object.keys(this.nameToGroup), function(groupName) {
-                    var match = pattern.exec(groupName);
-                    if (!!match) {
-                        largest = Math.max(largest, match[1]);
-                    }
-                });
-                return "group " + (largest + 1);
-            },
-
-            getGroups:function() {
-                return Object.keys(this.nameToGroup);
-            },
-            
-            deleteGroup: function(groupName) {
-                delete this.nameToGroup[groupName];
-            },
-
-            createGroupFromSelected: function(groupName) {
-                groupName = groupName ? groupName : this.generateGroupName();
-                var selectedNodes = this.ledSet.getSelectedNodes();
-
-                var group = new Group(groupName, selectedNodes);
-
-                this.nameToGroup[groupName] = group;
-                group.applyGroup();
-
-                return groupName;
-            },
-            
-            addGroups: function (serialGroups) {
-                var thisObj = this;
-                serialGroups.forEach(function (serialGroup) {
-                    var selectedNodes = new ArrayList();
-                    var name = serialGroup.name;
-                    serialGroup.lights.forEach(function(lightAddress) {
-                        var node = thisObj.ledSet.getLEDNode(lightAddress);
-                        selectedNodes.add(node);
-                    });
-                    thisObj.nameToGroup[name] = new Group(name, selectedNodes);
-                });
-            },
-            
-            addSelectedGroup: function (listBox, groupName) {
-
-                var selectedNodes = this.ledSet.getSelectedNodes();
-
-                if (selectedNodes.count > 0) {
-
-                    var countAmount = this.groupOptionList.count + 1;
-                    var group = new Group(countAmount, selectedNodes, groupName);
-                  
-                    listBox.domNode.appendChild(group.groupOption);
-                    this.groupOptionList.add(group.groupOption);
-
-                    group.applyGroup();
-
-                    on(group.groupOption, "click", dojo.hitch(this, function (listBox) {
-
-                        this.selectedGroupOptions.clear();
-                        for (var i = 0; i < listBox.getSelected().length; i++) {
-                            this.selectedGroupOptions.add(listBox.getSelected()[i]);
-                        }
-                        this.showSelectedVertexGroups(this.selectedGroupOptions);
-
-                    }, listBox));
-
-                }
-
-                this.patternModel.updateGroupDropDown();
-            },
-            
-            /*Select all associated nodes with the groups selected in the group list box*/
-            selectGroups: function (groupNames) {
-                this.ledSet.deselectAllVertexs();
-                this.ledSet.deselectAllLEDs();
-                array.forEach(groupNames, dojo.hitch(this, this.selectGroup));
-            },
-            
-            /*Select all associated nodes with the group selected in the group list box*/
-            selectGroup: function(groupName) {
-                var group = this.nameToGroup[groupName];
-                this.selectSpheres(group.selectedNodes);
-            },
-            
-            /*Deselect all associated nodes with the group selected in the group list box*/
-            deselectGroup: function(groupName) {
-                var group = this.nameToGroup[groupName];
-                this.deselectSpheres(group.selectedNodes);
-            },
-            
-            /*Remove all associated nodes with the group selected in the group list box and remove the group from the list box*/
-            removeGroup: function (groupName) {
-                var group = this.nameToGroup[groupName];
-                group.deselectAll();
-                this.deselectSpheres(group.selectedNodes);
-                group.remove();
-                delete this.nameToGroup[groupName];
-            },
-         
-            showSelectedVertexGroups: function (selectedGroupOptions) {
-
-                this.ledSet.deselectAllVertexs();
-                this.ledSet.deselectAllLEDs();
-                for (var i = 0; i < selectedGroupOptions.count; i++) {
-
-                    var option = selectedGroupOptions.item(i);
-
-                    for (var j = 0; j < option.list.count; j++) {
-                        option.list.item(j).isSelected = true;
-
-                        var selectionMaterial = new three.MeshBasicMaterial({
-
-                            color: 0xff0000
-                        });   
-
-                        option.list.item(j).setMaterial(selectionMaterial);
-                    }
-
-                }
-
-            },
 
             doSelect: function (event) {
                 if (event.altKey)
@@ -309,10 +184,10 @@ define([
                     if (intersects.length > 0 && this._inObject != intersects[0].object.id) {
                         this._inObject = intersects[0].object.id;
                         if (!intersects[0].object.isSelected) {
-                            this.selectSphere(intersects[0].object);
+                            this.ledSet.selectNode(intersects[0].object);
                         }
                         else {
-                            this.deselectSphere(intersects[0].object);
+                            this.ledSet.deselectNode(intersects[0].object);
                         }
                     }
                 }
@@ -325,10 +200,10 @@ define([
                 if (intersects.length > 0) {
 
                     if (!intersects[0].object.isSelected) {
-                        this.selectSphere(intersects[0].object);
+                        this.ledSet.selectNode(intersects[0].object);
                     }
                     else {
-                        this.deselectSphere(intersects[0].object);
+                        this.ledSet.deselectNode(intersects[0].object);
                     }
                 }
             },
@@ -359,33 +234,7 @@ define([
 
             },
 
-            selectSpheres: function(nodes) {
-                if (!(nodes instanceof ArrayList)) {
-                    nodes = new ArrayList(nodes);
-                }
-                var thisObj = this;
-                nodes.forEach(function(node) {
-                    thisObj.selectSphere(node);
-                });
-            },
-            
-            selectSphere: function (node) {               
-                node.select();
-            },
-
-            deselectSphere: function (node) {
-                node.unselect();
-            },
-            
-            deselectSpheres: function(nodes) {
-                if (!(nodes instanceof ArrayList)) {
-                    nodes = new ArrayList(nodes);
-                }
-                var thisObj = this;
-                nodes.forEach(function(node) {
-                    thisObj.deselectSphere(node);
-                });
-            },
+          
 
             findIntersects: function (objects, event) {
 
@@ -402,34 +251,6 @@ define([
             },
             
             /*GETTERS/SETTERS HERE*/
-
-
-            getLEDs: function () {
-
-                this.leds.clear();
-                for (var i = 0; i < this.ledSet.nodes.count; i++) {
-
-                    if (!this.ledSet.nodes.item(i).isVertex) {
-                        this.leds.add(this.ledSet.nodes.item(i));
-                    }
-
-                }
-
-            },
-            
-            getGroupOptions: function () {
-
-                var groupOptions = new ArrayList();
-                
-                for (var i = 0; i < this.groupOptionList.count; i++) {
-
-                    groupOptions.add(this.groupOptionList.item(i));
-                }
-
-                return groupOptions;
-                
-            },
-          
 
             setAddMode: function (button) {
 

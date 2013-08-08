@@ -52,7 +52,7 @@ define([
                 this.groupDropDown.set('label', "Select Group");
                 
 
-                var groupList = this.sceneInteraction.getGroupOptions();                
+                var groupList = this.sceneInteraction.groupSet.getGroupOptions();
                 for (var i = 0; i < groupList.count; i++) {
                     var label = groupList.item(i).label;
                     var menuItem = new MenuItem({
@@ -64,7 +64,7 @@ define([
                             newList.add(selectedGroupOption);
                             
                             this.groupDropDown.set('label', label);
-                            this.sceneInteraction.showSelectedVertexGroups(newList);
+                            this.sceneInteraction.groupSet.showSelectedVertexGroups(newList);
 
                             this.updateGroupListBox(newList);
 

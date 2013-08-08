@@ -333,7 +333,7 @@ define([
                 
                 
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = obj.modelView.sceneInteraction.createGroupFromSelected(groupNameTextBox.get('value'));
+                    var group = obj.modelView.sceneInteraction.groupSet.createGroupFromSelected(groupNameTextBox.get('value'));
                     obj.addGroup(group);
                 }, null, "color:#3d8dd5;");
                 domStyle.set(addButton.domNode.firstChild, "width", "100px");
@@ -383,21 +383,21 @@ define([
                 var thisObj = this;
                 this.groupListBox.domNode.appendChild(option);
 
-                this.modelView.sceneInteraction.createGroupFromSelected(groupName);
+                this.modelView.sceneInteraction.groupSet.createGroupFromSelected(groupName);
 
                 on(option, "click", function () {
                     var selected = [];
                     array.forEach(thisObj.groupListBox.getSelected(), function (node) {
                         selected.push(node.innerHTML);
                     });
-                    thisObj.modelView.sceneInteraction.selectGroups(selected);
+                    thisObj.modelView.sceneInteraction.groupSet.selectGroups(selected);
                 });
             },
             
             removeSelected: function () {
                 var thisObj = this;
                 array.forEach(this.groupListBox.getSelected(), function (node) {
-                    thisObj.modelView.sceneInteraction.removeGroup(node.innerHTML);
+                    thisObj.modelView.sceneInteraction.groupSet.removeGroup(node.innerHTML);
                     thisObj.groupListBox.domNode.removeChild(node);
                 });
                 

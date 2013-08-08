@@ -80,6 +80,34 @@
                 });
 
             },
+
+            selectNodes: function (nodes) {
+                if (!(nodes instanceof ArrayList)) {
+                    nodes = new ArrayList(nodes);
+                }
+                var thisObj = this;
+                nodes.forEach(function (node) {
+                    thisObj.selectNode(node);
+                });
+            },
+
+            selectNode: function (node) {
+                node.select();
+            },
+
+            deselectNode: function (node) {
+                node.unselect();
+            },
+
+            deselectNodes: function (nodes) {
+                if (!(nodes instanceof ArrayList)) {
+                    nodes = new ArrayList(nodes);
+                }
+                var thisObj = this;
+                nodes.forEach(function (node) {
+                    thisObj.deselectNode(node);
+                });
+            },
             
             
             addSingleLED: function (intersects, address) {
@@ -125,6 +153,19 @@
                 array.forEach(lightStateList, function(state) {
                     addressToLED[state.address.toString()].setColor(state.color);
                 });
+            },
+
+            getAllLEDs: function () {
+
+                this.leds.clear();
+                for (var i = 0; i < this.ledSet.nodes.count; i++) {
+
+                    if (!this.ledSet.nodes.item(i).isVertex) {
+                        this.leds.add(this.ledSet.nodes.item(i));
+                    }
+
+                }
+
             }
             
         });
