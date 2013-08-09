@@ -22,8 +22,9 @@ define([
 
             constructor: function (groupName, selectedNodes) {
 
-                this.name = groupName;               
+                this.name = groupName;             
                 var addresses = this.addresses = [];
+
                 
                 this.selectedNodes = new ArrayList();
                 var obj = this;

@@ -51,7 +51,7 @@ define([
                 /*Models*/
                 this.patternModel = new PatternModel(this);
                 this.ledSet = new LEDSet(this.scene);
-                this.groupSet = new GroupSet(this.ledSet);
+                this.groupSet = new GroupSet(this.ledSet, this.patternModel);
                 
             },
 

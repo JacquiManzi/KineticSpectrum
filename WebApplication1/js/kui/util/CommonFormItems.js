@@ -102,7 +102,7 @@
                  label: label,
                  style: style,
                  dropDown: dropDownMenu
-             });
+             });      
 
              return dropDownButton;
          },
@@ -143,9 +143,6 @@
 
             return textBox;
          };
-
-
-
 
         return {
             createNumberTextBox: createNumberTextBox,

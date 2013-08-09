@@ -290,7 +290,7 @@ define([
 
                 var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
-
+                this.modelView.sceneInteraction.groupSet.ledGroupListBox = groupListBox;
 
                 var groupNameTable = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
@@ -330,8 +330,6 @@ define([
                 
                 var obj = this;
 
-                
-                
                 var addButton = CommonForm.createButton('Add Group', function () {
                     var group = obj.modelView.sceneInteraction.groupSet.createGroupFromSelected(groupNameTextBox.get('value'));
                     obj.addGroup(group);

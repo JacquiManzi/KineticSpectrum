@@ -13,10 +13,9 @@ define([
     "kui/ajax/Effects",
     "dijit/MenuItem",
     "dojo/_base/array",
-    "kui/DesignMenu/EffectMenu/EffectSection",
-    "kui/ajax/Scenes"],
+    "kui/DesignMenu/EffectMenu/EffectSection"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection, Scenes) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu", null, {
 
@@ -67,7 +66,7 @@ define([
                       title: "Pattern Menu",
                       style: this.mainBackgroundColor,
                       onShow: dojo.hitch(this, function() {
-                          this.setGroupNames();
+                          this.patternModel.updateGroupDropDown();
                           container.simulation.setPatternMode();
                       })
                       
@@ -173,7 +172,7 @@ define([
             _getPatternProps: function () {
                 var patternDef = {};
                 patternDef.name = this.nameField.get('value');
-                patternDef.groups = this.getSelectedGroups();
+                patternDef.groups = this.patternModel.getSelectedGroups();
                 patternDef.priority = this.priorityDropDown.get('label')*1.0;
                 return patternDef;
             },
@@ -255,66 +254,47 @@ define([
                 var addCell = html.createCell();
                 domConstruct.place(addCell, row);
 
-                var groupDropDown = CommonForm.createDropDown("Select Group");
+                var groupDropDown = CommonForm.createDropDown("Select Group", "");
                 domConstruct.place(groupDropDown.domNode, dropDownCell);
 
                 this.patternModel.groupDropDown = groupDropDown;
-//                this.patternModel.groupDropDownMenu = new DropDownMenu();
-//                this.patternModel.groupDropDown.set('dropDown', this.patternModel.groupDropDownMenu); 
+                this.patternModel.updateGroupDropDown();
+                var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
 
-                var addButton = CommonForm.createButton("+");
+                    var option = html.createOption(this.patternModel.groupDropDown.get('label'));
+
+                    this.patternModel.groupList.add(option);
+                    this.patternModel.updateGroupListBox(this.patternModel.groupList);
+
+                }));
                 domConstruct.place(addButton.domNode, addCell);
-
+                
                 var groupDiv = html.createDiv("width:100%;");
                 domConstruct.place(groupDiv, div);
 
                 var groupListBox = CommonForm.createListBox("width:90%;");
                 domConstruct.place(groupListBox.domNode, groupDiv);
-                
-
+               
                 this.patternModel.groupListBox = groupListBox;
 
                 var groupButtonDiv = html.createDiv("width:100%;");
                 domConstruct.place(groupButtonDiv, groupDiv);
 
-                var addAllGroupButton = CommonForm.createButton("Add All");
+                var addAllGroupButton = CommonForm.createButton("Add All", dojo.hitch(this, function(){
+                
+                    this.patternModel.get
+                
+                }));
                 domConstruct.place(addAllGroupButton.domNode, groupButtonDiv);
 
-                var removeGroupButton = CommonForm.createButton("Remove");
+                var removeGroupButton = CommonForm.createButton("Remove", dojo.hitch(this, function () {
+
+                    var optionList = this.patternModel.getSelectedGroups();
+                    this.patternModel.removeGroups(optionList);
+                }));
                 domConstruct.place(removeGroupButton.domNode, groupButtonDiv);
 
                 return div;
-            },
-            
-            setGroupNames: function() {
-                var thisObj = this;
-
-                var dropDown = this.patternModel.groupDropDown;
-                var menu = this.patternModel.groupDropDown.dropDown;
-
-                array.forEach(menu.getChildren(), function(child) {
-                    menu.removeChild(child);
-                });
-
-                Scenes.getGroupNames(function(groupNames) {
-                    array.forEach(groupNames, function(groupName) {
-                        menu.addChild(new MenuItem({
-                            label: groupName,
-                            onClick: function() {
-                                var option = html.createOption(groupName);
-                                dropDown.set('label', groupName);
-                            }
-                        }));
-                    });
-                });
-            },
-            
-            getSelectedGroups: function () {
-                var selected = [];
-                array.forEach(this.patternModel.groupListBox.domNode.children, function (node) {
-                    selected.push(node.innerHTML);
-                });
-                return selected;
             },
             
 

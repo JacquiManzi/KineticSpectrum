@@ -19,13 +19,13 @@ define([
              *   
              */
 
-            constructor: function (ledSet) {
+            constructor: function (ledSet, patternModel) {
 
                 this.nameToGroup = [];
-                this.selectedGroupNames = [];
-                this.selectedGroupOptions = new ArrayList();
                 this.groupList = new ArrayList();
                 this.ledSet = ledSet;
+                this.patternModel = patternModel;
+                this.ledGroupListBox = null;
               
             },
 
@@ -72,36 +72,7 @@ define([
                     thisObj.nameToGroup[name] = new Group(name, selectedNodes);
                 });
             },
-
-            addSelectedGroup: function (listBox, groupName) {
-
-                var selectedNodes = this.ledSet.getSelectedNodes();
-
-                if (selectedNodes.count > 0) {
-
-                    var countAmount = this.groupOptionList.count + 1;
-                    var group = new Group(countAmount, selectedNodes, groupName);
-
-                    listBox.domNode.appendChild(group.groupOption);
-                    this.groupOptionList.add(group.groupOption);
-
-                    group.applyGroup();
-
-                    on(group.groupOption, "click", dojo.hitch(this, function (listBox) {
-
-                        this.selectedGroupOptions.clear();
-                        for (var i = 0; i < listBox.getSelected().length; i++) {
-                            this.selectedGroupOptions.add(listBox.getSelected()[i]);
-                        }
-                        this.showSelectedVertexGroups(this.selectedGroupOptions);
-
-                    }, listBox));
-
-                }
-
-                this.patternModel.updateGroupDropDown();
-            },
-
+          
             /*Select all associated nodes with the groups selected in the group list box*/
             selectGroups: function (groupNames) {
                 this.ledSet.deselectAllVertexs();
@@ -128,41 +99,36 @@ define([
                 this.ledSet.deselectNodes(group.selectedNodes);
                 group.remove();
                 delete this.nameToGroup[groupName];
+
+                //Update the group list box in the pattern model
+                this.patternModel.updateGroupDropDown();
+                var thisObj = this;
+                this.patternModel.getGroups().forEach(function (group) {
+
+                    if (group.groupName === groupName) {
+                        thisObj.groupList.remove(group);
+                    }
+                });
+
+                this.patternModel.updateGroupListBox(this.patternModel.getGroups());
             },
 
-            showSelectedVertexGroups: function (selectedGroupOptions) {
+            showSelectedVertexGroups: function () {
 
                 this.ledSet.deselectAllVertexs();
                 this.ledSet.deselectAllLEDs();
-                for (var i = 0; i < selectedGroupOptions.count; i++) {
 
-                    var option = selectedGroupOptions.item(i);
+                var selectedGroupOptions = this.getGroupOptions();
 
-                    for (var j = 0; j < option.list.count; j++) {
-                        option.list.item(j).isSelected = true;
+                array.forEach(selectedGroupOptions, function (option) {
 
-                        var selectionMaterial = new three.MeshBasicMaterial({
-
-                            color: 0xff0000
-                        });
-
-                        option.list.item(j).setMaterial(selectionMaterial);
-                    }
-
-                }
-
+                        var group = this.nameToGroup[option];
+                        group.selectAll();                    
+                    });             
             },
-
-            getGroupOptions: function () {
-
-                var groupOptions = new ArrayList();
-
-                for (var i = 0; i < this.groupOptionList.count; i++) {
-
-                    groupOptions.add(this.groupOptionList.item(i));
-                }
-                return groupOptions;
-
+           
+            getSelectedGroupOptions: function () {
+                return this.ledGroupListBox.getSelected();
             }
 
         });
