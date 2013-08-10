@@ -39,18 +39,18 @@
             this._typeUpdated(this.value.name);
         },
 
-        _createColorPalette: function(multipleColors)
+        _createColorPalette: function(multipleColors, isFirst)
         {
             
             this.addButton.destroy();
 
             var colorRow = html.createRow("width:90%;");
-            var dropDownCell = html.createCell();
-            domConstruct.place(dropDownCell, colorRow);
-
+            var dropDownCell = html.createCell("width:90%;");
+           
             var colorLI = html.createLI();
-            var colorBox = CommonForm.createDropDown("Select Color");
-
+            var colorBox = CommonForm.createDropDown("Select Color", "width:100%;");
+            CommonForm.setButtonStyle(colorBox);     
+                 
             var me = this;
             var colorOnClick = function () {
 
@@ -64,17 +64,24 @@
 
             domConstruct.place(colorPalette.domNode, colorPaletteItem.domNode);
 
-            colorBox.dropDown.addChild(colorPaletteItem); 
-
-            CommonForm.setButtonStyle(colorBox);
-            colorBox.placeAt(dropDownCell);
-            domConstruct.place(colorRow, colorLI);
+            colorBox.dropDown.addChild(colorPaletteItem);
+             
             domConstruct.place(colorLI, this.colorTypeUL);
 
             this.colorDropDownList.add(colorBox);
 
-            if (multipleColors) {
+            if (!isFirst && multipleColors) {
+
+                colorBox.placeAt(dropDownCell);
+                domConstruct.place(dropDownCell, colorRow);
+                domConstruct.place(colorRow, colorLI);
+
                 this._createRemoveButton(colorBox, colorLI, colorRow);
+            }
+            else {
+
+                colorBox.placeAt(colorLI);
+                CommonForm.setButtonStyle(colorBox);
             }
 
             return { "colorLI": colorLI, "dropDown": colorBox };
@@ -119,7 +126,7 @@
         
             if (name === "Fixed") {
 
-                this._createColorPalette(false);
+                this._createColorPalette(false, true);
              
             }
             else if (name === "Rainbow") {
@@ -127,12 +134,12 @@
             }
             else if (name === "ColorFade") {
                
-                this._createColorPalette(true);
+                this._createColorPalette(true, true);
                 this._createAddButton();
 
             }
             else if (name === "ChasingColors") {
-                this._createColorPalette(true);
+                this._createColorPalette(true, true);
                 this._createAddButton();
             }
             else {
@@ -149,38 +156,35 @@
 
         _createAddButton: function () {
 
-            var me = this;
+            var thisObj = this;
             this.addButton = CommonForm.createButton("+", function () {
 
-                me._createColorPalette(true);
-                me._createAddButton();
+                thisObj._createColorPalette(true, false);
+                thisObj._createAddButton();
 
             });
 
             this.colorDropDownList.add(this.addButton);
 
             domConstruct.place(this.addButton.domNode, this.colorTypeUL);
-
         },
 
         _createRemoveButton: function (colorDropDown, colorLI, colorRow) {
 
-            var me = this;
+            var thisObj = this;
             var removeButton = CommonForm.createButton("-", function () {
 
-                me.colorDropDownList.remove(colorDropDown);
+                thisObj.colorDropDownList.remove(colorDropDown);
                 colorDropDown.destroy();
-                me.colorTypeUL.removeChild(colorLI);
+                thisObj.colorTypeUL.removeChild(colorLI);
                 removeButton.destroy();
-
             });
 
             this.colorDropDownList.add(removeButton); 
-            var removeCell = html.createCell();
+            var removeCell = html.createCell("width:10%;");
             domConstruct.place(removeButton.domNode, removeCell);
-            domConstruct.place(removeCell, colorRow);
+            domConstruct.place(removeCell, colorRow);    
         }
-
     });
 
 });
