@@ -13,9 +13,10 @@ define([
     "kui/ajax/Effects",
     "dijit/MenuItem",
     "dojo/_base/array",
-    "kui/DesignMenu/EffectMenu/EffectSection"],
+    "kui/DesignMenu/EffectMenu/EffectSection",
+    "dojox/collections/ArrayList"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu", null, {
 
@@ -232,7 +233,6 @@ define([
                 });
 
                 domConstruct.place(applyButton.domNode, div);
-
                 domConstruct.place(createButton.domNode, div);
 
                 return div;
@@ -260,12 +260,7 @@ define([
                 this.patternModel.groupDropDown = groupDropDown;
                 this.patternModel.updateGroupDropDown();
                 var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
-
-                    var option = html.createOption(this.patternModel.groupDropDown.get('label'));
-
-                    this.patternModel.groupList.add(option);
-                    this.patternModel.updateGroupListBox(this.patternModel.groupList);
-
+                    this.patternModel.addGroup(this.patternModel.groupDropDown.get('label'));
                 }));
                 domConstruct.place(addButton.domNode, addCell);
                 
@@ -280,19 +275,36 @@ define([
                 var groupButtonDiv = html.createDiv("width:100%;");
                 domConstruct.place(groupButtonDiv, groupDiv);
 
-                var addAllGroupButton = CommonForm.createButton("Add All", dojo.hitch(this, function(){
-                
-                    this.patternModel.get
-                
+                var addAllGroupButton = CommonForm.createButton("Add All", dojo.hitch(this, function () {
+
+                    var groupList = this.patternModel.sceneInteraction.groupSet.getGroups();
+                    var thisObj = this;
+                    array.forEach(groupList, function (groupName) {
+                        thisObj.patternModel.addGroup(groupName); 
+                    });      
                 }));
                 domConstruct.place(addAllGroupButton.domNode, groupButtonDiv);
 
                 var removeGroupButton = CommonForm.createButton("Remove", dojo.hitch(this, function () {
 
-                    var optionList = this.patternModel.getSelectedGroups();
-                    this.patternModel.removeGroups(optionList);
+                    var optionList = this.patternModel.groupListBox.getSelected();
+                    var groupList = new ArrayList();
+                    var thisObj = this;
+                    array.forEach(optionList, function (option) {
+
+                        var group = thisObj.patternModel.sceneInteraction.groupSet.nameToGroup[option.innerHTML];
+                        groupList.add(group);
+                    });        
+
+                    this.patternModel.removeGroups(groupList);
                 }));
                 domConstruct.place(removeGroupButton.domNode, groupButtonDiv);
+
+                var removeAllGroupButton = CommonForm.createButton("Remove All", dojo.hitch(this, function () {
+                    this.patternModel.groupList.clear();
+                    this.patternModel.updateGroupListBox(this.patternModel.groupList); 
+                }));
+                domConstruct.place(removeAllGroupButton.domNode, groupButtonDiv);
 
                 return div;
             },

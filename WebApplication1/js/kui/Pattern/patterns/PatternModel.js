@@ -41,15 +41,21 @@ define([
             },
 
             addGroup: function(groupName){
+    
+                var group = this.sceneInteraction.groupSet.nameToGroup[groupName];
+                
+                if(!!group && !this.groupList.contains(group)){
 
-
+                    this.groupList.add(group);
+                    this.updateGroupListBox(this.groupList);
+                }
             },
 
-            removeGroups: function (groupList) {
+            removeGroups: function (groups) {
 
                 var thisObj = this;
-                array.forEach(groupList, function (group) {
-                    thisObj.getGroups().remove(group);                    
+                groups.forEach(function(group) {
+                    thisObj.groupList.remove(group);                       
                 });
 
                 this.updateGroupListBox(this.getGroups());
@@ -69,11 +75,11 @@ define([
 
             updateGroupListBox: function(groupList)
             {
-                this.groupListBox.destroyDescendants();
+                html.removeDomChildren(this.groupListBox);
 
                 var thisObj = this;
-                groupList.forEach(function (group) {
-                    var option = html.createOption(group.groupName);
+                this.groupList.forEach(function (group) {
+                    var option = html.createOption(group.name);
                     thisObj.groupListBox.domNode.appendChild(option);
                 });
             },
@@ -83,10 +89,10 @@ define([
                 this.groupDropDown.destroyDescendants();
                 this.groupDropDown.set('label', "Select Group");
                 
-                var groupList = this.sceneInteraction.groupSet.getGroups();
+                var ledGroupList = this.sceneInteraction.groupSet.getGroups();
                 var thisObj = this;
 
-                array.forEach(groupList, function (groupName) {
+                array.forEach(ledGroupList, function (groupName) {
                     var label = groupName;
 
                     var menuItem = new MenuItem({
