@@ -54,7 +54,7 @@
                 this.meshes = new ArrayList();
                 
                 this.sceneInteraction = new SceneInteraction();
-                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction,
+                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.ledSet,
                     this.sceneInteraction.ledSet.applyColorState));
 
             },
