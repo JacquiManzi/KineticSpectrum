@@ -48,7 +48,9 @@
                 sphere.address = this.address;
 
                 sphere.setColor = function (color) {
-
+                    if (color == 0x000000) {
+                        sphere.unselect();
+                    }
                     if (!this.material.color) {
                         var material = new three.MeshBasicMaterial({
                             color: color
@@ -62,13 +64,15 @@
                 sphere.select = function() {
                     this.setColor(0xff0000);
                     this.isSelected = true;
-                };
+                };    
 
-                sphere.unselect = function() {
-                    var material = new three.MeshNormalMaterial();
-                    this.setMaterial(material);
-                    this.isSelected = false;
-                    this.hasColor = false;
+                sphere.unselect = function () {
+                    if (this.material.color) {
+                        var material = new three.MeshNormalMaterial();
+                        this.setMaterial(material);
+                        this.isSelected = false;
+                        this.hasColor = false;
+                    }
                 };
 
                 return sphere;

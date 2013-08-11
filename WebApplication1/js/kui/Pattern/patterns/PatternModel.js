@@ -54,9 +54,10 @@ define([
             removeGroups: function (groups) {
 
                 var thisObj = this;
-                groups.forEach(function(group) {
+                groups.forEach(function (group) {
+                    thisObj.sceneInteraction.groupSet.deselectGroup(group.name); 
                     thisObj.groupList.remove(group);                       
-                });
+                });   
 
                 this.updateGroupListBox(this.getGroups());
             },
@@ -73,6 +74,17 @@ define([
                 return this.groupList;
             },
 
+            getGroupNames: function () {
+
+                var nameArray = [];
+                this.groupList.forEach(function (group) {
+
+                    nameArray.push(group.name);
+                });
+
+                return nameArray; 
+            },
+
             updateGroupListBox: function(groupList)
             {
                 html.removeDomChildren(this.groupListBox);
@@ -80,13 +92,14 @@ define([
                 var thisObj = this;
                 this.groupList.forEach(function (group) {
                     var option = html.createOption(group.name);
+                    dojo.connect(option, "onclick", thisObj.sceneInteraction.groupSet.selectGroup(group.name));
                     thisObj.groupListBox.domNode.appendChild(option);
                 });
             },
 
             updateGroupDropDown: function()
             {
-                this.groupDropDown.destroyDescendants();
+                this.groupDropDown.dropDown.destroyDescendants();
                 this.groupDropDown.set('label', "Select Group");
                 
                 var ledGroupList = this.sceneInteraction.groupSet.getGroups();

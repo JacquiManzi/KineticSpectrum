@@ -48,6 +48,16 @@ namespace RevKitt.KS.KineticEnvironment
             return mapping;
         }
 
+        public static void AddLED(LEDNode node)
+        {
+            if (_nodes.ContainsKey(node.Address))
+                throw new ArgumentException("Node with address '" + node.Address + "' already exists.");
+            if (node.Address.IsUnknown)
+                throw new ArgumentException("Cannot add a node with an unknown address");
+
+            _nodes.Add(node.Address, node);
+        }
+
         private const string LineMarker = "###";
         public static IDictionary<LightAddress, LEDNode> ParseProps(Stream stream, out IDictionary<string, string> nameToSection )
         {
@@ -131,6 +141,11 @@ namespace RevKitt.KS.KineticEnvironment
                 fixtureMap.Add(fixture[1], fixtureNo);
             }
             LightSystem.SetFixtureAddresses(fixtureMap);
+        }
+
+        public static IDictionary<int, String> getFixtures()
+        {
+            return LightSystem.getFixtures();
         }
     }
 }

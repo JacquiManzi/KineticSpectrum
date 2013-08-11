@@ -74,6 +74,17 @@ namespace KineticControl
             return LightAddresses;
         }
 
+        public IDictionary<int, String> getFixtures()
+        {
+            Dictionary<int, String> addressToFixture = new Dictionary<int, string>();
+
+            for (int i = 0; i < _pdss.Count; i++)
+            {
+                addressToFixture.Add(i, _pdss[i].EndPoint.Address.ToString());
+            }
+            return addressToFixture;
+        }
+
         public bool AutoUpdate
         {
             get { return _updateTimer.Enabled; }

@@ -372,6 +372,7 @@ define([
                 Scenes.getGroupNames(function (groupNames) {
                     array.forEach(groupNames, function (groupName) {
                         obj.addGroup(groupName);
+                       
                     });
                 });
             },
@@ -380,8 +381,6 @@ define([
                 var option = html.createOption(groupName);
                 var thisObj = this;
                 this.groupListBox.domNode.appendChild(option);
-
-                this.modelView.sceneInteraction.groupSet.createGroupFromSelected(groupName);
 
                 on(option, "click", function () {
                     var selected = [];

@@ -33,8 +33,6 @@ define([
             constructor: function () {
 
                 this.modelSkeleton = null;
-
-                this.addressToLED = [];
                 
                 this.projector = new three.Projector();
                 this.camera = null;
@@ -130,17 +128,8 @@ define([
 
                 var thisObj = this;
                 lineSegments.forEach(function (segment) {
-                   
-                    var ledNode = new LEDNode();
 
-                    ledNode.x = segment.x;
-                    ledNode.y = segment.y;
-                    ledNode.z = segment.z;
-
-                    var sphere = ledNode.createSphere();
-
-                    thisObj.ledSet.nodes.add(sphere);
-                    thisObj.scene.add(sphere);
+                    thisObj.ledSet.addGeneratedLED(segment);            
                 });
             },
 

@@ -37,6 +37,13 @@ namespace WebApplication1
         }
 
         [OperationContract]
+        public void AddLED(Stream ledStream)
+        {
+            LEDNode node = Serializer.FromStream<LEDNode>(ledStream);
+            LightSystemProvider.AddLED(node);
+        }
+
+        [OperationContract]
         [WebGet]
         public void DeleteGroup(string groupName)
         {
@@ -93,6 +100,13 @@ namespace WebApplication1
         public Stream GetPatterns()
         {
             return Serializer.ToStream(State.Scene.Patterns);
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetPatterns()
+        {
+            return Serializer.ToStream(LightSystemProvider.getFixtures());
         }
 
         [OperationContract]

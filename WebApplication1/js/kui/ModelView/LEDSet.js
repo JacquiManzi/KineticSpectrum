@@ -10,16 +10,18 @@
         "kui/util/CommonHTML",
         "kui/Pattern/patterns/PatternModel",
         "dojo/on",
-        "kui/ModelView/groups/Group"
+        "kui/ModelView/groups/Group",
+        "dojo/_base/array"
     ],
-    function(declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html, PatternModel, on, Group) {
+    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
+        PatternModel, on, Group, array) {
         "use strict";
         return declare("kui.ModelView.LEDSet", null, {
             nodes: null,
             vertexSpheres: null,
             addressToLED: null,
             ledRadius: 3,
-            
+                 
             constructor: function(scene) {
                 this.nodes = new ArrayList();
                 this.vertexSpheres = new ArrayList();
@@ -50,8 +52,6 @@
                         node.unselect();
                     }
                 });
-
-
             },
 
             selectAllVertexs: function () {
@@ -69,7 +69,6 @@
                         node.select();
                     }
                 });
-
             },
 
             deselectAllLEDs: function () {
@@ -78,7 +77,6 @@
                         node.unselect();
                     }
                 });
-
             },
 
             selectNodes: function (nodes) {
@@ -124,8 +122,24 @@
 
                 var ledSphere = led.createSphere();
 
-                /*Adjust the sphere radius according to model scale*/
+                this.addressToLED[address] = ledSphere;
 
+                Scene.AddLED({ address: address, position: ledSphere.position });
+
+                this.nodes.add(ledSphere);
+                this.scene.add(ledSphere);
+            },
+
+            addGeneratedLED: function(segment, address){
+
+                address = address ? address : new LightAddress();
+                var led = new LEDNode();
+                led.updatePosition(segment);
+                led.address = address;
+
+                var ledSphere = led.createSphere();
+
+                this.addressToLED[address] = ledSphere;
                 this.nodes.add(ledSphere);
                 this.scene.add(ledSphere);
             },
@@ -163,10 +177,7 @@
                     if (!this.ledSet.nodes.item(i).isVertex) {
                         this.leds.add(this.ledSet.nodes.item(i));
                     }
-
                 }
-
-            }
-            
+            }            
         });
     });

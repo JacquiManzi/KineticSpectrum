@@ -79,9 +79,6 @@ define([
                 var patternSection = this._createPatternSection();
                 domConstruct.place(patternSection, contentPane.domNode);
 
-                var applySection = this._createApplyPattern();
-                domConstruct.place(applySection, contentPane.domNode);
-
             }, 
 
             _createPatternSection: function () {
@@ -146,22 +143,30 @@ define([
 
                 dojo.connect(effectSection, "onUpdate", dojo.hitch(this, this._effectUpdated));
 
-                
+                /*Apply pattern button*/
+                var applyDiv = html.createDiv("background-color:" + this.backgroundColor + ";");
+                var applyPropPane = new TitlePane({
 
-                /*Create pattern button*/
+                    title: "Apply Pattern",
+                    content: applyDiv
+
+                });
+                var selectPatternSection = this._createSelectPatternSection();
+                domConstruct.place(selectPatternSection, applyDiv);
+
                 var createPatternButtonDiv = this._createPatternButtonSection();
-                domConstruct.place(createPatternButtonDiv, div);
-                domConstruct.place(html.createDiv(spacerDivStyle), div);
+                domConstruct.place(createPatternButtonDiv, applyDiv);
+                domConstruct.place(html.createDiv(spacerDivStyle), applyDiv);
+                domConstruct.place(applyPropPane.domNode, div); 
 
-             
-                return div;
+                return div;    
             },
             
             _effectUpdated: function (patternDef) {
 
                 this.patternDef = patternDef;
             },
-            _appplyEffect: function () {
+            _applyEffect: function () {
                 var patternDef = {};
                 dojo.mixin(patternDef, this.patternDef);
                 
@@ -169,11 +174,11 @@ define([
                 patternDef.groups = pProps.groups;
                 this.simulation.simulatePattern(patternDef);
             },
-            
+                 
             _getPatternProps: function () {
                 var patternDef = {};
                 patternDef.name = this.nameField.get('value');
-                patternDef.groups = this.patternModel.getSelectedGroups();
+                patternDef.groups = this.patternModel.getGroupNames();
                 patternDef.priority = this.priorityDropDown.get('label')*1.0;
                 return patternDef;
             },
@@ -222,13 +227,13 @@ define([
             _createPatternButtonSection: function()
             {
                 var div = html.createDiv();
-                var obj = this;
+                var thisObj = this;
                 var createButton = CommonForm.createButton('Create Pattern', function () {
 
 
                 });
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
-                    obj._appplyEffect();
+                    thisObj._applyEffect();
 
                 });
 
@@ -301,8 +306,13 @@ define([
                 domConstruct.place(removeGroupButton.domNode, groupButtonDiv);
 
                 var removeAllGroupButton = CommonForm.createButton("Remove All", dojo.hitch(this, function () {
-                    this.patternModel.groupList.clear();
-                    this.patternModel.updateGroupListBox(this.patternModel.groupList); 
+
+                    var groupList = this.patternModel.getGroups();
+                    var newGroupList = new ArrayList();
+                    groupList.forEach(function (group) {
+                        newGroupList.add(group);
+                    });
+                    this.patternModel.removeGroups(newGroupList);    
                 }));
                 domConstruct.place(removeAllGroupButton.domNode, groupButtonDiv);
 
@@ -310,7 +320,7 @@ define([
             },
             
 
-            _createApplyPattern: function () {
+            _createSelectPatternSection: function () {
 
                 var div = html.createDiv();
 
@@ -355,16 +365,8 @@ define([
                 var patterns = this.patterns.getPatterns();
                 for (var i = 0; i < patterns.count; i++) {
 
-
-
                 }
-
-
             }
-
-
-
-
         });
 
     });
