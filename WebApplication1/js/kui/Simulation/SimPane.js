@@ -40,8 +40,10 @@
 
             this.button = new Button({
                 name: "playButton",
-                label: this.simulation.isPlaying?"pause":"play"
+                label: this.simulation.isPlaying?"Pause":"Play"
             });
+
+            CommonForm.setButtonStyle(this.button);    
             
             var sliderRow = html.createRow();
             var sliderCell = html.createCell();
