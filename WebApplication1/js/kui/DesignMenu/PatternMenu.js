@@ -137,6 +137,10 @@ define([
 
                 });
 
+                var createPatternButtonDiv = this._createPatternButtonSection();
+                domConstruct.place(createPatternButtonDiv, effectPropPane.domNode);
+                domConstruct.place(html.createDiv(spacerDivStyle), effectPropPane.domNode);
+
                 effectSection.domNode.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(effectPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
@@ -144,19 +148,24 @@ define([
                 dojo.connect(effectSection, "onUpdate", dojo.hitch(this, this._effectUpdated));
 
                 /*Apply pattern button*/
-                var applyDiv = html.createDiv("background-color:" + this.backgroundColor + ";");
+                var applyDiv = html.createDiv(this.tableStyle);
                 var applyPropPane = new TitlePane({
 
                     title: "Apply Pattern",
                     content: applyDiv
-
                 });
+
+                applyDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+
                 var selectPatternSection = this._createSelectPatternSection();
                 domConstruct.place(selectPatternSection, applyDiv);
+                var applyButton = CommonForm.createButton('Apply Pattern', function () {
+                    thisObj._applyEffect();
+                });
 
-                var createPatternButtonDiv = this._createPatternButtonSection();
-                domConstruct.place(createPatternButtonDiv, applyDiv);
-                domConstruct.place(html.createDiv(spacerDivStyle), applyDiv);
+                CommonForm.setButtonStyle(applyButton);
+
+                domConstruct.place(applyButton.domNode, applyDiv);
                 domConstruct.place(applyPropPane.domNode, div); 
 
                 return div;    
@@ -232,12 +241,7 @@ define([
 
 
                 });
-                var applyButton = CommonForm.createButton('Apply Pattern', function () {
-                    thisObj._applyEffect();
-
-                });
-
-                domConstruct.place(applyButton.domNode, div);
+                
                 domConstruct.place(createButton.domNode, div);
 
                 return div;
@@ -328,6 +332,8 @@ define([
                     "color:#3d8dd5;");
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
+
+                CommonForm.setButtonStyle(patternDropDown);
 
                 var patternDropDownDiv = html.createDiv("padding-top:10px;");
             
