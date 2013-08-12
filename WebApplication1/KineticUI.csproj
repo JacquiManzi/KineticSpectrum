@@ -100,6 +100,7 @@
     <Content Include="js\kui\DesignMenu\EffectMenu\TimeItem.js" />
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
+    <Content Include="js\kui\DesignMenu\PatternComposerMenu.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
     <Content Include="js\kui\ModelView\groups\Group.js" />
     <Content Include="js\kui\ModelView\groups\GroupSet.js" />

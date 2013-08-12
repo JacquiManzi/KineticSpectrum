@@ -8,9 +8,10 @@ define([
     "kui/DesignMenu/ModelMenu",
     "kui/DesignMenu/FileMenu",
     "kui/DesignMenu/LEDMenu",
-    "kui/DesignMenu/PatternMenu"
+    "kui/DesignMenu/PatternMenu",
+    "kui/DesignMenu/PatternComposerMenu"
 ],
-    function (declare, AccordionContainer,three, ModelMenu, FileMenu, LEDMenu, PatternMenu) {
+    function (declare, AccordionContainer,three, ModelMenu, FileMenu, LEDMenu, PatternMenu, PatterComposerMenu) {
     "use strict";
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -30,7 +31,7 @@ define([
         },
          
         createMenu: function () {
-
+               
 
             /*LED Menu*/
             var ledMenu = new LEDMenu(this.modelView);
@@ -40,21 +41,20 @@ define([
             var patternMenu = new PatternMenu(this.modelView);
             patternMenu.createPatternMenu(this);
 
-           /*Model Menu*/
+            /*Pattern Composer Menu*/
+            var patternComposer = new PatterComposerMenu(this.modelView);
+            patternComposer.createComposerMenu(this);     
+
+           /*Model Menu
             var modelmenu = new ModelMenu(this.modelView);
-            modelmenu.create3DMenu(this);
+            modelmenu.create3DMenu(this);*/
 
             /*File Menu*/
             var fileMenu = new FileMenu(this.modelView);
             fileMenu.createFileMenu(this);
 
-           
             this.startup();
-
         }
-
-
     });
-
 });
 
