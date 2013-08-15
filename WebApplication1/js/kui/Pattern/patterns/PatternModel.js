@@ -15,8 +15,10 @@ define([
     "dojox/collections/ArrayList",
     "dijit/MenuItem",
     "dojo/_base/array",
-    "kui/ajax/Scenes"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, MenuItem, array, Scenes) {
+    "kui/ajax/Scenes",
+    "kui/ajax/SimState"
+],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, MenuItem, array, Scenes, SimState) {
         "use strict";
         return declare("kui.PatternMenu.patterns.PatternModel", null, {
 
@@ -27,17 +29,66 @@ define([
 
             constructor: function (sceneInteraction) {
 
-                this.name = "";
                 this.groupList = new ArrayList();
-                this.priority = 0;
+                this.patternList = new ArrayList();
+                this.patternDef = {};
+                this.effectsDef = {}; 
                 this.effectName = "";
                 this.effectProperties = {};
                 this.id = 0;
 
-                this.groupDropDown = null;
+                this.groupDropDown = null; 
                 this.groupListBox = null;
+                this.nameField = null;
+                this.priorityDropDown = null;
+                this.patternDropDown = null;
 
                 this.sceneInteraction = sceneInteraction;
+                this.simulation = null;
+            },
+
+            createPattern: function(){
+
+                this._createPatternDefinition();
+                SimState.createPattern(this.patternDef);
+
+                this.patternList.add(this.patternDef); 
+
+                this.updatePatternDropDown();
+            },
+
+            applyPattern: function(){
+
+                var selectedPattern = this.getSelectedPattern();
+                if (!!selectedPattern) {
+                    this.simulation.simulatePattern(selectedPattern);
+                } 
+            },
+
+            _createPatternDefinition: function () {
+
+                var patternDef = {};
+
+                patternDef.name = this.getPatternName();
+                patternDef.groups = this.getGroupNames();
+                patternDef.priority = this.getPatternPriority() * 1.0;
+
+                dojo.mixin(this.patternDef, this.effectsDef);
+                dojo.mixin(this.patternDef, patternDef);
+            },
+
+            updatePatternDefinition: function (effectsDef) {
+
+                this.effectsDef = effectsDef;
+                dojo.mixin(this.patternDef, effectsDef);
+            },
+
+            getPatternName: function(){
+                return this.nameField.get('displayedValue');
+            },
+
+            getPatternPriority: function () {
+                return this.priorityDropDown.get('value'); 
             },
 
             addGroup: function(groupName){
@@ -119,8 +170,59 @@ define([
                 }); 
             },
 
-            resetAllProperties: function () {
+            updatePatternDropDown: function(){ 
 
+                this.patternDropDown.dropDown.destroyDescendants();
+                 
+                var thisObj = this;
+                SimState.getPatternNames(function (patterns) {
+                    array.forEach(patterns, function (patternName) {
+
+                        var menuItem = new MenuItem({
+                            label: patternName,
+                            onClick: dojo.hitch(thisObj, function (patternName) {
+
+                                thisObj.patternDropDown.set('label', patternName);
+                                thisObj.patternDropDown.set('value', patternName); 
+                            }, patternName)
+                        });
+                        thisObj.patternDropDown.dropDown.addChild(menuItem);
+                    }); 
+                      
+                });
+
+            },
+
+            getSelectedPattern: function(){
+
+                this.updatePatternList(); 
+
+                var pattern = null;
+                var thisObj = this;
+                this.patternList.forEach(function (patternDef) {
+                    if (thisObj.patternDropDown.get('value') === patternDef.name) {
+                        pattern = patternDef;
+                    }                   
+                });
+
+                return pattern; 
+            },
+
+            updatePatternList: function(){
+
+                this.patternList.clear();
+
+                var thisObj = this;
+                var patterns = SimState.getPatterns(function(patterns){                 
+                    array.forEach(patterns, function (pattern) {
+
+                        thisObj.patternList.add(pattern);
+                    });   
+                });
+            }, 
+
+            resetAllProperties: function () {
+                 
                 this.name = "";
                 this.groupList = new ArrayList();
                 this.priority = 0;

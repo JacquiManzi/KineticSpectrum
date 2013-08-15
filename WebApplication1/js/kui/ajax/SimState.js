@@ -39,6 +39,54 @@
             });
         };
 
+        var createPattern = function (patternDef) {
+            xhr.post({
+                url: "Env.svc/SetPattern",
+                content: { d: JSON.stringify(patternDef) }
+            });
+        };
+
+        
+
+        var getPatternNames = function (onLoad) {
+            xhr.get({
+                url: "Env.svc/GetPatternNames",
+                handleAs: "json",
+                load: function (patternNames) {
+                    //array.forEach(patternNames, function (name) {
+                        
+                    //});
+                    onLoad(patternNames);
+                },
+                error: function (err1) {
+                    if (!!err1) {
+                        console.log(err1.stack);
+                    }
+                }
+            }); 
+        };
+
+        var getPatterns = function(onLoad){
+
+            xhr.get({
+                url: "Env.svc/GetPatterns",
+                handleAs: "json",
+                sync: true, 
+                load: function (patterns) {
+                    //array.forEach(patterns, function (pattern) {
+
+                    //});
+                    onLoad(patterns);
+                },
+                error: function (err1) {
+                    if (!!err1) {
+                        console.log(err1.stack);
+                    }
+                }
+            });
+
+        };
+
         var getLightState = function (onLoad) {
             xhr.get({
                 url: "SimState.svc/GetLightState",
@@ -132,6 +180,9 @@
 
         return {
             setMode: setMode,
+            createPattern: createPattern,
+            getPatternNames: getPatternNames,
+            getPatterns: getPatterns, 
             getLightState: getLightState,
             play: play,
             pause: pause,

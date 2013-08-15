@@ -56,7 +56,7 @@ define([
                 "background-color: #131313;" +
                 "background-size: 20px 20px;";
 
-                this.simulation = modelView.simulation;
+                this.patternModel.simulation = modelView.simulation;
 
             },
 
@@ -159,8 +159,10 @@ define([
 
                 var selectPatternSection = this._createSelectPatternSection();
                 domConstruct.place(selectPatternSection, applyDiv);
+
+                var thisObj = this; 
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
-                    thisObj._applyEffect();
+                    thisObj.patternModel.applyPattern();
                 });
 
                 CommonForm.setButtonStyle(applyButton);
@@ -173,28 +175,11 @@ define([
             
             _effectUpdated: function (patternDef) {
 
-                this.patternDef = patternDef;
+                this.patternModel.updatePatternDefinition(patternDef);
             },
-            _applyEffect: function () {
-                var patternDef = {};
-                dojo.mixin(patternDef, this.patternDef);
-                
-                var pProps = this._getPatternProps();
-                patternDef.groups = pProps.groups;
-                this.simulation.simulatePattern(patternDef);
-            },
-                 
-            _getPatternProps: function () {
-                var patternDef = {};
-                patternDef.name = this.nameField.get('value');
-                patternDef.groups = this.patternModel.getGroupNames();
-                patternDef.priority = this.priorityDropDown.get('label')*1.0;
-                return patternDef;
-            },
-
+            
             _createPrioritySection: function()
             {
-
                 var row = html.createRow();
 
                 var titleCell = html.createCell(this.titleCellStyle);
@@ -207,11 +192,9 @@ define([
                 var priorityDropDown = CommonForm.createDropDown("0");
                 domConstruct.place(priorityDropDown.domNode, valueCell);
 
-                this.priorityDropDown = priorityDropDown;
+                this.patternModel.priorityDropDown = priorityDropDown;
 
                 return row;
-
-
             },
 
             _createRunTimeSection: function()
@@ -238,8 +221,8 @@ define([
                 var div = html.createDiv();
                 var thisObj = this;
                 var createButton = CommonForm.createButton('Create Pattern', function () {
-
-
+ 
+                    thisObj.patternModel.createPattern();
                 });
                 
                 domConstruct.place(createButton.domNode, div);
@@ -332,8 +315,10 @@ define([
                     "color:#3d8dd5;");
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
-
-                CommonForm.setButtonStyle(patternDropDown);
+                this.patternModel.patternDropDown = patternDropDown;
+                this.patternModel.updatePatternDropDown();
+                 
+                CommonForm.setButtonStyle(patternDropDown); 
 
                 var patternDropDownDiv = html.createDiv("padding-top:10px;");
             
@@ -359,20 +344,16 @@ define([
 
                 titleCell.innerHTML = "Name: ";
 
-                this.nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;");
+                var nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;", dojo.hitch(this,function () {                   
+                }));
 
-                domConstruct.place(this.nameField.domNode, valueCell);
+                this.patternModel.nameField = nameField;
+
+                domConstruct.place(nameField.domNode, valueCell);
 
                 return tableRow;
-            },
-
-            populatePatternDropDown: function () {
-
-                var patterns = this.patterns.getPatterns();
-                for (var i = 0; i < patterns.count; i++) {
-
-                }
             }
+
         });
 
     });

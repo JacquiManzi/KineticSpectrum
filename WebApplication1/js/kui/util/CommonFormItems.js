@@ -133,12 +133,13 @@
              return listBox;
          },
 
-         createTextBox = function (value, placeHolder, style) {
+         createTextBox = function (value, placeHolder, style, inputFunc) {
              
             var textBox = new TextBox({
                  value: value /* no or empty value! */,
                  placeHolder: placeHolder,
-                 style: style
+                 style: style,
+                 onInput: inputFunc
             });
 
             return textBox;

@@ -38,8 +38,7 @@
         };
 
         var getGroups = function (onSuccessFunc) {
-
-                
+               
             xhr.get({
 
                 url: "Env.svc/GetGroups",
@@ -61,11 +60,7 @@
                 error: function (err1, err2) {
                     console.log(err1.stack);
                 }
-
-
             });
-
-
         };
 
         var tryPattern = function(pattern, onLoad) {

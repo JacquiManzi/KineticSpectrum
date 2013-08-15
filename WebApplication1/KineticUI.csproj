@@ -101,6 +101,7 @@
     <Content Include="js\kui\DesignMenu\FileMenu.js" />
     <Content Include="js\kui\DesignMenu\LEDMenu.js" />
     <Content Include="js\kui\DesignMenu\PatternComposerMenu.js" />
+    <Content Include="js\kui\DesignMenu\Timeline.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
     <Content Include="js\kui\ModelView\groups\Group.js" />
     <Content Include="js\kui\ModelView\groups\GroupSet.js" />
@@ -114,16 +115,17 @@
     <Content Include="js\kui\Pattern\patterns\Color.js" />
     <Content Include="js\kui\Pattern\effects\ColorEffect.js" />
     <Content Include="js\kui\Pattern\effects\Effect.js" />
-    <Content Include="js\kui\Pattern\patterns\Group.js" />
     <Content Include="js\kui\LED\LightAddress.js" />
     <Content Include="js\kui\Pattern\patterns\PatternModel.js" />
     <Content Include="js\kui\Pattern\patterns\Pattern.js" />
     <Content Include="js\kui\DesignMenu\PatternMenu.js" />
+    <Content Include="js\kui\Pattern\patterns\PatternSet.js" />
     <Content Include="js\kui\Pattern\patterns\PatternStart.js" />
     <Content Include="js\kui\Pattern\patterns\TimeRange.js" />
     <Content Include="js\kui\Simulation\SimPane.js" />
     <Content Include="js\kui\Simulation\Simulation.js" />
     <Content Include="js\kui\util\CommonFormItems.js" />
+    <Content Include="js\libraries\d3js\d3.js" />
     <Content Include="js\libraries\dojo\build-report.txt" />
     <Content Include="js\libraries\dojo\dijit\a11y.js" />
     <Content Include="js\libraries\dojo\dijit\a11y.js.uncompressed.js" />

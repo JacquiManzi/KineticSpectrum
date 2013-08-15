@@ -76,7 +76,15 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
         public void SetPattern(Pattern pattern)
         {
-            var existing = _patterns[pattern.Name];
+            Pattern existing = null;
+
+            if (_patterns.ContainsKey(pattern.Name))
+            {
+
+                existing = _patterns[pattern.Name];
+            }
+
+
             if (existing == null)
                 _patterns[pattern.Name] = pattern;
             else

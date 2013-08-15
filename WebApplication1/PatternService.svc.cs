@@ -39,6 +39,5 @@ namespace WebApplication1
             }
             return Serializer.ToStream(stateMap);
         }
-
     }
 }

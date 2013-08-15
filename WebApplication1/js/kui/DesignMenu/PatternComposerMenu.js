@@ -8,9 +8,12 @@ define([
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojo/on"
+    "dojo/on",
+    "kui/DesignMenu/Timeline",
+    "dojo/dom-geometry"
+ 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, Timeline, domGeom) {
         "use strict";
         return declare("kui.DesignMenu.PatternComposerMenu", null, {
 
@@ -24,7 +27,7 @@ define([
             },
 
             createComposerMenu: function (container) {
-                var contentPane = new ContentPane(
+                this.contentPane = new ContentPane(
                 {
                     title: "Pattern Composer",
                     style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
@@ -34,15 +37,24 @@ define([
                           "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
                           "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                 "background-color: #131313;" +
-                "background-size: 20px 20px;width:100%;"
-                    //onShow: dojo.hitch()
+                "background-size: 20px 20px;width:100%;height:100%;",
 
-                });
+                    onShow: dojo.hitch(this, this.createTimeline)
+                });    
+                    
+                container.addChild(this.contentPane);
+            },
 
-                container.addChild(contentPane);
+            createTimeline: function () {     
+                 
+                var timeline = new Timeline(); 
 
+                var timelineDiv = html.createDiv("width:100%;height:300px;");   
+                domConstruct.place(timelineDiv, this.contentPane.domNode);
+
+                timeline.createCanvas(timelineDiv);                                      
             }
-
+                    
         });
-
+               
     });

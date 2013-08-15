@@ -44,6 +44,13 @@ namespace WebApplication1
         }
 
         [OperationContract]
+        public void SetPattern(Stream pattern)
+        {
+            var patternObj = Serializer.FromPost<Pattern>(pattern);
+            State.Scene.SetPattern(patternObj);
+        }
+
+        [OperationContract]
         [WebGet]
         public void DeleteGroup(string groupName)
         {
@@ -56,14 +63,6 @@ namespace WebApplication1
         {
             Group groupObj = Serializer.Ser.Deserialize<Group>(new JsonTextReader(new StreamReader(newGroup)));
             State.Scene.RenameGroup(oldName, groupObj);
-        }
-
-        [OperationContract]
-        [WebGet]
-        public void SetPattern(Stream pattern)
-        {
-            var patternObj = Serializer.FromStream<Pattern>(pattern);
-            State.Scene.SetPattern(patternObj);
         }
 
         [OperationContract]
@@ -101,10 +100,10 @@ namespace WebApplication1
         {
             return Serializer.ToStream(State.Scene.Patterns);
         }
-
+       
         [OperationContract]
         [WebGet]
-        public Stream GetPatterns()
+        public Stream GetFixtures()
         {
             return Serializer.ToStream(LightSystemProvider.getFixtures());
         }

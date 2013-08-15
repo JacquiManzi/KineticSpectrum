@@ -32,7 +32,6 @@ define([
          
         createMenu: function () {
                
-
             /*LED Menu*/
             var ledMenu = new LEDMenu(this.modelView);
             ledMenu.createLEDMenu(this);
