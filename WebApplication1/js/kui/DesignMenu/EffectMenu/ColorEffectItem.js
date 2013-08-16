@@ -31,7 +31,7 @@
             this.colorTypeLI = html.createLI();
 
             this._createTypeDropDown();
-
+            this._colorList = new ArrayList();
 
             domConstruct.place(colorTitle, this.domNode);
             domConstruct.place(this.colorTypeLI, this.colorTypeUL);
@@ -51,16 +51,13 @@
             var colorBox = CommonForm.createDropDown("Select Color", "width:100%;");
             CommonForm.setButtonStyle(colorBox);     
                  
-            var me = this;
+            var thisObj = this;
             var colorOnClick = function () {
-
-                dojo.hitch(me, me._colorUpdated, colorPalette.get('value'), colorBox)();
+                dojo.hitch(thisObj, thisObj._colorUpdated, colorPalette.get('value'), colorBox)();
             };
             var colorPalette = CommonForm.createColorPalette(colorOnClick, "width:100%");
 
-            var colorPaletteItem = new MenuItem({
-
-            });
+            var colorPaletteItem = new MenuItem({});
 
             domConstruct.place(colorPalette.domNode, colorPaletteItem.domNode);
 
@@ -113,9 +110,6 @@
             })
 
             this.colorDropDownList.clear();
-
-           
-
         },
 
         _typeUpdated: function (name) {
@@ -126,32 +120,68 @@
         
             if (name === "Fixed") {
 
-                this._createColorPalette(false, true);
-             
+                this.typeBox.isMulti = false;
+                this._createColorPalette(false, true);             
             }
             else if (name === "Rainbow") {
-
+                this.typeBox.isMulti = false;
             }
             else if (name === "ColorFade") {
                
+                this.typeBox.isMulti = true;
                 this._createColorPalette(true, true);
-                this._createAddButton();
-
+                this._createAddButton();                 
             }
             else if (name === "ChasingColors") {
+
+                this.typeBox.isMulti = true;
                 this._createColorPalette(true, true);
                 this._createAddButton();
             }
-            else {
+            else { 
             }
-
-           
         },
 
         _colorUpdated: function (value, colorBox) {
 
-          colorBox.set('label', value); 
+            colorBox.set('label', value);
+            var thisObj = this;
+            var value = value.substr(1);   
+            value = parseInt(value, 16);
 
+
+            var found = false;
+            for (var i = 0; i < this._colorList.count; i++) {
+                var colorItem = this._colorList.item(i);
+                if (colorItem.id === colorBox.id) {
+                    colorItem.value = value;
+                    found = true;
+                }
+            }
+            if (!found) {
+                this._colorList.add({ 'id': colorBox.id, 'value': value });
+            }
+            
+            if (this.typeBox.isMulti) {   
+
+                var colorArray = [];
+                thisObj._colorList.forEach(function (colorItem) {
+
+                    colorArray.push(colorItem.value);  
+                });
+                this.onUpdate(this.key,
+                    {
+                        colors: colorArray,  
+                        name: this.value.name
+                    }); 
+            }
+            else { 
+                this.onUpdate(this.key,
+                    {
+                        color: value,
+                        name: this.value.name
+                    });
+            }
         },
 
         _createAddButton: function () {

@@ -17,11 +17,11 @@ define([
      "kui/Pattern/patterns/PatternModel",
      "dojo/on",
      "kui/ModelView/LEDSet",
-     "kui/ModelView/groups/GroupSet"
-
+     "kui/ModelView/groups/GroupSet",
+     "kui/DesignMenu/ComposerModel"
 ],
     function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
-        PatternModel, on, LEDSet, GroupSet) {
+        PatternModel, on, LEDSet, GroupSet, ComposerModel) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -48,6 +48,7 @@ define([
 
                 /*Models*/
                 this.patternModel = new PatternModel(this);
+                this.composerModel = new ComposerModel(this);
                 this.ledSet = new LEDSet(this.scene);
                 this.groupSet = new GroupSet(this.ledSet, this.patternModel);
                 

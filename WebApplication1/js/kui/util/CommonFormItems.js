@@ -94,8 +94,7 @@
 
          createDropDown = function (label, style) {
 
-             var dropDownMenu = new DropDownMenu({
-             });
+             var dropDownMenu = new DropDownMenu({});
 
              var dropDownButton = new DropDownButton({
 
@@ -123,13 +122,10 @@
          },
 
          createListBox = function (style) {
-
-
              var listBox = new MultiSelect({
-
                  style: style
              });
-
+              
              return listBox;
          },
 

@@ -15,7 +15,7 @@ namespace WebApplication1.JSConverters
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var val = (IColorEffect) value;
-            var nameProp = new JProperty("type", val.Name);
+            var nameProp = new JProperty("name", val.Name);
 
             var jobj = new JObject(nameProp);
 
@@ -23,8 +23,8 @@ namespace WebApplication1.JSConverters
             if (value is ColorFade)
             {
                 objWriter.WritePropertyName("colors");
-                serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));
-
+                //serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));
+                serializer.Serialize(objWriter, ((ColorFade)val).Colors);
             }
             else if (value is FixedColor)
             {
@@ -32,7 +32,7 @@ namespace WebApplication1.JSConverters
                 serializer.Serialize(objWriter, ((FixedColor) val).Colors[0]);
             }
             jobj.WriteTo(writer);
-        }
+        } 
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {

@@ -89,6 +89,7 @@
     <Content Include="js\kui\ajax\FileInterface.js" />
     <Content Include="js\kui\ajax\Scenes.js" />
     <Content Include="js\kui\ajax\SimState.js" />
+    <Content Include="js\kui\DesignMenu\ComposerModel.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\ColorEffectItem.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\EffectArea.js" />

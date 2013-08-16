@@ -45,6 +45,8 @@ define([
 
                 this.sceneInteraction = sceneInteraction;
                 this.simulation = null;
+
+                this.updatePatternList();
             },
 
             createPattern: function(){
@@ -173,6 +175,10 @@ define([
             updatePatternDropDown: function(){ 
 
                 this.patternDropDown.dropDown.destroyDescendants();
+
+                if (!!this.sceneInteraction.composerModel.patternListBox) {
+                    this.sceneInteraction.composerModel.updatePatternListBox();
+                }   
                  
                 var thisObj = this;
                 SimState.getPatternNames(function (patterns) {
@@ -234,3 +240,4 @@ define([
         });
 
     });
+    

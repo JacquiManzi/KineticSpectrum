@@ -1,4 +1,7 @@
-﻿/// <reference path="LEDMenu.js" />
+﻿/*
+*   @Author: Jacqui Manzi
+*    August 15th, 2013
+*/
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
@@ -39,7 +42,6 @@ define([
                     "padding-bottom:5px;" +
                     "background-color:" + this.backgroundColor + ";" +
                     "border-radius: 7px;" +
-                    "border: 3px solid #333333;" +
                     "width:99%;" +
                     "color:" + this.textColor + ";";
 

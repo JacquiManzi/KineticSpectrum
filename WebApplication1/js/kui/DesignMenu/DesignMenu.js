@@ -38,12 +38,12 @@ define([
             
             /*Pattern Menu*/
             var patternMenu = new PatternMenu(this.modelView);
-            patternMenu.createPatternMenu(this);
+            patternMenu.createPatternMenu(this); 
 
             /*Pattern Composer Menu*/
             var patternComposer = new PatterComposerMenu(this.modelView);
-            patternComposer.createComposerMenu(this);     
-
+            patternComposer.createComposerMenu(this);
+                    
            /*Model Menu
             var modelmenu = new ModelMenu(this.modelView);
             modelmenu.create3DMenu(this);*/

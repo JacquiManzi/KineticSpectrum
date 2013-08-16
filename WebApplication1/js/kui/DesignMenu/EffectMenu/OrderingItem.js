@@ -60,19 +60,19 @@
 
         setOrdering: function (type, update) {
             
-            var me = this;
+            var thisObj = this;
 
             array.forEach(this.orderingBox.dropDown.getChildren(), function(child) {
-                me.orderingBox.dropDown.removeChild(child);
+                thisObj.orderingBox.dropDown.removeChild(child);
             });
             Effects.getOrderingForType(type, function(orderings) {
                 array.forEach(orderings, function(ordering) {
-                    me.orderingBox.dropDown.addChild(new MenuItem({
+                    thisObj.orderingBox.dropDown.addChild(new MenuItem({
                         label: ordering,
-                        onClick: dojo.hitch(me, me.orderingUpdated, ordering)
+                        onClick: dojo.hitch(thisObj, thisObj.orderingUpdated, ordering)
                     }));
                     if (update) {
-                        me.orderingUpdated(orderings[0]);
+                        thisObj.orderingUpdated(orderings[0]);
                     }
                 });
             });

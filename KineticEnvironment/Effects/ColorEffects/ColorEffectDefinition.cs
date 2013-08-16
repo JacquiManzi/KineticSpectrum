@@ -27,7 +27,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
                                                                                 {ColorsProperty, new List<int>
                                                                                     {
                                                                                         ColorUtil.ToInt(Colors.Red),
-                                                                                        ColorUtil.ToInt(Colors.Green)
+                                                                                        ColorUtil.ToInt(Colors.Blue)
                                                                                     }}
                                                                             }; 
         public static readonly ColorEffectDefinition RedFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
@@ -45,6 +45,14 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
                                                                                 ColorProperty,
                                                                                 ColorUtil.ToInt(
                                                                                     Colors.Green)
+                                                                            }
+                                                                        });
+        public static readonly ColorEffectDefinition BlueFixed = new ColorEffectDefinition(FixedColor.EffectName, new Dictionary<string, object>
+                                                                        {
+                                                                            {
+                                                                                ColorProperty,
+                                                                                ColorUtil.ToInt(
+                                                                                    Colors.Blue)
                                                                             }
                                                                         });
 

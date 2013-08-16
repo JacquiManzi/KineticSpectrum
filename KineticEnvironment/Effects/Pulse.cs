@@ -91,7 +91,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
                         new List<PropertyDefinition>(DefaultDefs)
                             {
                                 new PropertyDefinition(BackgroundEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.RedFixed),
-                                new PropertyDefinition(PulseEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.GreenFixed),
+                                new PropertyDefinition(PulseEffectName, EffectPropertyTypes.ColorEffect, ColorEffectDefinition.BlueFixed),
                                 new PropertyDefinition(WidthName, EffectPropertyTypes.Float, 6)
                             });
     }
