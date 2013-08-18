@@ -55,9 +55,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             return 1;
         }
 
-        public int GetDurration()
+        public int GetDuration()
         {
-            return GetTime(PropertyDefinition.Durration.Name);
+            return GetTime(PropertyDefinition.Duration.Name);
         }
 
         public IOrdering GetOrdering(Group group )

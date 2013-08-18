@@ -25,7 +25,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             Tween = new Tween(easing)
                         {
                             StartTime = 0,
-                            EndTime = Durration,
+                            EndTime = Duration,
                             StartValue = Ordering.GetMin(),
                             EndValue = Ordering.GetMax()
                         };

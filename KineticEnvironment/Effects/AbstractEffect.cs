@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
-using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
-using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
@@ -16,7 +11,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         private readonly Group _group;
 
         private EffectProperties _properties;
-        protected int Durration;
+        protected int Duration;
         protected int RepeatCount;
         protected bool Reverse; 
 
@@ -30,7 +25,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public abstract string Name { get; }
         protected Group Group { get { return _group; } }
 
-        public int TotalTime { get { return Durration*RepeatCount; } }
+        public int TotalTime { get { return Duration*RepeatCount; } }
 
         public EffectProperties Properties { get { return _properties; }
         set
@@ -38,7 +33,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if(value == null)
                 throw new ArgumentNullException("value");
             _properties = value;
-            Durration = value.GetDurration();
+            Duration = value.GetDuration();
             RepeatCount = value.GetRepeatCount();
             Reverse = RepeatMethods.Reverse.Equals(value.GetRepeatMethod());
             ApplyProperties(_properties);
@@ -50,21 +45,21 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public void Apply(int time)
         {
-            if (time > Durration * RepeatCount)
-                time = Durration*RepeatCount;
-            int cycleTime = time%Durration;
-            int cycleCount = time/Durration;
+            if (time > Duration * RepeatCount)
+                time = Duration*RepeatCount;
+            int cycleTime = time%Duration;
+            int cycleCount = time/Duration;
 
             if (Reverse && cycleCount % 2 == 1)
-                cycleTime = Durration - cycleTime;
+                cycleTime = Duration - cycleTime;
             foreach (var ledNode in _group.LEDNodes)
             {
                 IColorEffect colorEffect = ApplyCycle(cycleTime, ledNode);
-                colorEffect.SetColor(time, RepeatCount*Durration, ledNode);
+                colorEffect.SetColor(time, RepeatCount*Duration, ledNode);
             }
         }
 
-        public static IList<PropertyDefinition> DefaultDefs = new List<PropertyDefinition>{PropertyDefinition.Durration}; 
+        public static IList<PropertyDefinition> DefaultDefs = new List<PropertyDefinition>{PropertyDefinition.Duration}; 
     }
     
 }

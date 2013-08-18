@@ -26,7 +26,7 @@ namespace WebApplication1.JSConverters
                 pattern.Name = "Test Pattern";
                 pattern.EffectProperties = new EffectProperties();
 
-                pattern.EffectProperties[PropertyDefinition.Durration.Name] = 5;
+                pattern.EffectProperties[PropertyDefinition.Duration.Name] = 5;
                 pattern.EffectProperties[PropertyDefinition.RepeatCount.Name] = 3;
                 pattern.EffectProperties[PropertyDefinition.RepeatMethod.Name] = RepeatMethods.Restart;
                 pattern.EffectProperties[PropertyDefinition.Ordering.Name] = GroupOrderings.Reverse;

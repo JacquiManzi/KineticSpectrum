@@ -26,7 +26,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public static readonly PropertyDefinition RepeatCount = new PropertyDefinition("Repeat Count", EffectPropertyTypes.Int, 1);
         public static readonly PropertyDefinition RepeatMethod = new PropertyDefinition("Repeat Method", EffectPropertyTypes.RepeatMethod, RepeatMethods.Reverse);
-        public static readonly PropertyDefinition Durration = new PropertyDefinition("Durration", EffectPropertyTypes.Time, 5);
+        public static readonly PropertyDefinition Duration = new PropertyDefinition("Duration", EffectPropertyTypes.Time, 5);
         public static readonly PropertyDefinition Ordering = new PropertyDefinition("Ordering", EffectPropertyTypes.Ordering, new Dictionary<string, string>{{Orderings.OrderingTypeKey, OrderingTypes.Group},{Orderings.OrderingKey,GroupOrderingTypes.Forward}});
         public static readonly PropertyDefinition Easing = new PropertyDefinition("Tween", EffectPropertyTypes.Easing, Easings.Linear.Name );
     }
