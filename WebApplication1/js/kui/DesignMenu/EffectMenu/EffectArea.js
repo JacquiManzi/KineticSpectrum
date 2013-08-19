@@ -49,7 +49,8 @@
             var item = this.selectItem(effectDef);
             if (!!item) {
                 this.items.push(item);
-                this.propertyMap[item.key] = item.value;
+                var key = item.key.charAt(0).toLowerCase() + item.key.slice(1);
+                this.propertyMap[key] = item.value;
                 this.handles.push(dojo.connect(item, "onUpdate", dojo.hitch(this, this._updateMapping)));
             }
 
@@ -60,7 +61,8 @@
             
         },
 
-        _updateMapping : function( key, value) {
+        _updateMapping: function (key, value) {
+            key = key.charAt(0).toLowerCase() + key.slice(1);
             this.propertyMap[key] = value;
             this.onUpdate(this.propertyMap);
         },
@@ -91,7 +93,8 @@
                 return new ColorEffectItem(obj);
             }
             else {
-                this.propertyMap[obj.key] = obj.value;
+                var key = obj.key.charAt(0).toLowerCase() + obj.key.slice(1);
+                this.propertyMap[key] = obj.value;
             }
                 
             return null;
