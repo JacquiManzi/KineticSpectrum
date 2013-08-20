@@ -27,43 +27,81 @@ define([
                 this.patternList = new ArrayList(); 
                 this.timeline = new Timeline();
 
+                this.barData = [{}];
+                this.xCount = 0;
+                this.yCount = 0;
+
+                this.timelineHeight = 200;
+
             },
 
             addPatternFromOption: function (options) {
 
-                var xCount = 0;
                 var width = 20;
-                var height = 200;
-                var y = 0;
+                var height = 0;
                 var color = "blue";
+                var time = 0;
 
                 var thisObj = this;
                 array.forEach(options, function (option) {
                                         
                     thisObj.patternModel.patternList.forEach(function (pattern) {
                         if (pattern.name === option.innerHTML) {                            
-                            
-                            thisObj.patternList.add(pattern); 
-                            thisObj.timeline.addBar(xCount, y, width, height, color);
-                            xCount += 22;
-                            y += 22; 
+                          
+                            if (!thisObj.patternList.contains(pattern)) {
+                                thisObj.patternList.add(pattern);
+                            }
+                                
+                            height = (pattern.effectProperties.duration * pattern.effectProperties["repeat Count"]);
+
+                            thisObj.barData.push({   
+                                "rx": thisObj.xCount,
+                                "ry": thisObj.yCount,
+                                "height": height,
+                                "width": width,   
+                                "color": color
+                            });
+
+                            thisObj.xCount += 22;    
+                            thisObj.yCount = thisObj.yCount + height;
                         }
-                    }); 
+                    });           
                 });
+              
+                this.timeline.addBars(this.barData);   
+
             }, 
 
-            removePattern: function (patterns) {
+            removePatternFromOption: function (removedOptions) {
 
-                array.forEach(patterns, function(pattern) {
+                var thisObj = this;
+                var newOptions = [];
 
+                for (var i = 0; i < removedOptions.length; i++) {
+                    for (var j = 0; j < this.patternList.count; j++) {
+
+                        if (this.patternList.item(j).name === removedOptions[i].innerHTML) {
+                            this.patternList.remove(this.patternList.item(j));
+                        }                     
+                     } 
+                }
+                     
+                this.patternList.forEach(function (pattern) {
+                    newOptions.push(html.createOption(pattern.name));
                 });
 
+                this.yCount = 0;
+                this.xCount = 0;
+                this.patternList.clear();
+                this.barData = [{}];
+
+                this.addPatternFromOption(newOptions);  
             },
 
             updatePatternListBox: function () {
 
-                this.patternListBox.destroyDescendants();
-                 
+                html.removeDomChildren(this.patternListBox);
+                  
                 var thisObj = this;
                 this.patternModel.patternList.forEach(function (pattern) {
 

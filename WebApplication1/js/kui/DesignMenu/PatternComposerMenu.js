@@ -97,7 +97,10 @@ define([
                     thisObj.composerModel.addPatternFromOption(thisObj.composerModel.patternListBox.getSelected());
                 });
                 domConstruct.place(addButton.domNode, div);
-                var removeButton = CommonForm.createButton('Remove'); 
+                var removeButton = CommonForm.createButton('Remove', function () {
+
+                    thisObj.composerModel.removePatternFromOption(thisObj.composerModel.patternListBox.getSelected());
+                });
                 domConstruct.place(removeButton.domNode, div); 
             },
 

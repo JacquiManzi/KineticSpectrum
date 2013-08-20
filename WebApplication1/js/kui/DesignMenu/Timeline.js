@@ -22,11 +22,16 @@ define([
             constructor: function () {
 
                 this.svg = null;
+                this.div = null;
+                this.barMap = d3.map();
+
+                this.patternGroup = null;
 
             },
 
             createCanvas: function (div) {
 
+                this.div = div;
                 html.removeDomChildren(div); 
 
                 var canvasWidth = domGeom.getMarginSize(div).w;
@@ -37,18 +42,31 @@ define([
 	                .attr("width", canvasWidth)
 	                .attr("height", canvasHeight);
 
-               this.addBar(); 
+               this.patternGroup = this.svg.append("g"); 
 
             },
 
-            addBar: function (x, y, width, height, color) {
+            addBars: function (patternData) {
 
-                this.svg.append("svg:rect")
-                    .attr("x", x)
-                    .attr("y", y)
-                    .attr("width", width)
-                    .attr("height", height)
-                    .attr("fill", color); 
+                this.clearCanvas();
+                this.createCanvas(this.div); 
+
+                var rectangles = this.patternGroup.selectAll("rect")
+                .data(patternData)
+                .enter()
+                .append("rect");            
+
+                  
+                var rectangleAttributes = rectangles
+                .attr("x", function (d) { return d.rx; })
+                .attr("y", function (d) { return d.ry; })
+                .attr("height", function (d) { return d.height; })
+                .attr("width", function (d) { return d.width; })
+                .style("fill", function (d) { return d.color; });
+            },
+
+            clearCanvas: function () {
+               this.svg.remove();
             }
 
 
