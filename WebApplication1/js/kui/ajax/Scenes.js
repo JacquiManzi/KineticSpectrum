@@ -85,11 +85,20 @@
             });
         };
 
+        var addLED = function (led) {
+            xhr.post({
+                url: "Env.svc/AddLED",
+                handleAs: "json",
+                content: { d: JSON.stringify(led) }
+            });
+        };
+
         return {
             getGroupNames: getGroupNames,
             getPatternNames: getPatternNames,
             getGroups: getGroups,
-            tryPattern: tryPattern
+            tryPattern: tryPattern,
+            addLED: addLED
         };
 
     });

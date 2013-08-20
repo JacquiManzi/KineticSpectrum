@@ -11,10 +11,11 @@
         "kui/Pattern/patterns/PatternModel",
         "dojo/on",
         "kui/ModelView/groups/Group",
-        "dojo/_base/array"
+        "dojo/_base/array",
+        "kui/ajax/Scenes"
     ],
     function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
-        PatternModel, on, Group, array) {
+        PatternModel, on, Group, array, Scenes) {
         "use strict";
         return declare("kui.ModelView.LEDSet", null, {
             nodes: null,
@@ -27,8 +28,12 @@
                 this.vertexSpheres = new ArrayList();
                 this.addressToLED = [];
                 this.scene = scene;
-            },
-            
+
+                this.lightNo = 0;
+                this.portNo = 0;
+                this.fixtureNo = 0;
+            },   
+               
             createLEDNodes: function(ledList) {
 
                 ledList.forEach(dojo.hitch(this, function(item) {
@@ -36,7 +41,7 @@
                     var ledNode = new LEDNode();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.radius = 3;
+                    ledNode.radius = 0.015;   
 
                     var ledSphere = ledNode.createSphere();
                     this.scene.add(ledSphere);
@@ -52,7 +57,7 @@
                         node.unselect();
                     }
                 });
-            },
+            },   
 
             selectAllVertexs: function () {
                 this.nodes.forEach(function (node) {
@@ -130,7 +135,7 @@
                 this.scene.add(ledSphere);
             },
 
-            addGeneratedLED: function(segment, address){
+            /*addGeneratedLED: function(segment, address){
 
                 address = address ? address : new LightAddress();
                 var led = new LEDNode();
@@ -138,6 +143,40 @@
                 led.address = address;
 
                 var ledSphere = led.createSphere();
+
+                this.addressToLED[address] = ledSphere;
+                this.nodes.add(ledSphere);
+                this.scene.add(ledSphere);
+            },*/
+
+            addGeneratedLED: function (segment) {
+
+                //address = address ? address : new LightAddress();
+                var address = new LightAddress({
+
+                    fixtureNo: this.fixtureNo,
+                    portNo: this.portNo,
+                    lightNo: this.lightNo
+                });
+
+                this.lightNo++;
+                if (this.lightNo > 49) {
+                    this.portNo++;
+                    this.lightNo = 0;
+                }
+
+                if (this.portNo > 7) {
+                    this.fixtureNo++;
+                    this.portNo = 0;
+                }
+
+                var led = new LEDNode();
+                led.updatePosition(segment);
+                led.address = address;
+
+                var ledSphere = led.createSphere();
+
+                Scenes.addLED({ address: led.address, position: led.position, color: 0 });
 
                 this.addressToLED[address] = ledSphere;
                 this.nodes.add(ledSphere);

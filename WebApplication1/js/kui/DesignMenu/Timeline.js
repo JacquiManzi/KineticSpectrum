@@ -40,9 +40,30 @@ define([
                this.svg = d3.select(div).append("svg:svg")
 		            .attr("id", "svg")
 	                .attr("width", canvasWidth)
-	                .attr("height", canvasHeight);
+	                .attr("height", canvasHeight)
+                    .style("overflow", "auto"); 
 
-               this.patternGroup = this.svg.append("g"); 
+               this.patternGroup = this.svg.append("g");
+
+               this.createAxis(); 
+
+            },
+
+            createAxis: function () {
+
+                var axisScale = d3.scale.linear()
+                                         .domain([0,300])
+                                         .range([0,300]);   
+                
+                var yAxis = d3.svg.axis()
+                                  .orient("left")                                    
+                                  //.ticks(d3.time.seconds, 200)
+                                  .scale(axisScale); 
+                    
+                var yAxisGroup = this.svg.append("g")
+                .attr("transform", "translate(35,30)")
+                .style('fill', 'white')   
+                .call(yAxis);   
 
             },
 
@@ -53,9 +74,25 @@ define([
 
                 var rectangles = this.patternGroup.selectAll("rect")
                 .data(patternData)
-                .enter()
-                .append("rect");            
+                .enter() 
+                .append("rect");
 
+                this.svg.selectAll("rect").on("click", function () {
+                  
+                    if (!this.selected) {
+                        d3.select(this).attr('r', 25)
+                            .style("fill", "lightcoral")
+                            .style("stroke", "red");
+                        this.selected = true;
+                    }
+                    else {
+                        d3.select(this).attr('r', 25)
+                            .style("fill", "blue")
+                            .style("stroke", "blue");
+                        this.selected = false;
+                    }
+                }); 
+                   
                   
                 var rectangleAttributes = rectangles
                 .attr("x", function (d) { return d.rx; })

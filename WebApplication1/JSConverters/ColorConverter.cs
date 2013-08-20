@@ -21,11 +21,14 @@ namespace WebApplication1.JSConverters
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
                                         JsonSerializer serializer)
         {
-            var nullable = reader.ReadAsInt32();
-            int color = 0;
-            if (nullable.HasValue)
-                color = nullable.Value;
-            return ColorUtil.FromInt(color);
+            if(reader.ValueType.Equals(typeof(int)))
+                return ColorUtil.FromInt((int)reader.Value);
+            return Colors.Black;
+            //var nullable = reader.ReadAsInt32();
+            //int color = 0;
+            //if (nullable.HasValue)
+            //    color = nullable.Value;
+            //return ColorUtil.FromInt(color);
 
         }
 

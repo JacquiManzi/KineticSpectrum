@@ -28,12 +28,12 @@ define([
                 this.timeline = new Timeline();
 
                 this.barData = [{}];
-                this.xCount = 0;
-                this.yCount = 0;
+                this.xCount = 40;
+                this.yCount = 30;
 
                 this.timelineHeight = 200;
 
-            },
+            },   
 
             addPatternFromOption: function (options) {
 
@@ -52,13 +52,13 @@ define([
                                 thisObj.patternList.add(pattern);
                             }
                                 
-                            height = (pattern.effectProperties.duration * pattern.effectProperties["repeat Count"]);
+                            height = (pattern.effectProperties.durration * pattern.effectProperties["repeat Count"]);
 
                             thisObj.barData.push({   
                                 "rx": thisObj.xCount,
-                                "ry": thisObj.yCount,
+                                "ry": thisObj.yCount, 
                                 "height": height,
-                                "width": width,   
+                                "width": width,      
                                 "color": color
                             });
 
@@ -90,8 +90,8 @@ define([
                     newOptions.push(html.createOption(pattern.name));
                 });
 
-                this.yCount = 0;
-                this.xCount = 0;
+                this.yCount = 30;
+                this.xCount = 35;
                 this.patternList.clear();
                 this.barData = [{}];
 

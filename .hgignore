@@ -8,3 +8,4 @@ style: regexp
 .cache$
 \.suo$
 \.orig$
+Config.resx$

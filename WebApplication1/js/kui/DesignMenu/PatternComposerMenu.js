@@ -66,7 +66,7 @@ define([
                
                 this.createPatternSection(this.contentPane);
                               
-                var timelineDiv = html.createDiv("width:100%;height:500px;background-color:#141414;");
+                var timelineDiv = html.createDiv("width:100%;height:500px;background-color:#141414;overflow:auto; ");
 
                 var timelineTitlePane = new TitlePane({    
                     title: "Pattern Timeline",

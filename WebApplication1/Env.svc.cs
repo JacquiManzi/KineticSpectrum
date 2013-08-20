@@ -32,7 +32,7 @@ namespace WebApplication1
         [OperationContract]
         public void AddLED(Stream ledStream)
         {
-            LEDNode node = Serializer.FromStream<LEDNode>(ledStream);
+            LEDNode node = Serializer.FromPost<LEDNode>(ledStream);
             LightSystemProvider.AddLED(node);
         }
 
