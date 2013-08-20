@@ -45,11 +45,14 @@ namespace KineticControl
                    Color color = pattern.GetColors()[i];
                    for (int j = 0; j < 50; j++)
                    {
-                       foreach (var colorData in powerSupply.AllColorData)
+                       foreach (PDS pds in network.PDSs)
                        {
-                           colorData[j] = color;
+                           foreach (var colorData in pds.AllColorData)
+                           {
+                               colorData[j] = color;
+                           }
+                           pds.UpdateSystem();
                        }
-                       powerSupply.UpdateSystem();
                        Thread.Sleep(100);
                    }
                }

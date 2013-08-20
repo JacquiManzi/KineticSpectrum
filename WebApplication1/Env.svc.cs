@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
-using System.Text;
-using System.Web.SessionState;
 using KineticControl;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using WebApplication1.JSConverters;
-using System.ServiceModel.Channels;
-using System.Net;
 
 namespace WebApplication1
 {
@@ -166,17 +159,45 @@ namespace WebApplication1
         {
             Stream s = new MemoryStream();
             Serializer.Ser.Formatting = Formatting.Indented;
-            string groups = Serializer.ToString(State.Scene.Groups);
-            string patterns = Serializer.ToString(State.Scene.Patterns);
-            Serializer.Ser.Formatting = Formatting.None;
 
             var writer = new StreamWriter(s);
-            writer.WriteLine("\n\n### Groups");
-            writer.Write(groups);
 
-            writer.WriteLine("\n\n### Patterns");
-            writer.WriteLine(patterns);
+            writer.WriteLine("###Fixtures\n");
+            foreach (var kv in LightSystemProvider.getFixtures())
+            {
+                writer.Write(kv.Key);
+                writer.Write(" ");
+                writer.Write(kv.Value);
+                writer.WriteLine();
+            }
+            writer.WriteLine("\n###Lights\n");
+            foreach (var node in LightSystemProvider.Lights)
+            {
+                writer.Write(node.Address.ToString());
+                writer.Write(' ');
+                writer.Write(node.Position.X);
+                writer.Write(' ');
+                writer.Write(node.Position.Y);
+                writer.Write(' ');
+                writer.Write(node.Position.Z);
+                writer.WriteLine();
+            }
+
+            writer.WriteLine("\n\n### Groups\n");
             writer.Flush();
+            Serializer.ToStream(State.Scene.Groups, writer.BaseStream);
+//            writer.Write(groups);
+//            groups = null;
+
+
+            writer.WriteLine("\n\n### Patterns\n");
+            writer.Flush();
+            Serializer.ToStream(State.Scene.Patterns, writer.BaseStream);
+//            writer.WriteLine(patterns);
+//            patterns = null;
+            writer.Flush();
+
+            Serializer.Ser.Formatting = Formatting.None;
 
             s.Position = 0;
             return s;

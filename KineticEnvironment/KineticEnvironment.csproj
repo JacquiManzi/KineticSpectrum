@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ILNumerics, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ILNumerics.3.2.2.0\lib\ILNumerics.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -49,6 +53,8 @@
   <ItemGroup>
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ColorUtilTest.cs" />
+    <Compile Include="D3\D3Util.cs" />
+    <Compile Include="D3\Plane.cs" />
     <Compile Include="Effects\AbstractEffect.cs" />
     <Compile Include="Effects\AbstractLinearEffect.cs" />
     <Compile Include="Effects\ColorEffects\ColorEffectDefinition.cs" />
@@ -83,7 +89,6 @@
     <Compile Include="Tweening\Easings.cs" />
     <Compile Include="Tweening\Tween.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\KineticControl\KineticControl.csproj">
       <Project>{e37e554b-4741-4827-8162-733de3ae02c6}</Project>
@@ -92,6 +97,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin32\libiomp5md.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bin32\mkl_custom.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bin64\libiomp5md.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bin64\mkl_custom.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

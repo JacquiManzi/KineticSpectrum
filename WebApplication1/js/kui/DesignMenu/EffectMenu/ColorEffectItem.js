@@ -103,11 +103,11 @@
 
         _clearColorDropDownList: function () {
 
-            this.colorDropDownList.forEach(function (item) {
+            this.colorDropDownList.forEach(function(item) {
 
                 item.destroy();
 
-            })
+            });
 
             this.colorDropDownList.clear();
         },

@@ -28,49 +28,34 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             } 
         }
 
-        private readonly static PositionFunc ForwardFunc = (pos, total) => pos;
 
         public static IOrdering Forward
         {
-            get { return new GroupOrdering(GroupOrderingTypes.Forward, ForwardFunc); } 
+            get { return new GroupOrdering(GroupOrderingTypes.Forward, Orderings.ForwardFunc); } 
         }
 
-        private static readonly PositionFunc ReverseFunc = (pos, total) => total - pos;
  
         public static IOrdering Reverse
         {
-            get{return new GroupOrdering(GroupOrderingTypes.Reverse, ReverseFunc);}
+            get{return new GroupOrdering(GroupOrderingTypes.Reverse, Orderings.ReverseFunc);}
         }
 
-        private static readonly PositionFunc OutInFunc = (pos, total) =>
-                                                         {
-                                                             if (pos <= total/2)
-                                                                 return pos*2;
-                                                             return (total - pos)*2;
-                                                         };
         public static IOrdering OutIn
         {
-            get{ return  new GroupOrdering(GroupOrderingTypes.OutIn, OutInFunc);}
+            get{ return  new GroupOrdering(GroupOrderingTypes.OutIn, Orderings.OutInFunc);}
         }
 
-        private static readonly PositionFunc InOutFunc = (pos, total) =>
-                                                         {
-                                                             if (pos <= total/2)
-                                                                 return total - pos*2;
-                                                             return (pos - total/2 - 1)*2;
-                                                         };
 
         public static IOrdering InOut
         {
-            get{ return new GroupOrdering(GroupOrderingTypes.InOut, InOutFunc);}
+            get{ return new GroupOrdering(GroupOrderingTypes.InOut, Orderings.InOutFunc);}
         }
 
-        protected delegate int PositionFunc(int pos, int total);
 
         protected class GroupOrdering : IOrdering
         {
             
-            private PositionFunc Position { get;  set; }
+            private Orderings.PositionFunc Position { get;  set; }
             public string Type { get { return OrderingTypes.Group; } }
             public string Ordering { get; private set; }
             public bool Runnable { get { return Group != null; } }
@@ -80,7 +65,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             private int _last;
 
 
-            internal GroupOrdering(string ordering, PositionFunc positionFunc)
+            internal GroupOrdering(string ordering, Orderings.PositionFunc positionFunc)
             {
                 Ordering = ordering;
                 Position = positionFunc;
@@ -89,7 +74,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             public double GetLEDPosition(LEDNode ledNode)
             {
                 var address = ledNode.Address;
-                int pos = Position(_addressToPos[address], _last);
+                double pos = Position(_addressToPos[address], _last);
                 return pos;
             }
 

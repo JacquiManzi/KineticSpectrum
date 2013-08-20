@@ -19,5 +19,25 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                 return SpatialOrderings.GetOrdering(ordering);
             throw new ArgumentException("Invalid OrderingType '"+orderingType+"'.", "orderingType");
         }
+
+        public static readonly PositionFunc InOutFunc = (pos, total) =>
+                                                         {
+                                                             if (pos <= total/2)
+                                                                 return total - pos*2;
+                                                             return (pos - total/2 - 1)*2;
+                                                         };
+
+        public static readonly PositionFunc OutInFunc = (pos, total) =>
+                                                         {
+                                                             if (pos <= total/2)
+                                                                 return pos*2;
+                                                             return (total - pos)*2;
+                                                         };
+
+        public static readonly PositionFunc ReverseFunc = (pos, total) => total - pos;
+
+        public readonly static PositionFunc ForwardFunc = (pos, total) => pos;
+
+        public delegate double PositionFunc(double pos, double total);
     }
 }
