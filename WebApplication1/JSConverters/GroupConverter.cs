@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using KineticControl;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
@@ -25,27 +26,40 @@ namespace WebApplication1.JSConverters
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
                                         JsonSerializer serializer)
         {
-            string name = null;
-            IEnumerable<LightAddress> addresses = null;
 
-            while (reader.Read())
-            {
-                if (reader.Value != null)
-                {
-                    if (reader.TokenType == JsonToken.PropertyName)
-                    {
-                        string pName = (string)reader.Value;
-                        reader.Read();
-                        if (pName.Equals("name"))
-                        {
-                            name = (string)reader.Value;
-                        }
-                        if (pName.Equals("lights"))
-                            addresses = serializer.Deserialize<IEnumerable<LightAddress>>(reader);
-                    }
-                }
-            }
+            JObject groupObj = JObject.Load(reader);
+            string name = (string)groupObj["name"];
+//            JArray lightArray = (JArray) groupObj["lights"].Sel;
+
+            IEnumerable<LightAddress> addresses = groupObj["lights"].Select(LightAddressConverter.FromObj);
             return new Group(name, LightSystemProvider.GetNodeMapping(addresses).Values);
+
+
+//            if(reader.TokenType != JsonToken.StartObject)
+//                throw new JsonReaderException("Expected start of object");
+//            reader.Read();
+//
+//            while (reader.TokenType != JsonToken.EndObject && reader.Read())
+//            {
+//                if(reader.TokenType == JsonToken.EndObject)
+//                if (reader.Value != null)
+//                {
+//                    if (reader.TokenType == JsonToken.PropertyName)
+//                    {
+//                        string pName = (string)reader.Value;
+//                        reader.Read();
+//                        if (pName.Equals("name"))
+//                        {
+//                            name = (string)reader.Value;
+//                        }
+//                        if (pName.Equals("lights"))
+//                            addresses = serializer.Deserialize<IEnumerable<LightAddress>>(reader);
+//                    }
+//                }
+//            }
+
+//            if(addresses == null)
+//                throw new JsonReaderException("Illegal Group object. No property 'lights' containing an array of light addresses");
 
         }
 

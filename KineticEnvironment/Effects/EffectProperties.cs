@@ -63,6 +63,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public IOrdering GetOrdering(Group group )
         {
             var ordering = (IOrdering) this[PropertyDefinition.Ordering.Name];
+            ordering = Orderings.GetOrdering(ordering.Type, ordering.Ordering);
             ordering.Group = group;
             return ordering;
 //            string[] orderings = (string[]) this[PropertyDefinition.Ordering.Name];

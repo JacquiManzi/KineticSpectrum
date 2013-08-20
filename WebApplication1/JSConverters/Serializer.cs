@@ -33,12 +33,17 @@ namespace WebApplication1.JSConverters
 
         public static readonly JsonSerializer Ser;
 
+        public static void ToStream(object obj, Stream stream)
+        {
+            var sw = new StreamWriter(stream);
+            Ser.Serialize(sw, obj );
+            sw.Flush();
+            
+        }
         public static Stream ToStream(object obj)
         {
             var ms = new MemoryStream();
-            var sw = new StreamWriter(ms);
-            Ser.Serialize(sw, obj );
-            sw.Flush();
+            ToStream(obj, ms);
             ms.Position = 0;
             return ms;
         }

@@ -50,7 +50,6 @@ namespace WebApplication1.JSConverters
                            Name = name,
                            Priority = priority
                        };
-
         }
 
         private static JsonSerializer BuildSerializer(EffectAttributes attributes)

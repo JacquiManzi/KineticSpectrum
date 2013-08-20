@@ -17,6 +17,11 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
         public Group(string name, IEnumerable<LEDNode> ledNodes )
         {
+            if(name == null)
+                throw new ArgumentException("Group name cannot be null");
+            if(name.Length == 0)
+                throw new ArgumentException("Group must have a name. The empty string is not a valid group name");
+
             _name = name;
             _ledNodes = new List<LEDNode>(ledNodes).AsReadOnly();
         }

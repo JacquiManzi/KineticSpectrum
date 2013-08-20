@@ -31,30 +31,14 @@ namespace WebApplication1.JSConverters
         {
 
             JObject obj = JObject.Load(reader);
+            return FromObj(obj);
+        }
+
+        public static LightAddress FromObj(JToken obj)
+        {
             return new LightAddress((int) obj["fixtureNo"],
                                     (int) obj["portNo"],
                                     (int) obj["lightNo"]);
-//            int fixture=-1, port=-1, light=-1;
-//            while(reader.Read())
-//            {
-//                if(reader.Value != null)
-//                {
-//                    if(reader.TokenType == JsonToken.PropertyName)
-//                    {
-//                        string pName = (string)reader.Value;
-//                        reader.Read();
-//                        int val = int.Parse((string) reader.Value);
-//                        if (pName.Equals("FixtureNo"))
-//                            fixture = val;
-//                        if (pName.Equals("LightNo"))
-//                            light = val;
-//                        if (pName.Equals("PortNo"))
-//                            port = val;
-//                    }
-//                }
-//            }
-//            return new LightAddress(fixture, port, light);
-
         }
 
         public override bool CanConvert(Type objectType)

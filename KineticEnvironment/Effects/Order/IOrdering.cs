@@ -12,6 +12,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
     [JsonObject(MemberSerialization.OptIn)]
     public interface IOrdering
     {
+
         Group Group { get; set; } 
         [JsonProperty]
         string Type { get; }
@@ -23,4 +24,5 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
         double GetMax();
         double GetMin();
     }
+
 }
