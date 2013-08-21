@@ -183,9 +183,9 @@ define([
                 CommonForm.setButtonStyle(removeButton); 
 
                // domConstruct.place(testButton.domNode, applyDiv);
-                domConstruct.place(removeButton.domNode, applyDiv);
-                domConstruct.place(topSpacerDiv, applyDiv);    
                 domConstruct.place(applyButton.domNode, applyDiv);
+                domConstruct.place(topSpacerDiv, applyDiv);    
+                domConstruct.place(removeButton.domNode, applyDiv); 
                 domConstruct.place(bottomSpacerDiv, applyDiv); 
                 domConstruct.place(applyPropPane.domNode, div); 
 

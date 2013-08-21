@@ -30,12 +30,12 @@
                 this.aspect = 0;
                 this.near = 0.09;
                 this.far = 10000;
-                this.cameriaPositionX = 100;
-                this.cameriaPositionY = 100;
-                this.cameriaPositionZ = 100;
+                this.cameriaPositionX = 2;
+                this.cameriaPositionY = 2;
+                this.cameriaPositionZ = 2;
 
                 /*Lighting Properties*/
-                this.hasDirectionalLight = true;
+                this.hasDirectionalLight = true;   
                 this.hasAmbientLight = true;
 
                 /*Directional Light properties*/
