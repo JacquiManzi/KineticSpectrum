@@ -52,7 +52,7 @@ define([
                                 thisObj.patternList.add(pattern);
                             }
                                 
-                            height = (pattern.effectProperties.durration * pattern.effectProperties["repeat Count"]);
+                            height = (pattern.effectProperties.duration * pattern.effectProperties["repeat Count"]);
 
                             thisObj.barData.push({   
                                 "rx": thisObj.xCount,
