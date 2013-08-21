@@ -22,7 +22,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
             new Dictionary<string, ColorEffectFactory>
                 {
                     {ColorFade.EffectName, c => new ColorFade(c)},
-                    {FixedColor.EffectName, c => new FixedColor(c.First())}
+                    {FixedColor.EffectName, c => new FixedColor(c.First())},
+                    {ChasingColors.EffectName, c=>new ChasingColors(c)}
                 };
     }
 }

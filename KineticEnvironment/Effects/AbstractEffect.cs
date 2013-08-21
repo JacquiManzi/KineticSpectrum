@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -11,9 +12,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         private readonly Group _group;
 
         private EffectProperties _properties;
-        protected int Duration;
-        protected int RepeatCount;
-        protected bool Reverse; 
+        protected int Duration { get; private set; }
+        protected int RepeatCount { get; private set; }
+        protected bool Reverse { get; private set; }
+        protected IOrdering Ordering { get; private set; }
 
         protected AbstractEffect(Group group)
         {
@@ -36,6 +38,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             Duration = value.GetDuration();
             RepeatCount = value.GetRepeatCount();
             Reverse = RepeatMethods.Reverse.Equals(value.GetRepeatMethod());
+            Ordering = value.GetOrdering(Group);
             ApplyProperties(_properties);
         }}
 
@@ -51,15 +54,23 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             int cycleCount = time/Duration;
 
             if (Reverse && cycleCount % 2 == 1)
-                cycleTime = Duration - cycleTime;
+                cycleTime = Duration - cycleTime - 1;
+
+            double orderingMin = Ordering.GetMin();
+            double orderingSize = Ordering.GetMax() - Ordering.GetMin();
             foreach (var ledNode in _group.LEDNodes)
             {
                 IColorEffect colorEffect = ApplyCycle(cycleTime, ledNode);
-                colorEffect.SetColor(cycleTime, Duration, ledNode);
+                double position = (Ordering.GetLEDPosition(ledNode) - orderingMin)/orderingSize;
+                colorEffect.SetColor((1.0*cycleTime)/Duration, position, ledNode);
             }
         }
 
-        public static IList<PropertyDefinition> DefaultDefs = new List<PropertyDefinition>{PropertyDefinition.Duration}; 
+        public static IList<PropertyDefinition> DefaultDefs = new List<PropertyDefinition>
+                                                                  {
+                                                                      PropertyDefinition.Duration,
+                                                                      PropertyDefinition.Ordering
+                                                                  };
     }
     
 }

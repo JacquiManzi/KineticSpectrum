@@ -12,15 +12,12 @@ namespace RevKitt.KS.KineticEnvironment.Effects
     public abstract class AbstractLinearEffect : AbstractEffect
     {
 
-        protected IOrdering Ordering;
         protected Tween Tween;
 
         protected AbstractLinearEffect(Group group) : base(group) {}
 
         protected override void ApplyProperties(EffectProperties properties)
         {
-            Ordering = properties.GetOrdering(Group);
-
             IEasing easing = properties.GetEasing(PropertyDefinition.Easing.Name);
             Tween = new Tween(easing)
                         {
@@ -36,7 +33,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
                 {
                     PropertyDefinition.RepeatCount,
                     PropertyDefinition.RepeatMethod,
-                    PropertyDefinition.Ordering,
                     PropertyDefinition.Easing
                 }.AsReadOnly();
     }
