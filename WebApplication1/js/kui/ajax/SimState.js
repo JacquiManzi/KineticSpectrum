@@ -48,6 +48,7 @@
             xhr.get({
                 url: "Env.svc/GetPatternNames",
                 handleAs: "json",
+                sync: true,
                 load: function (patternNames) {
                     //array.forEach(patternNames, function (name) {
                         

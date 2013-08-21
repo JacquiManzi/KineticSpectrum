@@ -54,7 +54,17 @@ define([
                 this._createPatternDefinition();
                 SimState.createPattern(this.patternDef);
 
-                this.patternList.add(this.patternDef); 
+                var newPattern = dojo.clone(this.patternDef);
+
+                var thisObj = this;
+                this.patternList.forEach(function (pattern) {
+
+                    if (pattern.name === newPattern.name) {
+                        thisObj.patternList.remove(pattern);                      
+                    }                     
+                });
+
+                this.patternList.add(newPattern);
 
                 this.updatePatternDropDown();
             },
