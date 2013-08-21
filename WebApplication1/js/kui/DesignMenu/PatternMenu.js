@@ -179,10 +179,10 @@ define([
                 var bottomSpacerDiv = html.createDiv("height:20px");
 
                 CommonForm.setButtonStyle(applyButton);   
-                CommonForm.setButtonStyle(testButton);
+               // CommonForm.setButtonStyle(testButton);
                 CommonForm.setButtonStyle(removeButton); 
 
-                domConstruct.place(testButton.domNode, applyDiv);
+               // domConstruct.place(testButton.domNode, applyDiv);
                 domConstruct.place(removeButton.domNode, applyDiv);
                 domConstruct.place(topSpacerDiv, applyDiv);    
                 domConstruct.place(applyButton.domNode, applyDiv);

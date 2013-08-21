@@ -41,7 +41,7 @@
                     var ledNode = new LEDNode();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.radius = 0.015;   
+                    ledNode.radius = 0.005;   
 
                     var ledSphere = ledNode.createSphere();
                     this.scene.add(ledSphere);
