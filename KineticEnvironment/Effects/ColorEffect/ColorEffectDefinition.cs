@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
+namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 {
     public class ColorEffectDefinition
     {

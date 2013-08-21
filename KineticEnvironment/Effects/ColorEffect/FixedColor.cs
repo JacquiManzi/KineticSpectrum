@@ -7,7 +7,7 @@ using System.Windows.Media;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
+namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 {
     public class FixedColor : IColorEffect
     {

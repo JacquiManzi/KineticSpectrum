@@ -77,7 +77,7 @@ namespace RevKitt.KS.KineticEnvironment
 
         private static double Interpolate(double d1, double d2, double fraction)
         {
-            return d1 + (d1 - d2) * fraction;
+            return d1*(1 - fraction) + d2*fraction;
         }
     }
 }

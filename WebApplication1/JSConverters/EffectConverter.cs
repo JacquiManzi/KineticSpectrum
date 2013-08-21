@@ -4,7 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment.Effects;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Tweening;
 

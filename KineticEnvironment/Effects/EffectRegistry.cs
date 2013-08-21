@@ -13,7 +13,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             List<EffectAttributes> effects = new List<EffectAttributes>
                                                  {
                                                      Sweep.Attributes,
-                                                     Pulse.Attributes
+                                                     Pulse.Attributes,
+                                                     FixedEffect.Attributes
                                                  };
 
             EffectAttributes = new Dictionary<string, EffectAttributes>(effects.ToDictionary(e=>e.Name));

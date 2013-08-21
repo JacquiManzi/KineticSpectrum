@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
-using System.Text;
-using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment.Effects;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using System.IO;
-using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Tweening;
 using WebApplication1.JSConverters;
 

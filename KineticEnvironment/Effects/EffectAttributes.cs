@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects

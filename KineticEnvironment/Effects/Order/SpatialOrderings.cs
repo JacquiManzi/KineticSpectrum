@@ -87,16 +87,16 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             Vector3D normal = start - center;
             return new Plane(normal, start);
         }
-        
     }
 
     abstract class SpatialOrdering : IOrdering
     {
         protected static readonly Random Rand = new Random();
         private Group _group;
-        protected IDictionary<LightAddress, double> AddressToPos;
+        private IDictionary<LightAddress, double> _addressToPos;
         private Orderings.PositionFunc Position { get;  set; }
-        protected double Max;
+        private double _max;
+        private double _min;
 
         public Group Group {
             get { return _group; }
@@ -125,14 +125,16 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
 
             IList<double> pos = VectorsToPositions(vectors);
 
-            AddressToPos = new Dictionary<LightAddress, double>();
-            double max = 0;
+            _addressToPos = new Dictionary<LightAddress, double>();
+            double max = Double.MinValue;
+            double min = Double.MaxValue;
             for (int i = 0; i < pos.Count; i++)
             {
-                AddressToPos[nodes[i].Address] = pos[i];
+                _addressToPos[nodes[i].Address] = pos[i];
                 max = Math.Max(max, pos[i]);
+                min = Math.Min(min, pos[i]);
             }
-            Max = max;
+            _max = max; _min = min;
         }
 
         protected abstract IList<double> VectorsToPositions(IList<Vector3D> vectors );
@@ -141,19 +143,19 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
         public double GetLEDPosition(LEDNode ledNode)
         {
             var address = ledNode.Address;
-            double pos = Position(AddressToPos[address], GetMax());
+            double pos = Position(_addressToPos[address], _min, _max);
             return pos;
         }
 
         public double GetMax()
         {
-            return Max;
+            return _max;
         }
 
 
         public double GetMin()
         {
-            return 0;
+            return _min;
         }
 
 

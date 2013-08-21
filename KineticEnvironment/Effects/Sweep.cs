@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Media;
 using KineticControl;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -28,8 +28,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected override void ApplyProperties(EffectProperties properties)
         {
             base.ApplyProperties(properties);
-            _startColorEffect = properties.GetColorEffect(StartEffectName);
-            _endColorEffect = properties.GetColorEffect(EndEffectName);
+            _startColorEffect = properties.GetColorEffect(StartEffectName,Ordering);
+            _endColorEffect = properties.GetColorEffect(EndEffectName,Ordering);
         }
 
 

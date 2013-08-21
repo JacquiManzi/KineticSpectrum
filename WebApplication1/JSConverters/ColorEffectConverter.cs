@@ -6,7 +6,7 @@ using System.Windows.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 
 namespace WebApplication1.JSConverters
 {
@@ -41,28 +41,44 @@ namespace WebApplication1.JSConverters
             if (type == null)
                 type = (string) jobj["name"];
 
-            if (type.Equals(FixedColor.EffectName))
-            {
-                if(jobj["color"].Type != JTokenType.Integer)
-                    throw new JsonReaderException("Invalid Fixed Color Effect. 'color' property must be an int, but was: " + jobj["color"]);
-                var colorInt = (int) jobj["color"];
-                var color = ColorUtil.FromInt(colorInt);
-                return new FixedColor(color);
-            }
+            return ColorEffects.GetEffect(type, ConvertColorList(jobj));
+//            if (type.Equals(FixedColor.EffectName))
+//            {
+//                if(jobj["color"].Type != JTokenType.Integer)
+//                    throw new JsonReaderException("Invalid Fixed Color Effect. 'color' property must be an int, but was: " + jobj["color"]);
+//                var colorInt = (int) jobj["color"];
+//                var color = ColorUtil.FromInt(colorInt);
+//                return new FixedColor(color);
+//            }
+//
+//            if (type.Equals(ColorFade.EffectName))
+//            {
+//                if(jobj["colors"].Type != JTokenType.Array)
+//                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was: " + jobj["colors"]);
+//
+//                JArray jarr = (JArray) jobj["colors"];
+//                if(jarr.Any(t => t.Type != JTokenType.Integer))
+//                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was:" +jobj["colors"]);
+//                var colors = jarr.Select(t => ColorUtil.FromInt((int) t));
+//                return new ColorFade(colors);
+//            }
+//
+//            throw new JsonReaderException("Invalid Color Effect: " + type);
+        }
 
-            if (type.Equals(ColorFade.EffectName))
-            {
-                if(jobj["colors"].Type != JTokenType.Array)
-                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was: " + jobj["colors"]);
+        private IList<Color> ConvertColorList(JObject parent)
+        {
+            JToken colorObj = parent["color"];
+            if (colorObj == null)
+                colorObj = parent["colors"];
 
-                JArray jarr = (JArray) jobj["colors"];
-                if(jarr.Any(t => t.Type != JTokenType.Integer))
-                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was:" +jobj["colors"]);
-                var colors = jarr.Select(t => ColorUtil.FromInt((int) t));
-                return new ColorFade(colors);
-            }
-
-            throw new JsonReaderException("Invalid Color Effect: " + type);
+            if(colorObj == null)
+                throw new JsonReaderException("JSON object does not define color or colors for ColorEffect");
+            if (colorObj.Type == JTokenType.Integer)
+                return new List<Color>{ColorUtil.FromInt((int) colorObj)};
+            if (colorObj.Type == JTokenType.Array)
+                return colorObj.Select(t => ColorUtil.FromInt((int) t)).ToList();
+            throw new ArgumentException("JSON object colors is not a valid type");
         }
 
         public override bool CanConvert(Type objectType)

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using KineticControl;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
-using RevKitt.KS.KineticEnvironment.Effects.Order;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Scenes;
-using RevKitt.KS.KineticEnvironment.Tweening;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
@@ -34,8 +29,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected override void ApplyProperties(EffectProperties properties)
         {
             base.ApplyProperties(properties);
-            _backgroundColor = properties.GetColorEffect(BackgroundEffectName);
-            _pulseColor = properties.GetColorEffect(PulseEffectName);
+            _backgroundColor = properties.GetColorEffect(BackgroundEffectName,Ordering);
+            _pulseColor = properties.GetColorEffect(PulseEffectName, Ordering);
             _width = properties.GetFloat(WidthName);
         }
 

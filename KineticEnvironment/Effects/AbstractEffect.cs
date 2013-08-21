@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -55,7 +55,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             foreach (var ledNode in _group.LEDNodes)
             {
                 IColorEffect colorEffect = ApplyCycle(cycleTime, ledNode);
-                colorEffect.SetColor(time, RepeatCount*Duration, ledNode);
+                colorEffect.SetColor(cycleTime, Duration, ledNode);
             }
         }
 

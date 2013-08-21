@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Tweening;
@@ -26,9 +26,13 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             set { Properties[propertyName] = value; }
         }
 
-        public IColorEffect GetColorEffect(string propertyName)
+        public IColorEffect GetColorEffect(string propertyName, IOrdering ordering)
         {
-            return (IColorEffect) this[propertyName];
+            IColorEffect baseEffect = (IColorEffect) this[propertyName];
+            IColorEffect effect = ColorEffects.GetEffect(baseEffect.Name, baseEffect.Colors);
+            effect.Ordering = ordering;
+
+            return effect;
         }
 
         public int GetTime(string propertyName)

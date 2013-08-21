@@ -7,7 +7,7 @@ using System.Windows.Media;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
+namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 {
     public class ColorFade : IColorEffect
     {
@@ -23,7 +23,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffects
         public IOrdering Ordering { get; set; }
         public void SetColor(int time, int endTime, LEDNode led)
         {
-            double pct = 1.0 * time/endTime * (Colors.Count-1);
+            double pct = (1.0 * time)/endTime * (Colors.Count-1);
             int start = (int)Math.Floor(pct);
             int end = (int) Math.Ceiling(pct);
             double diff = pct - start;

@@ -20,24 +20,28 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             throw new ArgumentException("Invalid OrderingType '"+orderingType+"'.", "orderingType");
         }
 
-        public static readonly PositionFunc InOutFunc = (pos, total) =>
-                                                         {
-                                                             if (pos <= total/2)
-                                                                 return total - pos*2;
-                                                             return (pos - total/2 - 1)*2;
-                                                         };
+        public static readonly PositionFunc InOutFunc = (pos, min, total) =>
+                                                            {
+                                                                pos = pos - min;
+                                                                total = total - min;
+                                                                if (pos <= total/2)
+                                                                    return total - pos*2;
+                                                                return (pos - total/2 - 1)*2 + min;
+                                                            };
 
-        public static readonly PositionFunc OutInFunc = (pos, total) =>
-                                                         {
-                                                             if (pos <= total/2)
-                                                                 return pos*2;
-                                                             return (total - pos)*2;
-                                                         };
+        public static readonly PositionFunc OutInFunc = (pos, min, total) =>
+                                                            {
+                                                                pos = pos - min;
+                                                                total = total - min;
+                                                                if (pos <= total/2)
+                                                                    return pos*2;
+                                                                return (total - pos)*2 + min;
+                                                            };
 
-        public static readonly PositionFunc ReverseFunc = (pos, total) => total - pos;
+        public static readonly PositionFunc ReverseFunc = (pos, min, total) => (total-min) - (pos - min) + min;
 
-        public readonly static PositionFunc ForwardFunc = (pos, total) => pos;
+        public readonly static PositionFunc ForwardFunc = (pos, min, total) => pos;
 
-        public delegate double PositionFunc(double pos, double total);
+        public delegate double PositionFunc(double pos, double min, double max);
     }
 }

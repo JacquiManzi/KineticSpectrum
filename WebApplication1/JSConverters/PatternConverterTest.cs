@@ -5,7 +5,7 @@ using System.Web;
 using System.Windows.Media;
 using NUnit.Framework;
 using RevKitt.KS.KineticEnvironment.Effects;
-using RevKitt.KS.KineticEnvironment.Effects.ColorEffects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Tweening;

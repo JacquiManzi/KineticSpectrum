@@ -74,7 +74,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             public double GetLEDPosition(LEDNode ledNode)
             {
                 var address = ledNode.Address;
-                double pos = Position(_addressToPos[address], _last);
+                double pos = Position(_addressToPos[address], 0, _last);
                 return pos;
             }
 

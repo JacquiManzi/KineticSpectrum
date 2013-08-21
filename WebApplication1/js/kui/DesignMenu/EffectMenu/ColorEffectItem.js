@@ -108,11 +108,14 @@
                 item.destroy();
 
             });
-
+            this._colorList.clear();
             this.colorDropDownList.clear();
         },
 
         _typeUpdated: function (name) {
+            if (name == this.value.name && this.colorDropDownList.count) {
+                return;
+            }
             this.value.name = name;
             this.typeBox.set('label', name);           
            
@@ -146,7 +149,7 @@
 
             colorBox.set('label', value);
             var thisObj = this;
-            var value = value.substr(1);   
+            value = value.substr(1);   
             value = parseInt(value, 16);
 
 
@@ -166,7 +169,6 @@
 
                 var colorArray = [];
                 thisObj._colorList.forEach(function (colorItem) {
-
                     colorArray.push(colorItem.value);  
                 });
                 this.onUpdate(this.key,
@@ -178,7 +180,7 @@
             else { 
                 this.onUpdate(this.key,
                     {
-                        color: value,
+                        colors: value,
                         name: this.value.name
                     });
             }
