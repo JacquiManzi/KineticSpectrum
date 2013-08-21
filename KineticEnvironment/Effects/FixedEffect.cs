@@ -29,8 +29,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         protected override void ApplyProperties(EffectProperties properties)
         {
-            IOrdering ordering = properties.GetOrdering(Group);
-            _colorEffect = properties.GetColorEffect(ColorEffectName, ordering);
+            _colorEffect = properties.GetColorEffect(ColorEffectName, Ordering);
         }
 
         protected override IColorEffect ApplyCycle(int time, LEDNode ledNode)
@@ -57,7 +56,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
                 {
                     PropertyDefinition.RepeatCount,
                     PropertyDefinition.RepeatMethod,
-                    PropertyDefinition.Ordering,
                     StartColor
                 }.AsReadOnly());
     }

@@ -57,6 +57,7 @@
     <Compile Include="D3\Plane.cs" />
     <Compile Include="Effects\AbstractEffect.cs" />
     <Compile Include="Effects\AbstractLinearEffect.cs" />
+    <Compile Include="Effects\ColorEffect\ChasingColors.cs" />
     <Compile Include="Effects\ColorEffect\ColorEffectDefinition.cs" />
     <Compile Include="Effects\ColorEffect\ColorEffects.cs" />
     <Compile Include="Effects\ColorEffect\ColorFade.cs" />
