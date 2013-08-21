@@ -42,7 +42,22 @@
             });
         };
 
-        
+        var removePattern = function (patternName, onLoad) {
+            xhr.get({
+                url: "Env.svc/DeletePattern",
+                handleAs: "json",
+                sync: true,
+                content: { patternName:patternName },
+                load: function () {
+                   onLoad();        
+                },
+                error: function (err1) {   
+                    if (!!err1) {    
+                        console.log(err1.stack);    
+                    }
+                }
+            });
+        };
 
         var getPatternNames = function (onLoad) {
             xhr.get({
@@ -178,6 +193,7 @@
         return {
             setMode: setMode,
             createPattern: createPattern,
+            removePattern: removePattern, 
             getPatternNames: getPatternNames,
             getPatterns: getPatterns, 
             getLightState: getLightState,

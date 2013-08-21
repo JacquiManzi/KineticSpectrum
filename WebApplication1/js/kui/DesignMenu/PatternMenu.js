@@ -162,14 +162,31 @@ define([
                 var selectPatternSection = this._createSelectPatternSection();
                 domConstruct.place(selectPatternSection, applyDiv);
 
-                var thisObj = this; 
+                var thisObj = this;
+                var testButton = CommonForm.createButton('Test Pattern', function () {
+                    //thisObj.patternModel.applyPattern();
+                });
+
+                var removeButton = CommonForm.createButton('Remove Pattern', function () {
+                    thisObj.patternModel.removePattern();
+                });    
+
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
                     thisObj.patternModel.applyPattern();
                 });
 
-                CommonForm.setButtonStyle(applyButton);
+                var topSpacerDiv = html.createDiv("height:20px");
+                var bottomSpacerDiv = html.createDiv("height:20px");
 
+                CommonForm.setButtonStyle(applyButton);   
+                CommonForm.setButtonStyle(testButton);
+                CommonForm.setButtonStyle(removeButton); 
+
+                domConstruct.place(testButton.domNode, applyDiv);
+                domConstruct.place(removeButton.domNode, applyDiv);
+                domConstruct.place(topSpacerDiv, applyDiv);    
                 domConstruct.place(applyButton.domNode, applyDiv);
+                domConstruct.place(bottomSpacerDiv, applyDiv); 
                 domConstruct.place(applyPropPane.domNode, div); 
 
                 return div;    

@@ -15,10 +15,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         private Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
         private Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
         private List<Group> _selectedGroups = new List<Group>();
-
-        public event PatternDeletedHandler OnPatternDeleted;
-
-       
+      
         public Group SetGroup(String name, List<LightAddress> addresses)
         {
             var addressToNode = LightSystemProvider.GetNodeMapping(addresses);
@@ -94,10 +91,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         public void DeletePattern(string patternName)
         {
             var pattern = _patterns[patternName];
-            if(pattern != null)
-            {
-                OnPatternDeleted(pattern);
-            }
+            
             _patterns.Remove(patternName);
         }
 

@@ -77,6 +77,21 @@ define([
                 } 
             },
 
+            removePattern: function(){
+
+                var selectedPattern = this.getSelectedPattern();
+
+                var thisObj = this;   
+                if (!!selectedPattern) {
+                    SimState.removePattern(selectedPattern.name, function () {
+
+                        thisObj.updatePatternDropDown();
+                        thisObj.patternList.remove(selectedPattern); 
+
+                    });
+                }
+            },
+
             _createPatternDefinition: function () {
 
                 var patternDef = {};
@@ -185,6 +200,7 @@ define([
             updatePatternDropDown: function(){ 
 
                 this.patternDropDown.dropDown.destroyDescendants();
+                this.patternDropDown.set('label', "Select Pattern");    
 
                 if (!!this.sceneInteraction.composerModel.patternListBox) {
                     this.sceneInteraction.composerModel.updatePatternListBox();

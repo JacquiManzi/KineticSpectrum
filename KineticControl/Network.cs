@@ -195,11 +195,14 @@ namespace KineticControl
        
         public void SendUpdate(IPEndPoint endPoint, ColorData colorData)
         {
-            var args = new SocketAsyncEventArgs();
-            args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
-            args.RemoteEndPoint = endPoint;
-//            _socket.SendAsync(args);
-            _socket.SendToAsync(args);
+            if (_socket.Connected)
+            {
+                var args = new SocketAsyncEventArgs();
+                args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
+                args.RemoteEndPoint = endPoint;
+                //            _socket.SendAsync(args);
+                _socket.SendToAsync(args);
+            }
         }
 
 //        public void SendUpdate(Color[] colors, int network)
