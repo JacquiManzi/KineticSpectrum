@@ -68,9 +68,10 @@ define([
                 var intColor = 0;
 
                 if (patternObj.pattern.effectName === "Pulse") {
+
                     intColor = patternObj.pattern.effectProperties.background.colors[0];
                     hexColor = "#" + intColor.toString(16);
-                }
+                }       
                  
                 else if (patternObj.pattern.effectName === "Fixed") {
 

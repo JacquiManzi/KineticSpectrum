@@ -98,9 +98,9 @@ define([
                     }
                     else {
                         d3.select(this).attr('r', 25)
-                            .style("fill", "blue")
-                            .style("stroke", "blue");
-
+                            .style("fill", this.getAttribute('color'))
+                            .style("stroke", this.getAttribute('color'));
+                              
                         this.setAttribute('selected', 'false'); 
                     }
                 }); 
@@ -113,6 +113,7 @@ define([
                 .attr("width", function (d) { return d.width; })
                 .attr("pattern", function (d) { return d.pattern; })
                 .attr("selected", function (d) { return d.selected; })
+                .attr("color", function (d){ return d.color;})
                 .attr("countID", function(d) { return d.countID;})
                 .style("fill", function (d) { return d.color; });
             },
