@@ -88,6 +88,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                 return 0;
             }
 
+            public double GetAngle(LEDNode node)
+            {
+                return 0;
+            }
+
             public Group Group
             {
                 get { return _group; }

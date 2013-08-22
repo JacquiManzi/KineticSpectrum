@@ -12,6 +12,8 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
     public class Scene : IStateProvider
     { 
+        private const String TEMP_GROUP = "____TEMP____GROUP";
+
         private Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
         private Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
         private List<Group> _selectedGroups = new List<Group>();
@@ -90,8 +92,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
         public void DeletePattern(string patternName)
         {
-            var pattern = _patterns[patternName];
-            
+//            var pattern = _patterns[patternName];
             _patterns.Remove(patternName);
         }
 
@@ -112,7 +113,8 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         {
             var LEDs = LightSystemProvider.GetNodeMapping(lights).Values;
 
-            SelectedGroups = new List<Group>{new Group("TempGroup", LEDs)};
+            SelectedGroups = new List<Group>{new Group(TEMP_GROUP, LEDs)};
+            ApplySelected();
         }
 
         public void SelectGroups(IEnumerable<string> groups )
@@ -123,6 +125,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
                 selected.Add(_nameToGroup[group]);
             }
             SelectedGroups = selected;
+            ApplySelected();
         }
 
         public void ApplySelected()

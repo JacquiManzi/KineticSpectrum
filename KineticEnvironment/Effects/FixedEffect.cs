@@ -54,8 +54,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static readonly EffectAttributes Attributes = new EffectAttributes(EffectName, FixedFactory,ApplyColors,
             new List<PropertyDefinition>(DefaultDefs)
                 {
-                    PropertyDefinition.RepeatCount,
-                    PropertyDefinition.RepeatMethod,
                     StartColor
                 }.AsReadOnly());
     }

@@ -50,6 +50,7 @@
                 sphere.setColor = function (color) {
                     if (color == 0x000000) {
                         sphere.unselect();
+                        return;
                     }
                     if (!this.material.color) {
                         var material = new three.MeshBasicMaterial({
