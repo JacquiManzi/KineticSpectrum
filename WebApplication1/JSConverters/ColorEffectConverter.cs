@@ -25,12 +25,11 @@ namespace WebApplication1.JSConverters
                 objWriter.WritePropertyName("color");
                 serializer.Serialize(objWriter, ((FixedColor) val).Colors[0]);
             }
-            else
-            {
+            
                 objWriter.WritePropertyName("colors");
                 //serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));
                 serializer.Serialize(objWriter, val.Colors);
-            }
+            
             jobj.WriteTo(writer);
         } 
 

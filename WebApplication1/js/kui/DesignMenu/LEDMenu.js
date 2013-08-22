@@ -143,8 +143,6 @@ define([
                 domConstruct.place(selectionDiv, nodeDiv);
 
                 return nodeDiv;
-
-
             },
 
             createRemoveNodeSection: function () {
@@ -219,7 +217,6 @@ define([
                 this.setButtonStyle(removeButton);
 
                 domConstruct.place(removeButton.domNode, div);
-
             },
 
             createSelectAllSection: function()

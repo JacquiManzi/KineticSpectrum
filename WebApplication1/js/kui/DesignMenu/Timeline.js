@@ -60,9 +60,10 @@ define([
 
             createAxis: function () {        
 
+                var rangeVal = this.canvasHeight;   
                 var axisScale = d3.scale.linear()
-                                         .domain([0,300/5])
-                                         .range([0,300]);   
+                                         .domain([0,rangeVal/5])
+                                         .range([0,rangeVal+6]);   
                 
                 var yAxis = d3.svg.axis()
                                   .orient("left")                                    

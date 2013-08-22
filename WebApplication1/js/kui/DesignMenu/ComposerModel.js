@@ -62,6 +62,33 @@ define([
                 this.addPatternBars();
             },
 
+            _getColorFromPattern: function(patternObj){
+
+                var hexColor = "";
+                var intColor = 0;
+
+                if (patternObj.pattern.effectName === "Pulse") {
+                    intColor = patternObj.pattern.effectProperties.background.colors[0];
+                    hexColor = "#" + intColor.toString(16);
+                }
+                 
+                else if (patternObj.pattern.effectName === "Fixed") {
+
+                    intColor = patternObj.pattern.effectProperties["color Effect"].colors[0];   
+                    hexColor = "#" + intColor.toString(16);
+                }
+                else if (patternObj.pattern.effectName === "Sweep") {
+
+                    intColor = patternObj.pattern.effectProperties["sweep Start"].colors[0];
+                    hexColor = "#" + intColor.toString(16);
+                }
+                else { 
+
+                }
+
+                return hexColor;
+            },     
+
             addPatternBars: function () {
 
                 this.yCount = 30;
@@ -91,7 +118,7 @@ define([
                             "ry": thisObj.yCount,
                             "height": height,
                             "width": width,
-                            "color": color,
+                            "color": thisObj._getColorFromPattern(patternObj),
                             "pattern": patternObj.pattern,
                             "selected": false,
                             "countID": patternObj.countID
