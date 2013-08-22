@@ -31,8 +31,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public new static readonly IList<PropertyDefinition> DefaultDefs =
             new List<PropertyDefinition>(AbstractEffect.DefaultDefs)
                 {
-                    PropertyDefinition.RepeatCount,
-                    PropertyDefinition.RepeatMethod,
                     PropertyDefinition.Easing
                 }.AsReadOnly();
     }

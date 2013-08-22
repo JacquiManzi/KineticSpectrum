@@ -69,6 +69,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public static IList<PropertyDefinition> DefaultDefs = new List<PropertyDefinition>
                                                                   {
                                                                       PropertyDefinition.Duration,
+                                                                      PropertyDefinition.RepeatCount,
+                                                                      PropertyDefinition.RepeatMethod,
                                                                       PropertyDefinition.Ordering
                                                                   };
     }

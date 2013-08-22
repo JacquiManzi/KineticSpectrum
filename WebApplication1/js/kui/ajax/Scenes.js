@@ -85,6 +85,20 @@
             });
         };
 
+        var selectGroups = function(groups) {
+            xhr.post({
+                url: "Env.svc/SelectGroups",
+                content: { d: JSON.stringify(groups) }
+            });
+        };
+
+        var selectLEDs = function(leds) {
+            xhr.post({
+                url: "Env.svc/SelectLights",
+                content: { d: JSON.stringify(leds) }
+            });
+        };
+
         var addLED = function (led) {
             xhr.post({
                 url: "Env.svc/AddLED",
@@ -98,7 +112,9 @@
             getPatternNames: getPatternNames,
             getGroups: getGroups,
             tryPattern: tryPattern,
-            addLED: addLED
+            addLED: addLED,
+            selectLEDs: selectLEDs,
+            selectGroups: selectGroups
         };
 
     });

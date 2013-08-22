@@ -10,10 +10,11 @@
     "kui/ModelView/ModelSkeleton",
     "dojox/collections/ArrayList",
     "kui/ModelView/SceneInteraction",
+    "kui/ModelView/Axis",
     "kui/ajax/FileInterface"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction, FileInterface) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -108,6 +109,8 @@
 
                 var modelViewNode = this.domNode;
                 this.orbitControl = new three.OrbitControls(this.camera, modelViewNode);
+
+                this.axis = new Axis(this.scene);
 
                 this.load(fileLocation, this.scene, this.render);
 
