@@ -250,7 +250,6 @@
                     if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
                        this.sceneInteraction.ledSet.nodes.item(i).visible = false;
                     }
-
                 }
             },
 
@@ -261,7 +260,6 @@
                     if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
                        this.sceneInteraction.ledSet.nodes.item(i).visible = true;
                     }
-
                 }
             },
 
@@ -271,7 +269,6 @@
                 this.camera.position.x = x;
                 this.camera.position.y = y;
                 this.camera.position.z = z;
-
             },
 
 

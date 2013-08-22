@@ -205,6 +205,14 @@
 
             var thisObj = this;
             var removeButton = CommonForm.createButton("-", function () {
+            
+                thisObj._colorList.forEach(function(colorItem){
+
+                    if(colorItem.id === colorDropDown.get('id')){
+                        thisObj._colorList.remove(colorItem); 
+                    }
+                        
+                });
 
                 thisObj.colorDropDownList.remove(colorDropDown);
                 colorDropDown.destroy();
