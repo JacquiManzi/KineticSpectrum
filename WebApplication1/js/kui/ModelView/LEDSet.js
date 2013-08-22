@@ -33,7 +33,7 @@
                 this.portNo = 0;
                 this.fixtureNo = 0;
             },   
-               
+
             createLEDNodes: function(ledList) {
 
                 ledList.forEach(dojo.hitch(this, function(item) {
@@ -50,6 +50,16 @@
                 }));
             },
             
+            updateServerSelection: function() {
+                var addresses = [];
+                this.nodes.forEach(function(node) {
+                    if (node.isSelected && node.address) {
+                        addresses.push(node.address);
+                    }
+                });
+                Scenes.selectLEDs(addresses);
+            },
+            
             deselectAllVertexs: function () {
 
                 this.nodes.forEach(function (node) {
@@ -57,6 +67,7 @@
                         node.unselect();
                     }
                 });
+                this.updateServerSelection();
             },   
 
             selectAllVertexs: function () {
@@ -65,6 +76,7 @@
                         node.select();
                     }
                 });
+                this.updateServerSelection();
             },
             
             selectAllLEDs: function () {
@@ -74,6 +86,7 @@
                         node.select();
                     }
                 });
+                this.updateServerSelection();
             },
 
             deselectAllLEDs: function () {
@@ -82,34 +95,37 @@
                         node.unselect();
                     }
                 });
+                this.updateServerSelection();
             },
 
             selectNodes: function (nodes) {
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
-                var thisObj = this;
                 nodes.forEach(function (node) {
-                    thisObj.selectNode(node);
+                    node.select();
                 });
+                this.updateServerSelection();
             },
 
             selectNode: function (node) {
                 node.select();
+                this.updateServerSelection();
             },
 
             deselectNode: function (node) {
                 node.unselect();
+                this.updateServerSelection();
             },
 
             deselectNodes: function (nodes) {
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
-                var thisObj = this;
                 nodes.forEach(function (node) {
-                    thisObj.deselectNode(node);
+                    node.unselect();
                 });
+                this.updateServerSelection();
             },
             
             
