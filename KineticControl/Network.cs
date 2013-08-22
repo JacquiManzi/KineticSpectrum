@@ -33,6 +33,7 @@ namespace KineticControl
         private List<NetworkInterface> _networkCardList;
         readonly IPEndPoint _ipEndPoint = new IPEndPoint(IPAddress.Any, 55350);
         private readonly Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        private bool _connected = false;
 
         private List<PDS> _pdss = new List<PDS>();
 
@@ -70,7 +71,7 @@ namespace KineticControl
         {
             if (_networkCardList.Count == 0)
                 RetrieveNetworkCards();
-
+            _connected = false;
             foreach(NetworkInterface inter in NetworkCardList)
             {
                 if(inter.Name.Equals(networkInterface))
@@ -78,6 +79,7 @@ namespace KineticControl
                     NetworkCard = inter;
                     InitializeLocalIP();
                     InitializeLocalPort();
+                    _connected = true;
                     return;
                 }
             }
@@ -195,13 +197,15 @@ namespace KineticControl
        
         public void SendUpdate(IPEndPoint endPoint, ColorData colorData)
         {
-            if (_socket.Connected)
+            if (_connected)
             {
-                var args = new SocketAsyncEventArgs();
-                args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
-                args.RemoteEndPoint = endPoint;
+//                var args = new SocketAsyncEventArgs();
+//                args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
+//                args.RemoteEndPoint = endPoint;
                 //            _socket.SendAsync(args);
-                _socket.SendToAsync(args);
+                _socket.BeginSendTo(colorData.Bytes, 0, colorData.Bytes.Length,
+                    SocketFlags.None, endPoint, null, null);
+//                _socket.SendToAsync(args);
             }
         }
 
