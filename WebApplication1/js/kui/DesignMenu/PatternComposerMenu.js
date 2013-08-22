@@ -59,7 +59,8 @@ define([
 
                 container.addChild(this.contentPane);
 
-                this.createTimeline(); 
+                this.createTimeline();
+                this.createPatternProps(this.contentPane); 
             },    
 
             createTimeline: function () {
@@ -93,10 +94,9 @@ define([
 
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add', function () {
-
-                    thisObj.composerModel.addPatternFromOption(thisObj.composerModel.patternListBox.getSelected());
+                    thisObj.composerModel.addPattern(thisObj.composerModel.patternListBox.getSelected());
                 });
-                domConstruct.place(addButton.domNode, div);
+                domConstruct.place(addButton.domNode, div); 
                 var removeButton = CommonForm.createButton('Remove', function () {
 
                     thisObj.composerModel.removePatternFromOption(thisObj.composerModel.patternListBox.getSelected());
@@ -112,8 +112,34 @@ define([
                 this.composerModel.updatePatternListBox();
                
                 return patternListBox.domNode;
+            },
+
+            createPatternProps: function (container) {
+
+                var div = html.createDiv("width:100%;");   
+
+                var patternPropertyTitlePane = new TitlePane({
+
+                    title: "Pattern Properties",
+                    content: div
+                });
+                div.parentNode.setAttribute('style', this.mainBackgroundColor);
+                domConstruct.place(patternPropertyTitlePane.domNode, container.domNode);
+
+                var thisObj = this;
+                var removeButton = CommonForm.createButton("Remove Pattern", function () {
+
+                    thisObj.composerModel.removeSelectedPattern();
+
+                });
+                CommonForm.setButtonStyle(removeButton);
+
+                domConstruct.place(removeButton.domNode, div);
+                domConstruct.place(patternPropertyTitlePane.domNode, container.domNode);
+ 
             }
                     
         });   
                
     });
+    

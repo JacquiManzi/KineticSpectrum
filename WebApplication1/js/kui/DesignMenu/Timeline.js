@@ -10,13 +10,14 @@ define([
     "threejs/three",
     "dojo/on",
     "d3js/d3",
-    "dojo/dom-geometry"
+    "dojo/dom-geometry",
+    "dojo/_base/array"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, d3, domGeom) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, d3, domGeom, array) {
         "use strict";
         return declare("kui.DesignMenu.Timeline", null, {
 
-            /*
+            /*   
              */
 
             constructor: function () {
@@ -24,7 +25,11 @@ define([
                 this.svg = null;
                 this.div = null;
                 this.barMap = d3.map();
-
+                this.canvasHeight = 300;
+                this.canvasWidth = 0;
+                this.defaultCanvasWidth = 0;
+                this.defaultCanvasHeight = 300;
+                  
                 this.patternGroup = null;
 
             },
@@ -35,24 +40,28 @@ define([
                 html.removeDomChildren(div); 
 
                 var canvasWidth = domGeom.getMarginSize(div).w;
-                var canvasHeight = domGeom.getMarginSize(div).h;
+                this.defaultCanvasWidth = canvasWidth;
 
+                if (this.canvasWidth === 0) {
+                    this.canvasWidth = canvasWidth; 
+                }
+              
                this.svg = d3.select(div).append("svg:svg")
 		            .attr("id", "svg")
-	                .attr("width", canvasWidth)
-	                .attr("height", canvasHeight)
+	                .attr("width", this.canvasWidth)
+	                .attr("height", this.canvasHeight)
                     .style("overflow", "auto"); 
 
                this.patternGroup = this.svg.append("g");
 
-               this.createAxis(); 
+               this.createAxis();     
 
             },
 
-            createAxis: function () {
+            createAxis: function () {        
 
                 var axisScale = d3.scale.linear()
-                                         .domain([0,300])
+                                         .domain([0,300/5])
                                          .range([0,300]);   
                 
                 var yAxis = d3.svg.axis()
@@ -79,17 +88,19 @@ define([
 
                 this.svg.selectAll("rect").on("click", function () {
                   
-                    if (!this.selected) {
+                    if (this.getAttribute('selected') === "false") {
                         d3.select(this).attr('r', 25)
                             .style("fill", "lightcoral")
                             .style("stroke", "red");
-                        this.selected = true;
+                           
+                        this.setAttribute('selected', 'true');
                     }
                     else {
                         d3.select(this).attr('r', 25)
                             .style("fill", "blue")
                             .style("stroke", "blue");
-                        this.selected = false;
+
+                        this.setAttribute('selected', 'false'); 
                     }
                 }); 
                    
@@ -99,12 +110,32 @@ define([
                 .attr("y", function (d) { return d.ry; })
                 .attr("height", function (d) { return d.height; })
                 .attr("width", function (d) { return d.width; })
+                .attr("pattern", function (d) { return d.pattern; })
+                .attr("selected", function (d) { return d.selected; })
+                .attr("countID", function(d) { return d.countID;})
                 .style("fill", function (d) { return d.color; });
             },
 
+            getSelectedBars: function(){
+
+                var bars = this.svg.selectAll("rect");
+                var selectedBars = [];
+
+                array.forEach(bars, function (bar) {
+
+                    array.forEach(bar, function (rect) {
+                        if (rect.getAttribute('selected') ===  "true") {
+                            selectedBars.push(rect);
+                        }
+                    });     
+                });
+
+                return selectedBars; 
+            },
+               
             clearCanvas: function () {
-               this.svg.remove();
-            }
+               this.svg.remove();              
+            }   
 
 
 
