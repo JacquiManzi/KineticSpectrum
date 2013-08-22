@@ -37337,8 +37337,10 @@ THREE.DragControls = function (_camera, _objects, _domElement, domGeom) {
 
         event.preventDefault();
 
-        _mouse.x = (event.layerX / domGeom.getMarginSize(_domElement).w) * 2 - 1;
-        _mouse.y = -(event.layerY / domGeom.getMarginSize(_domElement).h) * 2 + 1;
+        //TODO: Joseph, why are you doing this? you know it's going to screw you later
+        //GET rid of the -8, to compensate for padding and get the correct geometry
+        _mouse.x = ((event.layerX-8) / domGeom.getMarginSize(_domElement).w) * 2 - 1;
+        _mouse.y = -((event.layerY-8) / domGeom.getMarginSize(_domElement).h) * 2 + 1;
 
         var ray = _projector.pickingRay(_mouse, _camera);
 
@@ -37387,8 +37389,10 @@ THREE.DragControls = function (_camera, _objects, _domElement, domGeom) {
         if (me.enabled) {
             event.preventDefault();
 
-            _mouse.x = (event.layerX / domGeom.getMarginSize(_domElement).w) * 2 - 1;
-            _mouse.y = -(event.layerY / domGeom.getMarginSize(_domElement).h) * 2 + 1;
+            //TODO: Joseph, why are you doing this? you know it's going to screw you later
+            //GET rid of the -8, to compensate for padding and get the correct geometry
+            _mouse.x = ((event.layerX-8) / domGeom.getMarginSize(_domElement).w) * 2 - 1;
+            _mouse.y = -((event.layerY-8) / domGeom.getMarginSize(_domElement).h) * 2 + 1;
 
             var ray = _projector.pickingRay(_mouse, _camera);
             var intersects = ray.intersectObjects(_objects.toArray());

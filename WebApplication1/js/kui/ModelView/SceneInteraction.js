@@ -76,16 +76,19 @@ define([
                     }
                 }
 
-                this.dragControls = new three.DragControls(this.camera, this.ledSet.nodes, this.domNode, domGeom);
 
                 dojo.connect(this.domNode, "onmousemove", dojo.hitch(this, this.doSelect));
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
+
+                this.dragControls = new three.DragControls(this.camera, this.ledSet.nodes, this.domNode, domGeom);
+
                 dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function (event) {
 
                     this.orbitControl.enabled = true;
                     this.dragControls.enabled = false;
 
                 }));
+
 
                 //Set LEDSet scene here since we now have a scene to draw on.
                 this.ledSet.scene = this.scene;
@@ -223,7 +226,9 @@ define([
 
             findIntersects: function (objects, event) {
 
-                var mouse = { x: (event.layerX / domGeom.getMarginSize(this.domNode).w) * 2 - 1, y: -(event.layerY / domGeom.getMarginSize(this.domNode).h) * 2 + 1 };
+                //TODO: Joseph, why are you doing this? you know it's going to screw you later
+                //GET rid of the -8, to compensate for padding and get the correct geometry
+                var mouse = { x: ((event.layerX-8) / domGeom.getMarginSize(this.domNode).w) * 2 - 1, y: -((event.layerY-8) / domGeom.getMarginSize(this.domNode).h) * 2 + 1 };
 
                 var vector = new three.Vector3(mouse.x, mouse.y, 1);
 

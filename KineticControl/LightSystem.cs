@@ -70,7 +70,7 @@ namespace KineticControl
                 if (!_pdss.Contains(pds, new PDSAddressComparitor()))
                     _pdss.Add(pds);
             }
-            _updateTimer.Enabled = true;
+            //_updateTimer.Enabled = true;
             return LightAddresses;
         }
 

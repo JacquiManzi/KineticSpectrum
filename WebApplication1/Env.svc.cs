@@ -138,18 +138,17 @@ namespace WebApplication1
         }
 
         [OperationContract]
-        [WebGet]
-        public void SelectGroups(IEnumerable<string> groupNames)
+        public void SelectGroups(Stream groupNames)
         {
+            var names = Serializer.FromPost<IEnumerable<string>>(groupNames);
             //var names = Serializer.Deserialize<IEnumerable<string>>(new JsonTextReader(new StringReader(groupNames)));
-            State.Scene.SelectGroups(groupNames);
+            State.Scene.SelectGroups(names);
         }
 
         [OperationContract]
-        [WebGet]
         public void SelectLights(Stream lightAddresses)
         {
-            var las = Serializer.FromStream<IEnumerable<LightAddress>>(lightAddresses);
+            var las = Serializer.FromPost<IEnumerable<LightAddress>>(lightAddresses);
             State.Scene.SelectLights(las);
         }
 

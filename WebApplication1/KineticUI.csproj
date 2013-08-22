@@ -104,6 +104,7 @@
     <Content Include="js\kui\DesignMenu\PatternComposerMenu.js" />
     <Content Include="js\kui\DesignMenu\Timeline.js" />
     <Content Include="js\kui\LED\LEDNode.js" />
+    <Content Include="js\kui\ModelView\Axis.js" />
     <Content Include="js\kui\ModelView\groups\Group.js" />
     <Content Include="js\kui\ModelView\groups\GroupSet.js" />
     <Content Include="js\kui\ModelView\LEDSet.js" />
