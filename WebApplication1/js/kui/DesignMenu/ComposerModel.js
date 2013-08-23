@@ -122,6 +122,7 @@ define([
                             "color": thisObj._getColorFromPattern(patternObj),
                             "pattern": patternObj.pattern,
                             "selected": false,
+                            "text": patternObj.pattern.name, 
                             "countID": patternObj.countID
                         });
 

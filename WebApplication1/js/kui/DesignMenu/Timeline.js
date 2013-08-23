@@ -84,9 +84,10 @@ define([
 
                 var rectangles = this.patternGroup.selectAll("rect")
                 .data(patternData)
-                .enter() 
+                .enter()
                 .append("rect");
 
+               
                 this.svg.selectAll("rect").on("click", function () {
                   
                     if (this.getAttribute('selected') === "false") {
@@ -103,9 +104,8 @@ define([
                               
                         this.setAttribute('selected', 'false'); 
                     }
-                }); 
-                   
-                  
+                });
+
                 var rectangleAttributes = rectangles
                 .attr("x", function (d) { return d.rx; })
                 .attr("y", function (d) { return d.ry; })
@@ -113,9 +113,13 @@ define([
                 .attr("width", function (d) { return d.width; })
                 .attr("pattern", function (d) { return d.pattern; })
                 .attr("selected", function (d) { return d.selected; })
-                .attr("color", function (d){ return d.color;})
-                .attr("countID", function(d) { return d.countID;})
-                .style("fill", function (d) { return d.color; });
+                .attr("color", function (d) { return d.color; })
+                .attr("countID", function (d) { return d.countID; })
+                .attr("text", function (d) { return d.text; })
+                .style("fill", function (d) { return d.color; })
+                .append("svg:title")
+                .text(function (d) { return d.text; }); 
+                
             },
 
             getSelectedBars: function(){
