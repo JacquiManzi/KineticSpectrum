@@ -6,9 +6,8 @@
     "kui/util/CommonFormItems",
     "dojo/_base/array",
      "dijit/MenuItem",
-     "dojox/collections/ArrayList",
-     "dojo/dom-style"
-], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem, ArrayList, domStyle) {
+     "dojox/collections/ArrayList"
+], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem, ArrayList) {
     return declare("TimeItem", [EffectItem], {
 
         buildRendering: function () {
@@ -39,9 +38,49 @@
             this._typeUpdated(this.value.name);
         },
 
+        _createImageView: function() {
+            this.addButton.destroy();
+
+            var imageLi = html.createLI();
+            this.imageBox = CommonForm.createDropDown("Select Image", "width:100%;");
+            CommonForm.setButtonStyle(this.imageBox);     
+                 
+            var thisObj = this;
+            Effects.getImages(function (types) {
+                array.forEach(types, function (image) {
+                    thisObj.imageBox.dropDown.addChild(new MenuItem({
+                        label: image,
+                        onClick: function() {
+                            thisObj.imageBox.set('label', image);
+                            thisObj.value.imageName = image;
+                            thisObj.onUpdate(thisObj.key, thisObj.value);
+                        }
+                    }));
+                });
+            });
+
+            this.imageBox.placeAt(imageLi);
+            domConstruct.place(imageLi, this.colorTypeUL);
+
+            var widthLi = html.createLI();
+            this.widthBox = CommonForm.createTableNumberTextBox("width:100%");
+            this.value.width = 2.0;
+            this.widthBox.set('value', this.value.width);
+            this.connect(this.timeBox, "onChange", dojo.hitch(this, function (newValue) {
+                this.value.width = newValue;
+                this.onUpdate(this.key, this.value);
+            }));
+
+            this.widthBox.placeAt(widthLi);
+            domConstruct.place(widthLi, this.colorTypeUL);
+
+            this.colorDropDownList.add(this.imageBox);
+            this.colorDropDownList.add(this.widthBox);
+            CommonForm.setButtonStyle(this.imageBox);
+        },
+
         _createColorPalette: function(multipleColors, isFirst)
         {
-            
             this.addButton.destroy();
 
             var colorRow = html.createRow("width:90%;");
@@ -140,6 +179,9 @@
                 this.typeBox.isMulti = true;
                 this._createColorPalette(true, true);
                 this._createAddButton();
+            }
+            else if (name === "ImageEffect") {
+                this._createImageView();
             }
             else { 
             }

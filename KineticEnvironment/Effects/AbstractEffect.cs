@@ -43,7 +43,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         }}
 
         protected abstract void ApplyProperties(EffectProperties properties);
-        protected abstract IColorEffect ApplyCycle(int time, LEDNode ledNode);
+        protected abstract IColorEffect ApplyCycle(TimeRange range, LEDNode ledNode);
 
 
         public void Apply(int time)
@@ -56,13 +56,14 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if (Reverse && cycleCount % 2 == 1)
                 cycleTime = Duration - cycleTime - 1;
 
+            TimeRange range = new TimeRange(cycleTime, Duration);
             double orderingMin = Ordering.GetMin();
             double orderingSize = Ordering.GetMax() - Ordering.GetMin();
             foreach (var ledNode in _group.LEDNodes)
             {
-                IColorEffect colorEffect = ApplyCycle(cycleTime, ledNode);
+                IColorEffect colorEffect = ApplyCycle(range, ledNode);
                 double position = (Ordering.GetLEDPosition(ledNode) - orderingMin)/orderingSize;
-                colorEffect.SetColor((1.0*cycleTime)/Duration, position, ledNode);
+                colorEffect.SetColor(range, position, ledNode);
             }
         }
 

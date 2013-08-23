@@ -23,7 +23,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
                 {
                     {ColorFade.EffectName, c => new ColorFade(c)},
                     {FixedColor.EffectName, c => new FixedColor(c.First())},
-                    {ChasingColors.EffectName, c=>new ChasingColors(c)}
+                    {ChasingColors.EffectName, c=>new ChasingColors(c)},
+                    {ImageEffect.EffectName, c=>new ImageEffect()}
                 };
     }
 }

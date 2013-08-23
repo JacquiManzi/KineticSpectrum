@@ -32,12 +32,11 @@ namespace KineticControl
 //                }
 //            }
 
-           network.SetInterface("Local Area Connection 2");
+           network.SetInterface("Local Area Connection");
 
 
            
            network.BroadCast();
-           PDS powerSupply = network.PDSs[0];// PDSs[0];
            while (true)
            {
                for (int i = 0; i < pattern.GetColors().Count; i++)

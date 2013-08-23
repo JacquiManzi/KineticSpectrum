@@ -147,6 +147,11 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             return pos;
         }
 
+        public double GetAngle(LEDNode node)
+        {
+            return 0;
+        }
+
         public double GetMax()
         {
             return _max;

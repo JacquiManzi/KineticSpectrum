@@ -25,11 +25,14 @@ namespace WebApplication1.JSConverters
                 objWriter.WritePropertyName("color");
                 serializer.Serialize(objWriter, ((FixedColor) val).Colors[0]);
             }
-            
-                objWriter.WritePropertyName("colors");
-                //serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));
-                serializer.Serialize(objWriter, val.Colors);
-            
+            if (value is ImageEffect)
+            {
+                objWriter.WritePropertyName("imageName");
+                objWriter.WriteValue(((ImageEffect)value).ImageName);
+            }
+            objWriter.WritePropertyName("colors");
+            //serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));
+            serializer.Serialize(objWriter, val.Colors);
             jobj.WriteTo(writer);
         } 
 
@@ -40,29 +43,16 @@ namespace WebApplication1.JSConverters
             if (type == null)
                 type = (string) jobj["name"];
 
-            return ColorEffects.GetEffect(type, ConvertColorList(jobj));
-//            if (type.Equals(FixedColor.EffectName))
-//            {
-//                if(jobj["color"].Type != JTokenType.Integer)
-//                    throw new JsonReaderException("Invalid Fixed Color Effect. 'color' property must be an int, but was: " + jobj["color"]);
-//                var colorInt = (int) jobj["color"];
-//                var color = ColorUtil.FromInt(colorInt);
-//                return new FixedColor(color);
-//            }
-//
-//            if (type.Equals(ColorFade.EffectName))
-//            {
-//                if(jobj["colors"].Type != JTokenType.Array)
-//                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was: " + jobj["colors"]);
-//
-//                JArray jarr = (JArray) jobj["colors"];
-//                if(jarr.Any(t => t.Type != JTokenType.Integer))
-//                    throw new JsonReaderException("Invalid Color Fade effect. 'colors' property must be a color array, but was:" +jobj["colors"]);
-//                var colors = jarr.Select(t => ColorUtil.FromInt((int) t));
-//                return new ColorFade(colors);
-//            }
-//
-//            throw new JsonReaderException("Invalid Color Effect: " + type);
+            IColorEffect colorEffect =  ColorEffects.GetEffect(type, ConvertColorList(jobj));
+
+            ImageEffect imageEffect = colorEffect as ImageEffect;
+            if (imageEffect != null)
+            {
+                imageEffect.ImageName = (string) jobj["imageName"];
+                imageEffect.Width = (double) jobj["width"];
+            }
+
+            return colorEffect;
         }
 
         private IList<Color> ConvertColorList(JObject parent)

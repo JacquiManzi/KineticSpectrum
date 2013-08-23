@@ -5,10 +5,9 @@
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-    "dojo/_base/xhr",
-    "dojo/_base/array"
+    "dojo/_base/xhr"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr, array) {
+    function (declare, html, dom, domStyle, domConstruct, three, xhr) {
         "use strict";
 
         var getEffects = function(onLoad) {
@@ -16,7 +15,7 @@
                 url: "Effects.svc/GetEffects",
                 handleAs: "json",
                 load: onLoad,
-                error: function(err1, err2) {
+                error: function(err1) {
                     console.log(err1.stack);
                 }
             });
@@ -27,7 +26,7 @@
                 url: "Effects.svc/GetOrderingTypes",
                 handleAs: "json",
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -38,7 +37,7 @@
                 url: "Effects.svc/GetRepeatMethods",
                 handleAs: "json",
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -49,7 +48,7 @@
                 url: "Effects.svc/GetEasings",
                 handleAs: "json",
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -61,7 +60,7 @@
                 handleAs: "json",
                 content: { effectName: effectName },
                 load: onLoad,
-                error: function(err1, err2) {
+                error: function(err1) {
                     console.log(err1.stack);
                 }
             });
@@ -73,7 +72,7 @@
                 handleAs: "json",
                 content: { type: orderingType },
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -84,7 +83,18 @@
                 url: "Effects.svc/GetColorEffects",
                 handleAs: "json",
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
+                    console.log(err1.stack);
+                }
+            });
+        };
+
+        var getImages = function(onLoad) {
+            xhr.get({
+                url: "Effects.svc/GetImages",
+                handleAs: "json",
+                load:onLoad,
+                error: function(err1) {
                     console.log(err1.stack);
                 }
             });
@@ -98,7 +108,8 @@
             getOrderingTypes: getOrderingTypes,
             getRepeatMethods: getRepeatMethods,
             getEasings: getEasings,
-            getColorEffects: getColorEffects
+            getColorEffects: getColorEffects,
+            getImages:getImages
         };
 
     });

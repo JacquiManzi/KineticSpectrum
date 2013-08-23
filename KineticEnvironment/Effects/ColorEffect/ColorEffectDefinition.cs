@@ -60,7 +60,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 
         public static readonly ColorEffectDefinition DefaultFade = new ColorEffectDefinition("ColorFade", TwoColors);
         public static readonly ColorEffectDefinition DefaultChasing = new ColorEffectDefinition("ChasingColors", TwoColors);
+        public static readonly ColorEffectDefinition DefaultImage = new ColorEffectDefinition(ImageEffect.EffectName, new Dictionary<string, object>());
 
-        public static readonly IEnumerable<ColorEffectDefinition> AllDefaults = new List<ColorEffectDefinition>{RedFixed, DefaultRainbow, DefaultFade, DefaultChasing}; 
+        public static readonly IEnumerable<ColorEffectDefinition> AllDefaults = new List<ColorEffectDefinition>{RedFixed, DefaultImage, DefaultFade, DefaultChasing}; 
     }
 }

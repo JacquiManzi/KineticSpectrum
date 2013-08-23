@@ -120,4 +120,7 @@
   <data name="HostInterface" xml:space="preserve">
     <value>Local Area Connection 2</value>
   </data>
+  <data name="ImageDirectory" xml:space="preserve">
+    <value>C:\Users\jcu\personal\ks\KineticSpectrum\WebApplication1\Images</value>
+  </data>
 </root>

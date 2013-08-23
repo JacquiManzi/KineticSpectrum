@@ -65,6 +65,14 @@ namespace RevKitt.KS.KineticEnvironment
         }
 
         
+        public static Color Interpolate(System.Drawing.Color color1, System.Drawing.Color color2, double fraction)
+        {
+            double a = Interpolate(color1.A, color2.A, fraction);
+            double r = Interpolate(color1.R, color2.R, fraction);
+            double g = Interpolate(color1.G, color2.G, fraction);
+            double b = Interpolate(color1.B, color2.B, fraction);
+            return Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
+        }
 
         public static Color Interpolate(Color color1, Color color2, double fraction)
         {

@@ -62,6 +62,7 @@
     <Compile Include="Effects\ColorEffect\ColorEffects.cs" />
     <Compile Include="Effects\ColorEffect\ColorFade.cs" />
     <Compile Include="Effects\ColorEffect\FixedColor.cs" />
+    <Compile Include="Effects\ColorEffect\ImageEffect.cs" />
     <Compile Include="Effects\EffectAttributes.cs" />
     <Compile Include="Effects\EffectProperties.cs" />
     <Compile Include="Effects\EffectPropertyTypes.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Effects\PropertyDefinition.cs" />
     <Compile Include="Effects\Pulse.cs" />
     <Compile Include="Effects\Sweep.cs" />
+    <Compile Include="Images.cs" />
     <Compile Include="IStateProvider.cs" />
     <Compile Include="LightState.cs" />
     <Compile Include="LightSystemProvider.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Sim\PatternStart.cs" />
     <Compile Include="Sim\Simulation.cs" />
+    <Compile Include="TimeRange.cs" />
     <Compile Include="Tweening\Easing.cs" />
     <Compile Include="Tweening\Easings.cs" />
     <Compile Include="Tweening\Tween.cs" />

@@ -32,7 +32,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             _colorEffect = properties.GetColorEffect(ColorEffectName, Ordering);
         }
 
-        protected override IColorEffect ApplyCycle(int time, LEDNode ledNode)
+        protected override IColorEffect ApplyCycle(TimeRange range, LEDNode ledNode)
         {
             return _colorEffect;
         }

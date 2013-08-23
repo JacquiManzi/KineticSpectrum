@@ -23,6 +23,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
         double GetLEDPosition(LEDNode ledNode);
         double GetMax();
         double GetMin();
+        double GetAngle(LEDNode ledNode);
     }
 
 }

@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
+using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using System.IO;
@@ -64,6 +65,11 @@ namespace WebApplication1
             return Serializer.ToStream(OrderingTypes.GetOrderingSubTypes(type));
         }
 
-        // Add more operations here and mark them with [OperationContract]
+        [OperationContract]
+        [WebGet]
+        public Stream GetImages()
+        {
+            return Serializer.ToStream(Images.GetImages(Config.ImageDirectory));
+        }
     }
 }

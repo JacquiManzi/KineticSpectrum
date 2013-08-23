@@ -35,9 +35,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         }
 
 
-        protected override IColorEffect ApplyCycle(int time, LEDNode ledNode)
+        protected override IColorEffect ApplyCycle(TimeRange range, LEDNode ledNode)
         {
-            double pos = Tween.GetValue(time);
+            double pos = Tween.GetValue(range.Current);
 
             double rangeStart = pos - _width/2;
             double rangeEnd = pos + _width/2;
