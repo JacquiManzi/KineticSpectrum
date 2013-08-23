@@ -207,25 +207,16 @@
                 this._colorList.add({ 'id': colorBox.id, 'value': value });
             }
             
-            if (this.typeBox.isMulti) {   
-
-                var colorArray = [];
-                thisObj._colorList.forEach(function (colorItem) {
-                    colorArray.push(colorItem.value);  
-                });
-                this.onUpdate(this.key,
-                    {
-                        colors: colorArray,  
-                        name: this.value.name
-                    }); 
-            }
-            else { 
-                this.onUpdate(this.key,
-                    {
-                        colors: value,
-                        name: this.value.name
-                    });
-            }
+            
+            var colorArray = [];
+            thisObj._colorList.forEach(function (colorItem) {
+                colorArray.push(colorItem.value);  
+            });
+            this.onUpdate(this.key,
+                {
+                    colors: colorArray,  
+                    name: this.value.name
+                }); 
         },
 
         _createAddButton: function () {

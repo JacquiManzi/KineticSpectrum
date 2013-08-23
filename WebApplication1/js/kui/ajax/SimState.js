@@ -4,9 +4,10 @@
     "threejs/three",
     "dojo/_base/xhr",
     "dojo/_base/array",
-    "kui/LED/LightAddress"
+    "kui/LED/LightAddress",
+    "dojox/collections/ArrayList"
 ],
-    function (declare, dom, three, xhr, array, LightAddress) {
+    function (declare, dom, three, xhr, array, LightAddress, ArrayList) {
         "use strict";
 
         var setMode = function (mode) {
@@ -97,6 +98,32 @@
                 }
             });
 
+        };
+
+        var addStart = function (patternName, patternID, startTime) {
+
+            xhr.get({
+                url: "SimService.svc/AddStart",
+                content: { patternName: patternName, startTime: startTime, id: patternID }
+            });
+
+        };
+
+        var getPatternStarts = function (onLoad) {
+
+            xhr.get({
+                url: "SimService.svc/GetStarts",
+                handleAs: "json",
+                load: function (data) {
+                    var list = new ArrayList();
+                    array.forEach(function (start) {
+                        start.countID = start.id;
+                        delete start.id;
+                        list.add(start);
+                    });
+                    onLoad(list);
+                }
+            });
         };
 
         var getLightState = function (onLoad) {
@@ -202,7 +229,9 @@
             isPlaying: isPlaying,
             getTime: getTime,
             setTime: setTime,
-            getEndTime: getEndTime
+            getEndTime: getEndTime,
+            addStart: addStart,
+            getPatternStarts: getPatternStarts
         };
 
     });

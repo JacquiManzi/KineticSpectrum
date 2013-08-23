@@ -1,5 +1,9 @@
 ﻿
-
+/*
+*   @author: Jacqui Manzi
+*   August 22th, 2013
+*
+*/
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
@@ -10,9 +14,10 @@ define([
     "threejs/three",
     "dojox/collections/ArrayList",
     "dojo/_base/array",
-    "kui/DesignMenu/Timeline"
+    "kui/DesignMenu/Timeline",
+     "kui/ajax/SimState"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, array, Timeline) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, array, Timeline, SimState) {
         "use strict";
         return declare("kui.DesignMenu.ComposerModel", null, {
 
@@ -93,41 +98,62 @@ define([
             addPatternBars: function () {
 
                 this.yCount = 30;
-                this.xCount = 35;
-                this.barData = [{}];
+                this.xCount = 44;
+                this.barData = [];
                 this.timeline.canvasHeight = this.timeline.defaultCanvasHeight;
                 this.timeline.canvasWidth = this.timeline.defaultCanvasWidth;
 
                 this.timeline.svg.attr('width', this.timeline.canvasWidth)
                 .attr('height', this.timeline.canvasHeight);
                  
-                var width = 20;
+                var width = 22;
                 var height = 0;
                 var color = "blue"; 
                 var time = 0;   
 
-                var thisObj = this;
 
+                var thisObj = this;
+                var maxY = 30;
+                this.patternList.forEach(function (patternObj) {
+
+                    if (patternObj.getHeight) {
+                        maxY = Math.max(maxY, patternObj.yCount + patternObj.getHeight());
+                    }
+
+                });
                     this.patternList.forEach(function (patternObj) {
 
-                        height = (patternObj.pattern.effectProperties.duration * patternObj.pattern.effectProperties["repeat Count"]) * 5;
-                        patternObj.startTime = thisObj.yCount;
-                        patternObj.endTime = patternObj.startTime + height; 
+                        var getHeight = function(){
+                            return this.pattern.effectProperties.duration * this.pattern.effectProperties["repeat Count"] * 5;
+                        }
+                        var getColor = function () {
+                            return thisObj._getColorFromPattern(this);
+                        }
+                        var getText = function () {
+                            return this.pattern.name;
+                        }
+                        var updateStartTime = function (yCount) {
+                            this.startTime = (yCount - 30)/5;
+                            this.endTime = this.startTime + (this.pattern.effectProperties.duration * this.pattern.effectProperties["repeat Count"]);
+                        }
+                        patternObj.getHeight = getHeight;
+                        patternObj.getColor = getColor;
+                        patternObj.getText = getText;
+                        patternObj.updateStartTime = updateStartTime;
 
-                        thisObj.barData.push({
-                            "rx": thisObj.xCount,
-                            "ry": thisObj.yCount,
-                            "height": height,
-                            "width": width,
-                            "color": thisObj._getColorFromPattern(patternObj),
-                            "pattern": patternObj.pattern,
-                            "selected": false,
-                            "text": patternObj.pattern.name, 
-                            "countID": patternObj.countID
-                        });
+                        if (!patternObj.xCount) {
+                            patternObj.xCount = thisObj.xCount;
+                            patternObj.yCount = maxY;
+
+                            maxY += patternObj.getHeight();
+                        }
+
+                        patternObj.updateStartTime(thisObj.yCount);
+
+                        thisObj.barData.push(patternObj);
 
                         thisObj.xCount += 22;
-                        thisObj.yCount = thisObj.yCount + height;
+                        thisObj.yCount = thisObj.yCount + patternObj.getHeight();
                       
                         if (thisObj.yCount > thisObj.timeline.svg.attr()[0][0].height.baseVal.value) {
                             thisObj.timeline.canvasHeight = thisObj.yCount;
@@ -144,7 +170,6 @@ define([
             removePatternFromOption: function () {
 
                 var thisObj = this;
-
                 var removedOptions = this._getSelectedOptions();
 
                 for (var i = 0; i < removedOptions.length; i++) {
@@ -157,6 +182,16 @@ define([
                 }
 
                 this.addPatternBars();
+            },
+
+            applyAllPatterns: function () {
+
+                this.patternList.forEach(function (patternObj) {
+
+                    SimState.addStart(patternObj.pattern.name, patternObj.countID, patternObj.startTime);
+
+                });
+
             },
 
             updatePatternListBox: function () {

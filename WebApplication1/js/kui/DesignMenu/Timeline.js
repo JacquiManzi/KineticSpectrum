@@ -80,15 +80,40 @@ define([
             addBars: function (patternData) {
 
                 this.clearCanvas();
-                this.createCanvas(this.div); 
+                this.createCanvas(this.div);
 
-                var rectangles = this.patternGroup.selectAll("rect")
-                .data(patternData)
-                .enter()
-                .append("rect");
+                var dragmove = function dragmove(d) {
+                    var x = Math.max(44, Math.round(d3.event.sourceEvent.offsetX / 22) * 22);
+                    var y = Math.round(d3.event.sourceEvent.offsetY/5) * 5;
+                    d.updateStartTime(y);   
+                    d3.select(this)
+                        .attr("x", d.xCount = x)
+                        .attr("y", d.yCount = y);
+                };   
 
+                var drag = d3.behavior.drag()
+                .origin(Object)
+                .on("drag", dragmove);
+
+                var rectangles = this.svg.selectAll("rect")
+                    .data(patternData)
+                    .enter().append("rect")
+                    .attr("x", function (d) { return d.xCount; })
+                    .attr("y", function (d) { return d.yCount; })
+                    .attr("height", function (d) { return d.getHeight(); })
+                    .attr("width", 22)
+                    //.attr("pattern", function (d) { return d.pattern; })
+                    .attr("selected",false)
+                    .attr("color", function (d) { return d.getColor(); })
+                    .attr("countID", function (d) { return d.countID; })
+                    .attr("text", function (d) { return d.getText(); })
+                    .style("fill", function (d) { return d.getColor(); })
+                    .call(drag);
+
+                rectangles.append("svg:title")
+                  .text(function (d) { return d.getText(); });
                
-                this.svg.selectAll("rect").on("click", function () {
+                rectangles.on("click", function () {
                   
                     if (this.getAttribute('selected') === "false") {
                         d3.select(this).attr('r', 25)
@@ -106,20 +131,8 @@ define([
                     }
                 });
 
-                var rectangleAttributes = rectangles
-                .attr("x", function (d) { return d.rx; })
-                .attr("y", function (d) { return d.ry; })
-                .attr("height", function (d) { return d.height; })
-                .attr("width", function (d) { return d.width; })
-                .attr("pattern", function (d) { return d.pattern; })
-                .attr("selected", function (d) { return d.selected; })
-                .attr("color", function (d) { return d.color; })
-                .attr("countID", function (d) { return d.countID; })
-                .attr("text", function (d) { return d.text; })
-                .style("fill", function (d) { return d.color; })
-                .append("svg:title")
-                .text(function (d) { return d.text; }); 
-                
+
+                    
             },
 
             getSelectedBars: function(){

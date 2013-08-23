@@ -134,11 +134,19 @@ define([
                 });
                 CommonForm.setButtonStyle(removeButton);
 
+                var applyButton = CommonForm.createButton("Apply All", function () {
+
+                    thisObj.composerModel.applyAllPatterns(); 
+
+                });
+                CommonForm.setButtonStyle(applyButton);
+                 
                 domConstruct.place(removeButton.domNode, div);
+                domConstruct.place(applyButton.domNode, div); 
                 domConstruct.place(patternPropertyTitlePane.domNode, container.domNode);
  
             }
-                    
+                      
         });   
                
     });
