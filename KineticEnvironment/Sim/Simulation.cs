@@ -16,7 +16,6 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         private readonly Scene _scene;
         private readonly List<PatternStart> _patternStarts = new List<PatternStart>();
-        private int _idCounter = 1;
         private readonly IDictionary<LightAddress, LightState> _stateMap = new Dictionary<LightAddress, LightState>();
         private readonly List<LightState> _lightState = new List<LightState>();
 
@@ -56,17 +55,17 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         }
 
 
-        public PatternStart AddPattern(string patternName, int startTime)
+        public PatternStart AddPattern(string patternName, int startTime, int id)
         {
             Pattern pattern = _scene.Patterns.First(p => p.Name.Equals(patternName));
-            return AddPattern(pattern, startTime);
+            return AddPattern(pattern, startTime, id);
         }
 
-        public PatternStart AddPattern(Pattern pattern, int startTime)
+        public PatternStart AddPattern(Pattern pattern, int startTime, int id)
         {
-            Interlocked.Increment(ref _idCounter);
-            PatternStart pStart = new PatternStart(_scene, _idCounter, startTime, pattern );
+            PatternStart pStart = new PatternStart(_scene, id, startTime, pattern );
             _endTime = Math.Max(_endTime, pStart.EndTime);
+            _patternStarts.RemoveAll(start => start.Id == id);
             _patternStarts.Add(pStart);
             _patternStarts.Sort(PatternStart.StartTimeComparer);
             return pStart;

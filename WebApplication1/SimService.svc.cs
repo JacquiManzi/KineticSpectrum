@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
+using WebApplication1.JSConverters;
 
 namespace WebApplication1
 {
@@ -16,9 +17,9 @@ namespace WebApplication1
     {
         [OperationContract]
         [WebGet]
-        public int AddStart(string patternName, double startTime)
+        public void AddStart(string patternName, double startTime, int id)
         {
-            return State.Simulation.AddPattern(patternName, (int) (startTime*1000)).Id;
+            State.Simulation.AddPattern(patternName, (int) (startTime*1000), id);
         }
 
         [OperationContract]
@@ -26,6 +27,13 @@ namespace WebApplication1
         public void RemoveStart(int id)
         {
             State.Simulation.RemovePattern(id);
+        }
+
+        [OperationContract]
+        [WebGet]
+        public Stream GetStarts()
+        {
+            return Serializer.ToStream(State.Simulation.PatternStarts);
         }
 
         [OperationContract]
