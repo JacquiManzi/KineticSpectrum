@@ -12,39 +12,54 @@ namespace RevKitt.KS.KineticEnvironment
 {
     public class Images
     {
-        private static IDictionary<string, ImageRef> _nameMap = new Dictionary<string, ImageRef>();
+        private static readonly IDictionary<string, ImageRef> _nameMap = new Dictionary<string, ImageRef>();
 
-        public static IList<String> GetImages()
+        public static IList<String> GetImages(string directory)
         {
-            string[] files = Directory.GetFiles(".", "*.png");
-            return files.Select(file => file.Reverse().TakeWhile(c => c != '\\').Reverse().ToString()).ToList();
+            string[] png = Directory.GetFiles(directory, "*.png");
+            string[] jpg = Directory.GetFiles(directory, "*.jpg");
+            IList<string> names = new List<string>();
+            IEnumerable<string> files = png.Union(jpg);
+            foreach (var file in files)
+            {
+                string shortName = new string(file.Reverse().TakeWhile(c => c != '\\').Reverse().ToArray());
+                if (!_nameMap.ContainsKey(file))
+                {
+                    _nameMap[shortName]=new ImageRef(file);
+                }
+                names.Add(shortName);
+            }
+
+            return names;
         }
 
         public static ImageRef GetImage(string imageName)
         {
             if (_nameMap.ContainsKey(imageName))
-                return _nameMap[imageName];
-
-            string[] files = Directory.GetFiles(".", "*.png");
-            string fileName = files.First(s => s.EndsWith(@"\" + imageName));
-            ImageRef imgRef = new ImageRef(fileName);
-            _nameMap[imageName] = imgRef;
-            return imgRef;
+                return _nameMap[imageName].Create();
+            throw new ArgumentException("Specified Image does not exist");
         }
-
     }
 
     public class ImageRef
     {
-        private readonly string _fileName;
-        private readonly Bitmap _image;
+        private Bitmap _image;
 
         public ImageRef(string fileName)
         {
-            _fileName = fileName;
-            _image = new Bitmap(fileName);
+            FileName = fileName;
         }
 
+        public ImageRef Create()
+        {
+            if(null==_image)
+                _image = new Bitmap(FileName);
+            return this;
+        }
+
+        public string FileName { get; private set; }
+        public int Width { get { return _image.Width; } }
+        public int Height { get { return _image.Height; } }
 
         public Color GetValueAt(double x, double y)
         {

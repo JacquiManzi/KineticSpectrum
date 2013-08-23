@@ -69,7 +69,7 @@ namespace WebApplication1
         [WebGet]
         public Stream GetImages()
         {
-            return Serializer.ToStream(Images.GetImages());
+            return Serializer.ToStream(Images.GetImages(Config.ImageDirectory));
         }
     }
 }

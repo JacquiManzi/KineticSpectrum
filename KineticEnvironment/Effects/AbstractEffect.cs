@@ -63,7 +63,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             {
                 IColorEffect colorEffect = ApplyCycle(range, ledNode);
                 double position = (Ordering.GetLEDPosition(ledNode) - orderingMin)/orderingSize;
-                colorEffect.SetColor((1.0*cycleTime)/Duration, position, ledNode);
+                colorEffect.SetColor(range, position, ledNode);
             }
         }
 

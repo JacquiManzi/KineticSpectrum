@@ -3,31 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
+using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 {
-    class ImageEffect
+    public class ImageEffect : IColorEffect
     {
         public const string EffectName = "ImageEffect";
+        private string _imageName;
+        private ImageRef _ref;
 
-        public ImageEffect(IEnumerable<Color> colors)
+        public ImageEffect()
         {
-            Colors = colors.ToList();
+            Colors = Enumerable.Empty<Color>().ToList();
         }
 
+        public string ImageName
+        {
+            get { return _imageName; }
+            set
+            {
+                _imageName = value;
+                _ref = Images.GetImage(value);
+                Colors = new List<Color> {_ref.GetValueAt(0, 0)};
+            }
+        }
 
         public string Name { get { return EffectName; } }
+        public double Width = 1;
         public IOrdering Ordering { get; set; }
-        public void SetColor(double time, double position, LEDNode led)
-        {
-            double timePos = (time + 2*position)%1;
-            double pct = timePos * (Colors.Count-1);
-            int start = (int)Math.Floor(pct);
-            int end = (int) Math.Ceiling(pct);
-            double diff = pct - start;
-            Color color = ColorUtil.Interpolate(Colors[start], Colors[end], diff);
 
-            led.Color = color;
+        public void SetColor(TimeRange range, double position, LEDNode led)
+        {
+            //get our position in space
+            double posOffset = position*Width;
+            //get our position in time
+            double timeOffset = range.Portion*_ref.Width - Width;
+            double xPosition = (posOffset + timeOffset)/_ref.Width;
+            double yPosition = Ordering.GetAngle(led);
+
+            led.Color = _ref.GetValueAt(xPosition,yPosition);
         }
 
         public IList<Color> Colors { get; set; } 
