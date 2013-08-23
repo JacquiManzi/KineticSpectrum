@@ -69,13 +69,18 @@
                 content: { d: JSON.stringify(pattern) },
                 handleAs: "json",
                 load: function (lightStates) {
-                    var time;
+                    var time, timeState, timeStr;
                     var endTime = 0;
-                    for (time in lightStates) {
+                    var newStates = {};
+                    for (timeStr in lightStates) {
+                        time = timeStr * 1.0;
                         endTime = Math.max(time, endTime);
-                        array.forEach(lightStates[time], function (lightState) {
+                        timeState = lightStates[timeStr];
+                        
+                        array.forEach(timeState, function (lightState) {
                             lightState.address = new LightAddress(lightState.address);
                         });
+                        newStates[time] = timeState;
                     }
                     onLoad(lightStates, endTime);  
                 },

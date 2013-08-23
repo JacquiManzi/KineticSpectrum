@@ -40,7 +40,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
             //get our position in space
             double posOffset = position*Width;
             //get our position in time
-            double timeOffset = range.Portion*_ref.Width - Width;
+            double timeOffset = range.Portion*_ref.Width - range.Portion*Width;
             double xPosition = (posOffset + timeOffset)/_ref.Width;
             double yPosition = Ordering.GetAngle(led);
 

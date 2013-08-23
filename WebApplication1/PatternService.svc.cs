@@ -26,7 +26,7 @@ namespace WebApplication1
 
             var sim = State.PatternSim;
             sim.Clear();
-            sim.AddPattern(pObj, 0);
+            sim.AddPattern(pObj, 0, 0);
             var stateMap = new Dictionary<double, IEnumerable<LightState>>();
 
             int steps = sim.EndTime*30/1000;

@@ -29,6 +29,8 @@ namespace WebApplication1.JSConverters
             {
                 objWriter.WritePropertyName("imageName");
                 objWriter.WriteValue(((ImageEffect)value).ImageName);
+                objWriter.WritePropertyName("width");
+                objWriter.WriteValue(((ImageEffect)value).Width);
             }
             objWriter.WritePropertyName("colors");
             //serializer.Serialize(objWriter, ((ColorFade)val).Colors.Select(c => new JValue(c)));

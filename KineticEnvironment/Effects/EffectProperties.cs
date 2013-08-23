@@ -31,6 +31,12 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             IColorEffect baseEffect = (IColorEffect) this[propertyName];
             IColorEffect effect = ColorEffects.GetEffect(baseEffect.Name, baseEffect.Colors);
             effect.Ordering = ordering;
+            ImageEffect imageEffect = effect as ImageEffect;
+            if (imageEffect != null)
+            {
+                imageEffect.Width = ((ImageEffect) baseEffect).Width;
+                imageEffect.ImageName = ((ImageEffect) baseEffect).ImageName;
+            }
 
             return effect;
         }
