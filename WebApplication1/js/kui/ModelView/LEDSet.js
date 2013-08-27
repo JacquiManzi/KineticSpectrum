@@ -62,7 +62,7 @@
             },
             
             deselectAllVertexs: function () {
-
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (node.isVertex) {
                         node.unselect();
@@ -73,6 +73,7 @@
             },   
 
             selectAllVertexs: function () {
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (node.isVertex) {
                         node.select();
@@ -83,7 +84,7 @@
             },
             
             selectAllLEDs: function () {
-
+                var selected = this.selected;
                 this.nodes.forEach(function(node) {
                     if (!node.isVertex) {
                         node.select();
@@ -94,6 +95,7 @@
             },
 
             deselectAllLEDs: function () {
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (!node.isVertex) {
                         node.unselect();
@@ -107,6 +109,8 @@
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
+                var selected = this.selected;
+
                 nodes.forEach(function (node) {
                     node.select();
                     selected.add(node);
@@ -116,13 +120,13 @@
 
             selectNode: function (node) {
                 node.select();
-                selected.add(node);
+                this.selected.add(node);
                 this.updateServerSelection();
             },
 
             deselectNode: function (node) {
                 node.unselect();
-                selected.remove(node);
+                this.selected.remove(node);
                 this.updateServerSelection();
             },
 
@@ -130,6 +134,8 @@
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
+                var selected = this.selected;
+
                 nodes.forEach(function (node) {
                     node.unselect();
                     selected.remove(node);
@@ -197,13 +203,11 @@
 
                 var selectedNodes = new ArrayList();
 
-                this.nodes.forEach(function(node) {
-                    if (node.isSelected) {
+                this.selected.forEach(function(node) {
                         selectedNodes.add(node);
-                    }
                 });
 
-                return new ArrayList(this.selected);
+                return selectedNodes;
             },
             
             applyColorState: function(lightStateList) {

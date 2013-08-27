@@ -34,7 +34,9 @@
                       var mainContainer = new BorderContainer({
                           gutters: false,
                           design: "sidebar",
-                          style: "height:" + windowHeight + "px;width:100%;border:none;"
+                          style: "height:" + windowHeight + "px;width:100%;" +
+                              "border:none;"+
+                              "font-size:0.8pt"
                       }, "mainContainer");
 
 
@@ -42,10 +44,11 @@
                       var centerContainer = new ContentPaneX({
                           region: "center",
                           id: "centerContainer",
-                          style: "width:90%;" +
+                          style: "width:75%;" +
                                  "height:95%;" +
                                  "background-color:black;" +
                                  "overflow: hidden;" +
+                                 "font-size:0.8pt;"+
                                  "border:none;",
                           executeScripts: true
                       });
@@ -76,8 +79,9 @@
                           region: "left",
                           id: "leftContainer",
                           minSize: ".1",
-                          style: "width:20%;" +
-                                 "height:100%;"
+                          style: "width:25%;" +
+                                 "height:100%;"+
+                                 "font-size:0.8pt" 
                       });
 
                       mainContainer.addChild(leftContainer);

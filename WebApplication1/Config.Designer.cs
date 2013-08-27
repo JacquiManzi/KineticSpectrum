@@ -61,7 +61,7 @@ namespace WebApplication1 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wireless Network Connection.
+        ///   Looks up a localized string similar to Local Area Connection.
         /// </summary>
         internal static string HostInterface {
             get {
