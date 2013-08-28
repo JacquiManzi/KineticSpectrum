@@ -11,9 +11,10 @@ define([
     "dojo/on",
     "d3js/d3",
     "dojo/dom-geometry",
-    "dojo/_base/array"
+    "dojo/_base/array",
+     "kui/ajax/SimState"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, d3, domGeom, array) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, d3, domGeom, array, SimState) {
         "use strict";
         return declare("kui.DesignMenu.Timeline", null, {
 
@@ -52,8 +53,6 @@ define([
 	                .attr("height", this.canvasHeight)
                     .style("overflow", "auto"); 
 
-               this.patternGroup = this.svg.append("g");
-
                this.createAxis();     
 
             },
@@ -91,9 +90,15 @@ define([
                         .attr("y", d.yCount = y);
                 };   
 
+                var dragend = function(d){
+
+                    SimState.addStart(d.getText(), d.countID, d.startTime);
+                };
+
                 var drag = d3.behavior.drag()
                 .origin(Object)
-                .on("drag", dragmove);
+                .on("drag", dragmove)
+                .on("dragend", dragend);
 
                 var rectangles = this.svg.selectAll("rect")
                     .data(patternData)

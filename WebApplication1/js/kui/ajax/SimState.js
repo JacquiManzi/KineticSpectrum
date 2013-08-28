@@ -116,13 +116,22 @@
                 handleAs: "json",
                 load: function (data) {
                     var list = new ArrayList();
-                    array.forEach(function (start) {
+                    array.forEach(data,function (start) {
                         start.countID = start.id;
+                        start.startTime = start.startTime / 1000.0;
+                        start.endTime = start.endTime / 1000.0;
                         delete start.id;
                         list.add(start);
+                        start.yCount = 30 + start.startTime * 5
+
                     });
                     onLoad(list);
+                },
+                error: function (err1) {
+                if (!!err1) {
+                    console.log(err1.stack);
                 }
+            }
             });
         };
 

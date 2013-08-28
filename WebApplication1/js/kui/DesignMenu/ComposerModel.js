@@ -143,9 +143,14 @@ define([
 
                         if (!patternObj.xCount) {
                             patternObj.xCount = thisObj.xCount;
+                        }
+                        if(!patternObj.yCount)
+                        {
+                            patternObj.updateStartTime(maxY);
                             patternObj.yCount = maxY;
 
-                            maxY += patternObj.getHeight();
+                            maxY += patternObj.getHeight();                         
+                            SimState.addStart(patternObj.getText(), patternObj.countID, patternObj.startTime);
                         }
 
                         patternObj.updateStartTime(thisObj.yCount);
@@ -230,6 +235,18 @@ define([
                 }); 
                  
                 this.addPatternBars();
+            },
+
+            updateComposerFromServer: function () {
+                
+                var thisObj = this;
+                SimState.getPatternStarts(function (patternObjs) {
+
+                    thisObj.patternList = patternObjs;
+                    thisObj.addPatternBars();
+
+                });
+
             }
         });
     });

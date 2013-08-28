@@ -72,7 +72,11 @@ define([
                 var timelineTitlePane = new TitlePane({    
                     title: "Pattern Timeline",
                     content: timelineDiv,
-                    onShow: dojo.hitch(this.composerModel.timeline, this.composerModel.timeline.createCanvas, timelineDiv)
+                    onShow: dojo.hitch(this, function(){
+                        this.composerModel.timeline.createCanvas(timelineDiv);
+                        this.composerModel.updateComposerFromServer();
+                    
+                    })
                 });
                 timelineDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 this.composerModel.timeline.createCanvas(timelineDiv); 
