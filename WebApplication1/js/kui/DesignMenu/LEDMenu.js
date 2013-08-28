@@ -13,11 +13,12 @@ define([
     "dijit/TitlePane",
     "dojo/on",
     "dojo/_base/array",
-    "kui/ajax/Scenes"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes) {
+    "kui/ajax/Scenes",
+    "kui/LED/LightAddress"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes, LightAddress) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu", null, {
-
+                   
             /*
              *   Left menu for Kinect 3D model design 
              *
@@ -106,7 +107,8 @@ define([
             createNodeSection: function () {
 
                 var nodeDiv = html.createDiv("text-align:center;" +
-                    "color:#3d8dd5;" +
+                   // "color:#3d8dd5;" +
+                   "color: #f1f1f1;"+
                     "width:100%;" +
                     "height:100%;");
                 
@@ -160,42 +162,78 @@ define([
             createNodeAmountBox: function (table) {
               
                
-                var titleCell = html.createCell("border-bottom-left-radius: 7px;" +
-                    "border-top-left-radius: 7px;" +
-                    "border-left: 2px solid" + this.tableCellBorderColor+";"+
-                    "border-top: 2px solid" + this.tableCellBorderColor + ";" +
-                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    "color:#3d8dd5;" +
-                    "text-align: right;"+
-                    "width:30%;");
+                var titleCell = html.createCell(
+                    //"border-bottom-left-radius: 7px;" +
+                    //"border-top-left-radius: 7px;" +
+                    //"border-left: 2px solid" + this.tableCellBorderColor+";"+
+                    //"border-top: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"color:#3d8dd5;" +
+                    //"text-align: right;"+
+                    //"width:30%;"
+                    );
 
                 var valueRow = html.createRow("background-color:#141414;");
 
-                var valueCell = html.createCell("text-align:center;" +
-                    "border-top: 2px solid #2d2d2d;" +
-                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    "width:40%;");
+                var valueCell = html.createCell(
+                    //"text-align:center;" +
+                    //"border-top: 2px solid #2d2d2d;" +
+                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"width:40%;"
+                    );
 
-                var checkButtonCell = html.createCell("border-top-right-radius: 7px;" +
-                    "border-bottom-right-radius: 7px;"+
-                    "border-top-right-radius: 7px;" +
-                    "border-right: 2px solid" + this.tableCellBorderColor + ";" +
-                    "border-top: 2px solid" + this.tableCellBorderColor + ";" +
-                    "border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    "text-align:left;"+
-                    "width:30%;");
-
+                var checkButtonCell = html.createCell(
+                    //"border-top-right-radius: 7px;" +
+                    //"border-bottom-right-radius: 7px;"+
+                    //"border-top-right-radius: 7px;" +
+                    //"border-right: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"border-top: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
+                    //"text-align:left;"+
+                    //"width:30%;"
+                    );
+    
                 var nodeNumberTextBox = CommonForm.createTableNumberTextBox("width:90%;");
+                var ledAddressText = CommonForm.createTableNumberTextBox("width:90%");
+                var portText = CommonForm.createTableNumberTextBox("width:90%");
+                var fixtureText = CommonForm.createTableNumberTextBox("width:90%");
 
                 var obj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
-                   var lineSegments = obj.modelView.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
-                   obj.modelView.sceneInteraction.drawNodes(lineSegments);
+                    var lineSegments = obj.modelView.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
 
+                    var lightAddress = new LightAddress();
+                    lightAddress.lightNo = ledAddressText.get('value');
+                    lightAddress.fixtureNo = fixtureText.get('value');  
+                    lightAddress.portNo = portText.get('value');
+
+                   obj.modelView.sceneInteraction.drawNodes(lineSegments, lightAddress);
+                          
                 });
 
-                titleCell.innerHTML = "# Nodes";
+                titleCell.innerHTML = "#Nodes";
+
+                var addressRow = html.createRow();
+                var addressTitleCell = html.createCell();
+                var addressCell = html.createCell();
+
+                addressTitleCell.innerHTML = "#Address";
+                
+
+                var portRow = html.createRow();
+                var portTitleCell = html.createCell();
+                var portCell = html.createCell();
+                
+
+                portTitleCell.innerHTML = "#Port";
+
+                var fixtureRow = html.createRow();
+                var fixtureTitleCell = html.createCell();
+                var fixtureCell = html.createCell();
+                
+                fixtureTitleCell.innerHTML = "#Fixture";
+
 
                 domConstruct.place(titleCell, valueRow);
                 domConstruct.place(valueRow, table);
@@ -204,6 +242,20 @@ define([
                 domConstruct.place(checkButtonCell, valueRow);
                 domConstruct.place(nodeNumberTextBox.domNode, valueCell);
 
+                domConstruct.place(addressTitleCell, addressRow);
+                domConstruct.place(ledAddressText.domNode, addressCell); 
+                domConstruct.place(addressCell, addressRow);
+                domConstruct.place(addressRow, table);
+
+                domConstruct.place(portTitleCell, portRow);
+                domConstruct.place(portCell, portRow);
+                domConstruct.place(portText.domNode, portCell);
+                domConstruct.place(portRow, table);
+
+                domConstruct.place(fixtureTitleCell, fixtureRow);
+                domConstruct.place(fixtureCell, fixtureRow);
+                domConstruct.place(fixtureText.domNode, fixtureCell);
+                domConstruct.place(fixtureRow, table);    
             },
 
             createRemoveButton: function (div) {

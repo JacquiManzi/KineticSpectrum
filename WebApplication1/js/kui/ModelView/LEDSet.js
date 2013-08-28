@@ -28,6 +28,7 @@
                 this.vertexSpheres = new ArrayList();
                 this.addressToLED = [];
                 this.scene = scene;
+                this.selected = new ArrayList();
 
                 this.lightNo = 0;
                 this.portNo = 0;
@@ -61,38 +62,44 @@
             },
             
             deselectAllVertexs: function () {
-
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (node.isVertex) {
                         node.unselect();
+                        selected.remove(node);
                     }
                 });
                 this.updateServerSelection();
             },   
 
             selectAllVertexs: function () {
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (node.isVertex) {
                         node.select();
+                        selected.add(node);
                     }
                 });
                 this.updateServerSelection();
             },
             
             selectAllLEDs: function () {
-
+                var selected = this.selected;
                 this.nodes.forEach(function(node) {
                     if (!node.isVertex) {
                         node.select();
+                        selected.add(node);
                     }
                 });
                 this.updateServerSelection();
             },
 
             deselectAllLEDs: function () {
+                var selected = this.selected;
                 this.nodes.forEach(function (node) {
                     if (!node.isVertex) {
                         node.unselect();
+                        selected.remove(node);
                     }
                 });
                 this.updateServerSelection();
@@ -102,19 +109,24 @@
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
+                var selected = this.selected;
+
                 nodes.forEach(function (node) {
                     node.select();
+                    selected.add(node);
                 });
                 this.updateServerSelection();
             },
 
             selectNode: function (node) {
                 node.select();
+                this.selected.add(node);
                 this.updateServerSelection();
             },
 
             deselectNode: function (node) {
                 node.unselect();
+                this.selected.remove(node);
                 this.updateServerSelection();
             },
 
@@ -122,8 +134,11 @@
                 if (!(nodes instanceof ArrayList)) {
                     nodes = new ArrayList(nodes);
                 }
+                var selected = this.selected;
+
                 nodes.forEach(function (node) {
                     node.unselect();
+                    selected.remove(node);
                 });
                 this.updateServerSelection();
             },
@@ -165,26 +180,7 @@
                 this.scene.add(ledSphere);
             },*/
 
-            addGeneratedLED: function (segment) {
-
-                //address = address ? address : new LightAddress();
-                var address = new LightAddress({
-
-                    fixtureNo: this.fixtureNo,
-                    portNo: this.portNo,
-                    lightNo: this.lightNo
-                });
-
-                this.lightNo++;
-                if (this.lightNo > 49) {
-                    this.portNo++;
-                    this.lightNo = 0;
-                }
-
-                if (this.portNo > 7) {
-                    this.fixtureNo++;
-                    this.portNo = 0;
-                }
+            addGeneratedLED: function (segment, address) {
 
                 var led = new LEDNode();
                 led.updatePosition(segment);
@@ -207,12 +203,10 @@
 
                 var selectedNodes = new ArrayList();
 
-                this.nodes.forEach(function(node) {
-                    if (node.isSelected) {
+                this.selected.forEach(function(node) {
                         selectedNodes.add(node);
-                    }
                 });
-                
+
                 return selectedNodes;
             },
             

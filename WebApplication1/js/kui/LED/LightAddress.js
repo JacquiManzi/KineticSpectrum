@@ -26,6 +26,18 @@ define([
                 this.lightNo = -1;
                 dojo.mixin(this, address);
             },
+            inc: function() {
+                this.lightNo++;
+                if (this.lightNo > 49) {
+                    this.portNo++;
+                    this.lightNo = 0;
+                }
+
+                if (this.portNo > 7) {
+                    this.fixtureNo++;
+                    this.portNo = 0;
+                }
+            },
 
             toString: function() {
                 return this.fixtureNo + '-' + this.portNo + '-' + this.lightNo;

@@ -16,6 +16,7 @@ namespace RevKitt.KS.KineticEnvironment
 
         public static void Init(String hostInterface)
         {
+            LightSystem.AutoUpdate = false;
             Console.WriteLine("Attempting to set network interface to: " + hostInterface);
             if (!LightSystem.NetworkInterfaces.Contains(hostInterface))
             {
@@ -110,6 +111,7 @@ namespace RevKitt.KS.KineticEnvironment
 
         private static void ParseLights(StreamReader reader)
         {
+            int duplicates = 0;
             string line;
             while(null != (line = ReadSectionLine(reader)))
             {
@@ -124,7 +126,13 @@ namespace RevKitt.KS.KineticEnvironment
 
                 if(!_nodes.ContainsKey(address))
                     _nodes[address] = new LEDNode(address, new Vector3D(x,y,z));
+                else
+                {
+                    duplicates++;
+                    Console.WriteLine("Found Duplicates: address: " + address + " orig pos: "+ _nodes[address].Position + " dup pos:" + new Vector3D(x,y,z));
+                }
             }
+            Console.WriteLine("Found " + duplicates + " duplicates.");
         }
 
         private static void ParseFixtures(StreamReader reader)
