@@ -14,6 +14,8 @@ namespace KineticControl
         private readonly Network _network;
         private IList<PDS> _pdss = new List<PDS>();
 
+        private bool _autoUpdate = true;
+
         private readonly Timer _updateTimer;
 
         public LightSystem() : this(Network.GetInstance()) {}
@@ -23,8 +25,25 @@ namespace KineticControl
             _network = network;
             _updateTimer = new Timer();
             _updateTimer.Elapsed += (o, args) => UpdateLights();
-            _updateTimer.Interval = 1000/30;
+            _updateTimer.Interval = 1000/60;
             GC.KeepAlive(_updateTimer);
+        }
+
+        public bool AutoUpdate
+        {
+            get { return _autoUpdate; }
+            set
+            {
+                _autoUpdate = value;
+                if (value && _pdss.Count > 0)
+                {
+                    _updateTimer.Enabled = true;
+                }
+                if (!value)
+                {
+                    _updateTimer.Enabled = false;
+                }
+            }
         }
 
         public void UpdateLights()
@@ -70,7 +89,10 @@ namespace KineticControl
                 if (!_pdss.Contains(pds, new PDSAddressComparitor()))
                     _pdss.Add(pds);
             }
-            //_updateTimer.Enabled = true;
+            if (_autoUpdate)
+            {
+                _updateTimer.Enabled = true;
+            }
             return LightAddresses;
         }
 
@@ -83,12 +105,6 @@ namespace KineticControl
                 addressToFixture.Add(i, _pdss[i].EndPoint.Address.ToString());
             }
             return addressToFixture;
-        }
-
-        public bool AutoUpdate
-        {
-            get { return _updateTimer.Enabled; }
-            set { _updateTimer.Enabled = value; }
         }
 
         public String GetNetworkAddress(LightAddress address)

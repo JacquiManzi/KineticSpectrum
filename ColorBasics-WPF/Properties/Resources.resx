@@ -121,7 +121,7 @@
     <value>Connect a device first!</value>
   </data>
   <data name="HostInterface" xml:space="preserve">
-    <value>Local Area Connection 2</value>
+    <value>Wireless Network Connection</value>
     <comment>Sets the Host Interface to use for connecting to Color Kinetics Lighting</comment>
   </data>
   <data name="NoKinectReady" xml:space="preserve">

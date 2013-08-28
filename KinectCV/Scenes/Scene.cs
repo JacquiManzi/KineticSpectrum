@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,10 +64,11 @@ namespace RevKitt.ks.KinectCV.Scenes
 
         private void AddToScene(List<ScenePoint> scene, List<ScenePoint> newPoints)
         {
+            IEqualityComparer<ScenePoint> addressEquals = new LambdaComparer<ScenePoint>((a,b)=>a.Address.Equals(b.Address));
             Func<IEnumerable<ScenePoint>,Predicate<ScenePoint>> findContains = n=> s => n.Contains(s, new LambdaComparer<ScenePoint>((a, b) => a.Address.Equals(b.Address)));
-            List<ScenePoint> intersectScene = new List<ScenePoint>(scene.FindAll(findContains(newPoints)).Distinct());
+            List<ScenePoint> intersectScene = new List<ScenePoint>(scene.FindAll(findContains(newPoints)).Distinct(addressEquals));
             intersectScene.Sort();
-            List<ScenePoint> intersectNew = new List<ScenePoint>(newPoints.FindAll(findContains(scene)).Distinct());
+            List<ScenePoint> intersectNew = new List<ScenePoint>(newPoints.FindAll(findContains(scene)).Distinct(addressEquals));
             intersectNew.Sort();
 
             ILArray<double> transform;
