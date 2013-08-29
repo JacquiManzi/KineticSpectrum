@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
+using System.Windows.Media;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
@@ -10,6 +11,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
     {
 
         private readonly Group _group;
+
+        public int Priority { get; internal set; }
 
         private EffectProperties _properties;
         protected int Duration { get; private set; }
@@ -63,7 +66,14 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             {
                 IColorEffect colorEffect = ApplyCycle(range, ledNode);
                 double position = (Ordering.GetLEDPosition(ledNode) - orderingMin)/orderingSize;
-                colorEffect.SetColor(range, position, ledNode);
+                Color color = ColorUtil.Clone(colorEffect.SetColor(range, position, ledNode));
+                color.A = (byte)Priority;
+                Color ledColor = ledNode.Color;
+
+                if (Priority < ledColor.A)
+                    ledNode.Color = color;
+                else if (Priority == ledColor.A)
+                    ledNode.Color = ColorUtil.Interpolate(ledColor, color, .5);
             }
         }
 
