@@ -180,7 +180,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
                 foreach (var light in LightSystemProvider.Lights)
                 {
-                    light.Color = Colors.Black;
+                    light.Color = ColorUtil.Empty;
                 }
 
                 foreach (var patternStart in starts)

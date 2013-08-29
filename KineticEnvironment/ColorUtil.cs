@@ -9,6 +9,9 @@ namespace RevKitt.KS.KineticEnvironment
 {
     public class ColorUtil
     {
+        public static readonly Color Empty = Color.FromArgb(100, 0, 0, 0);
+
+
         /// <summary>
         /// Blends the specified colors, taking the alpha channel into account.
         /// </summary>
@@ -64,7 +67,11 @@ namespace RevKitt.KS.KineticEnvironment
             return intColor;
         }
 
-        
+        public static Color Clone(Color color)
+        {
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
         public static Color Interpolate(System.Drawing.Color color1, System.Drawing.Color color2, double fraction)
         {
             double a = Interpolate(color1.A, color2.A, fraction);
