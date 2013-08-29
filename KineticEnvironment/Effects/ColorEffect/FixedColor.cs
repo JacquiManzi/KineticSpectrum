@@ -24,9 +24,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
         public IOrdering Ordering { get; set; }
 
 
-        public void SetColor(TimeRange range, double position, LEDNode led)
+        public Color SetColor(TimeRange range, double position, LEDNode led)
         {
-            led.Color = Colors[(int)(range.Portion*Colors.Count)];
+            return Colors[(int)(range.Portion*Colors.Count)];
         }
     }
 }

@@ -35,16 +35,16 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
         public double Width = 1;
         public IOrdering Ordering { get; set; }
 
-        public void SetColor(TimeRange range, double position, LEDNode led)
+        public Color SetColor(TimeRange range, double position, LEDNode led)
         {
             //get our position in space
             double posOffset = position*Width;
             //get our position in time
-            double timeOffset = range.Portion*_ref.Width - range.Portion*Width;
+            double timeOffset = range.PortionTotal*_ref.Width - range.PortionTotal*Width;
             double xPosition = (posOffset + timeOffset)/_ref.Width;
             double yPosition = Ordering.GetAngle(led);
 
-            led.Color = _ref.GetValueAt(xPosition,yPosition);
+            return _ref.GetValueAt(xPosition,yPosition);
         }
 
         public IList<Color> Colors { get; set; } 

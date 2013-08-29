@@ -21,7 +21,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 
         public string Name { get { return EffectName; } }
         public IOrdering Ordering { get; set; }
-        public void SetColor(TimeRange range, double position, LEDNode led)
+        public Color SetColor(TimeRange range, double position, LEDNode led)
         {
             double pct = range.Portion * (Colors.Count-1);
             int start = (int)Math.Floor(pct);
@@ -29,7 +29,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
             double diff = pct - start;
             Color color = ColorUtil.Interpolate(Colors[start], Colors[end], diff);
 
-            led.Color = color;
+            return color;
         }
 
         public IList<Color> Colors { get; set; } 

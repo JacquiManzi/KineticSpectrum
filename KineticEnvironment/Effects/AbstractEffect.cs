@@ -56,7 +56,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if (Reverse && cycleCount % 2 == 1)
                 cycleTime = Duration - cycleTime - 1;
 
-            TimeRange range = new TimeRange(cycleTime, Duration);
+            TimeRange range = new TimeRange(cycleTime, Duration, cycleCount, Duration*RepeatCount);
             double orderingMin = Ordering.GetMin();
             double orderingSize = Ordering.GetMax() - Ordering.GetMin();
             foreach (var ledNode in _group.LEDNodes)

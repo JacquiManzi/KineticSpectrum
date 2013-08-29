@@ -11,12 +11,19 @@ namespace RevKitt.KS.KineticEnvironment
         public readonly double Portion;
         public readonly int Current;
         public readonly int End;
+        public readonly int Cycle;
 
-        public TimeRange(int current, int end)
+        public readonly int Total;
+        public readonly double PortionTotal;
+
+        public TimeRange(int current, int end, int cycle, int total)
         {
             Current = current;
             End = end;
             Portion = 1.0*current/end;
+            Cycle = cycle;
+            Total = total;
+            PortionTotal = (1.0 * cycle * end + current) / total;
         }
     }
 }
