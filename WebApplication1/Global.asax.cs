@@ -14,6 +14,7 @@ namespace WebApplication1
         protected void Application_Start(object sender, EventArgs e)
         {
             LightSystemProvider.Init(Config.HostInterface);
+            Images.GetImages(Config.ImageDirectory);
         }
 
         protected void Session_Start(object sender, EventArgs e)

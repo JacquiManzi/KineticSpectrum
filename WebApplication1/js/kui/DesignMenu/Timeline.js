@@ -113,6 +113,7 @@ define([
                     .attr("countID", function (d) { return d.countID; })
                     .attr("text", function (d) { return d.getText(); })
                     .style("fill", function (d) { return d.getColor(); })
+                    .style("stroke", "#FFFFFF")
                     .call(drag);
 
                 rectangles.append("svg:title")

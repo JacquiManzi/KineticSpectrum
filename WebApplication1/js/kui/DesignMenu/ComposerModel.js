@@ -75,22 +75,27 @@ define([
                 if (patternObj.pattern.effectName === "Pulse") {
 
                     intColor = patternObj.pattern.effectProperties.background.colors[0];
-                    hexColor = "#" + intColor.toString(16);
+                    hexColor = intColor.toString(16);
                 }       
                  
                 else if (patternObj.pattern.effectName === "Fixed") {
 
-                    intColor = patternObj.pattern.effectProperties["color Effect"].colors[0];   
-                    hexColor = "#" + intColor.toString(16);
+                    intColor = patternObj.pattern.effectProperties["color Effect"].colors[0];
+                    hexColor =intColor.toString(16);
                 }
                 else if (patternObj.pattern.effectName === "Sweep") {
 
                     intColor = patternObj.pattern.effectProperties["sweep Start"].colors[0];
-                    hexColor = "#" + intColor.toString(16);
+                    hexColor = intColor.toString(16);
                 }
                 else { 
 
                 }
+
+                while (hexColor.length < 6) {
+                    hexColor = "0" + hexColor;
+                }
+                hexColor = "#" + hexColor;
 
                 return hexColor;
             },     
@@ -150,7 +155,7 @@ define([
                             patternObj.yCount = maxY;
 
                             maxY += patternObj.getHeight();                         
-                            SimState.addStart(patternObj.getText(), patternObj.countID, patternObj.startTime);
+                            SimState.addStart(patternObj.getText(), patternObj.countID, patternObj.startTime)
                         }
 
                         patternObj.updateStartTime(thisObj.yCount);
@@ -169,7 +174,8 @@ define([
                         }
                     });
 
-                this.timeline.addBars(this.barData);
+                    this.timeline.addBars(this.barData);
+                    this.patternModel.simulation.setSimulationMode();
             },
 
             removePatternFromOption: function () {
@@ -231,7 +237,8 @@ define([
                 });
 
                 remove.forEach(function (patternObj) {
-                    thisObj.patternList.remove(patternObj); 
+                    thisObj.patternList.remove(patternObj);
+                    SimState.removeStart(patternObj.countID);
                 }); 
                  
                 this.addPatternBars();
@@ -243,6 +250,9 @@ define([
                 SimState.getPatternStarts(function (patternObjs) {
 
                     thisObj.patternList = patternObjs;
+                    patternObjs.forEach(function (pattern) {
+                        thisObj.countID = Math.max(thisObj.countID, pattern.countID + 1);
+                    });
                     thisObj.addPatternBars();
 
                 });

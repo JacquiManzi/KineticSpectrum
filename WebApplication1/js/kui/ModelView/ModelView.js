@@ -129,7 +129,7 @@
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
                     if (lightList.count > 0) {
                         this.sceneInteraction.removeAllNodes();
-                        this.removeAllMeshes();
+                        //this.removeAllMeshes();
                         this.sceneInteraction.ledSet.createLEDNodes(lightList);
                         this.loadServerGroups();
                     }

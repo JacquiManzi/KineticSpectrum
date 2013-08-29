@@ -33,7 +33,7 @@ namespace KineticControl
             {
                 Led led = new Led(_byteArray, _initialLength, i);
                 _leds.Add(led);
-                led.Color = Colors.White;
+                led.Color = Colors.Black;
             }
         }
 

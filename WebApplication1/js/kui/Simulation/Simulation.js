@@ -46,8 +46,10 @@
             
         },
         
-        _onTimeChange: function(time) {
-            this.onStateChange(this.patternStates[time]);
+        _onTimeChange: function (time) {
+            if (this.mode == modes.pattern) {
+                this.onStateChange(this.patternStates[time]);
+            }
         },
         
         onTimeChange: function(time) {
@@ -72,18 +74,24 @@
             this.mode = modes.scene;
             SimState.setMode(this.mode);
             this.onSimMode(false);
+            this.pause();
         },
         
         setPatternMode: function() {
             this.mode = modes.pattern;
             SimState.setMode(this.mode);
             this.onSimMode(true);
+            this.play();
         },
         
         setSimulationMode: function() {
             this.mode = modes.Simulation;
             SimState.setMode(this.mode);
             this.onSimMode(true);
+            SimState.getEndTime(dojo.hitch(this, function (endTime) {
+                this.onEndTimeChange(endTime);
+                this.play();
+            }));
         },
         
         play: function () {
@@ -121,10 +129,20 @@
         
         _intervalUpdate: function () {
             this.timeIndex++;
-            if (this.timeIndex >= this.timeList.length) {
-                this.timeIndex = 0;
+            if (this.mode == modes.pattern && this.timeList) {
+                if (this.timeIndex >= this.timeList.length) {
+                    this.timeIndex = 0;
+                }
+                this.onTimeChange(this.timeList[this.timeIndex]);
             }
-            this.onTimeChange(this.timeList[this.timeIndex]);
+            else if (this.mode == modes.Simulation) {
+                if (this.timeIndex >= this.endTime * 30) {
+                    this.timeIndex = 0;
+                }
+                this.onTimeChange(this.timeIndex/30.0);
+            }
+
+            
         },
         
         simulatePattern: function(pattern) {

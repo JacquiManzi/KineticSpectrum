@@ -59,11 +59,11 @@ define([
 
                 container.addChild(this.contentPane);
 
-                this.createTimeline();
+                this.createTimeline(container);
                 this.createPatternProps(this.contentPane); 
             },    
 
-            createTimeline: function () {
+            createTimeline: function (container) {
                
                 this.createPatternSection(this.contentPane);
                               
@@ -75,6 +75,7 @@ define([
                     onShow: dojo.hitch(this, function(){
                         this.composerModel.timeline.createCanvas(timelineDiv);
                         this.composerModel.updateComposerFromServer();
+                        container.simulation.setSimulationMode();
                     
                     })
                 });

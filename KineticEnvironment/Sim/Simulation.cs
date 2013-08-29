@@ -142,6 +142,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         private DateTime _lastRun = DateTime.Now;
 
+        
         private void AdvanceTime()
         {
             DateTime thisRun = DateTime.Now;
@@ -152,27 +153,48 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             Time = newTime;
         }
 
+        private volatile bool inProcessing = false;
+
+        private bool enterProcessing()
+        {
+            lock (this)
+            {
+                if (inProcessing)
+                {
+                    return false;
+                }
+                else
+                {
+                    inProcessing = true;
+                    return true;
+                }
+            }
+        }
         private void UpdateState(int time)
         {
-            List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
-            starts.Sort(PatternStart.PriorityComparer);
-            ActivePatterns = starts;
-
-            foreach (var light in LightSystemProvider.Lights)
+            if (enterProcessing())
             {
-                light.Color = Colors.Black;
-            }
+                List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
+                starts.Sort(PatternStart.PriorityComparer);
+                ActivePatterns = starts;
 
-            foreach (var patternStart in starts)
-            {
-                patternStart.Apply(time);
-            }
+                foreach (var light in LightSystemProvider.Lights)
+                {
+                    light.Color = Colors.Black;
+                }
 
-            foreach (var light in LightSystemProvider.Lights)
-            {
-                _stateMap[light.Address].Color = light.Color;
+                foreach (var patternStart in starts)
+                {
+                    patternStart.Apply(time);
+                }
+
+                foreach (var light in LightSystemProvider.Lights)
+                {
+                    _stateMap[light.Address].Color = light.Color;
+                }
+                LightSystemProvider.LightSystem.UpdateLights();
+                inProcessing = false;
             }
-            LightSystemProvider.LightSystem.UpdateLights();
         }
 
     }

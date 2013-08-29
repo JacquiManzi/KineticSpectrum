@@ -160,7 +160,7 @@
 
                 this.addressToLED[address] = ledSphere;
 
-                Scene.AddLED({ address: address, position: ledSphere.position });
+                Scenes.addLED({ address: address, position: ledSphere.position, color:0 });
 
                 this.nodes.add(ledSphere);
                 this.scene.add(ledSphere);

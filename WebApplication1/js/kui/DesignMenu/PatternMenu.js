@@ -70,7 +70,8 @@ define([
                       style: this.mainBackgroundColor,
                       onShow: dojo.hitch(this, function() {
                           this.patternModel.updateGroupDropDown();
-                          container.simulation.setPatternMode();
+                          //TODO: JCU, JMM: This is why sample patterns don't work anymore!
+                          //container.simulation.setPatternMode();
                       })
                       
                   });
@@ -208,7 +209,8 @@ define([
                 var valueCell = html.createCell();
                 domConstruct.place(valueCell, row);
 
-                var priorityDropDown = CommonForm.createDropDown("0");
+                var priorityDropDown = CommonForm.createTableNumberTextBox("0");
+                priorityDropDown.set('value', "0");
                 domConstruct.place(priorityDropDown.domNode, valueCell);
 
                 this.patternModel.priorityDropDown = priorityDropDown;

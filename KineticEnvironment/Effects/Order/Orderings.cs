@@ -22,20 +22,18 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
 
         public static readonly PositionFunc InOutFunc = (pos, min, total) =>
                                                             {
-                                                                pos = pos - min;
-                                                                total = total - min;
-                                                                if (pos <= total/2)
-                                                                    return total - pos*2;
-                                                                return (pos - total/2 - 1)*2 + min;
+                                                                pos = (pos - min) / (total - min);
+                                                                if (pos <= .5)
+                                                                    pos = pos * 2;
+                                                                else
+                                                                    pos = (1 - pos) * 2;
+                                                                return pos * (total - min) + min;
                                                             };
 
         public static readonly PositionFunc OutInFunc = (pos, min, total) =>
                                                             {
-                                                                pos = pos - min;
-                                                                total = total - min;
-                                                                if (pos <= total/2)
-                                                                    return pos*2;
-                                                                return (total - pos)*2 + min;
+                                                                pos = InOutFunc(pos, min, total);
+                                                                return ReverseFunc(pos, min, total);
                                                             };
 
         public static readonly PositionFunc ReverseFunc = (pos, min, total) => (total-min) - (pos - min) + min;

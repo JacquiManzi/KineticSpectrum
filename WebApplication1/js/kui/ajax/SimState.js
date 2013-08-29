@@ -102,9 +102,17 @@
 
         var addStart = function (patternName, patternID, startTime) {
 
-            xhr.get({
+            return xhr.get({
                 url: "SimService.svc/AddStart",
                 content: { patternName: patternName, startTime: startTime, id: patternID }
+            });
+
+        };
+        var removeStart = function ( patternID) {
+
+            return xhr.get({
+                url: "SimService.svc/RemoveStart",
+                content: { id: patternID }
             });
 
         };
@@ -240,7 +248,8 @@
             setTime: setTime,
             getEndTime: getEndTime,
             addStart: addStart,
-            getPatternStarts: getPatternStarts
+            getPatternStarts: getPatternStarts,
+            removeStart: removeStart
         };
 
     });

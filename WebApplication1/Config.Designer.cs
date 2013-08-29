@@ -70,7 +70,7 @@ namespace WebApplication1 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\jcu\personal\ks\KineticSpectrum\WebApplication1\Images.
+        ///   Looks up a localized string similar to C:\Users\JCU\code\KineticSpectrum\WebApplication1\Images.
         /// </summary>
         internal static string ImageDirectory {
             get {
