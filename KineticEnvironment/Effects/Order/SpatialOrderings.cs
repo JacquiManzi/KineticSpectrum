@@ -22,9 +22,13 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                 case SpatialOrderingTypes.TwoDirectionsOut:
                     return new LinearSpatialOrdering(SpatialOrderingTypes.TwoDirectionsOut, Orderings.InOutFunc);
                 case SpatialOrderingTypes.Shrink:
-                    return new PolarSpatialOrdering(SpatialOrderingTypes.Shrink, Orderings.ReverseFunc);
+                    return new PolarSpatialOrdering(SpatialOrderingTypes.Shrink, Orderings.ReverseFunc, false);
                 case SpatialOrderingTypes.Expand: 
-                    return new PolarSpatialOrdering(SpatialOrderingTypes.Shrink, Orderings.ForwardFunc);
+                    return new PolarSpatialOrdering(SpatialOrderingTypes.Expand, Orderings.ForwardFunc, false);
+                case SpatialOrderingTypes.ShrinkRand:
+                    return new PolarSpatialOrdering(SpatialOrderingTypes.ShrinkRand, Orderings.ReverseFunc, true);
+                case SpatialOrderingTypes.ExpandRand:
+                    return new PolarSpatialOrdering(SpatialOrderingTypes.ExpandRand, Orderings.ForwardFunc, true);
                 default:
                     throw new ArgumentException("Type '" + orderingName + "' is not a valid SpatialOrderingType");
             }
@@ -34,13 +38,20 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
 
     class PolarSpatialOrdering : SpatialOrdering
     {
+        private readonly bool _rand;
         
-        public PolarSpatialOrdering(string ordering, Orderings.PositionFunc positionFunc) : base(ordering, positionFunc)
+        public PolarSpatialOrdering(string ordering, Orderings.PositionFunc positionFunc, bool rand) : base(ordering, positionFunc)
         {
+            _rand = rand;
         }
 
         protected override IList<double> VectorsToPositions(IList<Vector3D> vectors )
         {
+            if (_rand)
+            {
+                Vector3D center = vectors[(int)(Rand.NextDouble() * vectors.Count)];
+                return vectors.Select(v => D3Util.Distance(center, v)).ToList();
+            }
             Plane plane = D3Util.FindPlane(vectors);
             return vectors.Select(plane.Projection)
                 .Select(v => D3Util.Distance(plane.Center, v)).ToList();

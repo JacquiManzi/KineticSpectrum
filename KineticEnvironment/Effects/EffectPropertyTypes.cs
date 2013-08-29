@@ -58,7 +58,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public const string TwoDirectionsOut = "TwoDirections (Out)";
         public const string Shrink = "Shrink";
         public const string Expand = "Expand";
+        public const string ShrinkRand = "Shrink Random";
+        public const string ExpandRand = "Expand Random";
 
-        public static readonly IList<string> All = new List<string> { OneDirection, TwoDirectionsIn, TwoDirectionsOut, Shrink, Expand }.AsReadOnly();
+        public static readonly IList<string> All = new List<string> { OneDirection, TwoDirectionsIn, TwoDirectionsOut, Shrink, Expand, ShrinkRand, ExpandRand }.AsReadOnly();
     }
 }
