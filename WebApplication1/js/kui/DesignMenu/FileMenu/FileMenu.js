@@ -1,31 +1,41 @@
-﻿
+﻿/*
+* @Author: Jacqui Manzi
+* jacqui.manzi@gmail.com
+*
+* August 5th, 2013
+*
+* FileMenu.js - Section in DesignMenu for uploading 3D model files or light configuration files to the ModelView
+*
+*/
 
 define([   
     "dojo/_base/declare",
     "kui/util/CommonHTML",
-    "dojo/dom",
     "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
-     "dojo/on",
-"dojox/form/Uploader",
-"kui/ajax/FileInterface"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct,three, on, FileUploader, FileInterface) {
+    "dojo/on",
+    "dojox/form/Uploader",
+    "kui/ajax/FileInterface",
+    "kui/DesignMenu/FileMenu/FileItem"
+],
+    function (declare, html, ContentPane, domStyle, domConstruct,three, on, FileUploader, FileInterface, FileItem) {
         "use strict";
-        return declare("kui.DesignMenu.FileMenu", null, {
+
+        return declare("kui.DesignMenu.FileMenu.FileMenu", [FileItem], {
 
             /*
              *   Left menu for Kinect 3D model design 
              *
              */
 
-            constructor: function(modelView) {
+            constructor: function() {
 
-                this.style = "background-color:transparent;";
-                this.modelView = modelView;
+                this.style = "background-color:transparent;";              
+            },
 
-
+            buildRendering: function(){
             },
 
             createFileMenu: function (container)
@@ -40,9 +50,9 @@ define([
                           "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
                           "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                 "background-color: #131313;" +
-                "background-size: 20px 20px;width:100%;",
+                "background-size: 20px 20px;" +
+                "width:100%;",
                      onShow: dojo.hitch(container.simulation, container.simulation.setSceneMode)
-
                   });
 
                  container.addChild(contentPane);
@@ -74,8 +84,6 @@ define([
                 domConstruct.place(input, div);
                 on(input, "change", dojo.hitch(this, func));
                 
-                    
-
             },
 
             createLightUploadSection: function (div) {

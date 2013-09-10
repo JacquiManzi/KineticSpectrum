@@ -1,12 +1,13 @@
 ﻿define([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct",
     "kui/DesignMenu/EffectMenu/EffectItem",
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
     "kui/util/CommonFormItems",
-        "dojo/_base/array",
-        "dijit/MenuItem"
-], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem) {
+    "dojo/_base/array",
+    "dijit/MenuItem"
+], function (declare, domConstruct, EffectItem, html, Effects, CommonForm, array, MenuItem) {
     return declare("TimeItem", [EffectItem], {
 
         buildRendering: function () {
@@ -83,8 +84,6 @@
             this.onUpdate(this.key, this.value);
             this.orderingBox.set('label', ordering);
         }
-
-       
 
     });
 

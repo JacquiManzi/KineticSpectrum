@@ -15,13 +15,13 @@ define([
     "kui/ajax/SimState",
     "dojo/_base/array",
     "dijit/TitlePane",
-    "kui/DesignMenu/ComposerModel"
+    "kui/DesignMenu/PatternComposerMenu/ComposerModel"
  
 ],
     function (declare, html, CommonForm, dom, ContentPane, domStyle, domConstruct, three, on,
         domGeom, Moveable, SimSate, array, TitlePane, ComposerModel) {
         "use strict";
-        return declare("kui.DesignMenu.PatternComposerMenu", null, {
+        return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", null, {
 
             /*   
              */
@@ -65,7 +65,7 @@ define([
 
             createTimeline: function (container) {
                
-                this.createPatternSection(this.contentPane);
+                this._createPatternSection(this.contentPane);
                               
                 var timelineDiv = html.createDiv("width:100%;height:500px;background-color:#141414;overflow:auto; ");
 
@@ -85,7 +85,7 @@ define([
                 domConstruct.place(timelineTitlePane.domNode, this.contentPane.domNode);                                  
             },
 
-            createPatternSection: function(container){
+            _createPatternSection: function(container){
 
                 var div = html.createDiv("background-color:#141414;"); 
                 domConstruct.place(this.createPatternBox(), div);
@@ -101,11 +101,15 @@ define([
                 var addButton = CommonForm.createButton('Add', function () {
                     thisObj.composerModel.addPattern(thisObj.composerModel.patternListBox.getSelected());
                 });
-                domConstruct.place(addButton.domNode, div); 
-                var removeButton = CommonForm.createButton('Remove', function () {
 
+                CommonForm.setButtonStyle(addButton);
+                domConstruct.place(addButton.domNode, div);
+
+                var removeButton = CommonForm.createButton('Remove', function () {
                     thisObj.composerModel.removePatternFromOption(thisObj.composerModel.patternListBox.getSelected());
                 });
+
+                CommonForm.setButtonStyle(removeButton);
                 domConstruct.place(removeButton.domNode, div); 
             },
 

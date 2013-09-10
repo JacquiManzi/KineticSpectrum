@@ -1,6 +1,7 @@
 ﻿/// <reference path="../LEDMenu.js" />
 define([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct", 
     "dijit/_WidgetBase",
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
@@ -8,7 +9,7 @@ define([
     "kui/DesignMenu/EffectMenu/EffectArea",
     "dojo/_base/array",
     "dijit/MenuItem"
-], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects,CommonForm, EffectArea, array, MenuItem) {
+], function (declare, domConstruct, _WidgetBase, html, Effects, CommonForm, EffectArea, array, MenuItem) {
     return declare("EffectSection", [_WidgetBase], {
 
         effectArea: null,

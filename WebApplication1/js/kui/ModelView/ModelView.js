@@ -1,4 +1,9 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    August 15th, 2013
+*/
+
+define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "dojo/dom",
@@ -11,10 +16,13 @@
     "dojox/collections/ArrayList",
     "kui/ModelView/SceneInteraction",
     "kui/ModelView/Axis",
-    "kui/ajax/FileInterface"
+    "kui/ajax/FileInterface",
+    "kui/ModelView/ModelEnvironment/Camera",
+    "kui/ModelView/ModelEnvironment/DirectionalLight"
 
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom, ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface) {
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom,
+        ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -23,31 +31,17 @@
              *
              */
 
-            constructor: function (obj1, obj2) {
+            
+            constructor: function () {
 
                 this.style = "overflow:hidden"; 
-                /*Camera properties*/
-                this.fov = 45;
-                this.aspect = 0;
-                this.near = 0.09;
-                this.far = 10000;
-                this.cameriaPositionX = 2;
-                this.cameriaPositionY = 2;
-                this.cameriaPositionZ = 2;
+
+                this.camera = new Camera();
+                this.directionalLight = new DirectionalLight();
 
                 /*Lighting Properties*/
                 this.hasDirectionalLight = true;   
                 this.hasAmbientLight = true;
-
-                /*Directional Light properties*/
-                this.directionalLightColor = 0xffeedd;
-                this.directionalLightIntensity = 0;
-                this.directionalLightDistance = 0;
-
-                //directional light position properties
-                this.directionalLightX = 1;
-                this.directionalLightY = 0;
-                this.directionalLightZ = 1;
 
                 /*Ambient Color properties*/
                 this.ambientColor = 0x101030;
@@ -55,7 +49,7 @@
                 this.meshes = new ArrayList();
                 
                 this.sceneInteraction = new SceneInteraction();
-                dojo.connect(obj1.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.ledSet,
+                dojo.connect(this.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.ledSet,
                     this.sceneInteraction.ledSet.applyColorState));
 
             },
@@ -66,14 +60,10 @@
                 var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h;
                 var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w;
                 
-                this.aspect = (paneWidth / paneHeight);
+                /*Use the content pane demensions to determine the aspect ratio of the camera*/
+                this.camera.setAspect(paneWidth / paneHeight);
 
                 this.scene = new three.Scene();
-                this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
-                
-                this.camera.position.x = this.cameriaPositionX;
-                this.camera.position.y = this.cameriaPositionY;
-                this.camera.position.z = this.cameriaPositionZ;
 
                 var renderer = new three.WebGLRenderer();
                 renderer.setSize(paneWidth, paneHeight);
@@ -83,10 +73,10 @@
                 if (this.hasDirectionalLight)
                 {
                     var positions = 
-                        {
-                            'x':  this.directionalLightX, 
-                            'y':  this.directionalLightY, 
-                            'z': this.directionalLightX
+                        {   
+                            'x':  this.directionalLight.position.x, 
+                            'y':  this.directionalLight.position.y, 
+                            'z':  this.directionalLight.position.z
                         };
 
                     this.shineDirectionalLight(this.scene, this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance, 
@@ -277,11 +267,10 @@
 
             shineDirectionalLight: function (scene, color, intensity, distance, positions) 
             {
+               this.directionalLight.setColor(color);
+               this.directionalLight.setPosition(positions.x, positions.y, positions.z);
 
-               this.directionalLight = new three.DirectionalLight(color);
-                this.directionalLight.position.set(positions.x, positions.y, positions.z).normalize();
-                scene.add(this.directionalLight);
-
+               scene.add(this.directionalLight);   
             },
 
             shineAmbientLight: function (scene, color) 

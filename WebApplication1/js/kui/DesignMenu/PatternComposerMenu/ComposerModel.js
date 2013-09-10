@@ -7,19 +7,18 @@
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
-    "dojo/dom",
     "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
     "threejs/three",
     "dojox/collections/ArrayList",
     "dojo/_base/array",
-    "kui/DesignMenu/Timeline",
+    "kui/DesignMenu/PatternComposerMenu/Timeline",
      "kui/ajax/SimState"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, array, Timeline, SimState) {
+    function (declare, html, ContentPane, domStyle, domConstruct, three, ArrayList, array, Timeline, SimState) {
         "use strict";
-        return declare("kui.DesignMenu.ComposerModel", null, {
+        return declare("kui.DesignMenu.PatternComposerMenu.ComposerModel", null, {
 
             /*
              *   

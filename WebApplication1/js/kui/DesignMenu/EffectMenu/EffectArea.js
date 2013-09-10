@@ -1,5 +1,6 @@
 ﻿define([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct",
     "dijit/_WidgetBase",
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
@@ -10,7 +11,8 @@
     "kui/DesignMenu/EffectMenu/OrderingItem",
     "kui/DesignMenu/EffectMenu/SelectItem",
     "kui/DesignMenu/EffectMenu/ColorEffectItem"
-], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem,
+
+], function (declare, domConstruct, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem,
     OrderingItem, SelectItem, ColorEffectItem) {
     return declare("EffectArea", [_WidgetBase], {
        

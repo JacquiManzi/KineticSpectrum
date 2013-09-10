@@ -1,10 +1,11 @@
 ﻿define([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct",
     "kui/DesignMenu/EffectMenu/EffectItem",
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
     "kui/util/CommonFormItems"
-], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm) {
+], function (declare, domConstruct, EffectItem, html, Effects, CommonForm) {
     return declare("TimeItem", [EffectItem], {
 
         timeBox: null,
@@ -16,13 +17,15 @@
 
             timeTitle.innerHTML = this.key;
 
-            var timeValue = html.createCell("text-align:left;width:60%;");
+            var timeValue = html.createCell("text-align:left;" +
+                "width:60%;");
+
             this.timeBox = CommonForm.createTableNumberTextBox("width:100%;");
             this.timeBox.set('value', this.value);
 
             domConstruct.place(timeTitle, this.domNode);
             domConstruct.place(timeValue, this.domNode);
-            this.timeBox.placeAt(timeValue);
+            this.timeBox.placeAt(timeValue); 
         },
 
         postCreate: function () {

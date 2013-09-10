@@ -5,12 +5,12 @@ define([
     "dojo/_base/declare",
     "dijit/layout/AccordionContainer",
     "threejs/three",
-    "kui/DesignMenu/ModelMenu",
-    "kui/DesignMenu/FileMenu",
-    "kui/DesignMenu/LEDMenu",
-    "kui/DesignMenu/PatternMenu",
-    "kui/DesignMenu/PatternComposerMenu"
-],
+    "kui/DesignMenu/ModelMenu/ModelMenu",
+    "kui/DesignMenu/FileMenu/FileMenu",
+    "kui/DesignMenu/LEDMenu/LEDMenu",
+    "kui/DesignMenu/PatternMenu/PatternMenu",
+    "kui/DesignMenu/PatternComposerMenu/PatternComposerMenu"
+], 
     function (declare, AccordionContainer,three, ModelMenu, FileMenu, LEDMenu, PatternMenu, PatterComposerMenu) {
     "use strict";
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
@@ -49,7 +49,7 @@ define([
             modelmenu.create3DMenu(this);*/
 
             /*File Menu*/
-            var fileMenu = new FileMenu(this.modelView);
+            var fileMenu = new FileMenu({ modelView: this.modelView });
             fileMenu.createFileMenu(this);
 
             this.startup();

@@ -10,7 +10,7 @@
 ],
     function (declare, html, BorderContainer, dom, ContentPane, domStyle, domConstruct, CommonForm) {
         "use strict";
-        return declare("kui.DesignMenu.ModelMenu", null, {
+        return declare("kui.DesignMenu.ModelMenu,ModelMenu", null, {
 
             /*
              *   Bottom menu for Kinect 3D model files
@@ -62,8 +62,7 @@
                 var cameraDiv = html.createDiv("width:100%;");
                 var camTitleDiv = html.createDiv("color: white;" +
                                          "padding-top: 10px;" +
-                                         "text-align: center;" +
-                                         "font-size: 1em;");
+                                         "text-align: center;");
 
                 domConstruct.place(camTitleDiv, cameraDiv);
 
@@ -104,8 +103,7 @@
                 var lightTitleDiv = html.createDiv("color: white;" +
                                                    "text-align:center;" +
                                                    "padding-top: 10px;" +
-                                                   "text-align: center;" +
-                                                   "font-size: 1em;");
+                                                   "text-align: center;");
 
                 domConstruct.place(lightTitleDiv, lightingDiv);
 

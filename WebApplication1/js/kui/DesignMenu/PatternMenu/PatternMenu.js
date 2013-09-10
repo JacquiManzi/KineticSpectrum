@@ -21,7 +21,7 @@ define([
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
     DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList) {
         "use strict";
-        return declare("kui.DesignMenu.PatternMenu", null, {
+        return declare("kui.DesignMenu.PatternMenu.PatternMenu", null, {
 
             /*
              *   
@@ -71,7 +71,7 @@ define([
                       onShow: dojo.hitch(this, function() {
                           this.patternModel.updateGroupDropDown();
                           //TODO: JCU, JMM: This is why sample patterns don't work anymore!
-                          //container.simulation.setPatternMode();
+                          container.simulation.setPatternMode();
                       })
                       
                   });

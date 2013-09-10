@@ -1,5 +1,6 @@
 ﻿define([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct",
     "kui/DesignMenu/EffectMenu/EffectItem",
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
@@ -7,7 +8,7 @@
     "dojo/_base/array",
      "dijit/MenuItem",
      "dojox/collections/ArrayList"
-], function (declare, domConstruct, parser, ready, EffectItem, html, Effects, CommonForm, array, MenuItem, ArrayList) {
+], function (declare, domConstruct, EffectItem, html, Effects, CommonForm, array, MenuItem, ArrayList) {
     return declare("TimeItem", [EffectItem], {
 
         buildRendering: function () {

@@ -18,7 +18,7 @@ define([
      "dojo/on",
      "kui/ModelView/LEDSet",
      "kui/ModelView/groups/GroupSet",
-     "kui/DesignMenu/ComposerModel"
+     "kui/DesignMenu/PatternComposerMenu/ComposerModel"
 ],
     function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
         PatternModel, on, LEDSet, GroupSet, ComposerModel) {

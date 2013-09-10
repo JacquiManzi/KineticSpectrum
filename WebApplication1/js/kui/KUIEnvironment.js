@@ -21,7 +21,7 @@
                   
                   constructor: function()
                   {
-
+                       
                   },
 
                   createKUILayout: function()
@@ -34,9 +34,9 @@
                       var mainContainer = new BorderContainer({
                           gutters: false,
                           design: "sidebar",
-                          style: "height:" + windowHeight + "px;width:100%;" +
-                              "border:none;"+
-                              "font-size:0.8pt"
+                          style: "height:" + windowHeight + "px;" +
+                              "width:100%;" +
+                              "border:none;"
                       }, "mainContainer");
 
 
@@ -48,7 +48,6 @@
                                  "height:95%;" +
                                  "background-color:black;" +
                                  "overflow: hidden;" +
-                                 "font-size:0.8pt;"+
                                  "border:none;",
                           executeScripts: true
                       });
@@ -62,17 +61,16 @@
                       centerContainer.set('content', modelView.domNode);
 
 
-                      //setup for the left container
-                      //Create the left design menu
-                      var designMenu = new DesignMenu({simulation:simulation}, null, modelView);  
+                      /*setup for the left container*/
+                      var designMenu = new DesignMenu({ simulation: simulation }, null, modelView);
+                      
+                      /*Create the left design menu*/ 
                       designMenu.createMenu();            
 
-                      dojo.connect(modelView, 'onShow', function(){
-                      
+                      dojo.connect(modelView, 'onShow', function(){                     
                           dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/GeodesicDome.js")();                                       
                       });
-
-
+                        
                       /*Left container*/
                       var leftContainer = new ContentPane({
                           isLayoutContainer: true,
@@ -80,17 +78,23 @@
                           id: "leftContainer",
                           minSize: ".1",
                           style: "width:25%;" +
-                                 "height:100%;"+
-                                 "font-size:0.8pt" 
+                                 "height:100%;" 
                       });
 
                       mainContainer.addChild(leftContainer);
                       
-                      var leftDiv = html.createDiv("height:100%;width:100%;background-color:black;overflow:hidden;");
-                      var innerTopDiv = html.createDiv("height:5%;width:100%;background-color:black;");
-                      var innerBottomDiv = html.createDiv("height:5%;width:100%;background-color:black;");
+                      var leftDiv = html.createDiv("height:100%;" +
+                          "width:100%;" +
+                          "background-color:black;" +
+                          "overflow:hidden;");
 
-                     
+                      var innerTopDiv = html.createDiv("height:5%;" +
+                          "width:100%;" +
+                          "background-color:black;");
+
+                      var innerBottomDiv = html.createDiv("height:5%;" +
+                          "width:100%;" +
+                          "background-color:black;");
 
                       domConstruct.place(innerTopDiv, leftDiv);
                       domConstruct.place(designMenu.domNode, leftDiv);
@@ -98,7 +102,7 @@
 
                       leftContainer.set('content', leftDiv);
                       
-                      ///Setup for bottom Container
+                      /*Setup for bottom Container*/ 
                       var bottomContainer = new ContentPane({
                           isLayoutContainer: true,
                           region: "bottom",
@@ -106,15 +110,16 @@
                           style: "height: 90px;"
                       });
 
-                      var simPane = new SimPane({ simulation: simulation });
+                      var simPane = new SimPane(
+                          {
+                              simulation: simulation
+                          });
+
                       bottomContainer.set('content', simPane);
                       mainContainer.addChild(bottomContainer);
 
                       mainContainer.startup();
                   }
-
-             
-
               });
 
           });

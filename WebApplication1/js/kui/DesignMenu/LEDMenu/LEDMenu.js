@@ -17,7 +17,7 @@ define([
     "kui/LED/LightAddress"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes, LightAddress) {
         "use strict";
-        return declare("kui.DesignMenu.LEDMenu", null, {
+        return declare("kui.DesignMenu.LEDMenu.LEDMenu", null, {
                    
             /*
              *   Left menu for Kinect 3D model design 

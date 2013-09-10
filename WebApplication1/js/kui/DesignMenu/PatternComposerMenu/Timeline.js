@@ -16,7 +16,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, on, d3, domGeom, array, SimState) {
         "use strict";
-        return declare("kui.DesignMenu.Timeline", null, {
+        return declare("kui.DesignMenu.PatternComposerMenu.Timeline", null, {
 
             /*   
              */
