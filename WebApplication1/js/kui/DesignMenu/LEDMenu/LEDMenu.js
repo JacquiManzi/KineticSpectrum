@@ -1,6 +1,4 @@
-﻿/// <reference path="../ModelView/SceneInteraction.js" />
-
-
+﻿
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
@@ -14,7 +12,7 @@ define([
     "dojo/on",
     "dojo/_base/array",
     "kui/ajax/Scenes",
-    "kui/LED/LightAddress"],
+    "kui/ModelView/Node/LightAddress"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes, LightAddress) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu.LEDMenu", null, {
@@ -24,10 +22,10 @@ define([
              *
              */
 
-            constructor: function (modelView) {
+            constructor: function (sceneModel) {
 
                 this.style = "background-color:#141414;";
-                this.modelView = modelView;
+                this.sceneModel = sceneModel;
 
                 /*CSS Stylings*/
                 this.tableCellBorderColor = "#333333";
@@ -131,7 +129,7 @@ define([
                 var obj = this;
                 var ledModeButton = CommonForm.createButton("Add Single LED OFF", function () {
 
-                    obj.modelView.sceneInteraction.setAddMode(this);
+                    obj.sceneModel.sceneInteraction.setAddMode(this);
 
                 }, null, "color:#3d8dd5;");
 
@@ -201,14 +199,14 @@ define([
                 var obj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
-                    var lineSegments = obj.modelView.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
+                    var lineSegments = obj.sceneModel.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
 
                     var lightAddress = new LightAddress();
                     lightAddress.lightNo = ledAddressText.get('value');
                     lightAddress.fixtureNo = fixtureText.get('value');  
                     lightAddress.portNo = portText.get('value');
 
-                   obj.modelView.sceneInteraction.drawNodes(lineSegments, lightAddress);
+                   obj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
                           
                 });
 
@@ -263,7 +261,7 @@ define([
                 var obj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
 
-                    obj.modelView.sceneInteraction.removeLEDNodes();
+                    obj.sceneModel.sceneInteraction.removeLEDNodes();
                 });
 
                 this.setButtonStyle(removeButton);
@@ -280,7 +278,7 @@ define([
                 var obj = this;
                 var selectAllNodeButton = CommonForm.createButton('Select All Vertices', function () {
 
-                    obj.modelView.sceneInteraction.ledSet.selectAllVertexs();
+                    obj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
                 });
 
                 this.setButtonStyle(selectAllNodeButton);
@@ -292,7 +290,7 @@ define([
                 var deselectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectAllNodeButton = CommonForm.createButton('Deselect All Vertices', function () {
 
-                    obj.modelView.sceneInteraction.ledSet.deselectAllVertexs();
+                    obj.sceneModel.sceneInteraction.ledSet.deselectAllVertexs();
 
                 });
 
@@ -306,7 +304,7 @@ define([
                 var selectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
 
-                    obj.modelView.sceneInteraction.ledSet.selectAllLEDs();
+                    obj.sceneModel.sceneInteraction.ledSet.selectAllLEDs();
                 });
 
                 this.setButtonStyle(selectLEDButton);
@@ -318,7 +316,7 @@ define([
                 var deselectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
                 var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
 
-                    obj.modelView.sceneInteraction.ledSet.deselectAllLEDs();
+                    obj.sceneModel.sceneInteraction.ledSet.deselectAllLEDs();
 
                 });
                 this.setButtonStyle(deselectLEDButton);
@@ -339,7 +337,7 @@ define([
 
                 var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
-                this.modelView.sceneInteraction.groupSet.ledGroupListBox = groupListBox;
+                this.sceneModel.sceneInteraction.groupSet.ledGroupListBox = groupListBox;
 
                 var groupNameTable = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
@@ -380,7 +378,7 @@ define([
                 var obj = this;
 
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = obj.modelView.sceneInteraction.groupSet.createGroupFromSelected(groupNameTextBox.get('value'));
+                    var group = obj.sceneModel.sceneInteraction.groupSet.createGroupFromSelected(groupNameTextBox.get('value'));
                     obj.addGroup(group);
                 }, null, "color:#3d8dd5;");
                 domStyle.set(addButton.domNode.firstChild, "width", "100px");
@@ -436,14 +434,14 @@ define([
                     array.forEach(thisObj.groupListBox.getSelected(), function (node) {
                         selected.push(node.innerHTML);
                     });
-                    thisObj.modelView.sceneInteraction.groupSet.selectGroups(selected);
+                    thisObj.sceneModel.sceneInteraction.groupSet.selectGroups(selected);
                 });
             },
             
             removeSelected: function () {
                 var thisObj = this;
                 array.forEach(this.groupListBox.getSelected(), function (node) {
-                    thisObj.modelView.sceneInteraction.groupSet.removeGroup(node.innerHTML);
+                    thisObj.sceneModel.sceneInteraction.groupSet.removeGroup(node.innerHTML);
                     thisObj.groupListBox.domNode.removeChild(node);
                 });
                 

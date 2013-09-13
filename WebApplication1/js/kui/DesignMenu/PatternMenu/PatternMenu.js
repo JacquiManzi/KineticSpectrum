@@ -23,16 +23,10 @@ define([
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", null, {
 
-            /*
-             *   
-             *
-             */
-
-            constructor: function (modelView) {
+            constructor: function (sceneModel, patternModel) {
 
                 this.style = "background-color:transparent;";
-                this.modelView = modelView;
-                this.patternModel = this.modelView.sceneInteraction.patternModel;
+                this.patternModel = patternModel;
                 
                 this.backgroundColor = "#141414";
                 this.textColor = "#3d8dd5";
@@ -58,7 +52,7 @@ define([
                 "background-color: #131313;" +
                 "background-size: 20px 20px;";
 
-                this.patternModel.simulation = modelView.simulation;
+                this.simulation = sceneModel.simulation;
 
             },
 

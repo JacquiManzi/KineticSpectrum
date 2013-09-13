@@ -1,6 +1,7 @@
 ﻿/*
 * @author: Jacqui Manzi
 * August, 7th 2013
+* jacquimanzi@gmail.com
 */
 
 define([
@@ -9,24 +10,40 @@ define([
     "threejs/three",
     "dojox/collections/ArrayList",
     "dojo/_base/array",
+    "dojo/_base/lang",
     "kui/ModelView/groups/Group"
 ],
-    function (declare, html, three, ArrayList, array, Group) {
+    function (declare, html, three, ArrayList, array, lang, Group) {
         "use strict";
         return declare("kui.ModelView.groups.GroupSet", null, {
 
             /*
              *   
              */
-
-            constructor: function (ledSet, patternModel) {
-
+            constructor: function (ledSet) {
+                this.groupsChangedListeners = new ArrayList();
+                this.selectedGroupNames = new ArrayList();
                 this.nameToGroup = [];
-                this.groupList = new ArrayList();
                 this.ledSet = ledSet;
-                this.patternModel = patternModel;
                 this.ledGroupListBox = null;
-              
+            },
+
+            /**
+             * Should be called whenever 
+             */
+            _dispatchGroups: function() {
+                var thisObj = this;
+                this.groupsChangedLsiteners.forEach(function (changeListener) {
+                    changeListener(thisObj.getGroups(), thisObj.getSelectedGroupNames());
+                });
+            },
+
+            /**
+             * Registers a function to be called whenever the group membership changes. The provided function will be called
+             * whenever a group is added or removed with the full list of group names
+             */
+            addGroupsUpdatedListener: function (groupsUpdated /*void groupsUpdated(Array<String> groupNames, Array<String> groupsSelected)*/) {
+                this.groupsChangedListeners.add(groupsUpdated);
             },
 
             generateGroupName: function () {
@@ -44,8 +61,9 @@ define([
             getGroups: function () {
                 return Object.keys(this.nameToGroup);
             },
-            deleteGroup: function (groupName) {
-                delete this.nameToGroup[groupName];
+
+            getSelectedGroupNames: function() {
+                return this.getSelectedGroupNames.toArray();
             },
 
             createGroupFromSelected: function (groupName) {
@@ -56,6 +74,8 @@ define([
 
                 this.nameToGroup[groupName] = group;
                 group.applyGroup();
+                this.selectedGroupNames.add(groupName);
+                this._dispatchGroups();
 
                 return groupName;
             },
@@ -71,44 +91,54 @@ define([
                     });
                     thisObj.nameToGroup[name] = new Group(name, selectedNodes);
                 });
+                this._dispatchGroups();
             },
           
             /*Select all associated nodes with the groups selected in the group list box*/
             selectGroups: function (groupNames) {
                 this.ledSet.deselectAllVertexs();
                 this.ledSet.deselectAllLEDs();
-                array.forEach(groupNames, dojo.hitch(this, this.selectGroup));
+                this.selectedGroupNames.clear();
+                array.forEach(groupNames, dojo.hitch(this, this._selectGroup));
+                this._dispatchGroups();
+            },
+
+            /*Select all associated nodes with the group selected in the group list box*/
+            _selectGroup: function (groupName) {
+                var group = this.nameToGroup[groupName];
+                this.ledSet.selectNodes(group.selectedNodes);
+
+                if (!this.selectedGroupNames.contains(groupName)) {
+                    this.selectedGroupNames.add(groupName);
+                }
             },
 
             /*Select all associated nodes with the group selected in the group list box*/
             selectGroup: function (groupName) {
-                var group = this.nameToGroup[groupName];
-                this.ledSet.selectNodes(group.selectedNodes);
+                this._selectGroup(groupName);
+                this._dispatchGroups();
             },
 
             /*Deselect all associated nodes with the group selected in the group list box*/
             deselectGroup: function (groupName) {
                 var group = this.nameToGroup[groupName];
+                group.deselectAll();
                 this.ledSet.deselectNodes(group.selectedNodes);
+                this.selectedGroupNames.remove(groupName);
+                this._dispatchGroups();
             },
 
             /*Remove all associated nodes with the group selected in the group list box and remove the group from the list box*/
             removeGroup: function (groupName) {
                 var group = this.nameToGroup[groupName];
-                group.deselectAll();
-                this.ledSet.deselectNodes(group.selectedNodes);
+                this.deselectGroup(groupName);
                 group.remove();
                 delete this.nameToGroup[groupName];
+                this._dispatchGroups();
 
                 //Update the group list box in the pattern model
                 this.patternModel.updateGroupDropDown();
                 var thisObj = this;
-                this.patternModel.getGroups().forEach(function (group) {
-
-                    if (group.groupName === groupName) {
-                        thisObj.groupList.remove(group);
-                    }
-                });
 
                 this.patternModel.updateGroupListBox(this.patternModel.getGroups());
             },

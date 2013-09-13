@@ -1,6 +1,7 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    September 9th, 2013
+*    jacquimanzi@gmail.com
 *
 *   Camera.js - The default camera used in Kinetic Spectrum ModelViews. This a THREEJS Perspective Camera.
 *   Full THREEJS documention for perspective camera here: http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera
@@ -8,11 +9,8 @@
 
 define([
     "dojo/_base/declare",
-    "dojo/dom-construct",    
-    "kui/util/CommonHTML",
-    "kui/util/CommonFormItems",
     "threejs/three"
-], function (declare, domConstruct, html, CommonForm, three) {
+], function (declare, three) {
     return declare("kui.ModelView.ModelEnvironment.Camera", [three.PerspectiveCamera], {
 
         FOV: 45,          //Field of view

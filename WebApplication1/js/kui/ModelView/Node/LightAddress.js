@@ -12,7 +12,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.LED.LightAddress", null, {
+        return declare("kui.ModelView..Node.LightAddress", null, {
 
             /*
              *  Group

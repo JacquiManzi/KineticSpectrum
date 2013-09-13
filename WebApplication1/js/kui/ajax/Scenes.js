@@ -7,7 +7,7 @@
     "threejs/three",
     "dojo/_base/xhr",
     "dojo/_base/array",
-    "kui/LED/LightAddress",
+    "kui/ModelView/Node/LightAddress",
     "dojox/collections/ArrayList"
 ],
     function (declare, html, dom, domStyle, domConstruct, three, xhr, array, LightAddress, ArrayList) {

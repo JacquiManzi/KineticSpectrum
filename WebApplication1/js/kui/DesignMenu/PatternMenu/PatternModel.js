@@ -20,17 +20,14 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, MenuItem, array, Scenes, SimState) {
         "use strict";
-        return declare("kui.PatternMenu.patterns.PatternModel", null, {
+        return declare("kui.DesignMenu.PatternMenu.PatternModel", null, {
 
-            /*
-             *   
-             *
-             */
-
-            constructor: function (sceneInteraction) {
+            constructor: function (sceneModel) {
 
                 this.groupList = new ArrayList();
                 this.patternList = new ArrayList();
+                this.patternsUpdatedListeners = new ArrayList();
+
                 this.patternDef = {};
                 this.effectsDef = {}; 
                 this.effectName = "";
@@ -43,7 +40,7 @@ define([
                 this.priorityDropDown = null;
                 this.patternDropDown = null;
 
-                this.sceneInteraction = sceneInteraction;
+                this.sceneModel = sceneModel;
                 this.simulation = null;
 
                 this.updatePatternList();
@@ -65,6 +62,7 @@ define([
                 });
 
                 this.patternList.add(newPattern);
+                this._dispatchPatterns();
 
                 this.updatePatternDropDown();
             },
@@ -78,7 +76,7 @@ define([
             },
 
             removePattern: function(){
-
+                 
                 var selectedPattern = this.getSelectedPattern();
 
                 var thisObj = this;   
@@ -120,7 +118,7 @@ define([
 
             addGroup: function(groupName){
     
-                var group = this.sceneInteraction.groupSet.nameToGroup[groupName];
+                var group = this.sceneModel.getGroupFromName(groupName);
                 
                 if(!!group && !this.groupList.contains(group)){
 
@@ -133,7 +131,7 @@ define([
 
                 var thisObj = this;
                 groups.forEach(function (group) {
-                    thisObj.sceneInteraction.groupSet.deselectGroup(group.name); 
+                    thisObj.sceneModel.deselectGroup(group.name); 
                     thisObj.groupList.remove(group);                       
                 });   
 
@@ -170,7 +168,7 @@ define([
                 var thisObj = this;
                 this.groupList.forEach(function (group) {
                     var option = html.createOption(group.name);
-                    dojo.connect(option, "onclick", thisObj.sceneInteraction.groupSet.selectGroup(group.name));
+                    dojo.connect(option, "onclick", thisObj.sceneModel.selectGroup(group.name)); 
                     thisObj.groupListBox.domNode.appendChild(option);
                 });
             },
@@ -180,7 +178,7 @@ define([
                 this.groupDropDown.dropDown.destroyDescendants();
                 this.groupDropDown.set('label', "Select Group");
                 
-                var ledGroupList = this.sceneInteraction.groupSet.getGroups();
+                var ledGroupList = this.sceneModel.getGroups(); 
                 var thisObj = this;
 
                 array.forEach(ledGroupList, function (groupName) {
@@ -192,7 +190,7 @@ define([
 
                             thisObj.groupDropDown.set('label', label);
                         }, label)
-                    });
+                    }); 
                     thisObj.groupDropDown.dropDown.addChild(menuItem);
                 }); 
             },
@@ -201,11 +199,7 @@ define([
 
                 this.patternDropDown.dropDown.destroyDescendants();
                 this.patternDropDown.set('label', "Select Pattern");    
-
-                if (!!this.sceneInteraction.composerModel.patternListBox) {
-                    this.sceneInteraction.composerModel.updatePatternListBox();
-                }   
-                 
+                                  
                 var thisObj = this;
                 SimState.getPatternNames(function (patterns) {
                     array.forEach(patterns, function (patternName) {
@@ -223,6 +217,17 @@ define([
                       
                 });
 
+            },
+
+            _dispatchPatterns: function(){
+                var thisObj = this;
+                this.patternsUpdatedListeners.forEach(function (updateListener) {
+                    updateListener(thisObj.patternList.clone());
+                });
+            },
+
+            addUpdateListener: function (patternsUpdated) {
+                this.patternsUpdatedListeners.add(patternsUpdated);
             },
 
             getSelectedPattern: function(){

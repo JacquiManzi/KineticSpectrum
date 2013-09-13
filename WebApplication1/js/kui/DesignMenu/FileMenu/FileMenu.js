@@ -32,7 +32,7 @@ define([
 
             constructor: function() {
 
-                this.style = "background-color:transparent;";              
+                this.style = "background-color:transparent;";
             },
 
             buildRendering: function(){
@@ -69,12 +69,10 @@ define([
                     var file = event.target.files[0];
                     var fileReader = new FileReader();
 
-                    var scene = this.modelView.scene;
-                    var render = this.modelView.render;
-                    var modelView = this.modelView;
+                    var thisObj = this;
                     fileReader.onload = (function(e) {
 
-                        modelView.loadFile(e.target.result, scene, render);
+                        thisObj.sceneModel.loadFile(e.target.result, thisObj.sceneModel.getScene());
 
                     });
                     var fileToLoad = fileReader.readAsText(file);
@@ -95,7 +93,7 @@ define([
                     multiple: false, 
                     uploadOnSelect: true,
                     url: "FileUpload.aspx",
-                    onComplete: dojo.hitch(this.modelView,this.modelView.loadServerLEDs)
+                    onComplete: dojo.hitch(this.sceneModel,this.sceneModel.loadServerLEDs)
                 });
             
                 domConstruct.place(fileUploader.domNode, div);

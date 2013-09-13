@@ -8,11 +8,8 @@
 
 define([
     "dojo/_base/declare",
-    "dojo/dom-construct",
-    "kui/util/CommonHTML",
-    "kui/util/CommonFormItems",
     "threejs/three"
-], function (declare, domConstruct, html, CommonForm, three) {
+], function (declare, three) {
     return declare("kui.ModelView.ModelEnvironment.DirectionalLight", [three.DirectionalLight], {
 
         COLOR: 0xffeedd,

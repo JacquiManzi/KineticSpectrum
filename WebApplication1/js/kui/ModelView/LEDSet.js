@@ -2,26 +2,24 @@
         "dojo/_base/declare",
         "kui/ModelView/ModelSkeleton",
         "dojox/collections/ArrayList",
-        "kui/LED/LEDNode",
-        "kui/LED/LightAddress",
+        "kui/ModelView/Node/LED",
+        "kui/ModelView/Node/LightAddress",
         "threejs/three",
         "dojo/dom-geometry",
-        "kui/ModelView/VertexSphere",
         "kui/util/CommonHTML",
-        "kui/Pattern/patterns/PatternModel",
         "dojo/on",
         "kui/ModelView/groups/Group",
         "dojo/_base/array",
         "kui/ajax/Scenes"
     ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
-        PatternModel, on, Group, array, Scenes) {
+    function (declare, ModelSkeleton, ArrayList, LED, LightAddress, three, domGeom, html,
+         on, Group, array, Scenes) {
         "use strict";
         return declare("kui.ModelView.LEDSet", null, {
             nodes: null,
             vertexSpheres: null,
             addressToLED: null,
-            ledRadius: 3,
+            ledRadius: 1.5,
                  
             constructor: function(scene) {
                 this.nodes = new ArrayList();
@@ -39,7 +37,7 @@
 
                 ledList.forEach(dojo.hitch(this, function(item) {
 
-                    var ledNode = new LEDNode();
+                    var ledNode = new LED();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
                     ledNode.radius = 0.005;   
@@ -150,49 +148,33 @@
                 var distance = intersects[0].object.geometry.boundingBox.min.distanceTo(intersects[0].object.geometry.boundingBox.max);
                 var position = intersects[0].point;
 
-                var led = new LEDNode();
+                var led = new LED();
                 led.updatePosition(position);
-                led.radius = distance * .003;
-                this.ledRadius = led.radius;
+                led.setRadius(1.5);
+                //led.setRadius(distance * .003);
+                //this.ledRadius = led.radius;
                 led.address = address;
 
-                var ledSphere = led.createSphere();
+                this.addressToLED[address] = led;
 
-                this.addressToLED[address] = ledSphere;
+                Scenes.addLED({ address: address, position: led.position, color:0 });
 
-                Scenes.addLED({ address: address, position: ledSphere.position, color:0 });
-
-                this.nodes.add(ledSphere);
-                this.scene.add(ledSphere);
+                this.nodes.add(led);
+                this.scene.add(led);
             },
-
-            /*addGeneratedLED: function(segment, address){
-
-                address = address ? address : new LightAddress();
-                var led = new LEDNode();
-                led.updatePosition(segment);
-                led.address = address;
-
-                var ledSphere = led.createSphere();
-
-                this.addressToLED[address] = ledSphere;
-                this.nodes.add(ledSphere);
-                this.scene.add(ledSphere);
-            },*/
 
             addGeneratedLED: function (segment, address) {
 
-                var led = new LEDNode();
+                var led = new LED();
                 led.updatePosition(segment);
                 led.address = address;
+                led.setRadius(.003);
 
-                var ledSphere = led.createSphere();
+                Scenes.addLED({ address: led.address, position: led, color: 0 });
 
-                Scenes.addLED({ address: led.address, position: led.position, color: 0 });
-
-                this.addressToLED[address] = ledSphere;
-                this.nodes.add(ledSphere);
-                this.scene.add(ledSphere);
+                this.addressToLED[address] = led;
+                this.nodes.add(led);
+                this.scene.add(led); 
             },
             
             getLEDNode: function(lightAddress) {
@@ -227,6 +209,14 @@
                         this.leds.add(this.ledSet.nodes.item(i));
                     }
                 }
-            }            
+            },
+
+            addNodeToSet: function (node) {
+                this.nodes.add(node);
+            },
+
+            removeNodeFromSet: function (node) {
+                this.nodes.remove(node); 
+            }
         });
     });

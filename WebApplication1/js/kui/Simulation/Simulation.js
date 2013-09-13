@@ -9,7 +9,7 @@
     "kui/ajax/Scenes"
 ], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, SimState, Scenes) {
     var modes = { scene: "Scene", pattern: "Pattern", Simulation: "Simulation" };
-    return declare("Simulation", null, {
+    return declare("kui.Simulation.Simulation", null, {
 
         mode: modes.scene,
         endTime: 0,

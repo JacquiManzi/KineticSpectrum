@@ -8,27 +8,22 @@ define([
     "dojo/_base/declare",
     "kui/ModelView/ModelSkeleton",
     "dojox/collections/ArrayList",
-    "kui/LED/LEDNode",
-    "kui/LED/LightAddress",
+    "kui/ModelView/Node/LED",
+    "kui/ModelView/Node/LightAddress",
     "threejs/three",
     "dojo/dom-geometry",
-    "kui/ModelView/VertexSphere",
+    "kui/ModelView/Node/Node",
+    "kui/ModelView/Node/Vertex",
      "kui/util/CommonHTML",
-     "kui/Pattern/patterns/PatternModel",
      "dojo/on",
      "kui/ModelView/LEDSet",
-     "kui/ModelView/groups/GroupSet",
-     "kui/DesignMenu/PatternComposerMenu/ComposerModel"
+     "kui/ModelView/groups/GroupSet"
 ],
-    function (declare, ModelSkeleton, ArrayList, LEDNode, LightAddress, three, domGeom, VertexSphere, html,
-        PatternModel, on, LEDSet, GroupSet, ComposerModel) {
+    function (declare, ModelSkeleton, ArrayList, LED, LightAddress, three, domGeom, Node, Vertex, html,
+        on, LEDSet, GroupSet) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
-            /*
-             *   
-             *
-             */
 
             constructor: function () {
 
@@ -46,11 +41,8 @@ define([
 
                 this.fileSelectionType = null;
 
-                /*Models*/
-                this.patternModel = new PatternModel(this);
-                this.composerModel = new ComposerModel(this);
                 this.ledSet = new LEDSet(this.scene);
-                this.groupSet = new GroupSet(this.ledSet, this.patternModel);
+                this.groupSet = new GroupSet(this.ledSet);
                 
             },
 
@@ -63,15 +55,16 @@ define([
                     for (var j = 0; j < vertices.length; j++) {
 
                         var distance = geometryList.item(i).boundingBox.min.distanceTo(geometryList.item(i).boundingBox.max);
-                        var radius = distance * .01;
-                        var vertexSphere = new VertexSphere(radius, vertices[j].x, vertices[j].y, vertices[j].z);
+                     
+                        var vertex = new Vertex();
+                        vertex.setCoords(vertices[j].x, vertices[j].y, vertices[j].z); 
 
                         /*Adjust the sphere radius according to model scale*/
-                        vertexSphere.radius = distance * 0.003;
+                        vertex.setRadius(distance * 0.005); 
 
-                        this.scene.add(vertexSphere.sphere);
-                        this.ledSet.nodes.add(vertexSphere.sphere);
-                        this.ledSet.vertexSpheres.add(vertexSphere.sphere);
+                        this.scene.add(vertex);
+                        this.ledSet.nodes.add(vertex);
+                        this.ledSet.vertexSpheres.add(vertex);
 
                     }
                 }

@@ -14,22 +14,21 @@ define([
     "dojo/dnd/Moveable",
     "kui/ajax/SimState",
     "dojo/_base/array",
-    "dijit/TitlePane",
-    "kui/DesignMenu/PatternComposerMenu/ComposerModel"
+    "dijit/TitlePane"
  
 ],
     function (declare, html, CommonForm, dom, ContentPane, domStyle, domConstruct, three, on,
-        domGeom, Moveable, SimSate, array, TitlePane, ComposerModel) {
+        domGeom, Moveable, SimSate, array, TitlePane) {
         "use strict";
         return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", null, {
 
             /*   
              */
-            constructor: function (modelView) {
+            constructor: function (sceneModel, patternComposerModel, patternModel) {
 
                 this.style = "background-color:transparent;";    
-                this.patternModel = modelView.sceneInteraction.patternModel;
-                this.composerModel = modelView.sceneInteraction.composerModel;
+                this.patternModel = patternModel;
+                this.patternComposerModel = patternComposerModel;
                 
 
                 this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
@@ -73,14 +72,14 @@ define([
                     title: "Pattern Timeline",
                     content: timelineDiv,
                     onShow: dojo.hitch(this, function(){
-                        this.composerModel.timeline.createCanvas(timelineDiv);
-                        this.composerModel.updateComposerFromServer();
+                        this.patternComposerModel.timeline.createCanvas(timelineDiv);
+                        this.patternComposerModel.updateComposerFromServer();
                         container.simulation.setSimulationMode();
                     
                     })
                 });
                 timelineDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
-                this.composerModel.timeline.createCanvas(timelineDiv); 
+                this.patternComposerModel.timeline.createCanvas(timelineDiv);
                    
                 domConstruct.place(timelineTitlePane.domNode, this.contentPane.domNode);                                  
             },
@@ -99,14 +98,14 @@ define([
 
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add', function () {
-                    thisObj.composerModel.addPattern(thisObj.composerModel.patternListBox.getSelected());
+                    thisObj.patternComposerModel.addPattern(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
                 CommonForm.setButtonStyle(addButton);
                 domConstruct.place(addButton.domNode, div);
 
                 var removeButton = CommonForm.createButton('Remove', function () {
-                    thisObj.composerModel.removePatternFromOption(thisObj.composerModel.patternListBox.getSelected());
+                    thisObj.patternComposerModel.removePatternFromOption(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
                 CommonForm.setButtonStyle(removeButton);
@@ -116,10 +115,8 @@ define([
             createPatternBox: function () {    
 
                 var patternListBox = CommonForm.createListBox("width:90%;");
-                this.composerModel.patternListBox = patternListBox;
+                this.patternComposerModel.patternListBox = patternListBox;
 
-                this.composerModel.updatePatternListBox();
-               
                 return patternListBox.domNode;
             },
 
@@ -138,14 +135,14 @@ define([
                 var thisObj = this;
                 var removeButton = CommonForm.createButton("Remove Pattern", function () {
 
-                    thisObj.composerModel.removeSelectedPattern();
+                    thisObj.patternComposerModel.removeSelectedPattern();
 
                 });
                 CommonForm.setButtonStyle(removeButton);
 
                 var applyButton = CommonForm.createButton("Apply All", function () {
 
-                    thisObj.composerModel.applyAllPatterns(); 
+                    thisObj.patternComposerModel.applyAllPatterns(); 
 
                 });
                 CommonForm.setButtonStyle(applyButton);

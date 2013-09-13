@@ -18,11 +18,15 @@ define([
     "kui/ModelView/Axis",
     "kui/ajax/FileInterface",
     "kui/ModelView/ModelEnvironment/Camera",
-    "kui/ModelView/ModelEnvironment/DirectionalLight"
-
+    "kui/ModelView/ModelEnvironment/DirectionalLight",
+    "kui/ModelView/ModelEnvironment/AmbientLight",
+    "kui/ModelView/ModelEnvironment/Scene",
+    "kui/ModelView/ModelEnvironment/Renderer",
+    "kui/ModelView/SceneModel"
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom,
-        ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight) {
+        ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight,
+        AmbientLight, Scene, Renderer, SceneModel) {
         "use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
@@ -30,25 +34,27 @@ define([
              *   3D Model View area (is a ContentPane object)
              *
              */
-
-            
+           
             constructor: function () {
 
                 this.style = "overflow:hidden"; 
 
                 this.camera = new Camera();
                 this.directionalLight = new DirectionalLight();
+                this.ambientLight = new AmbientLight();
+                this.scene = new Scene();
+                this.renderer = new Renderer();
 
                 /*Lighting Properties*/
                 this.hasDirectionalLight = true;   
                 this.hasAmbientLight = true;
 
-                /*Ambient Color properties*/
-                this.ambientColor = 0x101030;
-
                 this.meshes = new ArrayList();
                 
-                this.sceneInteraction = new SceneInteraction();
+                this.sceneInteraction = new SceneInteraction(); 
+                
+                this.sceneModel = new SceneModel(this.scene, this.sceneInteraction, this);
+
                 dojo.connect(this.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.ledSet,
                     this.sceneInteraction.ledSet.applyColorState));
 
@@ -62,12 +68,10 @@ define([
                 
                 /*Use the content pane demensions to determine the aspect ratio of the camera*/
                 this.camera.setAspect(paneWidth / paneHeight);
+              
+                this.renderer.setRenderSize(paneWidth, paneHeight);
 
-                this.scene = new three.Scene();
-
-                var renderer = new three.WebGLRenderer();
-                renderer.setSize(paneWidth, paneHeight);
-                this.set('content', renderer.domElement);
+                this.set('content', this.renderer.domElement);
                
 
                 if (this.hasDirectionalLight)
@@ -85,7 +89,7 @@ define([
 
                 if (this.hasAmbientLight)
                 {
-                    this.shineAmbientLight(this.scene, this.ambientColor);
+                    this.shineAmbientLight(this.scene);
                 }
 
 
@@ -94,15 +98,15 @@ define([
                     requestAnimationFrame(this.render);
 
                     this.camera.lookAt(this.scene.position);
-                    renderer.render(this.scene, this.camera);
+                    this.renderer.render(this.scene, this.camera);
                 });
 
-                var modelViewNode = this.domNode;
-                this.orbitControl = new three.OrbitControls(this.camera, modelViewNode);
+                var modelViewDomElement = this.domNode;
+                this.orbitControl = new three.OrbitControls(this.camera, modelViewDomElement);
 
                 this.axis = new Axis(this.scene);
 
-                this.load(fileLocation, this.scene, this.render);
+                this.load(fileLocation, this.scene);
 
                 var animate = dojo.hitch(this, function () {
 
@@ -131,25 +135,25 @@ define([
                 fileInterface.getGroups(dojo.hitch(this.sceneInteraction.groupSet, this.sceneInteraction.groupSet.addGroups));
             },
 
-            load: function(fileLocation, scene, render)
+            load: function(fileLocation, scene)
             {
                 var loader = new three.OBJLoader();
                
-                this.loadObj = dojo.hitch(this,function () { loader.load(fileLocation, dojo.hitch(this, this.loadObject, scene, render)); });
+                this.loadObj = dojo.hitch(this,function () { loader.load(fileLocation, dojo.hitch(this, this.loadObject, scene)); });
                 this.loadObj();
             },
 
-            loadFile: function(data, scene, render)
+            loadFile: function(data, scene)
             {
                 var loader = new three.OBJLoader();
                 var object = loader.parse(data);
 
-                this.loadObj = dojo.hitch(this, this.loadObject, scene, render, object);
+                this.loadObj = dojo.hitch(this, this.loadObject, scene, object);
                 this.loadObj();
 
             },
 
-            loadObject: function(scene, render, object)
+            loadObject: function(scene, object)
             {
                
                 if (this.meshes.count > 0) {
@@ -191,7 +195,7 @@ define([
 
                 this.loadServerLEDs();
 
-                render();
+                this.render();
 
                 
             },
@@ -273,11 +277,8 @@ define([
                scene.add(this.directionalLight);   
             },
 
-            shineAmbientLight: function (scene, color) 
-            {
-                this.ambient = new three.AmbientLight(color);
-                scene.add(this.ambient);
-
+            shineAmbientLight: function (scene) {
+             scene.add(this.ambientLight);
             }
              
 

@@ -18,15 +18,15 @@ define([
 ],
     function (declare, html, ContentPane, domStyle, domConstruct, three, ArrayList, array, Timeline, SimState) {
         "use strict";
-        return declare("kui.DesignMenu.PatternComposerMenu.ComposerModel", null, {
+        return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerModel", null, {
 
             /*
              *   
              */
 
-            constructor: function (sceneInteraction) {
+            constructor: function (patternModel) {
 
-                this.patternModel = sceneInteraction.patternModel;
+                this.patternModel = patternModel;
                 this.patternListBox = null;
                 this.patternList = new ArrayList();
                 this.timeline = new Timeline();
@@ -37,6 +37,9 @@ define([
                 this.countID = 0;
 
                 this.timelineHeight = 200;
+
+                //Get's passed an implicit pattern list from patternModel whenever the pattern list changes
+                patternModel.addUpdateListener(dojo.hitch(this, this.updatePatternListBox));
 
             },
 
@@ -204,12 +207,12 @@ define([
 
             },
 
-            updatePatternListBox: function () {
+            updatePatternListBox: function (patternList) {
 
                 html.removeDomChildren(this.patternListBox);
 
                 var thisObj = this;
-                this.patternModel.patternList.forEach(function (pattern) {
+                 patternList.forEach(function (pattern) {
 
                     var option = html.createOption(pattern.name);
                     dojo.connect(option, "onclick", function () {

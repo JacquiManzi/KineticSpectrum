@@ -8,7 +8,7 @@
     "dojo/_base/xhr",
     "dojox/collections/ArrayList",
     "dojo/_base/array",
-    "kui/LED/LightAddress"
+    "kui/ModelView/Node/LightAddress"
 ],
     function (declare, html, dom, domStyle, domConstruct, three, xhr, ArrayList, array, LightAddress) {
         "use strict";

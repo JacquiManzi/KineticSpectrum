@@ -62,10 +62,10 @@
 
 
                       /*setup for the left container*/
-                      var designMenu = new DesignMenu({ simulation: simulation }, null, modelView);
+                      var designMenu = new DesignMenu({simulation: simulation, sceneModel: modelView.sceneModel });
                       
                       /*Create the left design menu*/ 
-                      designMenu.createMenu();            
+                      designMenu.createMenu();             
 
                       dojo.connect(modelView, 'onShow', function(){                     
                           dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/GeodesicDome.js")();                                       
