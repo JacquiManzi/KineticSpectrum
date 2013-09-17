@@ -3,7 +3,7 @@
 *    September 13th, 2013
 *    jacquimanzi@gmail.com
 *
-*   NodeModel.js - 
+*    NodeModel.js - 
 *   
 */
 

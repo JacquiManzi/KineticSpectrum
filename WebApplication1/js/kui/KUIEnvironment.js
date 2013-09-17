@@ -11,10 +11,11 @@
       "kui/util/CommonHTML",
       "dojo/dom-construct",
       "kui/Simulation/Simulation",
-      "kui/Simulation/SimPane"
+      "kui/Simulation/SimPane",
+      "dojo/dom-style"
 ],
           function (declare, registry, BorderContainer, ContentPane, ContentPaneX, window, DesignMenu,
-               ModelView, on, html, domConstruct, Simulation, SimPane) {
+               ModelView, on, html, domConstruct, Simulation, SimPane, domStyle) {
 
               return declare("kui.PatternMenu.KUIEnvironment", null, {
               
@@ -26,7 +27,6 @@
 
                   createKUILayout: function()
                   {
-                      var windowHeight = window.getBox().h - 20;
 
                       var simulation = new Simulation();
 
@@ -34,32 +34,28 @@
                       var mainContainer = new BorderContainer({
                           gutters: false,
                           design: "sidebar",
-                          style: "height:" + windowHeight + "px;" +
+                          style: "height:100%;" +
                               "width:100%;" +
-                              "border:none;"
+                              "border:0;" +
+                              "margin:0;" +
+                              "padding:0"                          
                       }, "mainContainer");
 
-
-                      ///setup for the center container
-                      var centerContainer = new ContentPaneX({
-                          region: "center",
-                          id: "centerContainer",
-                          style: "width:75%;" +
-                                 "height:95%;" +
-                                 "background-color:black;" +
-                                 "overflow: hidden;" +
-                                 "border:none;",
-                          executeScripts: true
-                      });
+                      /*Create and place the model view content pane into center container*/
+                      var modelView = new ModelView(
+                          {
+                              simulation: simulation,
+                              region: "center",
+                              id: "centerContainer",
+                              style: "width:75%;" +
+                                     "height:95%;" +
+                                     "background-color:black;" +
+                                     "overflow: hidden;" +
+                                     "border:none;"
+                          });
 
                       /*The center content pane to the bottom content pane*/
-                      mainContainer.addChild(centerContainer);
-                      
-
-                      /*Create and place the model view content pane into center container*/
-                      var modelView = new ModelView({ simulation: simulation });
-                      centerContainer.set('content', modelView.domNode);
-
+                      mainContainer.addChild(modelView);
 
                       /*setup for the left container*/
                       var designMenu = new DesignMenu({simulation: simulation, sceneModel: modelView.sceneModel });

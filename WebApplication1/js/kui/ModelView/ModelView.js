@@ -7,7 +7,6 @@
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
-    "dojo/dom",
     "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
@@ -25,7 +24,7 @@ define([
     "kui/ModelView/ModelEnvironment/Renderer",
     "kui/ModelView/SceneModel"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom,
+    function (declare, html, ContentPane, domStyle, domConstruct, three, domGeom,
         ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight,
         AmbientLight, Scene, Renderer, SceneModel) {
         ///"use strict";
@@ -66,15 +65,27 @@ define([
 
                 return domNode;
             },
+
+            resize: function(){
+
+                this.inherited(arguments);
+                this._resizeModel(); 
+
+            },
+
+            _resizeModel: function(){
+
+                var paneHeight = domGeom.getMarginSize(this.domNode).h;
+                var paneWidth = domGeom.getMarginSize(this.domNode).w;
+
+                /*Use the content pane demensions to determine the aspect ratio of the camera*/
+                this.camera.setAspect(paneWidth / paneHeight);
+                this.renderer.setRenderSize(paneWidth, paneHeight);
+            },
                    
             displayModel: function (fileLocation) {
                
-                var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h;
-                var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w;
-                 
-                /*Use the content pane demensions to determine the aspect ratio of the camera*/
-                this.camera.setAspect(paneWidth / paneHeight);              
-                this.renderer.setRenderSize(paneWidth, paneHeight);
+                this._resizeModel();
 
                 if (this.hasDirectionalLight)
                 {

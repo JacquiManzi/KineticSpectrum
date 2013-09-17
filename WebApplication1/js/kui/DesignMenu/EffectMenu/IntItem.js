@@ -1,4 +1,13 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacquimanzi@gmail.com
+*
+*     
+*   
+*/
+
+define([
     "dojo/_base/declare",
     "dojo/dom-construct",
     "kui/DesignMenu/EffectMenu/EffectItem",
