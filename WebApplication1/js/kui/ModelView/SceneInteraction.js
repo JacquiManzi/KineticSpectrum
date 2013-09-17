@@ -2,96 +2,81 @@
 /*
 * @author: Jacqui Manzi
 * August 6th, 2013
+* jacquimanzi@gmail.com
 * SceneInteraction - All node interaction with the scene happens here.
 */
 define([
     "dojo/_base/declare",
-    "kui/ModelView/ModelSkeleton",
     "dojox/collections/ArrayList",
     "kui/ModelView/Node/LED",
     "kui/ModelView/Node/LightAddress",
-    "threejs/three",
     "dojo/dom-geometry",
     "kui/ModelView/Node/Node",
-    "kui/ModelView/Node/Vertex",
-     "kui/util/CommonHTML",
-     "dojo/on",
-     "kui/ModelView/LEDSet",
-     "kui/ModelView/groups/GroupSet"
+    "kui/util/CommonHTML",
+    "dojo/on",
+    "kui/ModelView/Node/NodeModel",
+    "kui/ModelView/groups/GroupModel",
+    "kui/ModelView/ModelEnvironment/DragControls",
+    "kui/ModelView/ModelEnvironment/OrbitalControl",
+    "kui/ModelView/ModelEnvironment/Vector3",
+    "kui/ModelView/ModelEnvironment/Raycaster",
+    "kui/ModelView/ModelEnvironment/Projector"
 ],
-    function (declare, ModelSkeleton, ArrayList, LED, LightAddress, three, domGeom, Node, Vertex, html,
-        on, LEDSet, GroupSet) {
+    function (declare, ArrayList, LED, LightAddress, domGeom, Node, html,
+        on, NodeModel, GroupModel, DragControls, OrbitalControl, Vector3, Raycaster, Projector) {
         "use strict";
         return declare("kui.ModelView.SceneInteraction", null, {
 
+            constructor: function (domNode, camera, scene) {
+                              
+                this.camera = camera; 
+                this.domNode = domNode;
+                this.scene = scene;
 
-            constructor: function () {
+                this.projector = new Projector();
+                this.meshList = new ArrayList();
+                 
+                this.nodeModel = new NodeModel(this.scene);
+                this.groupModel = new GroupModel(this.nodeModel);
 
-                this.modelSkeleton = null;
-                
-                this.projector = new three.Projector();
-                this.camera = null;
-                this.domNode = null;
-                this.orbitControl = null;
-                this.dragControls = null;
-                this.scene = null;
-
+                this.orbitControl = new OrbitalControl(this.camera, this.domNode);  
+                this.dragControls = new DragControls(this.camera, this.nodeModel.nodes, this.domNode, domGeom);
                 this.addModeOn = false;
-                this.sceneMesh = null;
 
-                this.fileSelectionType = null;
-
-                this.ledSet = new LEDSet(this.scene);
-                this.groupSet = new GroupSet(this.ledSet);
+                this._initiateMouseEvents();
                 
             },
 
-            createVertexSpheres: function () {
+            updateMeshes: function(meshList){
+                this.meshList.clear();
+                this.meshList = meshList;
+            },
 
-                var geometryList =  this.modelSkeleton.geometryList;
-                for (var i = 0; i < geometryList.count; i++) {
+            updateOrbitControl: function(){
+                this.orbitControl.update();
+            },
 
-                    var vertices = geometryList.item(i).vertices;
-                    for (var j = 0; j < vertices.length; j++) {
+            updateDragControl: function(){
+                this.dragControls = new DragControls(this.camera, this.nodeModel.nodes, this.domNode, domGeom);
+            },
 
-                        var distance = geometryList.item(i).boundingBox.min.distanceTo(geometryList.item(i).boundingBox.max);
-                     
-                        var vertex = new Vertex();
-                        vertex.setCoords(vertices[j].x, vertices[j].y, vertices[j].z); 
-
-                        /*Adjust the sphere radius according to model scale*/
-                        vertex.setRadius(distance * 0.005); 
-
-                        this.scene.add(vertex);
-                        this.ledSet.nodes.add(vertex);
-                        this.ledSet.vertexSpheres.add(vertex);
-
-                    }
-                }
-
+            _initiateMouseEvents: function(){
 
                 dojo.connect(this.domNode, "onmousemove", dojo.hitch(this, this.doSelect));
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
-
-                this.dragControls = new three.DragControls(this.camera, this.ledSet.nodes, this.domNode, domGeom);
 
                 dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function (event) {
 
                     this.orbitControl.enabled = true;
                     this.dragControls.enabled = false;
-
                 }));
-
-
-                //Set LEDSet scene here since we now have a scene to draw on.
-                this.ledSet.scene = this.scene;
             },
 
             /*Find the line segments between selected VertexSpheres*/
             findConnectingLines: function (amount) {
 
                 var lineSegments = new ArrayList();
-                var selectedNodes = this.ledSet.getSelectedNodes();
+                var selectedNodes = this.nodeModel.getSelectedNodes();
 
                 while (selectedNodes.count > 1) {
 
@@ -107,13 +92,15 @@ define([
                         var y = sphereTwo.y + i * deltaY;
                         var z = sphereTwo.z + i * deltaZ;
 
-                        lineSegments.add(new three.Vector3(x, y, z));
+                        var vector = new Vector3();
+                        vector.setCoords(x, y, z);
+                        lineSegments.add(vector);
                     }
 
                     selectedNodes.remove(selectedNodes.item(0));
                 }
 
-                this.x = selectedNodes.item(0).position.x;
+                this.x = selectedNodes.item(0).position.x; //What am I saving x, y, and z for?
                 this.y = selectedNodes.item(0).position.y;
                 this.z = selectedNodes.item(0).position.z;
 
@@ -125,7 +112,7 @@ define([
 
                 var thisObj = this;
                 lineSegments.forEach(function (segment) {
-                    thisObj.ledSet.addGeneratedLED(segment, new LightAddress(startAddress));
+                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(startAddress));
                     startAddress.inc();
                 });
             },
@@ -133,27 +120,27 @@ define([
             /*Removes all nodes from the scene- LEDs and Vertices*/
             removeAllNodes: function()
             {
-                this.ledSet.selectAllLEDs();
-                this.ledSet.selectAllVertexs();
-                var selectedNodes = this.ledSet.getSelectedNodes();
+                this.nodeModel.selectAllLEDs();
+                this.nodeModel.selectAllVertexs();
+                var selectedNodes = this.nodeModel.getSelectedNodes();
 
                 var thisObj = this;
                 selectedNodes.forEach(function(node) {
                     thisObj.scene.remove(node);
-                    thisObj.ledSet.nodes.remove(node);
+                    thisObj.nodeModel.nodes.remove(node);
                 });
             },
 
             /*Removes all selected LED nodes- not vertices*/
             removeLEDNodes: function () {
 
-                var selectedNodes = this.ledSet.getSelectedNodes();
+                var selectedNodes = this.nodeModel.getSelectedNodes();
 
                 var thisObj = this;
                 selectedNodes.forEach(function (node) {
                     if (!node.isVertex) {
                         thisObj.scene.remove(node);
-                        thisObj.ledSet.nodes.remove(node);
+                        thisObj.nodeModel.nodes.remove(node);
                     }
                 });
             },
@@ -161,14 +148,14 @@ define([
             doSelect: function (event) {
                 if (event.altKey)
                 {
-                    var intersects = this.findIntersects(this.ledSet.nodes, event);
+                    var intersects = this.findIntersects(this.nodeModel.nodes, event);
                     if (intersects.length > 0 && this._inObject != intersects[0].object.id) {
                         this._inObject = intersects[0].object.id;
                         if (!intersects[0].object.isSelected) {
-                            this.ledSet.selectNode(intersects[0].object);
+                            this.nodeModel.selectNode(intersects[0].object);
                         }
                         else {
-                            this.ledSet.deselectNode(intersects[0].object);
+                            this.nodeModel.deselectNode(intersects[0].object);
                         }
                     }
                 }
@@ -177,14 +164,14 @@ define([
 
             mouseSelect: function(event)
             {
-                var intersects = this.findIntersects(this.ledSet.nodes, event);
+                var intersects = this.findIntersects(this.nodeModel.nodes, event);
                 if (intersects.length > 0) {
 
                     if (!intersects[0].object.isSelected) {
-                        this.ledSet.selectNode(intersects[0].object);
+                        this.nodeModel.selectNode(intersects[0].object);
                     }
                     else {
-                        this.ledSet.deselectNode(intersects[0].object);
+                        this.nodeModel.deselectNode(intersects[0].object);
                     }
                 }
             },
@@ -199,14 +186,14 @@ define([
                 else {
 
                     var meshList = new ArrayList();
-                    this.sceneMesh.forEach(function (mesh) {
+                    this.meshList.forEach(function (mesh) {
                         meshList.add(mesh);
                     });
 
                     var intersects = this.findIntersects(meshList, event);
 
                     if (intersects.length > 0) {
-                        this.ledSet.addSingleLED(intersects);
+                        this.nodeModel.addSingleLED(intersects);
                     }
                     
                     //@TODO: Jacqui- This does not work on loaded light configuration files since they do not have meshes,
@@ -219,18 +206,19 @@ define([
 
             findIntersects: function (objects, event) {
 
-                //TODO: Joseph, why are you doing this? you know it's going to screw you later
+                //TODO: JMM, why are you doing this? you know it's going to screw you later
                 //GET rid of the -8, to compensate for padding and get the correct geometry
                 var mouse = { x: ((event.layerX-8) / domGeom.getMarginSize(this.domNode).w) * 2 - 1, y: -((event.layerY-8) / domGeom.getMarginSize(this.domNode).h) * 2 + 1 };
 
-                var vector = new three.Vector3(mouse.x, mouse.y, 1);
+                var vector = new Vector3();
+                vector.setCoords(mouse.x, mouse.y, 1);
 
-                this.projector.unprojectVector(vector, this.camera);
+                this.projector.unproject(vector, this.camera);
 
-                var raycaster = new three.Raycaster(this.camera.position, vector.sub(this.camera.position).normalize());
+                var raycaster = new Raycaster();
+                raycaster.setOriginAndDirection(this.camera.position, vector.sub(this.camera.position).normalize());
 
                 return raycaster.intersectObjects(objects.toArray());
-
             },
             
             /*GETTERS/SETTERS HERE*/
@@ -240,12 +228,10 @@ define([
                 if (this.addModeOn) {
 
                     this.setAddModeOff(button);
-
                 }
                 else {
 
                     this.setAddModeOn(button);
-
                 }
             },
 

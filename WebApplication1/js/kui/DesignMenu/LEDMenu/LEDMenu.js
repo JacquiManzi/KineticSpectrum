@@ -337,7 +337,7 @@ define([
 
                 var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
-                this.sceneModel.sceneInteraction.groupSet.ledGroupListBox = groupListBox;
+                this.sceneModel.sceneInteraction.groupModel.ledGroupListBox = groupListBox;
 
                 var groupNameTable = html.createTable("margin-left:auto;" +
                     "margin-right:auto;" +
@@ -378,7 +378,7 @@ define([
                 var obj = this;
 
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = obj.sceneModel.sceneInteraction.groupSet.createGroupFromSelected(groupNameTextBox.get('value'));
+                    var group = obj.sceneModel.sceneInteraction.groupModel.createGroupFromSelected(groupNameTextBox.get('value'));
                     obj.addGroup(group);
                 }, null, "color:#3d8dd5;");
                 domStyle.set(addButton.domNode.firstChild, "width", "100px");
@@ -434,14 +434,14 @@ define([
                     array.forEach(thisObj.groupListBox.getSelected(), function (node) {
                         selected.push(node.innerHTML);
                     });
-                    thisObj.sceneModel.sceneInteraction.groupSet.selectGroups(selected);
+                    thisObj.sceneModel.sceneInteraction.groupModel.selectGroups(selected);
                 });
             },
             
             removeSelected: function () {
                 var thisObj = this;
                 array.forEach(this.groupListBox.getSelected(), function (node) {
-                    thisObj.sceneModel.sceneInteraction.groupSet.removeGroup(node.innerHTML);
+                    thisObj.sceneModel.sceneInteraction.groupModel.removeGroup(node.innerHTML);
                     thisObj.groupListBox.domNode.removeChild(node);
                 });
                 

@@ -37316,7 +37316,7 @@ THREE.OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 
 THREE.DragControls = function (_camera, _objects, _domElement, domGeom) {
 
-    //JMM: Commenting out because I amnow using dojox.collections.ArrayList instead of javascript arrays
+    //JMM: Commenting out because I am now using dojox.collections.ArrayList instead of javascript arrays
     /*if (_objects instanceof THREE.Scene) {
         _objects = _objects.children;
     }*/
@@ -37389,7 +37389,7 @@ THREE.DragControls = function (_camera, _objects, _domElement, domGeom) {
         if (me.enabled) {
             event.preventDefault();
 
-            //TODO: Joseph, why are you doing this? you know it's going to screw you later
+            //TODO: JMM, why are you doing this? you know it's going to screw you later
             //GET rid of the -8, to compensate for padding and get the correct geometry
             _mouse.x = ((event.layerX-8) / domGeom.getMarginSize(_domElement).w) * 2 - 1;
             _mouse.y = -((event.layerY-8) / domGeom.getMarginSize(_domElement).h) * 2 + 1;

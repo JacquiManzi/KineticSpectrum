@@ -13,13 +13,12 @@ define([
     return declare("kui.ModelView.ModelEnvironment.OrbitalControl", [three.OrbitControls], {
 
 
-        constructor: function (camera, domElement) {
+        constructor: function (camera, domNode) {
 
             this.camera = camera;
-            this.domElement = scene;
-
+            this.domElement = domNode;
         }
 
     });
 
-});
+}); 

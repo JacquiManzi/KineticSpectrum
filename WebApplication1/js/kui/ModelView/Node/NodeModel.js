@@ -1,10 +1,17 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacquimanzi@gmail.com
+*
+*   NodeModel.js - 
+*   
+*/
+
+define([
         "dojo/_base/declare",
-        "kui/ModelView/ModelSkeleton",
         "dojox/collections/ArrayList",
         "kui/ModelView/Node/LED",
         "kui/ModelView/Node/LightAddress",
-        "threejs/three",
         "dojo/dom-geometry",
         "kui/util/CommonHTML",
         "dojo/on",
@@ -12,18 +19,14 @@
         "dojo/_base/array",
         "kui/ajax/Scenes"
     ],
-    function (declare, ModelSkeleton, ArrayList, LED, LightAddress, three, domGeom, html,
-         on, Group, array, Scenes) {
+    function (declare, ArrayList, LED, LightAddress, domGeom, html, on, Group, array, Scenes) {
         "use strict";
-        return declare("kui.ModelView.LEDSet", null, {
+        return declare("kui.ModelView.Node.NodeModel", null, {
             nodes: null,
-            vertexSpheres: null,
-            addressToLED: null,
-            ledRadius: 1.5,
+            addressToLED: null, 
                  
             constructor: function(scene) {
                 this.nodes = new ArrayList();
-                this.vertexSpheres = new ArrayList();
                 this.addressToLED = [];
                 this.scene = scene;
                 this.selected = new ArrayList();
@@ -150,9 +153,7 @@
 
                 var led = new LED();
                 led.updatePosition(position);
-                led.setRadius(1.5);
-                //led.setRadius(distance * .003);
-                //this.ledRadius = led.radius;
+                led.setRadius(distance * .003);
                 led.address = address;
 
                 this.addressToLED[address] = led;

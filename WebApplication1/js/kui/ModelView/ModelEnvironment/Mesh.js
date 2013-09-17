@@ -52,10 +52,11 @@ define([
         setZ: function (z) {
             this.coords.z = z;
             this.position.z = z;
+        },
+
+        updateGeometryFaces: function () {
+            this.geometry.computeFaceNormals();
         }
-
-
-
 
     });
 

@@ -138,6 +138,9 @@
     <Content Include="js\kui\DesignMenu\PatternComposerMenu\PatternComposerMenu.js" />
     <Content Include="js\kui\DesignMenu\PatternComposerMenu\Timeline.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\Color.js" />
+    <Content Include="js\kui\ModelView\ModelEnvironment\DragControls.js" />
+    <Content Include="js\kui\ModelView\ModelEnvironment\Projector.js" />
+    <Content Include="js\kui\ModelView\ModelEnvironment\Raycaster.js" />
     <Content Include="js\kui\ModelView\Node\LED.js" />
     <Content Include="js\kui\ModelView\Node\Vertex.js" />
     <Content Include="js\kui\ModelView\Axis.js" />
@@ -145,8 +148,8 @@
     <Content Include="js\kui\ModelView\ModelEnvironment\AmbientLight.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\Camera.js" />
     <Content Include="js\kui\ModelView\groups\Group.js" />
-    <Content Include="js\kui\ModelView\groups\GroupSet.js" />
-    <Content Include="js\kui\ModelView\LEDSet.js" />
+    <Content Include="js\kui\ModelView\groups\GroupModel.js" />
+    <Content Include="js\kui\ModelView\Node\NodeModel.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\DirectionalLight.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\Mesh.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\MeshBasicMaterial.js" />

@@ -1,13 +1,21 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacquimanzi@gmail.com
+*
+*   Node.js - The general class describing interactive nodes such as a Vertex object and an LED object in the Model.
+*   Node extends from Mesh.js, which is the container class for THREE.js Mesh objects.
+*/
+
+define([
     "dojo/_base/declare",
     "kui/ModelView/ModelEnvironment/Vector3",
     "kui/ModelView/ModelEnvironment/Mesh",
     "kui/ModelView/ModelEnvironment/MeshBasicMaterial",
     "kui/ModelView/ModelEnvironment/MeshNormalMaterial",
-    "kui/ModelView/ModelEnvironment/SphereGeometry",
-     "kui/ModelView/ModelEnvironment/Color"
+    "kui/ModelView/ModelEnvironment/Color"
 ],
-    function (declare, Vector3, Mesh, MeshBasicMaterial, MeshNormalMaterial, SphereGeometry, Color) {
+    function (declare, Vector3, Mesh, MeshBasicMaterial, MeshNormalMaterial, Color) {
         "use strict";
         return declare("kui.ModelMenu.Node.Node", Mesh, {
 
@@ -17,18 +25,13 @@
             constructor: function () {
               
                 this.setMaterial(new MeshNormalMaterial());
-                //his.setSphereGeometry(radius, this.segmentWidth, this.segmentHeight);
                 
-                this.radius = 2;
-                this.isVertex = true;
+                this.isVertex = true;       
                 this.addModeOn = true;
-
-                this._createMeshSphere(0, 0 ,0);
-
-                this.overdraw = true; //what is this?
                 this.isSelected = false;
+                this.address = "";
 
-                this.address = ""; //necessary?
+                this._createMeshSphere(0, 0, 0); 
             },
 
             _createMeshSphere: function( x, y, z){
@@ -41,7 +44,7 @@
                 vector.setCoords(x, y, z);
 
                 this.coords = vector;
-                this.geometry.computeFaceNormals(); //this about moving this to container class
+                this.updateGeometryFaces();  
             },
 
             setColor: function (color) {
@@ -92,9 +95,7 @@
                 this.setX(x);
                 this.setY(y);
                 this.setZ(z);
-            }
-             
-
+            }            
         });
 
     });

@@ -7,9 +7,10 @@
 
 define([
     "dojo/_base/declare",
-    "kui/Simulation/Simulation"
+    "kui/Simulation/Simulation",
+    "dojox/collections/ArrayList"
 ],
-    function (declare, Simulation) {
+    function (declare, Simulation, ArrayList) {
         "use strict";
         return declare("kui.ModelView.SceneModel", null, {
             /*
@@ -19,7 +20,7 @@ define([
 
                 this.scene = scene;
                 this.sceneInteraction = sceneInteraction;
-                this.groupSet = this.sceneInteraction.groupSet;
+                this.groupModel = this.sceneInteraction.groupModel;
                 this.modeView = modelView;
 
                 this.simulation = new Simulation();
@@ -73,22 +74,22 @@ define([
 
             getGroupFromName: function(groupName){
 
-               var group = this.groupSet.nameToGroup[groupName];
+               var group = this.groupModel.nameToGroup[groupName];
                 
                return group;
             },
 
             deselectGroup: function(groupName){
-                this.groupSet.deselectGroup(groupName);
+                this.groupModel.deselectGroup(groupName);
             },
 
             selectGroup: function(groupName){
-                this.groupSet.selectGroup(groupName)
+                this.groupModel.selectGroup(groupName)
             },
 
             getGroups: function(){
 
-                return this.groupSet.getGroups();
+                return this.groupModel.getGroups();
             },
 
             /**
@@ -96,7 +97,7 @@ define([
              * whenever a group is added or removed with the full list of group names
              */
             addGroupsUpdatedListener: function (groupsUpdated /*void groupChanged(Array<String> groupNames)*/) {
-                this.groupSet.addGroupsUpdatedListener(groupsUpdated);
+                this.groupModel.addGroupsUpdatedListener(groupsUpdated);
             },
         });
 

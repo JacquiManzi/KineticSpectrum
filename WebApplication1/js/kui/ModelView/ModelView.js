@@ -1,6 +1,7 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    August 15th, 2013
+*    jacquimanzi@gmail.com
 */
 
 define([
@@ -27,7 +28,7 @@ define([
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, domGeom,
         ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight,
         AmbientLight, Scene, Renderer, SceneModel) {
-        "use strict";
+        ///"use strict";
         return declare("kui.ModelView.ModelView", ContentPane, {
 
             /*
@@ -50,29 +51,30 @@ define([
                 this.hasAmbientLight = true;
 
                 this.meshes = new ArrayList();
-                
-                this.sceneInteraction = new SceneInteraction(); 
-                
+            },
+
+            buildRendering: function(){
+
+                var domNode = this.inherited(arguments);
+                this.set('content', this.renderer.domElement);
+
+                this.sceneInteraction = new SceneInteraction(this.renderer.domElement, this.camera, this.scene);
                 this.sceneModel = new SceneModel(this.scene, this.sceneInteraction, this);
 
-                dojo.connect(this.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.ledSet,
-                    this.sceneInteraction.ledSet.applyColorState));
+                dojo.connect(this.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.nodeModel,
+                this.sceneInteraction.nodeModel.applyColorState));
 
+                return domNode;
             },
                    
             displayModel: function (fileLocation) {
-
                
                 var paneHeight = domGeom.getMarginSize(this.getParent().domNode).h;
                 var paneWidth = domGeom.getMarginSize(this.getParent().domNode).w;
-                
+                 
                 /*Use the content pane demensions to determine the aspect ratio of the camera*/
-                this.camera.setAspect(paneWidth / paneHeight);
-              
+                this.camera.setAspect(paneWidth / paneHeight);              
                 this.renderer.setRenderSize(paneWidth, paneHeight);
-
-                this.set('content', this.renderer.domElement);
-               
 
                 if (this.hasDirectionalLight)
                 {
@@ -101,17 +103,13 @@ define([
                     this.renderer.render(this.scene, this.camera);
                 });
 
-                var modelViewDomElement = this.domNode;
-                this.orbitControl = new three.OrbitControls(this.camera, modelViewDomElement);
-
                 this.axis = new Axis(this.scene);
-
                 this.load(fileLocation, this.scene);
 
                 var animate = dojo.hitch(this, function () {
 
                     requestAnimationFrame(animate);
-                    this.orbitControl.update();
+                    this.sceneInteraction.updateOrbitControl();
                 });
 
                 animate(); 
@@ -124,7 +122,7 @@ define([
                     if (lightList.count > 0) {
                         this.sceneInteraction.removeAllNodes();
                         //this.removeAllMeshes();
-                        this.sceneInteraction.ledSet.createLEDNodes(lightList);
+                        this.sceneInteraction.nodeModel.createLEDNodes(lightList);
                         this.loadServerGroups();
                     }
                 }));
@@ -159,16 +157,13 @@ define([
                 if (this.meshes.count > 0) {
 
                     this.removeAllMeshes();
-                }
-            
-            
-                this.modelSkeleton = new ModelSkeleton();
-                for (var i = 0; i < object.children.length; i++) {
+                } 
+                       
+                var modelSkeleton = new ModelSkeleton(this.scene, this.sceneInteraction.nodeModel);
+                for (var i = 0; i < object.children.length; i++) { 
 
-                 
                     three.GeometryUtils.center(object.children[i].geometry);
-
-                    this.modelSkeleton.geometryList.add(object.children[i].geometry);
+                    modelSkeleton.geometryList.add(object.children[i].geometry);
                    
                     var mesh = new three.Mesh(object.children[i].geometry, new three.MeshBasicMaterial(
                         {
@@ -184,20 +179,13 @@ define([
                     scene.add(mesh);
                 }
 
-                /*Set scene interaction properties once they have been established*/
-                this.sceneInteraction.domNode = this.domNode;
-                this.sceneInteraction.camera = this.camera;
-                this.sceneInteraction.scene = this.scene;
-                this.sceneInteraction.orbitControl = this.orbitControl;
-                this.sceneInteraction.modelSkeleton = this.modelSkeleton;
-                this.sceneInteraction.sceneMesh = this.meshes;
-                this.sceneInteraction.createVertexSpheres();
+                this.sceneInteraction.updateDragControl();
+                this.sceneInteraction.updateMeshes(this.meshes);
+                modelSkeleton.createVertexSpheres(this.scene); 
 
                 this.loadServerLEDs();
 
                 this.render();
-
-                
             },
 
             removeAllMeshes: function()
@@ -206,12 +194,12 @@ define([
                     this.scene.remove(this.meshes.item(i));
                 }
 
-                for (var i = 0; i <this.sceneInteraction.ledSet.nodes.count; i++) {
-                    this.scene.remove(this.sceneInteraction.ledSet.nodes.item(i));
+                for (var i = 0; i <this.sceneInteraction.nodeModel.nodes.count; i++) {
+                    this.scene.remove(this.sceneInteraction.nodeModel.nodes.item(i));
                 }
 
                this.meshes.clear();
-               this.sceneInteraction.ledSet.nodes.clear();
+               this.sceneInteraction.nodeModel.nodes.clear();
             },
 
             resetObject: function()
@@ -242,19 +230,19 @@ define([
 
             hideAllVertices: function()
             {
-                for (var i = 0; i < this.sceneInteraction.ledSet.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.nodeModel.nodes.count; i++) {
 
-                    if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
-                       this.sceneInteraction.ledSet.nodes.item(i).visible = false;
+                    if (this.sceneInteraction.nodeModel.nodes.item(i).isVertex) {
+                       this.sceneInteraction.nodeModel.nodes.item(i).visible = false;
                     }
                 }
             },
 
             showAllVertices: function()
             {
-                for (var i = 0; i < this.sceneInteraction.ledSet.nodes.count; i++) {
+                for (var i = 0; i < this.sceneInteraction.nodeModel.nodes.count; i++) {
 
-                    if (this.sceneInteraction.ledSet.nodes.item(i).isVertex) {
+                    if (this.sceneInteraction.nodeModel.nodes.item(i).isVertex) {
                        this.sceneInteraction.ledSet.nodes.item(i).visible = true;
                     }
                 }

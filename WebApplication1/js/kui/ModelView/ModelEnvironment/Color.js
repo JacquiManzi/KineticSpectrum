@@ -3,8 +3,8 @@
 *    September 11th, 2013
 *    jacquimanzi@gmail.com
 *
-*   Mesh.js - The default 3D Mesh used in Kinetic Spectrum ModelViews.
-*   Full THREEJS documention for Mesh here: http://threejs.org/docs/#Reference/Objects/Mesh
+*   Color.js - The default Color Object used in Kinetic Spectrum ModelViews.
+*   Full THREEJS documention for Color here: http://threejs.org/docs/#Reference/Math/Color
 */
 
 define([
@@ -12,9 +12,6 @@ define([
     "threejs/three"
 ], function (declare, three) {
     return declare("kui.ModelView.ModelEnvironment.Mesh", [three.Color], {
-
-
-
 
     });
 
