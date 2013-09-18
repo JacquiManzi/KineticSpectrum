@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using KineticControl;
 using Microsoft.Kinect;
@@ -169,7 +170,10 @@ namespace RevKitt.LightBuilder
             if (lightingManager.NeedsPrompt)
                 throw new Exception("BOOOO! Network adapter not set properly. Options Include: \n" + String.Join("\n", lightingManager.LightSystem.NetworkInterfaces));
             Console.WriteLine("Querying for Lighting....");
-            lightingManager.LightSystem.RefreshLightList().Wait();
+            LightSystem system = lightingManager.LightSystem;
+            system.AutoUpdate = true;
+            system.RefreshLightList().Wait();
+            system.SetAllToColor(Colors.White);
             return lightingManager.LightSystem;
         }
 

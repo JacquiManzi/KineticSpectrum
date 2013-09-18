@@ -46,6 +46,21 @@ namespace KineticControl
             }
         }
 
+        public void SetAllToColor(Color color)
+        {
+            foreach (var pds in _pdss)
+            {
+                foreach (var port in pds.AllColorData)
+                {
+                    foreach (var light in port.Leds)
+                    {
+                        light.Color = color;
+                    }
+                }
+            }
+            UpdateLights();
+        }
+
         public void UpdateLights()
         {
             foreach (var pds in _pdss)
