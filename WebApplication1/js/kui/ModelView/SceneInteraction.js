@@ -110,9 +110,9 @@ define([
                     var deltaZ = (sphereOne.z - sphereTwo.z) / (amount + 1);
 
                     for (var i = 1; i <= amount; i++) {
-                        var x = sphereTwo.x + i * deltaX;
-                        var y = sphereTwo.y + i * deltaY;
-                        var z = sphereTwo.z + i * deltaZ;
+                        var x = sphereOne.x - i * deltaX;
+                        var y = sphereOne.y - i * deltaY;
+                        var z = sphereOne.z - i * deltaZ;
 
                         lineSegments.add(new three.Vector3(x, y, z));
                     }
@@ -159,8 +159,7 @@ define([
                 var thisObj = this;
                 selectedNodes.forEach(function (node) {
                     if (!node.isVertex) {
-                        thisObj.scene.remove(node);
-                        thisObj.ledSet.nodes.remove(node);
+                        thisObj.ledSet.removeNode(node);
                     }
                 });
             },
@@ -213,7 +212,7 @@ define([
                     var intersects = this.findIntersects(meshList, event);
 
                     if (intersects.length > 0) {
-                        this.ledSet.addSingleLED(intersects);
+                        this.ledSet.addSingleLED(intersects, this.getAddressFunc());
                     }
                     
                     //@TODO: Jacqui- This does not work on loaded light configuration files since they do not have meshes,
@@ -242,8 +241,8 @@ define([
             
             /*GETTERS/SETTERS HERE*/
 
-            setAddMode: function (button) {
-
+            setAddMode: function (button, getAddress) {
+                this.getAddressFunc = getAddress;
                 if (this.addModeOn) {
 
                     this.setAddModeOff(button);

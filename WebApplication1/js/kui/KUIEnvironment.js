@@ -35,8 +35,8 @@
                           gutters: false,
                           design: "sidebar",
                           style: "height:" + windowHeight + "px;width:100%;" +
-                              "border:none;"+
-                              "font-size:0.8pt"
+                              "border:none;"//+
+                             // "font-size:0.8pt"
                       }, "mainContainer");
 
 
@@ -48,7 +48,7 @@
                                  "height:95%;" +
                                  "background-color:black;" +
                                  "overflow: hidden;" +
-                                 "font-size:0.8pt;"+
+                                 //"font-size:0.8pt;" +                   
                                  "border:none;",
                           executeScripts: true
                       });
@@ -80,8 +80,8 @@
                           id: "leftContainer",
                           minSize: ".1",
                           style: "width:25%;" +
-                                 "height:100%;"+
-                                 "font-size:0.8pt" 
+                                 "height:100%;"//+
+                                 //"font-size:0.8pt" 
                       });
 
                       mainContainer.addChild(leftContainer);

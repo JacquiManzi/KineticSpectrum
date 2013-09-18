@@ -131,7 +131,7 @@ define([
                 var obj = this;
                 var ledModeButton = CommonForm.createButton("Add Single LED OFF", function () {
 
-                    obj.modelView.sceneInteraction.setAddMode(this);
+                    obj.modelView.sceneInteraction.setAddMode(this, obj.getAddress);
 
                 }, null, "color:#3d8dd5;");
 
@@ -198,17 +198,20 @@ define([
                 var portText = CommonForm.createTableNumberTextBox("width:90%");
                 var fixtureText = CommonForm.createTableNumberTextBox("width:90%");
 
+                this.getAddress = dojo.hitch(this, function() {
+                    return new LightAddress({
+                        lightNo: ledAddressText.get('value'),
+                        fixtureNo: fixtureText.get('value'),
+                        portNo: portText.get('value')
+                    });
+                });
+
                 var obj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
                     var lineSegments = obj.modelView.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
 
-                    var lightAddress = new LightAddress();
-                    lightAddress.lightNo = ledAddressText.get('value');
-                    lightAddress.fixtureNo = fixtureText.get('value');  
-                    lightAddress.portNo = portText.get('value');
-
-                   obj.modelView.sceneInteraction.drawNodes(lineSegments, lightAddress);
+                   obj.modelView.sceneInteraction.drawNodes(lineSegments, obj.getAddress());
                           
                 });
 

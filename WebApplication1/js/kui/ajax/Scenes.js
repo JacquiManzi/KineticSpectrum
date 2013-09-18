@@ -111,6 +111,14 @@
                 content: { d: JSON.stringify(led) }
             });
         };
+        
+        var removeLED = function (led) {
+            xhr.post({
+                url: "Env.svc/RemoveLED",
+                handleAs: "json",
+                content: { d: JSON.stringify(led.address) }
+            });
+        };
 
         return {
             getGroupNames: getGroupNames,
@@ -119,7 +127,8 @@
             tryPattern: tryPattern,
             addLED: addLED,
             selectLEDs: selectLEDs,
-            selectGroups: selectGroups
+            selectGroups: selectGroups,
+            removeLED:removeLED
         };
 
     });

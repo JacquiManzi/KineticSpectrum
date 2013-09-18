@@ -96,10 +96,13 @@
 
             deselectAllLEDs: function () {
                 var selected = this.selected;
+
+                this.selected.clear();
                 this.nodes.forEach(function (node) {
                     if (!node.isVertex) {
                         node.unselect();
-                        selected.remove(node);
+                        //selected.remove(node);
+                        
                     }
                 });
                 this.updateServerSelection();
@@ -143,6 +146,12 @@
                 this.updateServerSelection();
             },
             
+            removeNode: function(node) {
+                this.nodes.remove(node);
+                this.scene.remove(node);
+                Scenes.removeLED(node);
+            },
+            
             
             addSingleLED: function (intersects, address) {
                 address = address ? address : new LightAddress();
@@ -160,7 +169,7 @@
 
                 this.addressToLED[address] = ledSphere;
 
-                Scene.AddLED({ address: address, position: ledSphere.position });
+                Scenes.addLED({ address: address, position: ledSphere.position, color: 0 });
 
                 this.nodes.add(ledSphere);
                 this.scene.add(ledSphere);
