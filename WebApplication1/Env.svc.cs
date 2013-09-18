@@ -37,6 +37,13 @@ namespace WebApplication1
         }
 
         [OperationContract]
+        public void RemoveLED(Stream addressStream)
+        {
+            LightAddress node = Serializer.FromPost<LightAddress>(addressStream);
+            LightSystemProvider.RemoveLED(node);
+        }
+
+        [OperationContract]
         public void SetPattern(Stream pattern)
         {
             var patternObj = Serializer.FromPost<Pattern>(pattern);

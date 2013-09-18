@@ -18,16 +18,16 @@ namespace RevKitt.KS.KineticEnvironment
         {
             LightSystem.AutoUpdate = false;
             Console.WriteLine("Attempting to set network interface to: " + hostInterface);
-            if (!LightSystem.NetworkInterfaces.Contains(hostInterface))
-            {
-                Console.WriteLine(
-                    "Host Interface '" + hostInterface + "' does not exist on this computer. Available options are:\n" +
-                    String.Join("\n", LightSystem.NetworkInterfaces));
-                Console.WriteLine("Starting without any network interfaces.");
-                return;
-            }
+//            if (!LightSystem.NetworkInterfaces.Contains(hostInterface))
+//            {
+//                Console.WriteLine(
+//                    "Host Interface '" + hostInterface + "' does not exist on this computer. Available options are:\n" +
+//                    String.Join("\n", LightSystem.NetworkInterfaces));
+//                Console.WriteLine("Starting without any network interfaces.");
+//                return;
+//            }
 
-            LightSystem.SelectedInterface = hostInterface;
+//            LightSystem.SelectedInterface = hostInterface;
 
             Console.WriteLine("Searching for Color Kinetics Devices...");
             LightSystem.RefreshLightList();
@@ -47,6 +47,14 @@ namespace RevKitt.KS.KineticEnvironment
                     mapping[lightAddress] =  _nodes[lightAddress];
             }
             return mapping;
+        }
+
+        public static void RemoveLED(LightAddress address)
+        {
+            if (_nodes.ContainsKey(address))
+            {
+                _nodes.Remove(address);
+            }
         }
 
         public static void AddLED(LEDNode node)

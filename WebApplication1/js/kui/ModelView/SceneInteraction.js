@@ -88,9 +88,9 @@ define([
                     var deltaZ = (sphereOne.z - sphereTwo.z) / (amount + 1);
 
                     for (var i = 1; i <= amount; i++) {
-                        var x = sphereTwo.x + i * deltaX;
-                        var y = sphereTwo.y + i * deltaY;
-                        var z = sphereTwo.z + i * deltaZ;
+                        var x = sphereOne.x - i * deltaX;
+                        var y = sphereOne.y - i * deltaY;
+                        var z = sphereOne.z - i * deltaZ;
 
                         var vector = new Vector3();
                         vector.setCoords(x, y, z);
@@ -223,8 +223,8 @@ define([
             
             /*GETTERS/SETTERS HERE*/
 
-            setAddMode: function (button) {
-
+            setAddMode: function (button, getAddress) {
+                this.getAddressFunc = getAddress;
                 if (this.addModeOn) {
 
                     this.setAddModeOff(button);
