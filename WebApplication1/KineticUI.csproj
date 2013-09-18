@@ -7818,7 +7818,7 @@
     <Content Include="js\libraries\dojo\dojo\_firebug\tab_rgt_norm.png" />
     <Content Include="js\libraries\dojo\dojo\_firebug\tab_rgt_over.png" />
     <Content Include="js\libraries\dojo\dojo\_firebug\warningIcon.png" />
-    <Content Include="js\kui\KUIEnvironment.js" />
+    <Content Include="js\kui\KUILayout.js" />
     <Content Include="js\kui\ProcessModel.js" />
     <Content Include="js\kui\util\CommonHTML.js" />
     <Content Include="js\libraries\threejs\three.js" />

@@ -27,12 +27,23 @@
 
 <script id=" ">
 
-    require(["dijit/registry", "kui/KUIEnvironment"],
-           function (registry, KUIEnvironment) {
+    require(["dijit/registry", "kui/KUILayout"],
+           function (registry, KUILayout) {
 
                /*Create and startup layout*/
-               new KUIEnvironment().createKUILayout();
+               var kuiLayout = new KUILayout({
+                   gutters: false,
+                   design: "sidebar", 
+                   style:"height:100%;" +
+                              "width:100%;" +
+                              "border:0;" +
+                              "margin:0;" +
+                              "padding:0"
+               });
 
+               kuiLayout.placeAt("mainContainer");
+               //kuiLayout.resize();
+               kuiLayout.startup(); 
            });
                
 

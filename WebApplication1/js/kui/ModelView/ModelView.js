@@ -27,13 +27,8 @@ define([
     function (declare, html, ContentPane, domStyle, domConstruct, three, domGeom,
         ModelSkeleton, ArrayList, SceneInteraction, Axis, FileInterface, Camera, DirectionalLight,
         AmbientLight, Scene, Renderer, SceneModel) {
-        ///"use strict";
-        return declare("kui.ModelView.ModelView", ContentPane, {
 
-            /*
-             *   3D Model View area (is a ContentPane object)
-             *
-             */
+        return declare("kui.ModelView.ModelView", ContentPane, {
            
             constructor: function () {
 
@@ -70,7 +65,6 @@ define([
 
                 this.inherited(arguments);
                 this._resizeModel(); 
-
             },
 
             _resizeModel: function(){

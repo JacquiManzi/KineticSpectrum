@@ -17,9 +17,10 @@ define([
     "dijit/MenuItem",
     "dojo/_base/array",
     "kui/DesignMenu/EffectMenu/EffectSection",
-    "dojox/collections/ArrayList"],
+    "dojox/collections/ArrayList",
+    "dojo/aspect"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList, aspect) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", null, {
 
@@ -30,7 +31,7 @@ define([
                 
                 this.backgroundColor = "#141414";
                 this.textColor = "#3d8dd5";
-                this.tableStyle = "margin-left:auto;" +
+                this.tableStyle = "margin-left:auto;" + 
                     "margin-right:auto;" +
                     "padding-top:5px;" +
                     "padding-bottom:5px;" +
@@ -65,19 +66,21 @@ define([
                       onShow: dojo.hitch(this, function() {
                           this.patternModel.updateGroupDropDown();
                           //TODO: JCU, JMM: This is why sample patterns don't work anymore!
-                          container.simulation.setPatternMode();
+                         // container.simulation.setPatternMode();
                       })
                       
                   });
 
                 container.addChild(contentPane);
 
+                aspect.before(contentPane, "onShow", dojo.hitch( container.simulation, container.simulation.setPatternMode));
+
             
                 var patternSection = this._createPatternSection();
                 domConstruct.place(patternSection, contentPane.domNode);
 
             }, 
-
+             
             _createPatternSection: function () {
 
                 var spacerDivStyle = "width:100%;height:7px;";

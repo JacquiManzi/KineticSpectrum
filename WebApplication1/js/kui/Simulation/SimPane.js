@@ -6,8 +6,9 @@
     "dijit/form/HorizontalSlider",
     "dijit/form/TextBox",
     "dijit/form/Button",
-    "dojo/_base/xhr"
-], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox,Button, xhr) {
+    "dojo/_base/xhr",
+    "dojo/on"
+], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox,Button, xhr, on) {
     return declare("SimPane", [_WidgetBase], {
 
         slider: null,
@@ -15,18 +16,23 @@
 
         buildRendering: function () {
             // create the DOM for this widget
-            this.domNode = html.createDiv();
+            this.domNode = html.createDiv("height: 90px;");
+            
 
             if (this.simulation === null)
                 throw new Error("Invalid SimPane, Simulation object must be passed into the constructor");
 
             var table = html.createTable(html.tableStyle);
-            domStyle.set(table, 'width', '80%');
+            domStyle.set(table, 'width', '80%'); 
 
             domConstruct.place(this.buildSliderRow(), table);
             domConstruct.place(this.buildTextBoxRow(), table);
 
             domConstruct.place(table, this.domNode);
+        },
+
+        resize: function(){
+
         },
         
         buildSliderRow: function() {
@@ -75,7 +81,10 @@
         },
         
         _setEnabled: function(isEnabled) {
-            domStyle.set(this.domNode, "visibility", isEnabled?"visible":"hidden");
+            domStyle.set(this.domNode, "display", isEnabled ? "inline" : "none");
+            setTimeout(dojo.hitch(this, function () {
+                this.getParent().getParent().resize();
+            }), 100);
         },
         
         _sliderChanged: function(newValue) {
@@ -105,7 +114,7 @@
         },
 
         postCreate: function () {
-            this._setEnabled(false);
+
             //// First handle changes to UI Elements
             //handle the slider being moved
             //dojo.connect(this.slider, "onChange", dojo.hitch(this, this._sliderChanged));
@@ -122,6 +131,10 @@
             //handle change in simulation mode
             dojo.connect(this.simulation, "onSimMode", dojo.hitch(this, this._setEnabled));
         },
+
+        startup: function () {
+            this._setEnabled(false); 
+        }
 
     });
 
