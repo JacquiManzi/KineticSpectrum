@@ -5,10 +5,8 @@
     "kui/util/CommonFormItems",
     "dijit/form/HorizontalSlider",
     "dijit/form/TextBox",
-    "dijit/form/Button",
-    "dojo/_base/xhr",
-    "dojo/on"
-], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox,Button, xhr, on) {
+    "dijit/form/Button"
+], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox, Button) {
     return declare("SimPane", [_WidgetBase], {
 
         slider: null,
@@ -82,14 +80,17 @@
         
         _setEnabled: function(isEnabled) {
             domStyle.set(this.domNode, "display", isEnabled ? "inline" : "none");
+            
+            //this timeout is pretty gross, but it is required because resizing causes the accordian panes to 
+            //resize in the middle of animation. So, we wait until the animation is complete to do our resize.
             setTimeout(dojo.hitch(this, function () {
                 this.getParent().getParent().resize();
-            }), 100);
+            }), 300);
         },
         
         _sliderChanged: function(newValue) {
             this.textBox.set('value', newValue);
-            this.simulation.setTime(newValue);s
+            this.simulation.setTime(newValue);
         },
         
         _playPressed: function() {

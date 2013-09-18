@@ -18,9 +18,9 @@ define([
     "dojo/_base/array",
     "kui/DesignMenu/EffectMenu/EffectSection",
     "dojox/collections/ArrayList",
-    "dojo/aspect"],
+    "dojo/on"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList, aspect) {
+    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList, on) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", null, {
 
@@ -73,7 +73,7 @@ define([
 
                 container.addChild(contentPane);
 
-                aspect.before(contentPane, "onShow", dojo.hitch( container.simulation, container.simulation.setPatternMode));
+                on(contentPane, "show", dojo.hitch( container.simulation, container.simulation.setPatternMode));
 
             
                 var patternSection = this._createPatternSection();
