@@ -59,14 +59,19 @@ define([
                 container.addChild(this.contentPane);
 
                 this.createTimeline(container);
-                this.createPatternProps(this.contentPane); 
+                this.createPatternProps(this.contentPane);
+                
+                
             },    
 
             createTimeline: function (container) {
                
                 this._createPatternSection(this.contentPane);
                               
-                var timelineDiv = html.createDiv("width:100%;height:500px;background-color:#141414;overflow:auto; ");
+                var timelineDiv = html.createDiv("width:100%;" +
+                    "height:500px;" +
+                    "background-color:#141414;" +
+                    "overflow:auto;");
 
                 var timelineTitlePane = new TitlePane({    
                     title: "Pattern Timeline",
@@ -91,7 +96,7 @@ define([
 
                 var patternTitlePane = new TitlePane({
                     title: "Pattern Selection", 
-                    content: div 
+                    content: div
                 });
                 div.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(patternTitlePane.domNode, container.domNode);

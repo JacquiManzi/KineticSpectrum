@@ -12,7 +12,7 @@
     gfxRenderer:'svg, silverlight,vml' , paths: {'kui': '/js/kui'}"></script>
      
     <!-- CSS links -->
-    <!-- Dojo dijit tundra themes -->
+    <!-- Dojo dijit claro themes -->
     <link rel="stylesheet" href="js/libraries/dojo/dijit/themes/claro/claro.css" media="screen"/> 
 
 </head>   
@@ -38,11 +38,11 @@
                               "width:100%;" +
                               "border:0;" +
                               "margin:0;" +
-                              "padding:0"
+                              "padding:0",
+                   id:"kuiLayout"
                });
 
                kuiLayout.placeAt("mainContainer");
-               //kuiLayout.resize();
                kuiLayout.startup(); 
            });
                

@@ -39,7 +39,7 @@
                         vertex.setCoords(vertices[j].x, vertices[j].y, vertices[j].z);
 
                         /*Adjust the sphere radius according to model scale*/
-                        vertex.setRadius(distance * 0.005);
+                        vertex.setRadius(distance * 0.007);
 
                         this.scene.add(vertex);
                         this.nodeModel.nodes.add(vertex);

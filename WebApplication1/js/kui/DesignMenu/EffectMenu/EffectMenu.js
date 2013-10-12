@@ -13,11 +13,11 @@ define([
     "kui/util/CommonHTML",
     "kui/ajax/Effects",
     "kui/util/CommonFormItems",
-    "kui/DesignMenu/EffectMenu/EffectArea",
+    "kui/DesignMenu/EffectMenu/EffectPropertyMenu",
     "dojo/_base/array",
     "dijit/MenuItem"
-], function (declare, domConstruct, _WidgetBase, html, Effects, CommonForm, EffectArea, array, MenuItem) {
-    return declare("EffectSection", [_WidgetBase], {
+], function (declare, domConstruct, _WidgetBase, html, Effects, CommonForm, EffectPropertyMenu, array, MenuItem) {
+    return declare("kui.DesignMenu.EffectMenu.EffectMenu", [_WidgetBase], {
 
         effectArea: null,
         effectName: null,
@@ -33,9 +33,8 @@ define([
             var effectNameRow = this.buildEffectNameSection();
             domConstruct.place(effectNameRow, table);
             
-            this.effectArea = new EffectArea();
-            this.effectArea.placeAt(this.domNode);
-
+            this.effectPropMenu = new EffectPropertyMenu();
+            this.effectPropMenu.placeAt(this.domNode);
         },
 
         buildEffectNameSection: function(){
@@ -71,7 +70,7 @@ define([
             effectDropDown.set('label', effectName);
 
             Effects.getEffectDefinition(effectName, dojo.hitch(this,function (effectDefs) {
-                this.effectArea.buildFromDefaults(effectDefs);
+                this.effectPropMenu.buildFromDefaults(effectDefs);
             }));
         },
         
@@ -92,7 +91,7 @@ define([
 
         postCreate: function () {
             // every time the user clicks the button, increment the counter
-            dojo.connect(this.effectArea, "onUpdate", dojo.hitch(this,this.updateProperties));
+            dojo.connect(this.effectPropMenu, "onUpdate", dojo.hitch(this,this.updateProperties));
         },
 
     });

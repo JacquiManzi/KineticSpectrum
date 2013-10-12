@@ -14,7 +14,7 @@
 
 ], function (declare, domConstruct, _WidgetBase, html, Effects, CommonForm, array, TimeItem, IntItem,
     OrderingItem, SelectItem, ColorEffectItem) {
-    return declare("EffectArea", [_WidgetBase], {
+    return declare("kui.DesignMenu.EffectMenu.EffectPropertyMenu", [_WidgetBase], {
        
         items: null,
         propertyMap: null,

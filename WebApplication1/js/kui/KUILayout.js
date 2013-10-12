@@ -49,7 +49,7 @@ define([
                       this.addChild(modelView);
 
                       /*setup for the left container*/
-                      var designMenu = new DesignMenu({simulation: simulation, sceneModel: modelView.sceneModel });
+                      var designMenu = new DesignMenu({simulation: simulation, sceneModel: modelView.sceneModel, id: "designMenu" });
                       
                       /*Create the left design menu*/ 
                       designMenu.createMenu();             

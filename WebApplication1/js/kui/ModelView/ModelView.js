@@ -39,7 +39,7 @@ define([
                 this.ambientLight = new AmbientLight();
                 this.scene = new Scene();
                 this.renderer = new Renderer();
-
+                   
                 /*Lighting Properties*/
                 this.hasDirectionalLight = true;   
                 this.hasAmbientLight = true;

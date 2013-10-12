@@ -68,7 +68,7 @@ define([
 
                 });
 
-                nodeDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
+                nodeDiv.parentNode.setAttribute('style', 'background-color:#141414;');
                 domConstruct.place(nodePane.domNode, titlePaneDiv);
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
 
@@ -100,6 +100,8 @@ define([
                 groupDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(groupPane.domNode, titlePaneDiv);
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
+
+                contentPane.startup();
             },
 
             createNodeSection: function () {

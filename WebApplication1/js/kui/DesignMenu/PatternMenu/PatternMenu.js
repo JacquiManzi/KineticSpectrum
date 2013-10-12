@@ -1,11 +1,11 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    August 15th, 2013
+*    jacquimanzi@gmail.com
 */
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
-    "dojo/dom",
     "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
@@ -16,50 +16,24 @@ define([
     "kui/ajax/Effects",
     "dijit/MenuItem",
     "dojo/_base/array",
-    "kui/DesignMenu/EffectMenu/EffectSection",
+    "kui/DesignMenu/EffectMenu/EffectMenu",
     "dojox/collections/ArrayList",
-    "dojo/on"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectSection, ArrayList, on) {
+    "dojo/on",
+    "kui/DesignMenu/AccordianItem" 
+],
+    function (declare, html, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
+    DropDownMenu, Effects, MenuItem, array, EffectMenu, ArrayList, on,  AccordianItem) {
         "use strict";
-        return declare("kui.DesignMenu.PatternMenu.PatternMenu", null, {
+        return declare("kui.DesignMenu.PatternMenu.PatternMenu", AccordianItem, {
 
-            constructor: function (sceneModel, patternModel) {
-
-                this.style = "background-color:transparent;";
-                this.patternModel = patternModel;
+            constructor: function () {
                 
-                this.backgroundColor = "#141414";
-                this.textColor = "#3d8dd5";
-                this.tableStyle = "margin-left:auto;" + 
-                    "margin-right:auto;" +
-                    "padding-top:5px;" +
-                    "padding-bottom:5px;" +
-                    "background-color:" + this.backgroundColor + ";" +
-                    "border-radius: 7px;" +
-                    "width:99%;" +
-                    "color:" + this.textColor + ";";
-
-                this.titleCellStyle = "background-color: #232323;" +
-                    "border-radius:5px;"+
-                    "width: 40%;";
-
-                this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
-                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
-                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
-                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
-                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
-                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
-                "background-color: #131313;" +
-                "background-size: 20px 20px;";
-
-                this.simulation = sceneModel.simulation;
-
+                this.title = "Pattern Menu"; 
             },
 
             createPatternMenu: function (container) {
 
-                var contentPane = new ContentPane(
+               /* var contentPane = new ContentPane(
                   {
                       title: "Pattern Menu",
                       style: this.mainBackgroundColor,
@@ -68,17 +42,46 @@ define([
                           //TODO: JCU, JMM: This is why sample patterns don't work anymore!
                          // container.simulation.setPatternMode();
                       })
-                      
+                       
                   });
 
                 container.addChild(contentPane);
 
-                on(contentPane, "show", dojo.hitch( container.simulation, container.simulation.setPatternMode));
-
+                
             
                 var patternSection = this._createPatternSection();
-                domConstruct.place(patternSection, contentPane.domNode);
+               */
+               
+                domConstruct.place(this.domNode, container.domNode);
+                on(this, "show", dojo.hitch(container.simulation, container.simulation.setPatternMode));
+                //this.patternModel.updateGroupDropDown(); JMM---> what to do about this? Make this updateable
+                
+                var nameTableItems = [];
+                nameTableItems.push(this._createPatternNameSection());
+                nameTableItems.push(this._createPrioritySection());
 
+                var patternPropDivs = this.createTitlePane("Pattern Properties");
+                this.addTableItem(nameTableItems, patternPropDivs.contentDiv);
+                this.addDivItem(this._createSelectPatternSection(), patternPropDivs.contentDiv);
+
+                var groupButtons = [];
+                groupButtons.push(this._createGroupButtons());
+
+                var removeButton = [];
+                removeButton.push(this._createRemoveGroupButton());
+                 
+                var groupDivs = this.createTitlePane("Pattern Groups");
+                this.addTableItem(groupButtons, groupDivs.contentDiv);
+                this.addDivItem(this._createGroupListBox(), groupDivs.contentDiv); 
+                this.addTableItem(removeButton, groupDivs.contentDiv);
+
+                var patternCreationDivs = this.createTitlePane("Pattern Creation");
+                this.addDivItem(this._createEffectSection(), patternCreationDivs.contentDiv); 
+                this.addDivItem(this._createPatternButton(), patternCreationDivs.contentDiv); 
+                 
+                domConstruct.place(patternPropDivs.paneDiv, this.domNode);
+                domConstruct.place(groupDivs.paneDiv, this.domNode);
+                domConstruct.place(patternCreationDivs.paneDiv, this.domNode); 
             }, 
              
             _createPatternSection: function () {
@@ -90,8 +93,7 @@ define([
                 var patternPropPane = new TitlePane({
 
                     title: "Pattern Properties",
-                    content: table
-                   
+                    content: table                  
                 });
 
                 table.parentNode.setAttribute('style', this.mainBackgroundColor);
@@ -118,34 +120,31 @@ define([
 
                     title: "Pattern Groups",
                     content: groupSectionDiv
-
                 });
 
                 groupSectionDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(groupPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
                        
-                /*Effect Section*/
-                var effectSection = new EffectSection();
-                effectSection.placeAt(div);
+                /*Effect Menu*/
+                var effectMenu = new EffectMenu();
+                effectMenu.placeAt(div);
                
-
                 var effectPropPane = new TitlePane({
 
                     title: "Effect Properties",
-                    content: effectSection.domNode
-
+                    content: effectMenu.domNode
                 });
 
                 var createPatternButtonDiv = this._createPatternButtonSection();
                 domConstruct.place(createPatternButtonDiv, effectPropPane.domNode);
                 domConstruct.place(html.createDiv(spacerDivStyle), effectPropPane.domNode);
 
-                effectSection.domNode.parentNode.setAttribute('style', this.mainBackgroundColor);
+                effectMenu.domNode.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(effectPropPane.domNode, div);
                 domConstruct.place(html.createDiv(spacerDivStyle), div);
 
-                dojo.connect(effectSection, "onUpdate", dojo.hitch(this, this._effectUpdated));
+                dojo.connect(effectMenu, "onUpdate", dojo.hitch(this, this._effectUpdated));
 
                 /*Apply pattern button*/
                 var applyDiv = html.createDiv(this.tableStyle);
@@ -194,28 +193,38 @@ define([
 
                 this.patternModel.updatePatternDefinition(patternDef);
             },
+
+            _createEffectSection: function(){
+
+                var div = html.createDiv();
+
+                var effectMenu = new EffectMenu();
+                effectMenu.placeAt(div); 
+
+                return {
+                    valueContent: div
+                }
+            },
             
             _createPrioritySection: function()
             {
-                var row = html.createRow();
 
-                var titleCell = html.createCell(this.titleCellStyle);
-                titleCell.innerHTML = "Priority";
-                domConstruct.place(titleCell, row);
-
-                var valueCell = html.createCell();
-                domConstruct.place(valueCell, row);
-
-                var priorityDropDown = CommonForm.createTableNumberTextBox("0");
+                var priorityDropDown = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 priorityDropDown.set('value', "0");
-                domConstruct.place(priorityDropDown.domNode, valueCell);
+                 
 
-                this.patternModel.priorityDropDown = priorityDropDown;
+               // this.patternModel.priorityDropDown = priorityDropDown;
 
-                return row;
+
+                return {
+                    title: "Priority",
+                    valueContent: priorityDropDown.domNode 
+                }
             },
 
-            _createRunTimeSection: function()
+
+            //@TODO: Jacqui -> remove
+           /* _createRunTimeSection: function()
             {
               
                 var timeRow = html.createRow();
@@ -232,21 +241,92 @@ define([
                 domConstruct.place(timeBox.domNode, timeValue);
 
                 return timeRow;
-            },
+            },*/
 
-            _createPatternButtonSection: function()
+            _createPatternButton: function()
             {
                 var div = html.createDiv();
                 var thisObj = this;
                 var createButton = CommonForm.createButton('Create Pattern', function () {
  
-                    thisObj.patternModel.createPattern();
+                    //thisObj.patternModel.createPattern();
                 });
                 
                 domConstruct.place(createButton.domNode, div);
 
-                return div;
+                return {
+                    valueContent: div
+                } 
             },
+
+            _createGroupButtons: function(){
+                
+                var groupDropDown = CommonForm.createDropDown("Select Group", "");
+
+                //this.patternModel.groupDropDown = groupDropDown;
+                //this.patternModel.updateGroupDropDown();
+                var addAllGroupButton = CommonForm.createButton("Add All", dojo.hitch(this, function () {
+
+                    //var groupList = this.patternModel.sceneInteraction.groupSet.getGroups();
+                    //var thisObj = this;
+                    //array.forEach(groupList, function (groupName) {
+                    //     thisObj.patternModel.addGroup(groupName); 
+                    //});      
+                }));
+
+                var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
+                    //this.patternModel.addGroup(this.patternModel.groupDropDown.get('label'));
+                }));
+
+                return {
+                    groupDropDown: groupDropDown.domNode,
+                    addButton: addButton.domNode,
+                    addAllButton: addAllGroupButton.domNode
+                }
+            },
+
+            _createGroupListBox: function(){
+
+                var div = html.createDiv();
+                var groupListBox = CommonForm.createListBox("width:90%;");
+                domConstruct.place(groupListBox.domNode, div);
+
+                return {
+                    valueContent: div
+                }
+            },
+
+            _createRemoveGroupButton: function(){
+
+                var removeGroupButton = CommonForm.createButton("Remove", dojo.hitch(this, function () {
+
+                    //var optionList = this.patternModel.groupListBox.getSelected();
+                    // var groupList = new ArrayList();
+                    /* var thisObj = this;
+                     array.forEach(optionList, function (option) {
+ 
+                         var group = thisObj.patternModel.sceneInteraction.groupSet.nameToGroup[option.innerHTML];
+                         groupList.add(group);
+                     });        
+ 
+                     this.patternModel.removeGroups(groupList);*/
+                }));
+
+                var removeAllGroupButton = CommonForm.createButton("Remove All", dojo.hitch(this, function () {
+
+                   /* var groupList = this.patternModel.getGroups();
+                    var newGroupList = new ArrayList();
+                    groupList.forEach(function (group) {
+                        newGroupList.add(group);
+                    });
+                    this.patternModel.removeGroups(newGroupList);*/
+                }));
+                
+                return {                  
+                    removeButton: removeGroupButton.domNode,
+                    removeAllButton:removeAllGroupButton.domNode
+                }
+            }, 
         
             _createGroupSection: function()
             {
@@ -266,9 +346,7 @@ define([
 
                 var groupDropDown = CommonForm.createDropDown("Select Group", "");
                 domConstruct.place(groupDropDown.domNode, dropDownCell);
-
-                this.patternModel.groupDropDown = groupDropDown;
-                this.patternModel.updateGroupDropDown();
+               
                 var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
                     this.patternModel.addGroup(this.patternModel.groupDropDown.get('label'));
                 }));
@@ -333,45 +411,38 @@ define([
                     "color:#3d8dd5;");
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
-                this.patternModel.patternDropDown = patternDropDown;
-                this.patternModel.updatePatternDropDown();
+                //this.patternModel.patternDropDown = patternDropDown;
+               // this.patternModel.updatePatternDropDown();
                  
-                CommonForm.setButtonStyle(patternDropDown); 
+                //CommonForm.setButtonStyle(patternDropDown); 
 
                 var patternDropDownDiv = html.createDiv("padding-top:10px;");
             
                 domConstruct.place(patternDropDown.domNode, patternDropDownDiv);
                 domConstruct.place(patternDropDownDiv, innerDiv);
 
-                var obj = this;
+               // var obj = this;
                 
                 domConstruct.place(innerDiv, div);
 
-                return div;
+               // return div;
+
+                return {
+                    valueContent: div 
+                };
 
             },
 
             _createPatternNameSection: function()
             {
-                var tableRow = html.createRow();
-                var titleCell = html.createCell(this.titleCellStyle);
-                var valueCell = html.createCell("text-align: left;width:60%;");
+                //this.patternModel.nameField = nameField; //refactor this out and use update handlers instead
 
-                domConstruct.place(titleCell, tableRow);
-                domConstruct.place(valueCell, tableRow)
-
-                titleCell.innerHTML = "Name: ";
-
-                var nameField = CommonForm.createTextBox("", "Pattern Name", "width: 100%;", dojo.hitch(this,function () {                   
-                }));
-
-                this.patternModel.nameField = nameField;
-
-                domConstruct.place(nameField.domNode, valueCell);
-
-                return tableRow;
+                return {
+                    title: "Name",
+                    valueContent: CommonForm.createTextBox("", "Pattern Name", "text-align:left;width:100%;").domNode                 
+                };                        
             }
-
+                
         });
 
     });

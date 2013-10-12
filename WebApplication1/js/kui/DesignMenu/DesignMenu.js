@@ -14,7 +14,7 @@ define([
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
         PatterComposerMenu, PatternModel, PatternComposerModel) {
-    "use strict";
+
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
         constructor: function() {
@@ -32,7 +32,7 @@ define([
             
             /*Pattern Menu*/
             var patternModel = new PatternModel(this.sceneModel);
-            var patternMenu = new PatternMenu(this.sceneModel, patternModel);
+            var patternMenu = new PatternMenu({sceneModel: this.sceneModel, patternModel: patternModel});
             patternMenu.createPatternMenu(this); 
 
             /*Pattern Composer Menu*/

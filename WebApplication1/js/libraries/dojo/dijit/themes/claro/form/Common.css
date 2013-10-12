@@ -1,7 +1,9 @@
-
+/* claro/form/Common.css */
+/*========================= common css =========================*/
+/* 'dijitTextBox' refers to 'dijit(TextBox|DateTextBox|CurrencyTextBox|...)' */
 .claro .dijitTextBox,
 .claro .dijitInputInner {
-  color: #000000;
+  color: #3d8dd5;
 }
 .claro .dijitValidationTextBoxError .dijitValidationContainer {
   background-color: #d46464;
@@ -16,8 +18,14 @@
 .claro .dijitValidationTextBoxError .dijitValidationIcon {
   width: 0;
   background-color: transparent;
-  
+  /* so the INPUT doesn't obscure the border in rtl+a11y */
+
 }
+/* Padding for the input area of TextBox based widgets, and corresponding padding for the
+ * down arrow button and the placeholder.   placeholder is explicitly listed  because
+ * dijitPlaceHolder is absolutely positioned, so padding set on dijitInputField
+ * won't affect it
+ */
 .claro .dijitTextArea,
 .claro .dijitInputField .dijitPlaceHolder {
   padding: 2px;
@@ -34,8 +42,9 @@
 .claro .dijitSelect .dijitButtonContents,
 .claro .dijitTextBox,
 .claro .dijitTextBox .dijitButtonNode {
-  
-  border-color: #b5bcc7;
+  /* color for (outer) border on *TextBox widgets, and border between input and buttons on ComboBox and Spinner */
+
+  border-color: #000000;
   -webkit-transition-property: background-color, border;
   -moz-transition-property: background-color, border;
   transition-property: background-color, border;
@@ -45,48 +54,51 @@
 }
 .claro .dijitSelect,
 .claro .dijitTextBox {
-  background-color: #ffffff;
+  background-color: #dbdbdb;
 }
+/* hover */
 .claro .dijitSelectHover,
 .claro .dijitSelectHover .dijitButtonContents,
 .claro .dijitTextBoxHover,
 .claro .dijitTextBoxHover .dijitButtonNode {
-  border-color: #759dc0;
+  border-color: #000000;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
   transition-duration: 0.25s;
 }
 .claro .dijitTextBoxHover {
-  background-color: #e5f2fe;
+  background-color: #383838;
   background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
 }
+/* error state */
 .claro .dijitSelectError,
 .claro .dijitSelectError .dijitButtonContents,
 .claro .dijitTextBoxError,
 .claro .dijitTextBoxError .dijitButtonNode {
   border-color: #d46464;
 }
+/* focused state */
 .claro .dijitSelectFocused,
 .claro .dijitSelectFocused .dijitButtonContents,
 .claro .dijitTextBoxFocused,
 .claro .dijitTextBoxFocused .dijitButtonNode {
-  border-color: #759dc0;
+  border-color: #000000;
   -webkit-transition-duration: 0.1s;
   -moz-transition-duration: 0.1s;
   transition-duration: 0.1s;
 }
 .claro .dijitTextBoxFocused {
-  background-color: #ffffff;
+  background-color: #dbdbdb;
   background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
-  background: #ffffff;
+  background: #dbdbdb;
 }
 .claro .dijitSelectErrorFocused,
 .claro .dijitSelectErrorFocused .dijitButtonContents,
@@ -94,6 +106,7 @@
 .claro .dijitTextBoxErrorFocused .dijitButtonNode {
   border-color: #ce5050;
 }
+/* disabled state */
 .claro .dijitSelectDisabled,
 .claro .dijitSelectDisabled .dijitButtonContents,
 .claro .dijitTextBoxDisabled,
@@ -103,22 +116,26 @@
 .claro .dijitSelectDisabled,
 .claro .dijitTextBoxDisabled,
 .claro .dijitTextBoxDisabled .dijitInputContainer {
-  background-color: #efefef;
+  background-color: #1e1e1e;
   background-image: none;
 }
 .claro .dijitSelectDisabled,
 .claro .dijitTextBoxDisabled,
 .claro .dijitTextBoxDisabled .dijitInputInner {
-  color: #818181;
+  color: #000000;
 }
 .dj_webkit .claro .dijitDisabled input {
-  
-  color: #757575;
+  /* because WebKit lightens disabled input/textarea no matter what color you specify */
+
+  color: #000000;
 }
 .dj_webkit .claro textarea.dijitTextAreaDisabled {
-  
-  color: #1b1b1b;
+  /* because WebKit lightens disabled input/textarea no matter what color you specify */
+
+  color: #000000;
 }
+/*========================= for special widgets =========================*/
+/* Input boxes with an arrow (for a drop down) */
 .claro .dijitSelect .dijitArrowButtonInner,
 .claro .dijitComboBox .dijitArrowButtonInner {
   background-image: url("../form/images/commonFormArrows.png");
@@ -128,7 +145,7 @@
   width: 16px;
 }
 .claro .dijitComboBox .dijitArrowButtonInner {
-  border: 1px solid #ffffff;
+  border: 1px solid #dbdbdb;
 }
 .claro .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
   border: none;
@@ -136,32 +153,40 @@
 .claro .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
   border: none;
 }
+/* Add 1px vertical padding to the <input> where user types and the validation icon,
+   to match the 1px border on arrow button */
 .claro .dijitSelectLabel,
 .claro .dijitTextBox .dijitInputInner,
 .claro .dijitValidationTextBox .dijitValidationContainer {
   padding: 1px 0;
 }
 .claro .dijitComboBox .dijitButtonNode {
-  background-color: #efefef;
+  background-color: #1e1e1e;
   background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
   _background-image: none;
 }
+/* Arrow "hover" effect:
+ * The arrow button should change color whenever the mouse is in a position such that clicking it
+ * will toggle the drop down.   That's either (1) anywhere over the ComboBox or (2) over the arrow
+ * button, depending on the openOnClick setting for the widget.
+ */
 .claro .dijitComboBoxOpenOnClickHover .dijitButtonNode,
 .claro .dijitComboBox .dijitDownArrowButtonHover,
 .claro .dijitComboBoxFocused .dijitArrowButton {
-  background-color: #abd6ff;
+  background-color: #060404;
 }
 .claro .dijitComboBoxOpenOnClickHover .dijitArrowButtonInner,
 .claro .dijitComboBox .dijitDownArrowButtonHover .dijitArrowButtonInner {
   background-position: -70px 53%;
 }
+/* Arrow Button change when drop down is open */
 .claro .dijitComboBox .dijitHasDropDownOpen {
-  background-color: #7dbdfa;
+  background-color: #000000;
   background-image: url("../images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -178,11 +203,16 @@
   background-position: -70px 53%;
   border: 0 none;
 }
+/* disabled state */
 .claro div.dijitComboBoxDisabled .dijitArrowButtonInner {
-  
+  /* specific selector set to override background-position setting from Button.js
+	 * (.claro .dijitComboBoxDisabled .dijitArrowButtonInner) */
+
   background-position: 0 50%;
-  background-color: #efefef;
+  background-color: #1e1e1e;
 }
+/*========================= hacks for browsers =========================*/
+/* it seems the input[type="hidden"] has a height (16px) too... this may cause the widget's height calculate error */
 .dj_ff3 .claro .dijitInputField input[type="hidden"] {
   display: none;
   height: 0;

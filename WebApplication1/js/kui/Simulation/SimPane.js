@@ -1,5 +1,9 @@
 ﻿define([
-    "dojo/_base/declare", "dojo/dom-construct","dojo/dom-style", "dojo/parser", "dojo/ready",
+    "dojo/_base/declare",
+    "dojo/dom-construct",
+    "dojo/dom-style",
+    "dojo/parser",
+    "dojo/ready",
     "dijit/_WidgetBase",
     "kui/util/CommonHTML",
     "kui/util/CommonFormItems",
@@ -7,6 +11,7 @@
     "dijit/form/TextBox",
     "dijit/form/Button"
 ], function (declare, domConstruct,domStyle, parser, ready, _WidgetBase, html, CommonForm, HorizontalSlider, TextBox, Button) {
+
     return declare("SimPane", [_WidgetBase], {
 
         slider: null,
@@ -35,7 +40,7 @@
         
         buildSliderRow: function() {
             this.slider = new HorizontalSlider({
-                name: "timeSlider",
+                name: "timeSlider", 
                 value: this.simulation.getTime(),
                 minimum: 0,
                 maximum: this.simulation.endTime,
@@ -46,7 +51,7 @@
                 name: "playButton",
                 label: this.simulation.isPlaying?"Pause":"Play"
             });
-
+             
             CommonForm.setButtonStyle(this.button);    
             
             var sliderRow = html.createRow();
