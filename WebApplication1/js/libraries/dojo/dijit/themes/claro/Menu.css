@@ -30,7 +30,7 @@ There are three areas of styling for the Menu:
 
 */
 .claro .dijitMenuBar {
-  border: 1px solid #000000;
+  border: 1px solid #1e1e1e;
   margin: 0;
   padding: 0;
   background-color: #1e1e1e;
@@ -43,8 +43,8 @@ There are three areas of styling for the Menu:
   _background-image: none;
 }
 .claro .dijitMenu {
-  background-color: #dbdbdb;
-  border: 1px solid #000000;
+  background-color: #333333;
+  border: 1px solid #1e1e1e;
 }
 .claro .dijitMenuItem {
   color: #3d8dd5;

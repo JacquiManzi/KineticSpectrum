@@ -39,7 +39,7 @@ define([
                 this.timelineHeight = 200;
 
                 //Get's passed an implicit pattern list from patternModel whenever the pattern list changes
-                patternModel.addUpdateListener(dojo.hitch(this, this.updatePatternListBox));
+                patternModel.addPatternUpdateListener(dojo.hitch(this, this.updatePatternListBox));
 
             },
 

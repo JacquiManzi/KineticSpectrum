@@ -27,6 +27,7 @@ define([
                 this.groupList = new ArrayList();
                 this.patternList = new ArrayList();
                 this.patternsUpdatedListeners = new ArrayList();
+                this.patternMenuElementListeners = new ArrayList();
 
                 this.patternDef = {};
                 this.effectsDef = {}; 
@@ -34,16 +35,110 @@ define([
                 this.effectProperties = {};
                 this.id = 0;
 
-                this.groupDropDown = null; 
-                this.groupListBox = null;
-                this.nameField = null;
-                this.priorityDropDown = null;
-                this.patternDropDown = null;
+                this._patternMenuElements = {
+                    groupDropDown: null,
+                    groupListBox: null,
+                    nameField: null,
+                    priorityDropDown: null,
+                    patternDropDown: null
+                };
+
 
                 this.sceneModel = sceneModel;
                 this.simulation = null;
 
+                /*Add pattern menu element listeners*/
+                this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
+                this.addPatternMenuElementListener(dojo.hitch(this,this._updateGroupDropDown));
+
                 this.updatePatternList();
+            },
+
+            /*
+            *  Pattern Menu Elements Setters
+            */
+            setNameField: function(nameField){
+                this._patternMenuElements.nameField = nameField;
+            },
+
+            setGroupDropDown: function(groupDropDown){
+                this._patternMenuElements.groupDropDown = groupDropDown;
+            },
+
+            setGroupListBox: function(groupListBox){
+                this._patternMenuElements.groupListBox = groupListBox;
+            },
+
+            setPriorityDropDown: function (priorityDropDown) {
+                this._patternMenuElements.priorityDropDown = priorityDropDown;
+            },
+
+            setPatternDropDown: function(patternDropDown){
+                this._patternMenuElements.patternDropDown = patternDropDown;
+            },
+
+            /*
+            *  Pattern Menu Elements Getters
+            */
+           
+            getGroupDropDownLabel: function () {
+                return this._patternMenuElements.groupDropDown.get('label');
+            },
+
+            getGrouplistBoxSelection: function(){
+                return this._patternMenuElements.groupListBox.getSelected();
+            },
+
+            getPatternNameValue: function () {
+                return this._patternMenuElements.nameField.get('displayedValue');
+            },
+
+            getPatternPriorityValue: function () {
+                return this._patternMenuElements.get('value');
+            },
+
+            /*Pattern Model Getters*/
+
+            getSelectedGroups: function () {
+                var selected = [];
+                array.forEach(this._patternMenuElements.groupListBox.getSelected(), function (group) {
+                    selected.push(group);
+                });
+                return selected;
+            },
+
+            getGroupsFromSceneModel: function(){
+                return this.sceneModel.getGroups();
+            },
+
+            getSelectedPattern: function () {
+
+                this.updatePatternList();
+
+                var pattern = null;
+                var thisObj = this;
+                this.patternList.forEach(function (patternDef) {
+                    if (thisObj._patternMenuElements.patternDropDown.get('value') === patternDef.name) {
+                        pattern = patternDef;
+                    }
+                });
+
+                return pattern;
+            },
+
+            getGroups: function () {
+                return this.groupList;
+            },
+
+            getGroupNames: function () {
+
+                var nameArray = [];
+                this.groupList.forEach(function (group) {
+
+                    nameArray.push(group.name);
+                });
+
+                return nameArray;
             },
 
             createPattern: function(){
@@ -62,9 +157,9 @@ define([
                 });
 
                 this.patternList.add(newPattern);
-                this._dispatchPatterns();
+                this._dispatchPatternsToListeners();
 
-                this.updatePatternDropDown();
+                this._updatePatternDropDown();
             },
 
             applyPattern: function(){
@@ -108,13 +203,7 @@ define([
                 dojo.mixin(this.patternDef, effectsDef);
             },
 
-            getPatternName: function(){
-                return this.nameField.get('displayedValue');
-            },
-
-            getPatternPriority: function () {
-                return this.priorityDropDown.get('value'); 
-            },
+            
 
             addGroup: function(groupName){
     
@@ -123,7 +212,7 @@ define([
                 if(!!group && !this.groupList.contains(group)){
 
                     this.groupList.add(group);
-                    this.updateGroupListBox(this.groupList);
+                    this._updateGroupListBox(this.groupList);
                 }
             },
 
@@ -135,33 +224,10 @@ define([
                     thisObj.groupList.remove(group);                       
                 });   
 
-                this.updateGroupListBox(this.getGroups());
+                this._updateGroupListBox(this.getGroups());
             },
 
-            getSelectedGroups: function () {
-                var selected = [];
-                array.forEach(this.groupListBox.getSelected(), function (group) {
-                    selected.push(group);
-                });
-                return selected;
-            },
-
-            getGroups: function(){
-                return this.groupList;
-            },
-
-            getGroupNames: function () {
-
-                var nameArray = [];
-                this.groupList.forEach(function (group) {
-
-                    nameArray.push(group.name);
-                });
-
-                return nameArray; 
-            },
-
-            updateGroupListBox: function(groupList)
+            _updateGroupListBox: function(groupList)
             {
                 html.removeDomChildren(this.groupListBox);
 
@@ -169,16 +235,16 @@ define([
                 this.groupList.forEach(function (group) {
                     var option = html.createOption(group.name);
                     dojo.connect(option, "onclick", thisObj.sceneModel.selectGroup(group.name)); 
-                    thisObj.groupListBox.domNode.appendChild(option);
+                    thisObj._patternMenuElements.groupListBox.domNode.appendChild(option);
                 });
             },
 
-            updateGroupDropDown: function()
+            _updateGroupDropDown: function()
             {
-                this.groupDropDown.dropDown.destroyDescendants();
-                this.groupDropDown.set('label', "Select Group");
+                this._patternMenuElements.groupDropDown.dropDown.destroyDescendants();
+                this._patternMenuElements.groupDropDown.set('label', "Select Group");
                 
-                var ledGroupList = this.sceneModel.getGroups(); 
+                var ledGroupList = this.getGroupsFromSceneModel();
                 var thisObj = this;
 
                 array.forEach(ledGroupList, function (groupName) {
@@ -188,17 +254,17 @@ define([
                         label: label,
                         onClick: dojo.hitch(thisObj, function (label) {
 
-                            thisObj.groupDropDown.set('label', label);
+                            thisObj._patternMenuElements.groupDropDown.set('label', label);
                         }, label)
                     }); 
-                    thisObj.groupDropDown.dropDown.addChild(menuItem);
+                    thisObj._patternMenuElements.groupDropDown.dropDown.addChild(menuItem);
                 }); 
             },
 
-            updatePatternDropDown: function(){ 
+            _updatePatternDropDown: function(){ 
 
-                this.patternDropDown.dropDown.destroyDescendants();
-                this.patternDropDown.set('label', "Select Pattern");    
+                this._patternMenuElements.patternDropDown.dropDown.destroyDescendants();
+                this._patternMenuElements.patternDropDown.set('label', "Select Pattern");
                                   
                 var thisObj = this;
                 SimState.getPatternNames(function (patterns) {
@@ -219,32 +285,29 @@ define([
 
             },
 
-            _dispatchPatterns: function(){
+            _dispatchPatternsToListeners: function(){
                 var thisObj = this;
                 this.patternsUpdatedListeners.forEach(function (updateListener) {
                     updateListener(thisObj.patternList.clone());
                 });
             },
 
-            addUpdateListener: function (patternsUpdated) {
+            addPatternUpdateListener: function (patternsUpdated) {
                 this.patternsUpdatedListeners.add(patternsUpdated);
             },
 
-            getSelectedPattern: function(){
+            dispatchUpdatesToMenuElementListeners: function(){
 
-                this.updatePatternList(); 
-
-                var pattern = null;
-                var thisObj = this;
-                this.patternList.forEach(function (patternDef) {
-                    if (thisObj.patternDropDown.get('value') === patternDef.name) {
-                        pattern = patternDef;
-                    }                   
+                var thisIbj = this;
+                this.patternMenuElementListeners.forEach(function (updateListener) {
+                    updateListener();
                 });
-
-                return pattern; 
             },
 
+            addPatternMenuElementListener: function(elementUpdateListener){
+                this.patternMenuElementListeners.add(elementUpdateListener);
+            },
+         
             updatePatternList: function(){
 
                 this.patternList.clear();
