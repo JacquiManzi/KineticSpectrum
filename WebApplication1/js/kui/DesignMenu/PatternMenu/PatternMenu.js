@@ -6,12 +6,9 @@
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
-    "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
-    "threejs/three",
     "kui/util/CommonFormItems",
-    "dijit/TitlePane",
     "dijit/DropDownMenu",
     "kui/ajax/Effects",
     "dijit/MenuItem",
@@ -19,16 +16,19 @@ define([
     "kui/DesignMenu/EffectMenu/EffectMenu",
     "dojox/collections/ArrayList",
     "dojo/on",
-    "kui/DesignMenu/AccordianItem" 
+    "kui/DesignMenu/AccordianItem",
+    "dojo/dom-class"
 ],
-    function (declare, html, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane,
-    DropDownMenu, Effects, MenuItem, array, EffectMenu, ArrayList, on,  AccordianItem) {
+    function (declare, html, domStyle, domConstruct, CommonForm, 
+    DropDownMenu, Effects, MenuItem, array, EffectMenu, ArrayList, on,  AccordianItem, domClass) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", AccordianItem, {
 
             constructor: function () {
                 
-                this.title = "Pattern Menu"; 
+                this.title = "Pattern Menu";
+
+                 
             },
 
             createPatternMenu: function (container) {
@@ -51,45 +51,73 @@ define([
             
                 var patternSection = this._createPatternSection();
                */
+
+                this.onShow = function () {
+
+                    //this.patternModel.updateGroupDropDown();
+                    container.simulation.setPatternMode();
+                };
                
                 domConstruct.place(this.domNode, container.domNode);
                 on(this, "show", dojo.hitch(container.simulation, container.simulation.setPatternMode));
                 //this.patternModel.updateGroupDropDown(); JMM---> what to do about this? Make this updateable
                 
+                              
+                this._createPatternProps();
+                this._createPatternGroups();
+                this._createPatternCreation();
+                this._createPatternSelection();
+                 
+                this.patternModel.dispatchUpdatesToMenuElementListeners();
+
+                domClass.add(this.domNode, "designMenu");
+            },
+
+            _createPatternProps: function () {
+
                 var nameTableItems = [];
                 nameTableItems.push(this._createPatternNameSection());
                 nameTableItems.push(this._createPrioritySection());
 
                 var patternPropDivs = this.createTitlePane("Pattern Properties");
                 this.addTableItem(nameTableItems, patternPropDivs.contentDiv);
-               
+                domConstruct.place(patternPropDivs.paneDiv, this.domNode);
+            },
+
+            _createPatternGroups: function(){
+
                 var groupButtons = [];
                 groupButtons.push(this._createGroupButtons());
 
                 var removeButton = [];
                 removeButton.push(this._createRemoveGroupButton());
-                 
+
                 var groupDivs = this.createTitlePane("Pattern Groups");
                 this.addTableItem(groupButtons, groupDivs.contentDiv);
-                this.addDivItem(this._createGroupListBox(), groupDivs.contentDiv); 
+                this.addDivItem(this._createGroupListBox(), groupDivs.contentDiv);
                 this.addTableItem(removeButton, groupDivs.contentDiv);
 
+                domConstruct.place(groupDivs.paneDiv, this.domNode);
+            },
+
+            _createPatternCreation: function(){
+
                 var patternCreationDivs = this.createTitlePane("Pattern Creation");
-                this.addDivItem(this._createEffectSection(), patternCreationDivs.contentDiv); 
+                this.addDivItem(this._createEffectSection(), patternCreationDivs.contentDiv);
                 this.addDivItem(this._createPatternButton(), patternCreationDivs.contentDiv);
+
+                domConstruct.place(patternCreationDivs.paneDiv, this.domNode);
+            },
+
+            _createPatternSelection: function(){
 
                 var patternSelectionButtons = [];
                 patternSelectionButtons.push(this._createSelectPatternSection());
                 var patternSelectionDivs = this.createTitlePane("Pattern Selection");
                 this.addTableItem(patternSelectionButtons, patternSelectionDivs.contentDiv);
-                 
-                domConstruct.place(patternPropDivs.paneDiv, this.domNode);
-                domConstruct.place(groupDivs.paneDiv, this.domNode);
-                domConstruct.place(patternCreationDivs.paneDiv, this.domNode);
+
                 domConstruct.place(patternSelectionDivs.paneDiv, this.domNode);
-                 
-                this.patternModel.dispatchUpdatesToMenuElementListeners();
-            }, 
+            },
                                    
             _effectUpdated: function (patternDef) {
 
@@ -212,6 +240,7 @@ define([
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
                 this.patternModel.setPatternDropDown(patternDropDown);                 
               
+                var thisObj = this;
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
                     thisObj.patternModel.applyPattern();
                 });

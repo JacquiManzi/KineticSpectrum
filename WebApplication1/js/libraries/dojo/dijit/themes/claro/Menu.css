@@ -128,7 +128,7 @@ There are three areas of styling for the Menu:
   margin-top: 1px;
   /* prevents spacing above/below separator */
 
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #1e1e1e;
 }
 .claro .dijitMenuSeparatorBottom {
   height: auto;

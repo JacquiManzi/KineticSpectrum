@@ -21,14 +21,14 @@ define([
 
             this.style = "background-color:#1f1f1f;" +
                 "height:90%;" +
-                "border-right: solid 3  px #cccccc;"; 
+                "border-right: solid 3  px #cccccc;";
         },
          
         createMenu: function () {
                
             /*LED Menu*/
-            var ledMenu = new LEDMenu(this.sceneModel);
-            ledMenu.createLEDMenu(this);
+            var ledMenu = new LEDMenu({ sceneModel: this.sceneModel });
+            ledMenu.createLEDMenu(this); 
             
             /*Pattern Menu*/
             var patternModel = new PatternModel(this.sceneModel);

@@ -12,22 +12,25 @@ define([
     "dojo/on",
     "dojo/_base/array",
     "kui/ajax/Scenes",
-    "kui/ModelView/Node/LightAddress"],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm, TitlePane, on, array, Scenes, LightAddress) {
+    "kui/ModelView/Node/LightAddress",
+    "kui/DesignMenu/AccordianItem"],
+    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm,
+        TitlePane, on, array, Scenes, LightAddress, AccordianItem) {
         "use strict";
-        return declare("kui.DesignMenu.LEDMenu.LEDMenu", null, {
+        return declare("kui.DesignMenu.LEDMenu.LEDMenu", AccordianItem, {
                    
             /*
              *   Left menu for Kinect 3D model design 
              *
              */
 
-            constructor: function (sceneModel) {
+            constructor: function () {
 
-                this.style = "background-color:#141414;";
-                this.sceneModel = sceneModel;
+               // this.style = "background-color:#141414;";           
+                this.title = "LED Menu";
 
                 /*CSS Stylings*/
+                /*
                 this.tableCellBorderColor = "#333333";
 
                 this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
@@ -37,31 +40,31 @@ define([
                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
                "background-color: #131313;" +
-               "background-size: 20px 20px;";
+               "background-size: 20px 20px;";*/
 
 
             },
 
             createLEDMenu: function (container) {
-                var contentPane = new ContentPane(
+              /*  var contentPane = new ContentPane(
                   {
                       title: "LED Menu",
                       style: this.mainBackgroundColor,
                       onShow: dojo.hitch(container.simulation, container.simulation.setSceneMode)
 
-                  });
+                  });*/
 
-                var spacerDivStyle = "width:100%;height:7px;";
+                //var spacerDivStyle = "width:100%;height:7px;";
 
-                container.addChild(contentPane);
+                //container.addChild(contentPane);
 
-                var titlePaneDiv = html.createDiv("width:100%;height:100%;");
-                domConstruct.place(titlePaneDiv, contentPane.domNode);
+               // var titlePaneDiv = html.createDiv("width:100%;height:100%;");
+                //domConstruct.place(titlePaneDiv, contentPane.domNode);
 
-                var nodeDiv = this.createNodeSection();
+                //var nodeDiv = this.createNodeSection();
                               
                 /*Node Creation Section*/
-                var nodePane = new TitlePane({
+               /* var nodePane = new TitlePane({
 
                     title: "Create / Select Nodes",
                     content: nodeDiv
@@ -74,7 +77,7 @@ define([
 
                           
                 /*Node Removal Section*/
-                var removalDiv = this.createRemoveNodeSection();
+                /*var removalDiv = this.createRemoveNodeSection();
 
                 var removePane = new TitlePane({
 
@@ -88,7 +91,7 @@ define([
                 domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
 
                 /*Group Section*/            
-                var groupDiv = this.createGroupSection();
+               /* var groupDiv = this.createGroupSection();
 
                 var groupPane = new TitlePane({
 
@@ -99,241 +102,247 @@ define([
 
                 groupDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
                 domConstruct.place(groupPane.domNode, titlePaneDiv);
-                domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);
+                domConstruct.place(html.createDiv(spacerDivStyle), titlePaneDiv);*/
 
-                contentPane.startup();
+                //contentPane.startup();
+
+                this.onShow = function () {
+
+                    //this.patternModel.updateGroupDropDown();
+                   // container.simulation.setPatternMode();
+                };
+
+                domConstruct.place(this.domNode, container.domNode);
+
+                this._createNodes();
+                this._createSelectNodes();
+
             },
 
-            createNodeSection: function () {
+            _createNodes: function(){
 
-                var nodeDiv = html.createDiv("text-align:center;" +
-                   // "color:#3d8dd5;" +
-                   "color: #f1f1f1;"+
-                    "width:100%;" +
-                    "height:100%;");
-                
-                var table = html.createTable("margin-left:auto;" +
-                    "margin-right:auto;" +
-                    "padding-top:10px;"+
-                    "padding-bottom:10px;"+
-                    "border-spacing: 0px;"+
-                    "width:95%;");
+                var nodeDivs = this.createTitlePane("Create Nodes");
+                this.addDivItem(this._createAddLEDModeDiv(), nodeDivs.contentDiv);
 
-                var tableDiv = html.createDiv("width:100%;" +                    
-                    "margin-left:auto;" +
-                    "margin-right:auto;"+
-                    "border-radius:10px;");
+                var amountTableItems = [];
+                amountTableItems.push(this._createNodeAmountSection());
+                amountTableItems.push(this._createLEDAddressSection());
+                amountTableItems.push(this._createPortAddressSection());
+                amountTableItems.push(this._createFixureAddressSection());
+                this.addTableItem(amountTableItems, nodeDivs.contentDiv);
 
-                this.createNodeAmountBox(table);
-
-                var ledModeDiv = html.createDiv("text-align:center;padding-top:20px;");
-                domConstruct.place(ledModeDiv, nodeDiv);
-                var obj = this;
-                var ledModeButton = CommonForm.createButton("Add Single LED OFF", function () {
-
-                    obj.sceneModel.sceneInteraction.setAddMode(this);
-
-                }, null, "color:#3d8dd5;");
-
-                this.setButtonStyle(ledModeButton);
-                domConstruct.place(ledModeButton.domNode, ledModeDiv);
-
-                domConstruct.place(table, tableDiv);
-                domConstruct.place(tableDiv, nodeDiv);
-
-                var selectionDiv = this.createSelectAllSection();
-                domConstruct.place(selectionDiv, nodeDiv);
-
-                return nodeDiv;
+                domConstruct.place(nodeDivs.paneDiv, this.domNode); 
             },
 
-            createRemoveNodeSection: function () {
-                var innerDiv = html.createDiv("text-align:center;" +
-                   "color:#3d8dd5;"+
-                   "padding-top: 10px;"+
-                   "padding-bottom: 10px;");
+            _createSelectNodes: function(){
 
-                this.createRemoveButton(innerDiv);
+                var selectNodeDivs = this.createTitlePane("Select / Deselect Nodes");
+                this.addDivItem(this._createSelectLEDsSection(), selectNodeDivs.contentDiv);
+                this.addDivItem(this._createDeselectLEDsSection(), selectNodeDivs.contentDiv);
+                this.addDivItem(this._createtSelectVertexSection(), selectNodeDivs.contentDiv);
+                this.addDivItem(this._createDeselectVertexSection(), selectNodeDivs.contentDiv);
+                this.addDivItem(this._createRemoveSection(), selectNodeDivs.contentDiv);
 
-
-                return innerDiv;
+                domConstruct.place(selectNodeDivs.paneDiv, this.domNode);                
             },
 
-            createNodeAmountBox: function (table) {
-              
-               
-                var titleCell = html.createCell(
-                    //"border-bottom-left-radius: 7px;" +
-                    //"border-top-left-radius: 7px;" +
-                    //"border-left: 2px solid" + this.tableCellBorderColor+";"+
-                    //"border-top: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"color:#3d8dd5;" +
-                    //"text-align: right;"+
-                    //"width:30%;"
-                    );
+            _createAddLEDModeDiv: function(){
 
-                var valueRow = html.createRow("background-color:#141414;");
+                var nodeDiv = html.createDiv();
 
-                var valueCell = html.createCell(
-                    //"text-align:center;" +
-                    //"border-top: 2px solid #2d2d2d;" +
-                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"width:40%;"
-                    );
+                var thisObj = this;
+                var addNodeButton = CommonForm.createButton("Add Single LED OFF",function () {
 
-                var checkButtonCell = html.createCell(
-                    //"border-top-right-radius: 7px;" +
-                    //"border-bottom-right-radius: 7px;"+
-                    //"border-top-right-radius: 7px;" +
-                    //"border-right: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"border-top: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"border-bottom: 2px solid" + this.tableCellBorderColor + ";" +
-                    //"text-align:left;"+
-                    //"width:30%;"
-                    );
-    
-                var nodeNumberTextBox = CommonForm.createTableNumberTextBox("width:90%;");
-                var ledAddressText = CommonForm.createTableNumberTextBox("width:90%");
-                var portText = CommonForm.createTableNumberTextBox("width:90%");
-                var fixtureText = CommonForm.createTableNumberTextBox("width:90%");
+                    thisObj.sceneModel.sceneInteraction.setAddMode(this);
+                }, null);
 
-                var obj = this;
+                domConstruct.place(addNodeButton.domNode, nodeDiv);
+                CommonForm.setButtonStyle(addNodeButton);
+
+                return {
+                    valueContent: nodeDiv
+                }
+            },
+
+            _createNodeAmountSection: function(){
+
+                var amountField = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+
+                var thisObj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
-                    var lineSegments = obj.sceneModel.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
+                    var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
 
                     var lightAddress = new LightAddress();
                     lightAddress.lightNo = ledAddressText.get('value');
-                    lightAddress.fixtureNo = fixtureText.get('value');  
+                    lightAddress.fixtureNo = fixtureText.get('value');
                     lightAddress.portNo = portText.get('value');
 
-                   obj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
-                          
+                    thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
+
                 });
 
-                titleCell.innerHTML = "#Nodes";
-
-                var addressRow = html.createRow();
-                var addressTitleCell = html.createCell();
-                var addressCell = html.createCell();
-
-                addressTitleCell.innerHTML = "#Address";
-                
-
-                var portRow = html.createRow();
-                var portTitleCell = html.createCell();
-                var portCell = html.createCell();
-                
-
-                portTitleCell.innerHTML = "#Port";
-
-                var fixtureRow = html.createRow();
-                var fixtureTitleCell = html.createCell();
-                var fixtureCell = html.createCell();
-                
-                fixtureTitleCell.innerHTML = "#Fixture";
-
-
-                domConstruct.place(titleCell, valueRow);
-                domConstruct.place(valueRow, table);
-                domConstruct.place(valueCell, valueRow);
-                domConstruct.place(checkButton.domNode, checkButtonCell);
-                domConstruct.place(checkButtonCell, valueRow);
-                domConstruct.place(nodeNumberTextBox.domNode, valueCell);
-
-                domConstruct.place(addressTitleCell, addressRow);
-                domConstruct.place(ledAddressText.domNode, addressCell); 
-                domConstruct.place(addressCell, addressRow);
-                domConstruct.place(addressRow, table);
-
-                domConstruct.place(portTitleCell, portRow);
-                domConstruct.place(portCell, portRow);
-                domConstruct.place(portText.domNode, portCell);
-                domConstruct.place(portRow, table);
-
-                domConstruct.place(fixtureTitleCell, fixtureRow);
-                domConstruct.place(fixtureCell, fixtureRow);
-                domConstruct.place(fixtureText.domNode, fixtureCell);
-                domConstruct.place(fixtureRow, table);    
+                return {
+                    title: "LED Amount",
+                    valueContent: amountField.domNode,
+                    checkButton: checkButton.domNode
+                }
+                 
             },
 
-            createRemoveButton: function (div) {
+            _createLEDAddressSection: function(){
 
-                var obj = this;
-                var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
+                var ledAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var verifyButton = CommonForm.createButton('Verify', function () {
 
-                    obj.sceneModel.sceneInteraction.removeLEDNodes();
                 });
 
-                this.setButtonStyle(removeButton);
-
-                domConstruct.place(removeButton.domNode, div);
+                return {
+                    title: "Address",
+                    valueContent: ledAddressText.domNode,
+                    verifyButton: verifyButton.domNode
+                }
             },
 
-            createSelectAllSection: function()
-            {
-                var div = html.createDiv();
+            _createFixureAddressSection: function(){
 
-                /*Select All Vertices*/
-                var selectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
-                var obj = this;
-                var selectAllNodeButton = CommonForm.createButton('Select All Vertices', function () {
-
-                    obj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
-                });
-
-                this.setButtonStyle(selectAllNodeButton);
-                
-                domConstruct.place(selectAllNodeButton.domNode, selectAllDiv);
-                domConstruct.place(selectAllDiv, div);
-
-                /*Deselect All Vertices*/
-                var deselectAllDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
-                var deselectAllNodeButton = CommonForm.createButton('Deselect All Vertices', function () {
-
-                    obj.sceneModel.sceneInteraction.ledSet.deselectAllVertexs();
+                var fixtureAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var verifyButton = CommonForm.createButton('Verify', function () {
 
                 });
 
-                this.setButtonStyle(deselectAllNodeButton);
+                return {
+                    title: "Fixture",
+                    valueContent: fixtureAddressText.domNode,
+                    verifyButton: verifyButton.domNode
+                }
 
-                domConstruct.place(deselectAllNodeButton.domNode, deselectAllDiv);
-                domConstruct.place(deselectAllDiv, div);
+            },
 
+            _createPortAddressSection: function(){
 
-                /*Select All LEDs*/
-                var selectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+                var portAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var verifyButton = CommonForm.createButton('Verify', function () {
+
+                });
+
+                return {
+                    title: "Port",
+                    valueContent: portAddressText.domNode,
+                    verifyButton: verifyButton.domNode
+                }
+
+            },
+
+            _createSelectLEDsSection: function(){
+
+                var div = html.createDiv("padding-top:10px;");
+
+                var thisObj = this;
                 var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
 
-                    obj.sceneModel.sceneInteraction.ledSet.selectAllLEDs();
+                    thisObj.sceneModel.sceneInteraction.ledSet.selectAllLEDs();
                 });
 
-                this.setButtonStyle(selectLEDButton);
+                domConstruct.place(selectLEDButton.domNode, div);
+                CommonForm.setButtonStyle(selectLEDButton);
 
-                domConstruct.place(selectLEDButton.domNode, selectLEDDiv);
-                domConstruct.place(selectLEDDiv, div);
+                return {
+                    valueContent: div
+                }
+            },
 
-                /* Deselect All LEDs*/
-                var deselectLEDDiv = html.createDiv("text-align:center;color:#3d8dd5;width:100%;");
+            _createDeselectLEDsSection: function(){
+
+                var div = html.createDiv();
+
+                var thisObj = this;
                 var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
 
-                    obj.sceneModel.sceneInteraction.ledSet.deselectAllLEDs();
-
+                    thisObj.sceneModel.sceneInteraction.ledSet.deselectAllLEDs();
                 });
-                this.setButtonStyle(deselectLEDButton);
 
-                domConstruct.place(deselectLEDButton.domNode, deselectLEDDiv);
-                domConstruct.place(deselectLEDDiv, div);
+                domConstruct.place(deselectLEDButton.domNode, div);
+                CommonForm.setButtonStyle(deselectLEDButton);
 
-                return div;
+                return {
+                    valueContent: div
+                }
             },
 
-            setButtonStyle: function(button)
-            {
-                domStyle.set(button.domNode, "width", "90%");
-                domStyle.set(button.domNode.firstChild, "width", "100%");
+            _createtSelectVertexSection: function(){
+
+                var div = html.createDiv();
+
+                var thisObj = this;
+                var selectVertexButton = CommonForm.createButton('Select All Vertices', function () {
+
+                  //  thisObj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
+                });
+
+                domConstruct.place(selectVertexButton.domNode, div);
+                CommonForm.setButtonStyle(selectVertexButton);
+
+                return {
+                    valueContent: div
+                }
             },
+
+            _createDeselectVertexSection: function(){
+
+                var div = html.createDiv();
+
+                var thisObj = this;
+                var deselectVertexButton = CommonForm.createButton('Deselect All Vertices', function () {
+
+                    //  thisObj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
+                });
+
+                domConstruct.place(deselectVertexButton.domNode, div);
+                CommonForm.setButtonStyle(deselectVertexButton);
+
+                return {
+                    valueContent: div
+                }
+            },
+
+            _createRemoveSection: function(){
+
+                var div = html.createDiv("padding-top:10px;");
+
+                var thisObj = this;
+                var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
+
+                    thisObj.sceneModel.sceneInteraction.removeLEDNodes();
+                });
+
+                domConstruct.place(removeButton.domNode, div);
+
+                return {
+                    valueContent: div
+                }
+
+            },
+
+            _createGroupSection: function(){
+
+
+
+            },
+
+            _createGroupListBoxSection: function(){
+
+                var div = html.createDiv();
+                var groupListBox = CommonForm.createListBox("width:89%;");
+                //this.sceneModel.sceneInteraction.groupModel.ledGroupListBox = groupListBox;
+
+                domConstruct.place(groupListBox.domNode, div);
+
+                return {
+                    valueContent: div
+                }
+            },
+
 
             createGroupSection: function () {
 
