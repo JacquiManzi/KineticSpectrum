@@ -1,0 +1,56 @@
+﻿
+body {
+
+    background-color:black;
+    height:100%;
+    width:100%;
+    padding:0;
+    border:0;
+    margin:0;
+}
+
+.designMenu {   
+    
+    scrollbar-face-color: #367CD2;
+    scrollbar-shadow-color: #FFFFFF;
+    scrollbar-highlight-color: #FFFFFF;
+    scrollbar-3dlight-color: #FFFFFF;
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: #FFFFFF;
+    scrollbar-arrow-color: #FFFFFF;    
+}
+
+/* Let's get this party started */
+.designMenu::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+.designMenu::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: rgba(57, 57, 57, 0.9);
+}
+
+.designMenu::-webkit-scrollbar-track:hover {
+  background-color: rgba(75, 75, 75, 0.90);
+}
+
+/* Handle */
+.designMenu::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(4, 83, 183, 0.90); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.designMenu::-webkit-scrollbar-thumb:hover {    
+ background: rgba(6, 117, 255, 0.90); 
+}
+
+
+#mainContainer {   
+    height: 100%;
+    width: 100%;
+}
