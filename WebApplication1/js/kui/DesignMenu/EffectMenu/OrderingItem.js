@@ -35,7 +35,7 @@ define([
            
             var typeBox = this.typeBox = CommonForm.createDropDown(this.value.type, "width:100%;");
             typeBox.placeAt(orderingTypeLI);
-            CommonForm.setButtonStyle(typeBox);
+            CommonForm.setButtonStyle(typeBox, 90);
 
             typeBox.set('label', this.value.type);
             var me = this;
@@ -50,7 +50,7 @@ define([
 
             var orderingLI = html.createLI();
             this.orderingBox = CommonForm.createDropDown(this.value.ordering, "width:100%;");
-            CommonForm.setButtonStyle(this.orderingBox);
+            CommonForm.setButtonStyle(this.orderingBox, 90);
             this.orderingBox.placeAt(orderingLI);
             this.orderingBox.set('label', this.value.ordering);
 

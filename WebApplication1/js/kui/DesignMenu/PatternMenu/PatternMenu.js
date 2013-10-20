@@ -235,7 +235,7 @@ define([
                     this.patternModel.removeGroups(newGroupList);
                 }));
 
-                CommonForm.setButtonStyle(removeAllGroupButton, 85);
+                CommonForm.setButtonStyle(removeAllGroupButton, 90);
                 
                 return {                  
                     removeButton: removeGroupButton.domNode,
@@ -246,6 +246,7 @@ define([
             _createSelectPatternSection: function () {
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
+                CommonForm.setButtonStyle(patternDropDown, 80);
                 this.patternModel.setPatternDropDown(patternDropDown);                 
               
                 var thisObj = this;
@@ -253,9 +254,12 @@ define([
                     thisObj.patternModel.applyPattern();
                 });
 
+                CommonForm.setButtonStyle(applyButton, 80);
+
                 var testButton = CommonForm.createButton('Test Pattern', function () {
                    // thisObj.patternModel.applyPattern();
                 });
+                CommonForm.setButtonStyle(testButton, 80);
 
                 return {
                     patternDropDown: patternDropDown.domNode,

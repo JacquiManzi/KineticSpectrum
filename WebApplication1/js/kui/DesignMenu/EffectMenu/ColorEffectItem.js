@@ -44,7 +44,7 @@
 
             var imageLi = html.createLI();
             this.imageBox = CommonForm.createDropDown("Select Image", "width:100%;");
-            CommonForm.setButtonStyle(this.imageBox);     
+            CommonForm.setButtonStyle(this.imageBox, 90);     
                  
             var thisObj = this;
             Effects.getImages(function (types) {
@@ -77,7 +77,7 @@
 
             this.colorDropDownList.add(this.imageBox);
             this.colorDropDownList.add(this.widthBox);
-            CommonForm.setButtonStyle(this.imageBox);
+            CommonForm.setButtonStyle(this.imageBox, 90);
         },
 
         _createColorPalette: function(multipleColors, isFirst)
@@ -89,7 +89,7 @@
            
             var colorLI = html.createLI();
             var colorBox = CommonForm.createDropDown("Select Color", "width:100%;");
-            CommonForm.setButtonStyle(colorBox);     
+            CommonForm.setButtonStyle(colorBox, 90);     
                  
             var thisObj = this;
             var colorOnClick = function () {
@@ -118,7 +118,7 @@
             else {
 
                 colorBox.placeAt(colorLI);
-                CommonForm.setButtonStyle(colorBox);
+                CommonForm.setButtonStyle(colorBox, 90);
             }
 
             return { "colorLI": colorLI, "dropDown": colorBox };
@@ -128,7 +128,7 @@
 
             this.typeBox = CommonForm.createDropDown(this.value.name, "width:100%;");
             this.typeBox.placeAt(this.colorTypeLI);
-            CommonForm.setButtonStyle(this.typeBox);
+            CommonForm.setButtonStyle(this.typeBox, 90);
 
             var me = this;
             Effects.getColorEffects(function (types) {

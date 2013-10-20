@@ -177,7 +177,7 @@ define([
                     });
 
                     this.timeline.addBars(this.barData);
-                    this.patternModel.simulation.setSimulationMode();
+                    this.patternModel.sceneModel.simulation.setSimulationMode();
             },
 
             removePatternFromOption: function () {

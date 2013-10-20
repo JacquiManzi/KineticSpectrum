@@ -21,7 +21,7 @@
             var itemCell = html.createCell("width:100%;");
             this.itemBox = CommonForm.createDropDown(this.value, "width:100%;");
             this.itemBox.placeAt(itemCell);
-            CommonForm.setButtonStyle(this.itemBox);
+            CommonForm.setButtonStyle(this.itemBox, 90);
 
             domConstruct.place(orderingTitle, this.domNode);
             domConstruct.place(itemCell, this.domNode);
