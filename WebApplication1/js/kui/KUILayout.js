@@ -38,7 +38,7 @@ define([
                               simulation: simulation,
                               region: "center",
                               id: "centerContainer",
-                              style: "width:75%;" +
+                              style: "width:74%;" +
                                      "height:95%;" +
                                      "background-color:black;" +
                                      "overflow: hidden;" +
@@ -64,7 +64,7 @@ define([
                           region: "left",
                           id: "leftContainer",
                           minSize: ".1",
-                          style: "width:25%;" +
+                          style: "width:26%;" +
                                  "height:100%;" 
                       });
 

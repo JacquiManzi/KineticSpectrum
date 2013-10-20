@@ -11,7 +11,6 @@ define([
     "kui/util/CommonFormItems",
     "dijit/DropDownMenu",
     "kui/ajax/Effects",
-    "dijit/MenuItem",
     "dojo/_base/array",
     "kui/DesignMenu/EffectMenu/EffectMenu",
     "dojox/collections/ArrayList",
@@ -19,8 +18,8 @@ define([
     "kui/DesignMenu/AccordianItem",
     "dojo/dom-class"
 ],
-    function (declare, html, domStyle, domConstruct, CommonForm, 
-    DropDownMenu, Effects, MenuItem, array, EffectMenu, ArrayList, on,  AccordianItem, domClass) {
+    function (declare, html, domStyle, domConstruct, CommonForm, DropDownMenu, Effects, array,
+        EffectMenu, ArrayList, on, AccordianItem, domClass) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", AccordianItem, {
 
@@ -168,6 +167,7 @@ define([
             _createGroupButtons: function(){
                 
                 var groupDropDown = CommonForm.createDropDown("Select Group", "");
+                CommonForm.setButtonStyle(groupDropDown, 90); 
 
                 this.patternModel.setGroupDropDown(groupDropDown);
                 var addAllGroupButton = CommonForm.createButton("Add All", dojo.hitch(this, function () {
@@ -179,9 +179,13 @@ define([
                     });      
                 }));
 
+               CommonForm.setButtonStyle(addAllGroupButton, 80);
+
                 var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
                     this.patternModel.addGroup(this.patternModel.getGroupDropDownLabel());
                 }));
+
+                CommonForm.setButtonStyle(addButton, 90); 
 
                 return {
                     groupDropDown: groupDropDown.domNode,
@@ -219,6 +223,8 @@ define([
                      this.patternModel.removeGroups(groupList);
                 }));
 
+                CommonForm.setButtonStyle(removeGroupButton, 90);
+
                 var removeAllGroupButton = CommonForm.createButton("Remove All", dojo.hitch(this, function () {
 
                     var groupList = this.patternModel.getGroups();
@@ -228,6 +234,8 @@ define([
                     });
                     this.patternModel.removeGroups(newGroupList);
                 }));
+
+                CommonForm.setButtonStyle(removeAllGroupButton, 85);
                 
                 return {                  
                     removeButton: removeGroupButton.domNode,

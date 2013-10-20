@@ -48,7 +48,7 @@ define([
             domConstruct.place(valueCell, row);
 
             var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
-            CommonForm.setButtonStyle(effectDropDown);
+            CommonForm.setButtonStyle(effectDropDown, 90);
             domConstruct.place(effectDropDown.domNode, valueCell);
 
             var me = this;

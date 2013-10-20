@@ -27,17 +27,29 @@ define([
         createMenu: function () {
                
             /*LED Menu*/
-            var ledMenu = new LEDMenu({ sceneModel: this.sceneModel });
+            var ledMenu = new LEDMenu({
+                sceneModel: this.sceneModel
+            });
+
             ledMenu.createLEDMenu(this); 
             
             /*Pattern Menu*/
             var patternModel = new PatternModel(this.sceneModel);
-            var patternMenu = new PatternMenu({sceneModel: this.sceneModel, patternModel: patternModel});
+            var patternMenu = new PatternMenu({
+                sceneModel: this.sceneModel,
+                patternModel: patternModel
+            });
+
             patternMenu.createPatternMenu(this); 
 
             /*Pattern Composer Menu*/
             var patternComposerModel = new PatternComposerModel(patternModel);
-            var patternComposer = new PatterComposerMenu(this.sceneModel, patternComposerModel, patternModel);
+            var patternComposer = new PatterComposerMenu({
+                sceneModel: this.sceneModel,
+                patternComposerModel: patternComposerModel,
+                patternModel: patternModel
+            });
+
             patternComposer.createComposerMenu(this);
                     
            /*Model Menu
@@ -45,7 +57,10 @@ define([
             modelmenu.create3DMenu(this);*/
 
             /*File Menu*/
-            var fileMenu = new FileMenu({ sceneModel: this.sceneModel });
+            var fileMenu = new FileMenu({
+                sceneModel: this.sceneModel
+            });
+
             fileMenu.createFileMenu(this);
 
             this.startup();

@@ -85,9 +85,9 @@
              return colorPalette
          },
 
-         setButtonStyle = function(button)
+         setButtonStyle = function(button, widthAmount)
              {
-                 domStyle.set(button.domNode, "width", "90%");
+                 domStyle.set(button.domNode, "width", widthAmount+"%");
                  domStyle.set(button.domNode.firstChild, "width", "100%");
              },
 

@@ -4,70 +4,60 @@ define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "kui/util/CommonFormItems",
-    "dojo/dom",
-    "dijit/layout/ContentPane",
     "dojo/dom-style",
     "dojo/dom-construct",
-    "threejs/three",
     "dojo/on",
     "dojo/dom-geometry",
     "dojo/dnd/Moveable",
     "kui/ajax/SimState",
     "dojo/_base/array",
-    "dijit/TitlePane"
+    "kui/DesignMenu/AccordianItem",
+    "dojo/dom-class"
  
 ],
-    function (declare, html, CommonForm, dom, ContentPane, domStyle, domConstruct, three, on,
-        domGeom, Moveable, SimSate, array, TitlePane) {
+    function (declare, html, CommonForm, domStyle, domConstruct, on, domGeom, Moveable,
+        SimSate, array, AccordianItem, domClass) {
         "use strict";
-        return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", null, {
+        return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", AccordianItem, {
 
             /*   
              */
-            constructor: function (sceneModel, patternComposerModel, patternModel) {
-
-                this.style = "background-color:transparent;";    
-                this.patternModel = patternModel;
-                this.patternComposerModel = patternComposerModel;
+            constructor: function () {
+            
+                this.title = "Pattern Composer";
                 
-
-                this.mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
-                         "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
-                         "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
-                         "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
-                         "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
-                         "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
-               "background-color: #131313;" +
-               "background-size: 20px 20px;";
             },
 
             createComposerMenu: function (container) {
-                this.contentPane = new ContentPane(
-                {
-                    title: "Pattern Composer",
-                    style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
-                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
-                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
-                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
-                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
-                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
-                "background-color: #131313;" +
-                "background-size: 20px 20px;width:100%;height:100%;text-align:center;"
-
-                });    
-
-                container.addChild(this.contentPane);
-
-                this.createTimeline(container);
-                this.createPatternProps(this.contentPane);
-                
-
-                
-            },    
-
-            createTimeline: function (container) {
                
-                this._createPatternSection(this.contentPane);
+                domConstruct.place(this.domNode, container.domNode);
+
+                var timelineDiv = this._createTimeline(container);
+               // this.createPatternProps(this.contentPane);
+                
+
+                this.onShow = function () {
+
+                    this.patternComposerModel.timeline.createCanvas(timelineDiv);
+                    this.patternComposerModel.updateComposerFromServer();
+                    this.sceneModel.simulation.setSimulationMode();
+                };
+                
+                
+            },
+
+            _createTimeline: function(){
+
+                var timelineDivs = this.createTitlePane();
+
+                this.patternComposerModel.timeline.createCanvas(timelineDivs.contentDiv);
+
+                return timelineDivs.contentDiv;
+            },
+
+          /*  createTimeline: function (container) {
+               
+                //this._createPatternSection(this.contentPane);
                               
                 var timelineDiv = html.createDiv("width:100%;" +
                     "height:500px;" +
@@ -88,7 +78,7 @@ define([
                 this.patternComposerModel.timeline.createCanvas(timelineDiv);
                    
                 domConstruct.place(timelineTitlePane.domNode, this.contentPane.domNode);                                  
-            },
+            },*/
 
             _createPatternSection: function(container){
 

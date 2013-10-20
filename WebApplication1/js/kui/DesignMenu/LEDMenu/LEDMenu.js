@@ -13,9 +13,10 @@ define([
     "dojo/_base/array",
     "kui/ajax/Scenes",
     "kui/ModelView/Node/LightAddress",
-    "kui/DesignMenu/AccordianItem"],
+    "kui/DesignMenu/AccordianItem",
+    "dojo/dom-class"],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, CommonForm,
-        TitlePane, on, array, Scenes, LightAddress, AccordianItem) {
+        TitlePane, on, array, Scenes, LightAddress, AccordianItem, domClass) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu.LEDMenu", AccordianItem, {
                    
@@ -116,7 +117,10 @@ define([
 
                 this._createNodes();
                 this._createSelectNodes();
+                this._createGroupBox();
 
+
+                domClass.add(this.domNode, "designMenu");
             },
 
             _createNodes: function(){
@@ -157,7 +161,7 @@ define([
                 }, null);
 
                 domConstruct.place(addNodeButton.domNode, nodeDiv);
-                CommonForm.setButtonStyle(addNodeButton);
+                CommonForm.setButtonStyle(addNodeButton, 90);
 
                 return {
                     valueContent: nodeDiv
@@ -245,7 +249,7 @@ define([
                 });
 
                 domConstruct.place(selectLEDButton.domNode, div);
-                CommonForm.setButtonStyle(selectLEDButton);
+                CommonForm.setButtonStyle(selectLEDButton, 90);
 
                 return {
                     valueContent: div
@@ -263,7 +267,7 @@ define([
                 });
 
                 domConstruct.place(deselectLEDButton.domNode, div);
-                CommonForm.setButtonStyle(deselectLEDButton);
+                CommonForm.setButtonStyle(deselectLEDButton, 90);
 
                 return {
                     valueContent: div
@@ -281,7 +285,7 @@ define([
                 });
 
                 domConstruct.place(selectVertexButton.domNode, div);
-                CommonForm.setButtonStyle(selectVertexButton);
+                CommonForm.setButtonStyle(selectVertexButton, 90);
 
                 return {
                     valueContent: div
@@ -299,7 +303,7 @@ define([
                 });
 
                 domConstruct.place(deselectVertexButton.domNode, div);
-                CommonForm.setButtonStyle(deselectVertexButton);
+                CommonForm.setButtonStyle(deselectVertexButton, 90);
 
                 return {
                     valueContent: div
@@ -324,10 +328,16 @@ define([
 
             },
 
-            _createGroupSection: function(){
+            _createGroupBox: function(){
 
+                var groupDivs = this.createTitlePane("Create Groups");
 
+                this.addDivItem(this._createGroupListBoxSection(), groupDivs.contentDiv);
+                var addRemoveTableItems = [];
+                addRemoveTableItems.push(this._createAddRemoveGroupSection());
+                this.addTableItem(addRemoveTableItems, groupDivs.contentDiv);
 
+                domConstruct.place(groupDivs.paneDiv, this.domNode);
             },
 
             _createGroupListBoxSection: function(){
@@ -340,6 +350,31 @@ define([
 
                 return {
                     valueContent: div
+                }
+            },
+
+            _createAddRemoveGroupSection: function(){
+
+
+                var thisObj = this;
+                var addButton = CommonForm.createButton('Add Group', function () {
+                    var group = thisObj.sceneModel.sceneInteraction.groupModel.createGroupFromSelected(groupNameTextBox.get('value'));
+                    thisObj.addGroup(group);
+                }, null);
+
+                CommonForm.setButtonStyle(addButton, 90);
+
+                var removeButton = CommonForm.createButton('Remove Group', function () {
+
+                    thisObj.removeSelected();
+
+                }, null);
+
+                CommonForm.setButtonStyle(removeButton, 90);
+
+                return {
+                    addButton: addButton.domNode,
+                    removeButton: removeButton.domNode
                 }
             },
 

@@ -31,7 +31,7 @@ define([
                     "padding-bottom:5px;" +
                     "background-color:" + this.backgroundColor + ";" +
                     "border-radius: 7px;" +
-                    //"width:99%;" +
+                    "width:99%;" +
                     "color:" + this.textColor + ";" +
                     "border-spacing:0;";
 
