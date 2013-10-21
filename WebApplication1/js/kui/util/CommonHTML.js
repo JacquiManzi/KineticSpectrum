@@ -112,12 +112,13 @@
                     });
             },
 
-            createInput = function (type, size, name) {
+            createInput = function (type, size, name, style) {
                 return domConstruct.create("input",
                     {
                         size: size,
                         type: type,
-                        name: name
+                        name: name,
+                        style: style
                     });
             },
 

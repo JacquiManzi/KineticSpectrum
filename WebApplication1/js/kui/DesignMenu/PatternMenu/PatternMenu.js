@@ -26,8 +26,6 @@ define([
             constructor: function () {
                 
                 this.title = "Pattern Menu";
-
-                 
             },
 
             createPatternMenu: function (container) {

@@ -4,7 +4,6 @@ define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "kui/util/CommonFormItems",
-    "dojo/dom-style",
     "dojo/dom-construct",
     "dojo/on",
     "dojo/dom-geometry",
@@ -12,10 +11,9 @@ define([
     "kui/ajax/SimState",
     "dojo/_base/array",
     "kui/DesignMenu/AccordianItem",
-    "dojo/dom-class"
- 
+    "dojo/dom-class" 
 ],
-    function (declare, html, CommonForm, domStyle, domConstruct, on, domGeom, Moveable,
+    function (declare, html, CommonForm, domConstruct, on, domGeom, Moveable,
         SimSate, array, AccordianItem, domClass) {
         "use strict";
         return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", AccordianItem, {
@@ -24,8 +22,7 @@ define([
              */
             constructor: function () {
             
-                this.title = "Pattern Composer";
-                
+                this.title = "Pattern Composer";               
             },
 
             createComposerMenu: function (container) {
@@ -41,7 +38,9 @@ define([
                     this.patternComposerModel.timeline.createCanvas(timelineDiv);
                     this.patternComposerModel.updateComposerFromServer();
                     this.sceneModel.simulation.setSimulationMode();
-                };                
+                };
+
+                domClass.add(this.domNode, "designMenu");
             },
 
             _createTimeline: function(){
@@ -53,31 +52,6 @@ define([
 
                 return timelineDivs.contentDiv;
             },
-
-          /*  createTimeline: function (container) {
-               
-                //this._createPatternSection(this.contentPane);
-                              
-                var timelineDiv = html.createDiv("width:100%;" +
-                    "height:500px;" +
-                    "background-color:#141414;" +
-                    "overflow:auto;");
-
-                var timelineTitlePane = new TitlePane({    
-                    title: "Pattern Timeline",
-                    content: timelineDiv,
-                    onShow: dojo.hitch(this, function(){
-                        this.patternComposerModel.timeline.createCanvas(timelineDiv);
-                        this.patternComposerModel.updateComposerFromServer();
-                        container.simulation.setSimulationMode();
-                    
-                    })
-                });
-                timelineDiv.parentNode.setAttribute('style', this.mainBackgroundColor);
-                this.patternComposerModel.timeline.createCanvas(timelineDiv);
-                   
-                domConstruct.place(timelineTitlePane.domNode, this.contentPane.domNode);                                  
-            },*/
 
             _createPatternSection: function(){
 
@@ -102,7 +76,6 @@ define([
                 return{
                     valueContent: div
                 }             
-
             },
 
             _createPatternButtons: function(){
@@ -144,14 +117,12 @@ define([
                 var removeButton = CommonForm.createButton("Remove Pattern", function () {
 
                     thisObj.patternComposerModel.removeSelectedPattern();
-
                 });
                 CommonForm.setButtonStyle(removeButton, 90);
 
                 var applyButton = CommonForm.createButton("Apply All", function () {
 
                     thisObj.patternComposerModel.applyAllPatterns();
-
                 });
                 CommonForm.setButtonStyle(applyButton, 90);
 

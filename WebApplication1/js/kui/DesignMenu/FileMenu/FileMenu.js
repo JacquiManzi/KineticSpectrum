@@ -18,59 +18,40 @@ define([
     "dojo/on",
     "dojox/form/Uploader",
     "kui/ajax/FileInterface",
-    "kui/DesignMenu/FileMenu/FileItem"
+    "kui/DesignMenu/FileMenu/FileItem",
+    "kui/DesignMenu/AccordianItem",
+    "dojo/dom-class",
+    "kui/util/CommonFormItems"
 ],
-    function (declare, html, ContentPane, domStyle, domConstruct,three, on, FileUploader, FileInterface, FileItem) {
+    function (declare, html, ContentPane, domStyle, domConstruct,three, on, FileUploader, FileInterface, FileItem,
+        AccordianItem, domClass, CommonForm) {
         "use strict";
 
-        return declare("kui.DesignMenu.FileMenu.FileMenu", [FileItem], {
-
-            /*
-             *   Left menu for Kinect 3D model design 
-             *
-             */
+        return declare("kui.DesignMenu.FileMenu.FileMenu", AccordianItem, {
 
             constructor: function() {
 
-                this.style = "background-color:transparent;";
-            },
-
-            buildRendering: function(){
+                this.title = "File Menu";
             },
 
             createFileMenu: function (container)
             {
-                 var contentPane = new ContentPane(
-                 {
-                    title: "File Menu",
-                    style: "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
-                          "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +
-                          "linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px," +
-                          "linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px," +
-                          "linear-gradient(90deg, #1b1b1b 10px, transparent 10px)," +
-                          "linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);" +
-                "background-color: #131313;" +
-                "background-size: 20px 20px;" +
-                "width:100%;",
-                     onShow: dojo.hitch(container.simulation, container.simulation.setSceneMode)
-                  });
 
-                 container.addChild(contentPane);
+                this.onShow = dojo.hitch(container.simulation, container.simulation.setSceneMode);
+                this._createUploadSection();
 
-                 this.createUploadSection(contentPane.domNode);
-                 this.createLightUploadSection(contentPane.domNode); 
-
+                domConstruct.place(this.domNode, container.domNode);
             },
 
+            _createUploadButton: function () {
 
-            createUploadSection: function (div) {
 
-                var func = function(event) {
+                var func = function (event) {
                     var file = event.target.files[0];
                     var fileReader = new FileReader();
 
                     var thisObj = this;
-                    fileReader.onload = (function(e) {
+                    fileReader.onload = (function (e) {
 
                         thisObj.sceneModel.loadFile(e.target.result, thisObj.sceneModel.getScene());
 
@@ -79,28 +60,43 @@ define([
                 };
 
                 var input = html.createInput('file', 200, 'model');
-                domConstruct.place(input, div);
                 on(input, "change", dojo.hitch(this, func));
-                
+                return {
+                    valueContent: input
+                }
             },
 
-            createLightUploadSection: function (div) {
+            _createLightConfigUploadButton: function(){
 
                 var fileInterface = new FileInterface();
                 var fileUploader = new FileUploader({
 
                     label: "Choose Light Configuration",
-                    multiple: false, 
+                    multiple: false,
                     uploadOnSelect: true,
                     url: "FileUpload.aspx",
-                    onComplete: dojo.hitch(this.sceneModel,this.sceneModel.loadServerLEDs)
+                    onComplete: dojo.hitch(this.sceneModel, this.sceneModel.loadServerLEDs)
                 });
-            
-                domConstruct.place(fileUploader.domNode, div);
 
+                CommonForm.setButtonStyle(fileUploader, 90);
 
+                return {
+                    valueContent: fileUploader.domNode
+                }
+            },
+
+            _createUploadSection: function(){
+
+                var uploadTableItems = [];
+                var fileDivs = this.createTitlePane("Upload Files");
+
+                uploadTableItems.push(this._createUploadButton());
+                uploadTableItems.push({ contentValue: html.createDiv("height:10px;") });
+                uploadTableItems.push(this._createLightConfigUploadButton());
+                this.addTableItem(uploadTableItems, fileDivs.contentDiv);
+
+                domConstruct.place(fileDivs.paneDiv, this.domNode);
             }
-
 
         });
 
