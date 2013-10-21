@@ -156,7 +156,8 @@ define([
                 var createButton = CommonForm.createButton('Create Pattern', function () { 
                     thisObj.patternModel.createPattern();
                 });
-                
+
+                //CommonForm.setButtonStyle(createButton, 50);               
                 domConstruct.place(createButton.domNode, div);
 
                 return {

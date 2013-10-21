@@ -31,26 +31,25 @@ define([
             createComposerMenu: function (container) {
                
                 domConstruct.place(this.domNode, container.domNode);
-
+               
+                this._createPatternSection();
                 var timelineDiv = this._createTimeline(container);
-               // this.createPatternProps(this.contentPane);
+                this._createPatternprops();
                 
-
                 this.onShow = function () {
 
                     this.patternComposerModel.timeline.createCanvas(timelineDiv);
                     this.patternComposerModel.updateComposerFromServer();
                     this.sceneModel.simulation.setSimulationMode();
-                };
-                
-                
+                };                
             },
 
             _createTimeline: function(){
 
-                var timelineDivs = this.createTitlePane();
-
+                var timelineDivs = this.createTitlePane("Pattern Timeline");
                 this.patternComposerModel.timeline.createCanvas(timelineDivs.contentDiv);
+
+                domConstruct.place(timelineDivs.paneDiv, this.domNode);
 
                 return timelineDivs.contentDiv;
             },
@@ -80,53 +79,66 @@ define([
                 domConstruct.place(timelineTitlePane.domNode, this.contentPane.domNode);                                  
             },*/
 
-            _createPatternSection: function(container){
+            _createPatternSection: function(){
 
-                var div = html.createDiv("background-color:#141414;"); 
-                domConstruct.place(this.createPatternBox(), div);
+                var patternButtonTableItems = []; 
 
-                var patternTitlePane = new TitlePane({
-                    title: "Pattern Selection", 
-                    content: div
-                });
-                div.parentNode.setAttribute('style', this.mainBackgroundColor);
-                domConstruct.place(patternTitlePane.domNode, container.domNode);
+                var patternDivs = this.createTitlePane("Add Pattern");
+                this.addDivItem(this._createPatternBox(), patternDivs.contentDiv);
+                patternButtonTableItems.push(this._createPatternButtons());
+                this.addTableItem(patternButtonTableItems, patternDivs.contentDiv);
 
+                domConstruct.place(patternDivs.paneDiv, this.domNode);
+            },
+
+            _createPatternBox: function(){
+
+                var div = html.createDiv();
+                var patternListBox = CommonForm.createListBox("width:90%;");
+                this.patternComposerModel.patternListBox = patternListBox;
+
+                domConstruct.place(patternListBox.domNode, div);
+
+                return{
+                    valueContent: div
+                }             
+
+            },
+
+            _createPatternButtons: function(){
+               
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add', function () {
                     thisObj.patternComposerModel.addPattern(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
-                CommonForm.setButtonStyle(addButton);
-                domConstruct.place(addButton.domNode, div);
-
+                CommonForm.setButtonStyle(addButton, 90);
+             
                 var removeButton = CommonForm.createButton('Remove', function () {
                     thisObj.patternComposerModel.removePatternFromOption(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
-                CommonForm.setButtonStyle(removeButton);
-                domConstruct.place(removeButton.domNode, div); 
+                CommonForm.setButtonStyle(removeButton, 90);
+
+                return {               
+                    addButton: addButton.domNode,
+                    removeButton: removeButton.domNode
+                }
+
             },
 
-            createPatternBox: function () {    
+            _createPatternprops: function(){
 
-                var patternListBox = CommonForm.createListBox("width:90%;");
-                this.patternComposerModel.patternListBox = patternListBox;
+                var patternPropButtons = [];
 
-                return patternListBox.domNode;
+                var patternPropDivs = this.createTitlePane("Timeline Properties");
+                patternPropButtons.push(this._createPatternPropButtons());
+                this.addTableItem(patternPropButtons, patternPropDivs.contentDiv);
+
+                domConstruct.place(patternPropDivs.paneDiv, this.domNode);
             },
 
-            createPatternProps: function (container) {
-
-                var div = html.createDiv("width:100%;");   
-
-                var patternPropertyTitlePane = new TitlePane({
-
-                    title: "Pattern Properties",
-                    content: div
-                });
-                div.parentNode.setAttribute('style', this.mainBackgroundColor);
-                domConstruct.place(patternPropertyTitlePane.domNode, container.domNode);
+            _createPatternPropButtons: function(){
 
                 var thisObj = this;
                 var removeButton = CommonForm.createButton("Remove Pattern", function () {
@@ -134,19 +146,20 @@ define([
                     thisObj.patternComposerModel.removeSelectedPattern();
 
                 });
-                CommonForm.setButtonStyle(removeButton);
+                CommonForm.setButtonStyle(removeButton, 90);
 
                 var applyButton = CommonForm.createButton("Apply All", function () {
 
-                    thisObj.patternComposerModel.applyAllPatterns(); 
+                    thisObj.patternComposerModel.applyAllPatterns();
 
                 });
-                CommonForm.setButtonStyle(applyButton);
-                 
-                domConstruct.place(removeButton.domNode, div);
-                domConstruct.place(applyButton.domNode, div); 
-                domConstruct.place(patternPropertyTitlePane.domNode, container.domNode);
- 
+                CommonForm.setButtonStyle(applyButton, 90);
+
+                return {
+
+                    removeButton: removeButton.domNode,
+                    applyButton: applyButton.domNode
+                }
             }
                       
         });   
