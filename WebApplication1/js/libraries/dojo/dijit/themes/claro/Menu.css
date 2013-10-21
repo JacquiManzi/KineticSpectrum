@@ -69,7 +69,7 @@ There are three areas of styling for the Menu:
   padding: 2px;
   border-width: 1px 0 1px 0;
   border-style: solid;
-  border-color: #dbdbdb;
+  border-color: #1f1f1f;
 }
 /* hover over a MenuItem or MenuBarItem */
 .claro .dijitMenu .dijitMenuItemHover td,
