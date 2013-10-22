@@ -215,7 +215,9 @@ TABLE.dijitSelect {
 	vertical-align: middle;
 }
 .dijitButtonContents {
-	display: block;		
+	/*display: block;*/
+	/*JMM edit for allowing buttons to fill entire parent dom element*/
+	display: table-cell;
 }
 td.dijitButtonContents {
 	display: table-cell;	

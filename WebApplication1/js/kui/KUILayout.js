@@ -93,7 +93,8 @@ define([
                       var bottomContainer = new ContentPane({
                           isLayoutContainer: true,
                           region: "bottom",
-                          id: "bottomContatiner"
+                          id: "bottomContatiner",
+                          style: "height:6%;"
                       });
 
                       this.simPane = new SimPane(

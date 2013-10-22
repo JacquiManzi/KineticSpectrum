@@ -57,6 +57,9 @@
   background-image: -o-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.15) 0px, rgba(255, 255, 255, 0.3) 100%);
   background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.15) 0px, rgba(255, 255, 255, 0.3) 100%);
   _background-image: none;
+  display: table;
+  height: inherit;
+  width: inherit;
 }
 .claro .dijitComboButton .dijitArrowButton {
   border-left-width: 0;

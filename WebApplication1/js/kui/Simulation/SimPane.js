@@ -18,20 +18,39 @@
         simulation: null,
 
         buildRendering: function () {
-            // create the DOM for this widget
+
             this.domNode = html.createDiv("height: 90px;");
             
-
             if (this.simulation === null)
                 throw new Error("Invalid SimPane, Simulation object must be passed into the constructor");
 
-            var table = html.createTable(html.tableStyle);
-            domStyle.set(table, 'width', '80%'); 
+            var div = html.createDiv(html.tableStyle + "padding-top:0px;" +
+                "width:80%;" +
+                "height:100%;");
 
+            var buttonDiv = html.createDiv("float:left;" +
+                "width:10%;" +
+                "height:100%;");
+            var tableDiv = html.createDiv();
+
+            this.button = new Button({
+                name: "playButton",
+                label: this.simulation.isPlaying ? "Pause" : "Play"
+            });
+
+            domStyle.set(this.button.domNode, "height", "100%");
+            domStyle.set(this.button.domNode, "width", "92%");
+
+            var table = html.createTable();
+           
             domConstruct.place(this.buildSliderRow(), table);
-            domConstruct.place(this.buildTextBoxRow(), table);
+            domConstruct.place(this.buildTextBoxRow(), table);                
+            this.button.placeAt(buttonDiv);
+            domConstruct.place(buttonDiv, div);
+            domConstruct.place(table, tableDiv);
+            domConstruct.place(tableDiv, div);
 
-            domConstruct.place(table, this.domNode);
+            domConstruct.place(div, this.domNode);
         },
 
         resize: function(){
@@ -44,25 +63,17 @@
                 value: this.simulation.getTime(),
                 minimum: 0,
                 maximum: this.simulation.endTime,
-                intermediateChanges: true
+                intermediateChanges: true,
+                style: "width: 100%"
             }, "timeSlider");
 
-            this.button = new Button({
-                name: "playButton",
-                label: this.simulation.isPlaying?"Pause":"Play"
-            });
-             
-            CommonForm.setButtonStyle(this.button);    
-            
+                      
             var sliderRow = html.createRow();
-            var sliderCell = html.createCell();
-            var buttonCell = html.createCell("width:10%;");
+            var sliderCell = html.createCell("width:100%;");
             var endCell = html.createCell("width:10%");
-            domConstruct.place(buttonCell, sliderRow);
             domConstruct.place(sliderCell, sliderRow);
             domConstruct.place(endCell, sliderRow);
             this.slider.placeAt(sliderCell);
-            this.button.placeAt(buttonCell);
 
             return sliderRow;
         },
@@ -71,12 +82,15 @@
             this.textBox = new TextBox({
                 name: "timeBox",
                 value: 0,
-                readOnly:true
+                readOnly: true,
+                style: "width:10%;" +
+                    "background-color:#0a0a0a;" +
+                    "border-radius:7px;"
             });
 
             var boxRow = html.createRow();
-            var boxCell = html.createCell();
-            domConstruct.place(html.createCell(), boxRow);
+            var boxCell = html.createCell("width:100%;" +
+                "padding-left:10px;");
             domConstruct.place(boxCell, boxRow);
             this.textBox.placeAt(boxCell);
 
