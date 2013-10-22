@@ -7,9 +7,9 @@ using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using System.IO;
 using RevKitt.KS.KineticEnvironment.Tweening;
-using WebApplication1.JSConverters;
+using KineticUI.JSConverters;
 
-namespace WebApplication1
+namespace KineticUI
 {
     [ServiceContract(Namespace = "")]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]

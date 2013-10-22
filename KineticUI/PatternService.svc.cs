@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
-using WebApplication1.JSConverters;
+using KineticUI.JSConverters;
 
-namespace WebApplication1
+namespace KineticUI
 {
     [ServiceContract(Namespace = "")]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]

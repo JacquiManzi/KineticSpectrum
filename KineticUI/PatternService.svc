@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="WebApplication1.PatternService" CodeBehind="PatternService.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="KineticUI.PatternService" CodeBehind="PatternService.svc.cs" %>

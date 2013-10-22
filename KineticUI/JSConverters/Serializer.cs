@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class Serializer
     {

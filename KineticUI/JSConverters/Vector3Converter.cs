@@ -7,7 +7,7 @@ using KineticControl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class Vector3Converter : JsonConverter
     {

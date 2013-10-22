@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using KineticControl;
 using Newtonsoft.Json.Linq;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class LightAddressConverter : JsonConverter
     {

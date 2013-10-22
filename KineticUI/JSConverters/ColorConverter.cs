@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class ColorConverter : JsonConverter
     {

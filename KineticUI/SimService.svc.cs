@@ -7,9 +7,9 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
-using WebApplication1.JSConverters;
+using KineticUI.JSConverters;
 
-namespace WebApplication1
+namespace KineticUI
 {
     [ServiceContract(Namespace = "")]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]

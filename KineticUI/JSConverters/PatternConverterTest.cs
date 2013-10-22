@@ -10,7 +10,7 @@ using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Tweening;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     [TestFixture]
     public class PatternConverterTest

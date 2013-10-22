@@ -7,7 +7,7 @@ using System.ServiceModel.DomainServices.Hosting;
 using System.ServiceModel.DomainServices.Server;
 using System.ServiceModel.DomainServices.Server.ApplicationServices;
 
-namespace WebApplication1
+namespace KineticUI
 {
     [EnableClientAccess]
     public class Default : AuthenticationBase<User>

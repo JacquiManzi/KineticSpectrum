@@ -8,7 +8,7 @@ using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Tweening;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class EffectConverter : JsonConverter
     {

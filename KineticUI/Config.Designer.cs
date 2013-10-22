@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebApplication1 {
+namespace KineticUI {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WebApplication1 {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WebApplication1.Config", typeof(Config).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KineticUI.Config", typeof(Config).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace WebApplication1 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local Area Connection.
+        ///   Looks up a localized string similar to Local Area Connection 2.
         /// </summary>
         internal static string HostInterface {
             get {
@@ -70,7 +70,7 @@ namespace WebApplication1 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\JCU\code\KineticSpectrum\WebApplication1\Images.
+        ///   Looks up a localized string similar to C:\KineticSpectrum\KineticUI\Images.
         /// </summary>
         internal static string ImageDirectory {
             get {

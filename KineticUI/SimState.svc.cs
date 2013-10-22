@@ -9,10 +9,10 @@ using System.ServiceModel.Web;
 using System.Text;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
-using WebApplication1.CSharp;
-using WebApplication1.JSConverters;
+using KineticUI.CSharp;
+using KineticUI.JSConverters;
 
-namespace WebApplication1
+namespace KineticUI
 {
     [ServiceContract(Namespace = "")]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]

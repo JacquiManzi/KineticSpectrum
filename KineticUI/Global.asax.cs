@@ -6,7 +6,7 @@ using System.Web.Security;
 using System.Web.SessionState;
 using RevKitt.KS.KineticEnvironment;
 
-namespace WebApplication1
+namespace KineticUI
 {
     public class Global : System.Web.HttpApplication
     {

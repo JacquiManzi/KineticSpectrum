@@ -7,7 +7,7 @@ using KineticControl;
 using NUnit.Framework;
 using Newtonsoft.Json;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     [TestFixture]
     public class LightAddressConverterTest

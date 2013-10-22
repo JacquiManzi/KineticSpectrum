@@ -1,1 +1,1 @@
-﻿<%@ Page Language="C#" AutoEventWireup="false" CodeBehind="FileUpload.aspx.cs" Inherits="WebApplication1.FileUpload" %>
+﻿<%@ Page Language="C#" AutoEventWireup="false" CodeBehind="FileUpload.aspx.cs" Inherits="KineticUI.FileUpload" %>

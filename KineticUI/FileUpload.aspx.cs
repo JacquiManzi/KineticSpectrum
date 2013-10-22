@@ -9,9 +9,9 @@ using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
-using WebApplication1.JSConverters;
+using KineticUI.JSConverters;
 
-namespace WebApplication1
+namespace KineticUI
 {
     public partial class FileUpload : System.Web.UI.Page
     {

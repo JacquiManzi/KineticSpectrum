@@ -6,7 +6,7 @@ using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
 
-namespace WebApplication1
+namespace KineticUI
 {
     public class State
     {

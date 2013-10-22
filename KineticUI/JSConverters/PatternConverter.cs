@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace WebApplication1.JSConverters
+namespace KineticUI.JSConverters
 {
     public class PatternConverter : JsonConverter
     {
