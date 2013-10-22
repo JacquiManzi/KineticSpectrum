@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalibrateVideo", "Calibrate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KineticCalibration", "KineticCalibration\KineticCalibration.csproj", "{188C1357-2C7E-4A53-870C-B66A8CF3988F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KineticUI", "WebApplication1\KineticUI.csproj", "{0F905DA2-8390-4D14-9A26-D9843930EE2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KineticUI", "KineticUI\KineticUI.csproj", "{0F905DA2-8390-4D14-9A26-D9843930EE2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorBasics-WPF", "ColorBasics-WPF\ColorBasics-WPF.csproj", "{49EA2D7C-A2D2-42F0-A447-966AFFD19E42}"
 EndProject

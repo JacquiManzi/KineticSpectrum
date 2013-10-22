@@ -32,7 +32,7 @@ namespace KineticControl
 //                }
 //            }
 
-            network.SetInterface("Wireless Network Connection");
+            network.SetInterface("Local Area Connection 2");
 
 
            
