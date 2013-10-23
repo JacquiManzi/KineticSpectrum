@@ -29,7 +29,7 @@
                 "height:100%;");
 
             var buttonDiv = html.createDiv("float:left;" +
-                "width:10%;" +
+                "width:10%;max-width:100px;" +
                 "height:100%;");
             var tableDiv = html.createDiv();
 

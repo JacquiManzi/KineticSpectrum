@@ -32,6 +32,10 @@ define([
                 return this.scene;
             },
 
+            getNodeModel: function(){
+                return this.sceneInteraction.nodeModel;
+            },
+
             loadFile: function(file, scene){
 
                 this.modelView.loadFile(file, scene);

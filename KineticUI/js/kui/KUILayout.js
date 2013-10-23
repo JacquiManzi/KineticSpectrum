@@ -94,7 +94,7 @@ define([
                           isLayoutContainer: true,
                           region: "bottom",
                           id: "bottomContatiner",
-                          style: "height:6%;"
+                          style: "height:6%;max-height: 45px;"
                       });
 
                       this.simPane = new SimPane(

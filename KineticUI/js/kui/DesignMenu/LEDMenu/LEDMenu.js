@@ -154,7 +154,7 @@ define([
                 var thisObj = this;
                 var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
 
-                    thisObj.sceneModel.sceneInteraction.ledSet.selectAllLEDs();
+                    thisObj.sceneModel.getNodeModel().selectAllLEDs();
                 });
 
                 domConstruct.place(selectLEDButton.domNode, div);
@@ -172,7 +172,7 @@ define([
                 var thisObj = this;
                 var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
 
-                    thisObj.sceneModel.sceneInteraction.ledSet.deselectAllLEDs();
+                    thisObj.sceneModel.getNodeModel().deselectAllLEDs();
                 });
 
                 domConstruct.place(deselectLEDButton.domNode, div);
@@ -190,7 +190,7 @@ define([
                 var thisObj = this;
                 var selectVertexButton = CommonForm.createButton('Select All Vertices', function () {
 
-                  thisObj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
+                    thisObj.sceneModel.getNodeModel().selectAllVertexs();
                 });
 
                 domConstruct.place(selectVertexButton.domNode, div);
@@ -208,7 +208,7 @@ define([
                 var thisObj = this;
                 var deselectVertexButton = CommonForm.createButton('Deselect All Vertices', function () {
 
-                    thisObj.sceneModel.sceneInteraction.ledSet.selectAllVertexs();
+                    thisObj.sceneModel.getNodeModel().deselectAllVertexs();
                 });
 
                 domConstruct.place(deselectVertexButton.domNode, div);
@@ -226,7 +226,7 @@ define([
                 var thisObj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
 
-                    thisObj.sceneModel.sceneInteraction.removeLEDNodes();
+                    thisObj.sceneModel.getNodeModel().removeLEDNodes();
                 });
 
                 domConstruct.place(removeButton.domNode, div);
@@ -255,7 +255,7 @@ define([
 
                 var div = html.createDiv();
                 var groupListBox = CommonForm.createListBox("width:89%;");
-                this.sceneModel.sceneInteraction.groupModel.ledGroupListBox = groupListBox;
+                this.sceneModel.groupModel.ledGroupListBox = groupListBox;
 
                 domConstruct.place(groupListBox.domNode, div);
 
@@ -281,7 +281,7 @@ define([
 
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = thisObj.sceneModel.sceneInteraction.groupModel.createGroupFromSelected(groupNameTextBox.get('value'));
+                    var group = thisObj.sceneModel.groupModel.createGroupFromSelected(groupNameTextBox.get('value'));
                     thisObj._addGroup(group);
                 }, null);
 
@@ -324,14 +324,14 @@ define([
                     array.forEach(thisObj.groupListBox.getSelected(), function (node) {
                         selected.push(node.innerHTML);
                     });
-                    thisObj.sceneModel.sceneInteraction.groupModel.selectGroups(selected);
+                    thisObj.sceneModel.groupModel.selectGroups(selected);
                 });
             },
             
             _removeSelected: function () {
                 var thisObj = this;
                 array.forEach(this.groupListBox.getSelected(), function (node) {
-                    thisObj.sceneModel.sceneInteraction.groupModel.removeGroup(node.innerHTML);
+                    thisObj.sceneModel.groupModel.removeGroup(node.innerHTML);
                     thisObj.groupListBox.domNode.removeChild(node);
                 });
                 
