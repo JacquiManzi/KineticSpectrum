@@ -18,7 +18,7 @@
         simulation: null,
 
         buildRendering: function () {
-
+           
             this.domNode = html.createDiv("height: 90px;");
             
             if (this.simulation === null)
@@ -53,7 +53,7 @@
             domConstruct.place(div, this.domNode);
         },
 
-        resize: function(){
+        resize: function(){ 
 
         },
         
@@ -98,12 +98,13 @@
         },
         
         _setEnabled: function(isEnabled) {
-            domStyle.set(this.domNode, "display", isEnabled ? "inline" : "none");
             
             //this timeout is pretty gross, but it is required because resizing causes the accordian panes to 
             //resize in the middle of animation. So, we wait until the animation is complete to do our resize.
             setTimeout(dojo.hitch(this, function () {
-                this.getParent().getParent().resize();
+                domStyle.set(this.domNode.parentNode, 'height', isEnabled ? '6%' : '0px');
+                domStyle.set(this.domNode, "display", isEnabled ? "inline" : "none");
+                this.getParent().getParent().resize();                
             }), 300);
         },
         

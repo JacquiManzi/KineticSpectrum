@@ -10,22 +10,56 @@ define([
     "kui/DesignMenu/PatternMenu/PatternMenu",
     "kui/DesignMenu/PatternComposerMenu/PatternComposerMenu",
     "kui/DesignMenu/PatternMenu/PatternModel",
-     "kui/DesignMenu/PatternComposerMenu/PatternComposerModel"
+    "kui/DesignMenu/PatternComposerMenu/PatternComposerModel",
+    "kui/util/CommonHTML",
+    "kui/util/CommonFormItems",
+    "dojo/dom-construct",
+    "dojo/dom-style",
+     "dojo/dom-class"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
-        PatterComposerMenu, PatternModel, PatternComposerModel) {
+        PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct, domStyle, domClass) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
         constructor: function() {
 
             this.style = "background-color:#1f1f1f;" +
-                "height:90%;" +
-                "border-right: solid 3  px #cccccc;";
+                "height:100%;" +
+                "border-right: solid 2px #1f1f1f;" +
+                "width:100%;";
         },
          
         createMenu: function () {
+
+            this.containerDiv = html.createDiv("width:100%;" +
+                "height:90%;"+
+                "display:block;"+
+                "background-color:#000000;");
+
+            var arrowDiv = html.createDiv("width:100%;"+
+                "height:100%;"+
+                "border-top-right-radius: 7px;"+
+                "border-bottom-right-radius: 7px;");
+
+            var rightDiv = html.createDiv("width:5%;" +
+                "height:100%;" +
+                "float:right;" +
+                "display:block;");
+
+            var leftDiv = html.createDiv("width:95%;" +
+               "height:100%;" +
+               "float:left;" +
+               "display:block;"+
+               "background-color:#000000;");
+
+            domClass.add(arrowDiv, "arrowButton");
                
+            domConstruct.place(arrowDiv, rightDiv);
+            domConstruct.place(rightDiv, this.containerDiv);
+            domConstruct.place(this.domNode, leftDiv);
+            domConstruct.place(leftDiv, this.containerDiv);
+                           
             /*LED Menu*/
             var ledMenu = new LEDMenu({
                 sceneModel: this.sceneModel
@@ -63,7 +97,8 @@ define([
 
             fileMenu.createFileMenu(this);
 
-            this.startup();
+            
+            this.startup();           
         }
     });
 });

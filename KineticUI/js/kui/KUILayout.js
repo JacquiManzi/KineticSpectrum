@@ -65,13 +65,14 @@ define([
                           id: "leftContainer",
                           minSize: ".1",
                           style: "width:26%;" +
-                                 "height:100%;" 
+                                 "height:100%;" +
+                                 "max-width:400px;"
                       });
 
                       this.addChild(leftContainer);
                       
                       var leftDiv = html.createDiv("height:100%;" +
-                          "width:100%;" +
+                          "width:99%;" +
                           "background-color:black;" +
                           "overflow:hidden;");
 
@@ -84,17 +85,17 @@ define([
                           "background-color:black;");
 
                       domConstruct.place(innerTopDiv, leftDiv);
-                      domConstruct.place(designMenu.domNode, leftDiv);
+                      domConstruct.place(designMenu.containerDiv, leftDiv); 
                       domConstruct.place(innerBottomDiv, leftDiv);
-
-                      leftContainer.set('content', leftDiv);
-                      
+                   
+                      leftContainer.set('content', leftDiv); 
+                                          
                       /*Setup for bottom Container*/ 
                       var bottomContainer = new ContentPane({
                           isLayoutContainer: true,
                           region: "bottom",
                           id: "bottomContatiner",
-                          style: "height:6%;max-height: 45px;"
+                          style: "height:0;max-height: 45px;"
                       });
 
                       this.simPane = new SimPane(

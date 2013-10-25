@@ -9,12 +9,12 @@ define([
     "kui/ajax/Scenes",
     "kui/ModelView/Node/LightAddress",
     "kui/DesignMenu/AccordianItem",
-    "dojo/dom-class"],
+    "dojo/dom-class"
+],
     function (declare, html,  domConstruct, CommonForm,  on, array, Scenes, LightAddress, AccordianItem, domClass) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu.LEDMenu", AccordianItem, {
                    
-
             constructor: function () {
 
                 this.title = "LED Menu";
@@ -79,7 +79,7 @@ define([
 
             _createNodeAmountSection: function(){
 
-                var amountField = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var amountField = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
 
                 var thisObj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
@@ -94,6 +94,7 @@ define([
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 
                 });
+                CommonForm.setButtonStyle(checkButton, 90);
 
                 return {
                     title: "LED Amount",
@@ -105,10 +106,11 @@ define([
 
             _createLEDAddressSection: function(){
 
-                var ledAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var ledAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 });
+                CommonForm.setButtonStyle(verifyButton, 90);
 
                 return {
                     title: "Address",
@@ -119,10 +121,11 @@ define([
 
             _createFixureAddressSection: function(){
 
-                var fixtureAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var fixtureAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 });
+                CommonForm.setButtonStyle(verifyButton, 90);
 
                 return {
                     title: "Fixture",
@@ -134,10 +137,11 @@ define([
 
             _createPortAddressSection: function(){
 
-                var portAddressText = CommonForm.createTableNumberTextBox("", "0", "text-align:left;width:100%;");
+                var portAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 });
+                CommonForm.setButtonStyle(verifyButton, 90);
 
                 return {
                     title: "Port",
@@ -238,23 +242,23 @@ define([
 
             _createGroupBox: function(){
 
+                var groupListBox = CommonForm.createListBox("width:95%;");
                 var groupDivs = this.createTitlePane("Create Groups");
 
                 var groupNameTableItems = [];
                 groupNameTableItems.push(this._createGroupNameBox());
                 this.addTableItem(groupNameTableItems, groupDivs.contentDiv); 
-                this.addDivItem(this._createGroupListBoxSection(), groupDivs.contentDiv);
+                this.addDivItem(this._createGroupListBoxSection(groupListBox), groupDivs.contentDiv);
                 var addRemoveTableItems = [];
-                addRemoveTableItems.push(this._createAddRemoveGroupSection());
+                addRemoveTableItems.push(this._createAddRemoveGroupSection(groupListBox));
                 this.addTableItem(addRemoveTableItems, groupDivs.contentDiv);
 
                 domConstruct.place(groupDivs.paneDiv, this.domNode);
             },
 
-            _createGroupListBoxSection: function(){
+            _createGroupListBoxSection: function(groupListBox){
 
-                var div = html.createDiv();
-                var groupListBox = CommonForm.createListBox("width:89%;");
+                var div = html.createDiv();               
                 this.sceneModel.groupModel.ledGroupListBox = groupListBox;
 
                 domConstruct.place(groupListBox.domNode, div);
@@ -276,12 +280,12 @@ define([
 
             },
 
-            _createAddRemoveGroupSection: function(){
+            _createAddRemoveGroupSection: function (groupListBox) {
 
 
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = thisObj.sceneModel.groupModel.createGroupFromSelected(groupNameTextBox.get('value'));
+                    var group = thisObj.sceneModel.groupModel.createGroupFromSelected(groupListBox.get('value'));
                     thisObj._addGroup(group);
                 }, null);
 

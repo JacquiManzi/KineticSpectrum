@@ -108,9 +108,11 @@ define([
 
             _createPatternSelection: function(){
 
-                var patternSelectionButtons = [];
-                patternSelectionButtons.push(this._createSelectPatternSection());
                 var patternSelectionDivs = this.createTitlePane("Pattern Selection");
+
+                this.addDivItem(this._createSelectPatternDropDown(), patternSelectionDivs.contentDiv); 
+                var patternSelectionButtons = [];
+                patternSelectionButtons.push(this._createApplyPatternSection());               
                 this.addTableItem(patternSelectionButtons, patternSelectionDivs.contentDiv);
 
                 domConstruct.place(patternSelectionDivs.paneDiv, this.domNode);
@@ -196,7 +198,7 @@ define([
             _createGroupListBox: function(){
 
                 var div = html.createDiv();
-                var groupListBox = CommonForm.createListBox("width:90%;");               
+                var groupListBox = CommonForm.createListBox("width:95%;");
                 domConstruct.place(groupListBox.domNode, div);
 
                 this.patternModel.setGroupListBox(groupListBox);
@@ -240,28 +242,34 @@ define([
                     removeButton: removeGroupButton.domNode,
                     removeAllButton:removeAllGroupButton.domNode
                 }
-            }, 
+            },
 
-            _createSelectPatternSection: function () {
+            _createSelectPatternDropDown: function(){
 
                 var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
-                CommonForm.setButtonStyle(patternDropDown, 80);
-                this.patternModel.setPatternDropDown(patternDropDown);                 
-              
+                CommonForm.setButtonStyle(patternDropDown, 90);
+                this.patternModel.setPatternDropDown(patternDropDown);
+
+                return {
+                    valueContent: patternDropDown.domNode
+                }
+            },
+
+            _createApplyPatternSection: function () {
+
                 var thisObj = this;
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
                     thisObj.patternModel.applyPattern();
                 });
 
-                CommonForm.setButtonStyle(applyButton, 80);
+                CommonForm.setButtonStyle(applyButton, 90);
 
                 var testButton = CommonForm.createButton('Test Pattern', function () {
-                   // thisObj.patternModel.applyPattern();
+                   thisObj.patternModel.applyPattern();
                 });
-                CommonForm.setButtonStyle(testButton, 80);
+                CommonForm.setButtonStyle(testButton, 90);
 
-                return {
-                    patternDropDown: patternDropDown.domNode,
+                return {                 
                     applyButton: applyButton.domNode,
                     testButton: testButton.domNode
                 };
