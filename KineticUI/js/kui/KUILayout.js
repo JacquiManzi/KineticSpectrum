@@ -49,7 +49,12 @@ define([
                       this.addChild(modelView);
 
                       /*setup for the left container*/
-                      var designMenu = new DesignMenu({simulation: simulation, sceneModel: modelView.sceneModel, id: "designMenu" });
+                      var designMenu = new DesignMenu(
+                          {
+                              simulation: simulation,
+                              sceneModel: modelView.sceneModel,
+                              id: "designMenu"
+                          });
                       
                       /*Create the left design menu*/ 
                       designMenu.createMenu();             
@@ -60,6 +65,7 @@ define([
                         
                       /*Left container*/
                       var leftContainer = new ContentPane({
+                          isHidden: false,
                           isLayoutContainer: true,
                           region: "left",
                           id: "leftContainer",

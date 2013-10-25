@@ -15,10 +15,13 @@ define([
     "kui/util/CommonFormItems",
     "dojo/dom-construct",
     "dojo/dom-style",
-     "dojo/dom-class"
+     "dojo/dom-class",
+     "dijit/registry",
+     "dojo/dom-geometry"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
-        PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct, domStyle, domClass) {
+        PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
+        domStyle, domClass, registry, domGeom) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -28,6 +31,7 @@ define([
                 "height:100%;" +
                 "border-right: solid 2px #1f1f1f;" +
                 "width:100%;";
+
         },
          
         createMenu: function () {
@@ -59,7 +63,9 @@ define([
             domConstruct.place(rightDiv, this.containerDiv);
             domConstruct.place(this.domNode, leftDiv);
             domConstruct.place(leftDiv, this.containerDiv);
-                           
+         
+            this.arrowBarClickEvent(rightDiv, leftDiv);
+                                     
             /*LED Menu*/
             var ledMenu = new LEDMenu({
                 sceneModel: this.sceneModel
@@ -96,10 +102,72 @@ define([
             });
 
             fileMenu.createFileMenu(this);
-
             
             this.startup();           
+        },
+
+        arrowBarClickEvent: function (rightDiv, leftDiv) {
+
+            var thisObj = this;
+            dojo.connect(rightDiv, "onclick", function (evt) {
+
+                var leftContainer = registry.byId("leftContainer");
+                var kuiLayout = registry.byId("kuiLayout");
+
+                var leftWidth = 0;
+                var rightWidth = 0;
+
+                if (!leftContainer.isHidden) {
+                   
+                    leftWidth = thisObj.findPaneWidth(kuiLayout, 2);
+
+                    if(leftWidth < 30){
+                        leftWidth = 30;
+                    }
+                    else if (leftWidth > 40) {
+                        leftWidth = 40;
+                    }
+
+                    leftContainer.resize({ w: leftWidth});
+                    domStyle.set(leftDiv, 'width', '0px');
+                    rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
+
+                    /*Subtract 2 pixels for the border on design menu accordian container*/
+                    domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');
+
+                    kuiLayout.resize();
+
+                    leftContainer.isHidden = true;
+                }
+                else {
+
+                    leftWidth = thisObj.findPaneWidth(kuiLayout, 26);
+                    leftContainer.resize({ w: leftWidth });
+                    
+                    leftContainer.isHidden = false;
+                    kuiLayout.resize();
+
+                    leftDivWidth = thisObj.findPaneWidth(leftContainer, 95);
+                    rightDivWidth = thisObj.findPaneWidth(leftContainer, 5);
+
+                    domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
+                    domStyle.set(rightDiv, 'width', rightDivWidth + 'px');
+
+                    kuiLayout.resize();
+                }
+            });
+
+        },
+
+        findPaneWidth: function (pane, percentage) {
+
+            var width = domGeom.getContentBox(pane.domNode).w - domGeom.getContentBox(pane.domNode).l;
+            var calculatedWidth = (percentage / 100) * width;
+
+            return calculatedWidth;
+
         }
+
     });
 });
 
