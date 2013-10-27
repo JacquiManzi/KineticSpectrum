@@ -210,7 +210,7 @@ define([
             leftDivWidth = this._findPaneWidth(leftContainer, 95);
             rightDivWidth = this._findPaneWidth(leftContainer, 5);
 
-            domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
+            domStyle.set(leftDiv, 'width', leftDivWidth + 2 + 'px');
             domStyle.set(rightDiv, 'width', rightDivWidth + 'px');
 
             kuiLayout.resize();
