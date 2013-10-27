@@ -17,11 +17,13 @@ define([
     "dojo/dom-style",
      "dojo/dom-class",
      "dijit/registry",
-     "dojo/dom-geometry"
+     "dojo/dom-geometry",
+     "dojox/gfx",
+     "dojo/aspect"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
         PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
-        domStyle, domClass, registry, domGeom) {
+        domStyle, domClass, registry, domGeom, gfx, aspect) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -63,9 +65,16 @@ define([
             domConstruct.place(rightDiv, this.containerDiv);
             domConstruct.place(this.domNode, leftDiv);
             domConstruct.place(leftDiv, this.containerDiv);
+
+            var arrowMap = this.drawArrowCanvas(arrowDiv);
          
-            this.arrowBarClickEvent(rightDiv, leftDiv);
-                                     
+            this.arrowBarClickEvent(rightDiv, leftDiv, arrowMap);
+
+            var thisObj = this;
+            aspect.after(this , "resize", function () {
+                thisObj.setArrowSize(arrowMap, arrowDiv);
+            });
+                                      
             /*LED Menu*/
             var ledMenu = new LEDMenu({
                 sceneModel: this.sceneModel
@@ -106,7 +115,40 @@ define([
             this.startup();           
         },
 
-        arrowBarClickEvent: function (rightDiv, leftDiv) {
+        drawArrowCanvas: function(div){
+
+            var size =  10;
+            var canvas = gfx.createSurface(div, size, size);
+
+            var leftArrow = canvas.createImage({
+                x: 0, y: 0, width: 0, height: 0, src: "../js/kui/images/leftArrow.svg"
+            });
+
+            var rightArrow = canvas.createImage({
+                x: 0, y: 0, width: 0, height: 0, src: "../js/kui/images/rightArrow.svg"
+            });
+
+            return {
+                canvas: canvas,
+                leftArrow: leftArrow,
+                rightArrow: rightArrow,
+                currentArrow: leftArrow
+            }
+        },
+
+        setArrowSize: function(arrowMap, div){
+
+            var x = 0;
+            var y = (domGeom.getContentBox(div).h) / 2;
+
+            arrowMap.leftArrow.setShape({ x: 0, y: 0, width: 0, height: 0 });
+            arrowMap.rightArrow.setShape({ x: 0, y: 0, width: 0, height: 0 });
+            arrowMap.currentArrow.setShape({x: x, y: y, width: 13, height: 20});           
+            arrowMap.canvas.setDimensions((domGeom.getContentBox(div).w),(domGeom.getContentBox(div).h));
+            
+        },
+
+        arrowBarClickEvent: function (rightDiv, leftDiv, arrowMap) {
 
             var thisObj = this;
             dojo.connect(rightDiv, "onclick", function (evt) {
@@ -119,47 +161,62 @@ define([
 
                 if (!leftContainer.isHidden) {
                    
-                    leftWidth = thisObj.findPaneWidth(kuiLayout, 2);
-
-                    if(leftWidth < 30){
-                        leftWidth = 30;
-                    }
-                    else if (leftWidth > 40) {
-                        leftWidth = 40;
-                    }
-
-                    leftContainer.resize({ w: leftWidth});
-                    domStyle.set(leftDiv, 'width', '0px');
-                    rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
-
-                    /*Subtract 2 pixels for the border on design menu accordian container*/
-                    domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');
-
-                    kuiLayout.resize();
-
+                    thisObj._hideMenu(leftDiv, rightDiv, kuiLayout, leftContainer);
                     leftContainer.isHidden = true;
+
+                    arrowMap.currentArrow = arrowMap.rightArrow;
+                    thisObj.setArrowSize(arrowMap, rightDiv);
                 }
                 else {
 
-                    leftWidth = thisObj.findPaneWidth(kuiLayout, 26);
-                    leftContainer.resize({ w: leftWidth });
-                    
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer);
                     leftContainer.isHidden = false;
-                    kuiLayout.resize();
 
-                    leftDivWidth = thisObj.findPaneWidth(leftContainer, 95);
-                    rightDivWidth = thisObj.findPaneWidth(leftContainer, 5);
-
-                    domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
-                    domStyle.set(rightDiv, 'width', rightDivWidth + 'px');
-
-                    kuiLayout.resize();
+                    arrowMap.currentArrow = arrowMap.leftArrow;
+                    thisObj.setArrowSize(arrowMap, rightDiv);
                 }
             });
 
         },
 
-        findPaneWidth: function (pane, percentage) {
+        _hideMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
+
+            leftWidth = this._findPaneWidth(kuiLayout, 2);
+
+            if (leftWidth < 30) {
+                leftWidth = 30;
+            }
+            else if (leftWidth > 40) {
+                leftWidth = 40;
+            }
+
+            leftContainer.resize({ w: leftWidth });
+            domStyle.set(leftDiv, 'width', '0px');
+            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
+
+            /*Subtract 2 pixels for the border on design menu accordian container*/
+            domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');
+
+            kuiLayout.resize();
+        },
+
+        _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
+
+            leftWidth = this._findPaneWidth(kuiLayout, 26);
+            leftContainer.resize({ w: leftWidth });
+         
+            kuiLayout.resize();
+
+            leftDivWidth = this._findPaneWidth(leftContainer, 95);
+            rightDivWidth = this._findPaneWidth(leftContainer, 5);
+
+            domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
+            domStyle.set(rightDiv, 'width', rightDivWidth + 'px');
+
+            kuiLayout.resize();
+        },
+
+        _findPaneWidth: function (pane, percentage) {
 
             var width = domGeom.getContentBox(pane.domNode).w - domGeom.getContentBox(pane.domNode).l;
             var calculatedWidth = (percentage / 100) * width;
@@ -167,7 +224,6 @@ define([
             return calculatedWidth;
 
         }
-
     });
 });
 

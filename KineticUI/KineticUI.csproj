@@ -139,6 +139,8 @@
     <Content Include="js\kui\DesignMenu\LEDMenu\LEDMenu.js" />
     <Content Include="js\kui\DesignMenu\PatternComposerMenu\PatternComposerMenu.js" />
     <Content Include="js\kui\DesignMenu\PatternComposerMenu\Timeline.js" />
+    <Content Include="js\kui\images\leftArrow.svg" />
+    <Content Include="js\kui\images\rightArrow.svg" />
     <Content Include="js\kui\ModelView\ModelEnvironment\Color.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\DragControls.js" />
     <Content Include="js\kui\ModelView\ModelEnvironment\Projector.js" />
