@@ -44,7 +44,7 @@
 .claro .dijitTextBox .dijitButtonNode {
   /* color for (outer) border on *TextBox widgets, and border between input and buttons on ComboBox and Spinner */
 
-  border-color: #000000;
+  border-color: #474747;
   -webkit-transition-property: background-color, border;
   -moz-transition-property: background-color, border;
   transition-property: background-color, border;
@@ -54,7 +54,7 @@
 }
 .claro .dijitSelect,
 .claro .dijitTextBox {
-  background-color: #dbdbdb;
+  background-color: #000000;
 }
 /* hover */
 .claro .dijitSelectHover,

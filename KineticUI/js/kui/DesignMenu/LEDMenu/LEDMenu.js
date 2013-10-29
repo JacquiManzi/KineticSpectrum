@@ -93,8 +93,7 @@ define([
 
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 
-                });
-                CommonForm.setButtonStyle(checkButton, 90);
+                }, null, "width:90%;");
 
                 return {
                     title: "LED Amount",
@@ -109,9 +108,8 @@ define([
                 var ledAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
-                });
-                CommonForm.setButtonStyle(verifyButton, 90);
-
+                }, null, "width:90%;");
+               
                 return {
                     title: "Address",
                     valueContent: ledAddressText.domNode,
@@ -124,8 +122,7 @@ define([
                 var fixtureAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
-                });
-                CommonForm.setButtonStyle(verifyButton, 90);
+                }, null, "width:90%;");
 
                 return {
                     title: "Fixture",
@@ -140,8 +137,7 @@ define([
                 var portAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
-                });
-                CommonForm.setButtonStyle(verifyButton, 90);
+                }, null, "width:90%;");
 
                 return {
                     title: "Port",
@@ -242,7 +238,8 @@ define([
 
             _createGroupBox: function(){
 
-                var groupListBox = CommonForm.createListBox("width:95%;");
+                var groupListBox = CommonForm.createListBox("width:95%;background-color:black;");
+                domClass.add(groupListBox, "designMenu");
                 var groupDivs = this.createTitlePane("Create Groups");
 
                 var groupNameTableItems = [];
