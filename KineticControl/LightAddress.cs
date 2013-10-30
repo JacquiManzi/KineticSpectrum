@@ -37,10 +37,10 @@ namespace KineticControl
 
         public bool IsUnknown
         {
-            get { return Equals(Unknown); }
+            get { return FixtureNo==-1 && PortNo==-1; }
         }
 
-        private const string splitChar = "-";
+        private const string SplitChar = "/";
         private const string UnknownString = "?";
 
         public static bool TryParse(string addressString, out LightAddress lightAddress)
@@ -51,7 +51,7 @@ namespace KineticControl
                 lightAddress = Unknown;
                 return true;
             }
-            string[] split = addressString.Split(splitChar.ToCharArray());
+            string[] split = addressString.Split(SplitChar.ToCharArray());
             if(split.Count() != 3) return false;
             int fixtureNo, portNo, lightNo;
             bool success = int.TryParse(split[0], out fixtureNo);

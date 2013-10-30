@@ -10,14 +10,16 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         private readonly LightAddress _address;
         private          Color        _color;
         private          Vector3D     _position;
+        private          bool         _active;
 
-        private static LightSystem _lightSystem = LightSystemProvider.LightSystem;
+        private static readonly LightSystem _lightSystem = LightSystemProvider.LightSystem;
 
         public LEDNode(LightAddress address, Vector3D position)
         {
             if(address == null)
                 throw new ArgumentException("LightAddres cannot be null on LEDNode");
             _address = address;
+            _active = false;
             Position = position;
         }
 
@@ -43,10 +45,23 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             {
                 if(value == null)
                     throw new ArgumentException("Cannot set Color to null on LEDNode");
+                if (!_address.IsUnknown && _active)
+                    _lightSystem[_address] = value;
                 _color = value;
-                _lightSystem[_address] = value;
             }
         }
 
+        public bool IsActive
+        {
+            get { return _active; }
+            set
+            {
+                _active = value;
+                if (value)
+                {
+                    Color = _color;
+                }
+            }
+        }
     }
 }

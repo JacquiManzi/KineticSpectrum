@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment.Scenes;
@@ -35,8 +34,14 @@ namespace RevKitt.KS.KineticEnvironment
         }
 
         private static readonly Dictionary<LightAddress, LEDNode> _nodes = new Dictionary<LightAddress, LEDNode>();
+        private static int _unaddressed = 0;
 
-        public static IList<LEDNode> Lights { get { return new List<LEDNode>(_nodes.Values); } } 
+        public static IList<LEDNode> Lights { get { return new List<LEDNode>(_nodes.Values.Select(node=>new LEDNode(node.Address, node.Position))); } } 
+
+        public static void UpdateLights()
+        {
+            LightSystem.UpdateLights();
+        }
 
         public static IDictionary<LightAddress, LEDNode> GetNodeMapping(IEnumerable<LightAddress> addresses )
         {
@@ -57,14 +62,17 @@ namespace RevKitt.KS.KineticEnvironment
             }
         }
 
-        public static void AddLED(LEDNode node)
+        public static LightAddress AddLED(LEDNode node)
         {
             if (_nodes.ContainsKey(node.Address))
                 throw new ArgumentException("Node with address '" + node.Address + "' already exists.");
             if (node.Address.IsUnknown)
-                throw new ArgumentException("Cannot add a node with an unknown address");
+            {
+                node = new LEDNode(new LightAddress(-1,-1, _unaddressed++), node.Position );
+            }
 
             _nodes.Add(node.Address, node);
+            return node.Address;
         }
 
         private const string LineMarker = "###";

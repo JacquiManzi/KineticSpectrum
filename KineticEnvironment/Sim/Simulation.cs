@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment.Scenes;
@@ -14,30 +10,39 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 {
     public class Simulation : IStateProvider
     {
+        private const String TEMP_NAME = "___TEMP__SIMULATION";
         private readonly Scene _scene;
         private readonly List<PatternStart> _patternStarts = new List<PatternStart>();
         private readonly IDictionary<LightAddress, LightState> _stateMap = new Dictionary<LightAddress, LightState>();
         private readonly List<LightState> _lightState = new List<LightState>();
+        private readonly IList<LEDNode> _lights = LightSystemProvider.Lights; 
 
         private readonly Timer _updateTimer;
         private int _currentTime;
         private int _endTime;
 
-        public Simulation(Scene scene)
+        public readonly String Name;
+
+        public Simulation(Scene scene) : this(TEMP_NAME, scene){ }
+
+        public Simulation(String name, Scene scene)
         {
+            Name = name;
             _scene = scene;
             _updateTimer = new Timer();
             _updateTimer.Elapsed += (o, args) => AdvanceTime();
             _updateTimer.Interval = 1000/60;
             GC.KeepAlive(_updateTimer);
 
-            foreach (var light in LightSystemProvider.Lights)
+            foreach (var light in _lights)
             {
-                var lState = new LightState() {Address = light.Address, Color = light.Color};
+                var lState = new LightState {Address = light.Address, Color = light.Color};
                 _stateMap[light.Address] = lState;
                 _lightState.Add(lState);
             }
         }
+
+        public IEnumerable<LEDNode> Nodes { get { return _lights; } }
 
         public void Clear()
         {
@@ -153,32 +158,36 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             Time = newTime;
         }
 
-        private volatile bool inProcessing = false;
+        private volatile bool _inProcessing = default(bool);
 
-        private bool enterProcessing()
+        /// <summary>
+        /// Guard method to determine if processing should begin. This will prevent more than
+        /// one thread from entering a block that is tested via this. Note _inProcessing should
+        /// be set to false when done.
+        /// </summary>
+        /// <returns>true if it's safe to enter processing block, false otherwise</returns>
+        private bool EnterProcessing()
         {
             lock (this)
             {
-                if (inProcessing)
-                {
-                    return false;
-                }
-                else
-                {
-                    inProcessing = true;
-                    return true;
-                }
+                bool wasProcessing = _inProcessing;
+                if (!wasProcessing)
+                    _inProcessing = true;
+                return !wasProcessing;
             }
         }
+        
         private void UpdateState(int time)
         {
-            if (enterProcessing())
+            if (!EnterProcessing()) return;
+
+            try
             {
                 List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
                 starts.Sort(PatternStart.PriorityComparer);
                 ActivePatterns = starts;
 
-                foreach (var light in LightSystemProvider.Lights)
+                foreach (var light in _lights)
                 {
                     light.Color = ColorUtil.Empty;
                 }
@@ -188,12 +197,15 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                     patternStart.Apply(time);
                 }
 
-                foreach (var light in LightSystemProvider.Lights)
+                foreach (var light in _lights)
                 {
                     _stateMap[light.Address].Color = light.Color;
                 }
-                LightSystemProvider.LightSystem.UpdateLights();
-                inProcessing = false;
+                LightSystemProvider.UpdateLights();
+            }
+            finally
+            {
+                _inProcessing = false;
             }
         }
 
