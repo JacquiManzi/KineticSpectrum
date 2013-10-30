@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using KineticControl;
 
@@ -14,14 +12,21 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
     { 
         private const String TEMP_GROUP = "____TEMP____GROUP";
 
-        private Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
-        private Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
-        private List<Group> _selectedGroups = new List<Group>();
+        private readonly Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
+        private readonly Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
+        private volatile List<Group> _selectedGroups = new List<Group>();
+        private readonly Dictionary<LightAddress, LEDNode> _addressToNode;
+
+        public Scene()
+        {
+            _addressToNode = new Dictionary<LightAddress, LEDNode>(
+                    LightSystemProvider.Lights.ToDictionary(node=>node.Address)
+                );
+        }
       
         public Group SetGroup(String name, List<LightAddress> addresses)
         {
-            var addressToNode = LightSystemProvider.GetNodeMapping(addresses);
-            return SetGroup(new Group(name, addressToNode.Values));
+            return SetGroup(new Group(name, addresses.Select(a => _addressToNode[a])));
         }
 
         public Group SetGroup(Group group)
@@ -190,5 +195,9 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         }
 
         public int EndTime { get; private set; }
+
+        public IEnumerable<LEDNode> Nodes {
+            get { return _addressToNode.Values; }
+        }
     }
 }

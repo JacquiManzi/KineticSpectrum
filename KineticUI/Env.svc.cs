@@ -30,10 +30,10 @@ namespace KineticUI
         }
 
         [OperationContract]
-        public void AddLED(Stream ledStream)
+        public Stream AddLED(Stream ledStream)
         {
             LEDNode node = Serializer.FromPost<LEDNode>(ledStream);
-            LightSystemProvider.AddLED(node);
+            return Serializer.ToStream(LightSystemProvider.AddLED(node));
         }
 
         [OperationContract]

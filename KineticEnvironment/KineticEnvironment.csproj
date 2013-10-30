@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activatable.cs" />
+    <Compile Include="ActivityController.cs" />
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ColorUtilTest.cs" />
     <Compile Include="D3\D3Util.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Sim\PatternStart.cs" />
     <Compile Include="Sim\Simulation.cs" />
+    <Compile Include="State.cs" />
     <Compile Include="TimeRange.cs" />
     <Compile Include="Tweening\Easing.cs" />
     <Compile Include="Tweening\Easings.cs" />

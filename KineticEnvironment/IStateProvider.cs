@@ -8,7 +8,7 @@ using KineticControl;
 
 namespace RevKitt.KS.KineticEnvironment
 {
-    public interface IStateProvider
+    public interface IStateProvider : IActivatable
     {
         int Time { get; set; }
         bool IsPlaying { get; set; }

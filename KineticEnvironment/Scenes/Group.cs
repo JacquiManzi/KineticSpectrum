@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using KineticControl;
 using Newtonsoft.Json;
 
@@ -12,8 +10,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
     public class Group
     {
         private readonly string _name;
-        private readonly IList<LEDNode> _ledNodes; 
-
+        private readonly IList<LEDNode> _ledNodes;
 
         public Group(string name, IEnumerable<LEDNode> ledNodes )
         {

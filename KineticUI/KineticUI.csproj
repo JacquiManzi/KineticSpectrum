@@ -7878,7 +7878,6 @@
     <Compile Include="SimState.svc.cs">
       <DependentUpon>SimState.svc</DependentUpon>
     </Compile>
-    <Compile Include="State.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="js\libraries\dojo\dijit\LICENSE" />
