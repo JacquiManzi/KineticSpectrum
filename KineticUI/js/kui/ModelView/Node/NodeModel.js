@@ -158,7 +158,7 @@ define([
 
                 this.addressToLED[address] = led;
 
-                Scenes.addLED({ address: address, position: led.position, color:0 });
+                Scenes.addLED(led);
 
                 this.nodes.add(led);
                 this.scene.add(led);

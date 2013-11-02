@@ -38,11 +38,12 @@ define([
                               simulation: simulation,
                               region: "center",
                               id: "centerContainer",
-                              style: "width:74%;" +
-                                     "height:95%;" +
+                              style: "width:100%;" +
+                                     "height:100%;" +
                                      "background-color:black;" +
                                      "overflow: hidden;" +
-                                     "border:none;"
+                                     "border:none;" +
+                                     "padding: 0px;"
                           });
 
                       /*The center content pane to the bottom content pane*/
@@ -72,7 +73,8 @@ define([
                           minSize: ".1",
                           style: "width:26%;" +
                                  "height:100%;" +
-                                 "max-width:400px;"
+                                 "max-width:400px;" +
+                                 "padding: 0px"
                       });
 
                       this.addChild(leftContainer);

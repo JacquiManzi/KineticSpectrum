@@ -91,14 +91,14 @@
   transition-duration: 0.1s;
 }
 .claro .dijitTextBoxFocused {
-  background-color: #dbdbdb;
+  background-color: #191919;
   background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
-  background: #dbdbdb;
+  background: #000000;
 }
 .claro .dijitSelectErrorFocused,
 .claro .dijitSelectErrorFocused .dijitButtonContents,

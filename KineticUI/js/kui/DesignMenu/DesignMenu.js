@@ -181,10 +181,10 @@ define([
 
         _hideMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
 
-            leftWidth = this._findPaneWidth(kuiLayout, 2);
+            leftWidth = this._findPaneWidth(kuiLayout, 1);
 
-            if (leftWidth < 30) {
-                leftWidth = 30;
+            if (leftWidth < 25) {
+                leftWidth = 25;
             }
             else if (leftWidth > 40) {
                 leftWidth = 40;
@@ -210,8 +210,8 @@ define([
             leftDivWidth = this._findPaneWidth(leftContainer, 95);
             rightDivWidth = this._findPaneWidth(leftContainer, 5);
 
-            domStyle.set(leftDiv, 'width', leftDivWidth + 2 + 'px');
-            domStyle.set(rightDiv, 'width', rightDivWidth + 'px');
+            domStyle.set(leftDiv, 'width', leftDivWidth - 10 + 'px');
+            domStyle.set(rightDiv, 'width', rightDivWidth + 6 +'px');
 
             kuiLayout.resize();
         },

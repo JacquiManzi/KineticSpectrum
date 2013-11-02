@@ -84,7 +84,7 @@ define([
                 var thisObj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
 
-                    var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(nodeNumberTextBox.get('value'));
+                    var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(amountField.get('value'));
 
                     var lightAddress = new LightAddress();
                     lightAddress.lightNo = ledAddressText.get('value');
