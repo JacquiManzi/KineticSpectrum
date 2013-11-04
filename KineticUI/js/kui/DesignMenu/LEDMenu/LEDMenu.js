@@ -87,16 +87,16 @@ define([
                     var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(amountField.get('value'));
 
                     var lightAddress = new LightAddress();
-                    lightAddress.lightNo = ledAddressText.get('value');
-                    lightAddress.fixtureNo = fixtureText.get('value');
-                    lightAddress.portNo = portText.get('value');
+                    //lightAddress.lightNo = ledAddressText.get('value');
+                    //lightAddress.fixtureNo = fixtureText.get('value');
+                    //lightAddress.portNo = portText.get('value');
 
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 
                 }, null, "width:90%;");
 
                 return {
-                    title: "LED Amount",
+                    title: "Amount",
                     valueContent: amountField.domNode,
                     checkButton: checkButton.domNode
                 }

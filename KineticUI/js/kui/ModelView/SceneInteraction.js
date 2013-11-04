@@ -45,6 +45,11 @@ define([
 
                 this._initiateMouseEvents();
                 
+                this.lightNo = 0;
+                this.portNO = 0;
+                this.fixtureNo = 0;
+
+                
             },
 
             updateMeshes: function(meshList){
@@ -112,6 +117,12 @@ define([
 
                 var thisObj = this;
                 lineSegments.forEach(function (segment) {
+
+                    //var lightAddress = new LightAddress();
+                    startAddress.lightNo = thisObj.lightNo;
+                    startAddress.fixtureNo = thisObj.fixtureNo;
+                    startAddress.portNo = thisObj.portNo;
+
                     thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(startAddress));
                     startAddress.inc();
                 });
@@ -206,9 +217,10 @@ define([
 
             findIntersects: function (objects, event) {
 
-                //TODO: JMM, why are you doing this? you know it's going to screw you later
-                //GET rid of the -8, to compensate for padding and get the correct geometry
-                var mouse = { x: ((event.layerX-8) / domGeom.getMarginSize(this.domNode).w) * 2 - 1, y: -((event.layerY-8) / domGeom.getMarginSize(this.domNode).h) * 2 + 1 };
+                var mouse = {
+                    x: ((event.layerX - domGeom.getContentBox(this.domNode).l) / domGeom.getContentBox(this.domNode).w) * 2 - 1,
+                    y: -((event.layerY - domGeom.getContentBox(this.domNode).l) / domGeom.getContentBox(this.domNode).h) * 2 + 1
+                };
 
                 var vector = new Vector3();
                 vector.setCoords(mouse.x, mouse.y, 1);
