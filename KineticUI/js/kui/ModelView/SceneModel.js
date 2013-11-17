@@ -78,29 +78,52 @@ define([
 
             getGroupFromName: function(groupName){
 
-               var group = this.groupModel.nameToGroup[groupName];
+               var group = this.groupModel.nameToGroup[groupNamde];
                 
                return group;
             },
 
-            deselectGroup: function(groupName){
+            createGroupFromSelected: function(groupName) {
+                this.groupModel.createGroupFromSelected(groupName);
+            },
+
+            deleteSelectedGroups: function() {
+                this.groupModel.deleteSelectedGroups();
+            },
+
+            deselectGroup: function(/*String*/groupName){
                 this.groupModel.deselectGroup(groupName);
             },
 
-            selectGroup: function(groupName){
-                this.groupModel.selectGroup(groupName)
+            selectGroup: function(/*String*/groupName) {
+                this.groupModel.selectGroup(groupName);
             },
 
-            getGroups: function(){
+            selectGroups: function(/*Array<String>*/ groupNames) {
+                this.groupModel.selectGroups(groupNames);
+            },
 
+            /**
+             * Retrieves an array of the group names in the scene
+             * Array<String>
+             */
+            getGroups: function(){
                 return this.groupModel.getGroups();
+            },
+
+            /**
+              * Retrieves an array of the names of the selected groups in the scene
+              * Array<String>
+              */
+            getSelectedGroupNames: function() {
+                return this.groupModel.getSelectedGroupNames();
             },
 
             /**
              * Registers a function to be called whenever the group membership changes. The provided function will be called
              * whenever a group is added or removed with the full list of group names
              */
-            addGroupsUpdatedListener: function (groupsUpdated /*void groupChanged(Array<String> groupNames)*/) {
+            addGroupsUpdatedListener: function (groupsUpdated /*void groupChanged(Array<String> groupNames, Array<String> selectedGroupNames)*/) {
                 this.groupModel.addGroupsUpdatedListener(groupsUpdated);
             },
         });

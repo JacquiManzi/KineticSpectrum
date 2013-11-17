@@ -9,9 +9,10 @@ define([
     "kui/ajax/Scenes",
     "kui/ModelView/Node/LightAddress",
     "kui/DesignMenu/AccordianItem",
+    "kui/DesignMenu/GroupBox",
     "dojo/dom-class"
 ],
-    function (declare, html,  domConstruct, CommonForm,  on, array, Scenes, LightAddress, AccordianItem, domClass) {
+    function (declare, html,  domConstruct, CommonForm,  on, array, Scenes, LightAddress, AccordianItem, GroupBox, domClass) {
         "use strict";
         return declare("kui.DesignMenu.LEDMenu.LEDMenu", AccordianItem, {
                    
@@ -74,7 +75,7 @@ define([
 
                 return {
                     valueContent: nodeDiv
-                }
+                };
             },
 
             _createNodeAmountSection: function(){
@@ -87,9 +88,9 @@ define([
                     var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(amountField.get('value'));
 
                     var lightAddress = new LightAddress();
-                    //lightAddress.lightNo = ledAddressText.get('value');
-                    //lightAddress.fixtureNo = fixtureText.get('value');
-                    //lightAddress.portNo = portText.get('value');
+                    lightAddress.lightNo = this.ledAddressText.get('value') || -1;
+                    lightAddress.fixtureNo = this.fixtureText.get('value') || -1;
+                    lightAddress.portNo = this.portText.get('value') || -1;
 
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 
@@ -99,51 +100,49 @@ define([
                     title: "Amount",
                     valueContent: amountField.domNode,
                     checkButton: checkButton.domNode
-                }
-                 
+                };
+
             },
 
             _createLEDAddressSection: function(){
 
-                var ledAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
+                this.ledAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 }, null, "width:90%;");
-               
+
                 return {
                     title: "Address",
-                    valueContent: ledAddressText.domNode,
+                    valueContent: this.ledAddressText.domNode,
                     verifyButton: verifyButton.domNode
-                }
+                };
             },
 
             _createFixureAddressSection: function(){
-
-                var fixtureAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
+                this.fixtureAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 }, null, "width:90%;");
 
                 return {
                     title: "Fixture",
-                    valueContent: fixtureAddressText.domNode,
+                    valueContent: this.fixtureAddressText.domNode,
                     verifyButton: verifyButton.domNode
-                }
-
+                };
             },
 
             _createPortAddressSection: function(){
 
-                var portAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
+                this.portAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 }, null, "width:90%;");
 
                 return {
                     title: "Port",
-                    valueContent: portAddressText.domNode,
+                    valueContent: this.portAddressText.domNode,
                     verifyButton: verifyButton.domNode
-                }
+                };
 
             },
 
@@ -162,7 +161,7 @@ define([
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createDeselectLEDsSection: function(){
@@ -180,7 +179,7 @@ define([
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createtSelectVertexSection: function(){
@@ -198,7 +197,7 @@ define([
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createDeselectVertexSection: function(){
@@ -216,7 +215,7 @@ define([
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createRemoveSection: function(){
@@ -233,65 +232,55 @@ define([
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createGroupBox: function(){
-
-                var groupListBox = CommonForm.createListBox("width:95%;background-color:black;");
-                domClass.add(groupListBox, "designMenu");
                 var groupDivs = this.createTitlePane("Create Groups");
 
                 var groupNameTableItems = [];
                 groupNameTableItems.push(this._createGroupNameBox());
                 this.addTableItem(groupNameTableItems, groupDivs.contentDiv); 
-                this.addDivItem(this._createGroupListBoxSection(groupListBox), groupDivs.contentDiv);
+                this.addDivItem(this._createGroupListBoxSection(), groupDivs.contentDiv);
                 var addRemoveTableItems = [];
-                addRemoveTableItems.push(this._createAddRemoveGroupSection(groupListBox));
+                addRemoveTableItems.push(this._createAddRemoveGroupSection());
                 this.addTableItem(addRemoveTableItems, groupDivs.contentDiv);
 
                 domConstruct.place(groupDivs.paneDiv, this.domNode);
             },
 
-            _createGroupListBoxSection: function(groupListBox){
+            _createGroupListBoxSection: function(){
 
-                var div = html.createDiv();               
-                this.sceneModel.groupModel.ledGroupListBox = groupListBox;
-
-                domConstruct.place(groupListBox.domNode, div);
+                var div = html.createDiv();
+                //var groupListBox = new GroupBox({ sceneModel: this.sceneModel });
+                //groupListBox.placeAt(div);
 
                 return {
                     valueContent: div
-                }
+                };
             },
 
             _createGroupNameBox: function () {
 
-                var groupNametextBox = CommonForm.createTextBox("", "Group Name", "text-align:left;width:100%;");
-                //this.patternModel.setNameField(nameField); //refactor this out and use update handlers instea
-
+                var groupNameTextBox = CommonForm.createTextBox("", "Group Name", "text-align:left;width:100%;");
                 return {
                     title: "Group Name",
-                    valueContent: groupNametextBox.domNode
+                    valueContent: groupNameTextBox.domNode
                 };
 
             },
 
-            _createAddRemoveGroupSection: function (groupListBox) {
-
-
+            _createAddRemoveGroupSection: function () {
                 var thisObj = this;
                 var addButton = CommonForm.createButton('Add Group', function () {
-                    var group = thisObj.sceneModel.groupModel.createGroupFromSelected(groupListBox.get('value'));
-                    thisObj._addGroup(group);
+                    var groupName = thisObj.groupNameTextBox.get('value');
+                    thisObj.sceneModel.createGroupFromSelected(groupName);
                 }, null);
 
                 CommonForm.setButtonStyle(addButton, 90);
 
                 var removeButton = CommonForm.createButton('Remove Group', function () {
-
-                    thisObj._removeSelected();
-
+                    thisObj.sceneModel.deleteSelectedGroups();
                 }, null);
 
                 CommonForm.setButtonStyle(removeButton, 90);
@@ -299,44 +288,8 @@ define([
                 return {
                     addButton: addButton.domNode,
                     removeButton: removeButton.domNode
-                }
+                };
             },
-            
-            _setGroupNames: function () {
-
-                var thisObj = this;
-
-                dojo.empty(this.groupListBox.domNode.children);
-                
-                Scenes.getGroupNames(function (groupNames) {
-                    array.forEach(groupNames, function (groupName) {
-                        thisObj._addGroup(groupName);                       
-                    });
-                });
-            },
-
-            _addGroup: function(groupName) {
-                var option = html.createOption(groupName);
-                var thisObj = this;
-                this.groupListBox.domNode.appendChild(option);
-
-                on(option, "click", function () {
-                    var selected = [];
-                    array.forEach(thisObj.groupListBox.getSelected(), function (node) {
-                        selected.push(node.innerHTML);
-                    });
-                    thisObj.sceneModel.groupModel.selectGroups(selected);
-                });
-            },
-            
-            _removeSelected: function () {
-                var thisObj = this;
-                array.forEach(this.groupListBox.getSelected(), function (node) {
-                    thisObj.sceneModel.groupModel.removeGroup(node.innerHTML);
-                    thisObj.groupListBox.domNode.removeChild(node);
-                });
-                
-            }
         });
 
     });

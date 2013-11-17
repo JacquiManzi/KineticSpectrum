@@ -25,7 +25,6 @@ define([
                 this.selectedGroupNames = new ArrayList();
                 this.nameToGroup = [];
                 this.ledSet = ledSet;
-                this.ledGroupListBox = null;
             },
 
             /**
@@ -59,15 +58,22 @@ define([
             },
 
             getGroups: function () {
-                return Object.keys(this.nameToGroup);
+                return Object.keys(this.nameToGroup).slice(0);
             },
 
             getSelectedGroupNames: function() {
-                return this.getSelectedGroupNames.toArray();
+                return this.selectedGroupNames.toArray();
+            },
+
+            deleteSelectedGroups: function() {
+                selectedGroupNames.forEach(function(groupName) {
+                    delete this.nameToGroup[groupName];
+                } );
+                selectedGroupNames.clear();
             },
 
             createGroupFromSelected: function (groupName) {
-                groupName = groupName ? groupName : this.generateGroupName();
+                groupName = groupName || this.generateGroupName();
                 var selectedNodes = this.ledSet.getSelectedNodes();
 
                 var group = new Group(groupName, selectedNodes);
@@ -156,10 +162,6 @@ define([
                         group.selectAll();                    
                     });             
             },
-           
-            getSelectedGroupOptions: function () {
-                return this.ledGroupListBox.getSelected();
-            }
 
         });
 
