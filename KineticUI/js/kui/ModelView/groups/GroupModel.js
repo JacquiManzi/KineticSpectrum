@@ -32,7 +32,7 @@ define([
              */
             _dispatchGroups: function() {
                 var thisObj = this;
-                this.groupsChangedLsiteners.forEach(function (changeListener) {
+                this.groupsChangedListeners.forEach(function (changeListener) {
                     changeListener(thisObj.getGroups(), thisObj.getSelectedGroupNames());
                 });
             },

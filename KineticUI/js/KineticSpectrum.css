@@ -35,9 +35,9 @@ body {
     background-color: rgba(57, 57, 57, 0.9);
 }
 
-.designMenu::-webkit-scrollbar-track:hover {
+/*.designMenu::-webkit-scrollbar-track:hover {
   background-color: rgba(57, 57, 57, 0.9);
-}
+}*/
 
 /* Handle */
 .designMenu::-webkit-scrollbar-thumb {
@@ -47,9 +47,9 @@ body {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
-.designMenu::-webkit-scrollbar-thumb:hover {    
+/*.designMenu::-webkit-scrollbar-thumb:hover {    
  background: rgba(151, 151, 151, 0.9); 
-}
+}*/
 
 #mainContainer {   
     height: 100%;  

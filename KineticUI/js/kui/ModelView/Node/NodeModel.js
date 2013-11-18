@@ -45,10 +45,9 @@ define([
                     ledNode.address = item.address;
                     ledNode.radius = 0.005;   
 
-                    var ledSphere = ledNode.createSphere();
-                    this.scene.add(ledSphere);
-                    this.nodes.add(ledSphere);
-                    this.addressToLED[item.address.toString()] = ledSphere;
+                    this.scene.add(ledNode);
+                    this.nodes.add(ledNode);
+                    this.addressToLED[item.address.toString()] = ledNode;
                 }));
             },
             

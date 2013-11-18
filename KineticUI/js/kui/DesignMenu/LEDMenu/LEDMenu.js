@@ -251,21 +251,19 @@ define([
 
             _createGroupListBoxSection: function(){
 
-                var div = html.createDiv();
-                //var groupListBox = new GroupBox({ sceneModel: this.sceneModel });
-                //groupListBox.placeAt(div);
+                var groupListBox = new GroupBox({ sceneModel: this.sceneModel });
 
                 return {
-                    valueContent: div
+                    valueContent: groupListBox.domNode
                 };
             },
 
             _createGroupNameBox: function () {
 
-                var groupNameTextBox = CommonForm.createTextBox("", "Group Name", "text-align:left;width:100%;");
+                this.groupNameTextBox = CommonForm.createTextBox("", "Group Name", "text-align:left;width:100%;");
                 return {
                     title: "Group Name",
-                    valueContent: groupNameTextBox.domNode
+                    valueContent: this.groupNameTextBox.domNode
                 };
 
             },

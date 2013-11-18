@@ -46,13 +46,6 @@ define([
                 this.modelView.loadServerLEDs();
             },
 
-            getSelectedgroups: function(){
-
-            },
-
-            setSelectedGroups: function () {
-
-            },
 
             addLeds: function(){
 
@@ -74,6 +67,10 @@ define([
 
             createVertices: function (vertexList) {
 
+            },
+
+            setSelectedGroups: function (/*Array<String>*/groupNames) {
+                this.groupModel.selectGroups(groupNames);
             },
 
             getGroupFromName: function(groupName){

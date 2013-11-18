@@ -135,7 +135,8 @@ define([
             
             loadServerGroups: function() {
                 var fileInterface = new FileInterface();
-                fileInterface.getGroups(dojo.hitch(this.sceneInteraction.groupSet, this.sceneInteraction.groupSet.addGroups));
+                var groupModel = this.sceneInteraction.groupModel;
+                fileInterface.getGroups(dojo.hitch(groupModel, groupModel.addGroups));
             },
 
             load: function(fileLocation, scene)

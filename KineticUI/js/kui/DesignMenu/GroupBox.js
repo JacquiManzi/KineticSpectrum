@@ -11,9 +11,10 @@ define([
     "dojo/dom-construct",
     "dojo/dom-class",
     "dojo/dom-style",
+    "kui/util/CommonHTML",
     "dijit/_WidgetBase",
     "kui/Widgets/MultiSelect"
-], function (declare, domConstruct, domClass, domStyle, _WidgetBase, MultiSelect) {
+], function (declare, domConstruct, domClass, domStyle, html, _WidgetBase, MultiSelect) {
     return declare("kui.DesignMenu.GroupBox", [_WidgetBase], {
 
         _sceneModel: null,
@@ -34,7 +35,7 @@ define([
             domStyle.set(this.domNode, "width", "95%");
             domStyle.set(this.domNode, "background-color", "black");
 
-            //domClass.add(this.domNode, "designMenu");
+            domClass.add(this.domNode, "designMenu");
         },
 
         _updateGroups: function(groups, selectedGroups) {
@@ -43,9 +44,9 @@ define([
         },
 
         postCreate: function() {
-            dojo.connect(this._multiSelect, "onSelectionChanged", function(selection) {
+            dojo.connect(this._multiSelect, "onSelectionChanged", dojo.hitch(this, function(selection) {
                 this._sceneModel.setSelectedGroups(selection);
-            });
+            }));
         },
 
         setup: function() {

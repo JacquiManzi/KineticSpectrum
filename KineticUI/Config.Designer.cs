@@ -61,7 +61,7 @@ namespace KineticUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local Area Connection 2.
+        ///   Looks up a localized string similar to Wireless Network Connection.
         /// </summary>
         internal static string HostInterface {
             get {
@@ -70,7 +70,7 @@ namespace KineticUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\KineticSpectrum\KineticUI\Images.
+        ///   Looks up a localized string similar to C:\Users\jcu\personal\ks\KineticSpectrum\KineticUI\Images.
         /// </summary>
         internal static string ImageDirectory {
             get {

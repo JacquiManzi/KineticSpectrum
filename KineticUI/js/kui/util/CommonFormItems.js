@@ -130,8 +130,9 @@
          },
 
          createTextBox = function (value, placeHolder, style, inputFunc) {
-             
-            var textBox = new TextBox({
+             inputFunc = inputFunc || function() {};
+
+             var textBox = new TextBox({
                  value: value /* no or empty value! */,
                  placeHolder: placeHolder,
                  style: style,
