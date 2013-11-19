@@ -42,10 +42,10 @@
         _doSetSelectedItems: function(selectedItems) {
             array.forEach(this.domNode.children, function(option) {
                 var item = option.innerHTML;
-                if (array.indexOf(selectedItems, item) > 0) {
-                    domAttr.set(option, "selected", "selected");
+                if (array.indexOf(selectedItems, item) >= 0) {
+                    domAttr.set(option, "selected", true);
                 } else {
-                    domAttr.remove(option, "selected");
+                    domAttr.set(option, "selected", false);
                 }
             });
         },
@@ -71,11 +71,9 @@
         },
 
         _onSelectionChanged: function(selectedItems) {
-            if (!this._arraysEqual(selectedItems, this.selectedItems)) {
-                selectedItems = selectedItems.splice(0);
-                this._set('selectedItems', selectedItems);
-                this.onSelectionChanged(selectedItems);
-            }
+            selectedItems = selectedItems.splice(0);
+            this._set('selectedItems', selectedItems);
+            this.onSelectionChanged(selectedItems);
         },
 
         onSelectionChanged: function() {

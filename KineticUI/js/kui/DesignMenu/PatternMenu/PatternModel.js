@@ -24,7 +24,6 @@ define([
 
             constructor: function (sceneModel) {
 
-                this.groupList = new ArrayList();
                 this.patternList = new ArrayList();
                 this.patternsUpdatedListeners = new ArrayList();
                 this.patternMenuElementListeners = new ArrayList();
@@ -49,7 +48,6 @@ define([
 
                 /*Add pattern menu element listeners*/
                 this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
-                this.addPatternMenuElementListener(dojo.hitch(this,this._updateGroupDropDown));
 
                 this.updatePatternList();
             },
@@ -107,10 +105,6 @@ define([
                 return selected;
             },
 
-            getGroupsFromSceneModel: function(){
-                return this.sceneModel.getGroups();
-            },
-
             getSelectedPattern: function () {
 
                 this.updatePatternList();
@@ -124,21 +118,6 @@ define([
                 });
 
                 return pattern;
-            },
-
-            getGroups: function () {
-                return this.groupList;
-            },
-
-            getGroupNames: function () {
-
-                var nameArray = [];
-                this.groupList.forEach(function (group) {
-
-                    nameArray.push(group.name);
-                });
-
-                return nameArray;
             },
 
             createPattern: function(){
@@ -190,7 +169,7 @@ define([
                 var patternDef = {};
 
                 patternDef.name = this.getPatternName();
-                patternDef.groups = this.getGroupNames();
+                patternDef.groups = this.sceneModel.getSelectedGroupNames();
                 patternDef.priority = this.getPatternPriority() * 1.0;
 
                 dojo.mixin(this.patternDef, this.effectsDef);
@@ -203,8 +182,6 @@ define([
                 dojo.mixin(this.patternDef, effectsDef);
             },
 
-            
-
             addGroup: function(groupName){
     
                 var group = this.sceneModel.getGroupFromName(groupName);
@@ -216,50 +193,6 @@ define([
                 }
             },
 
-            removeGroups: function (groups) {
-
-                var thisObj = this;
-                groups.forEach(function (group) {
-                    thisObj.sceneModel.deselectGroup(group.name); 
-                    thisObj.groupList.remove(group);                       
-                });   
-
-                this._updateGroupListBox(this.getGroups());
-            },
-
-            _updateGroupListBox: function(groupList)
-            {
-                html.removeDomChildren(this.groupListBox);
-
-                var thisObj = this;
-                this.groupList.forEach(function (group) {
-                    var option = html.createOption(group.name);
-                    dojo.connect(option, "onclick", thisObj.sceneModel.selectGroup(group.name)); 
-                    thisObj._patternMenuElements.groupListBox.domNode.appendChild(option);
-                });
-            },
-
-            _updateGroupDropDown: function()
-            {
-                this._patternMenuElements.groupDropDown.dropDown.destroyDescendants();
-                this._patternMenuElements.groupDropDown.set('label', "Select Group");
-                
-                var ledGroupList = this.getGroupsFromSceneModel();
-                var thisObj = this;
-
-                array.forEach(ledGroupList, function (groupName) {
-                    var label = groupName;
-
-                    var menuItem = new MenuItem({
-                        label: label,
-                        onClick: dojo.hitch(thisObj, function (label) {
-
-                            thisObj._patternMenuElements.groupDropDown.set('label', label);
-                        }, label)
-                    }); 
-                    thisObj._patternMenuElements.groupDropDown.dropDown.addChild(menuItem);
-                }); 
-            },
 
             _updatePatternDropDown: function(){ 
 

@@ -16,10 +16,11 @@ define([
     "dojox/collections/ArrayList",
     "dojo/on",
     "kui/DesignMenu/AccordianItem",
-    "dojo/dom-class"
+    "dojo/dom-class",
+    "kui/DesignMenu/GroupBox"
 ],
     function (declare, html, domStyle, domConstruct, CommonForm, DropDownMenu, Effects, array,
-        EffectMenu, ArrayList, on, AccordianItem, domClass) {
+        EffectMenu, ArrayList, on, AccordianItem, domClass, GroupBox) {
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternMenu", AccordianItem, {
 
@@ -83,16 +84,9 @@ define([
 
             _createPatternGroups: function(){
 
-                var groupButtons = [];
-                groupButtons.push(this._createGroupButtons());
-
-                var removeButton = [];
-                removeButton.push(this._createRemoveGroupButton());
-
                 var groupDivs = this.createTitlePane("Pattern Groups");
-                this.addTableItem(groupButtons, groupDivs.contentDiv);
-                this.addDivItem(this._createGroupListBox(), groupDivs.contentDiv);
-                this.addTableItem(removeButton, groupDivs.contentDiv);
+                this.groupBox = new GroupBox({ sceneModel: this.sceneModel });
+                this.groupBox.placeAt(groupDivs.paneDiv);
 
                 domConstruct.place(groupDivs.paneDiv, this.domNode);
             },
@@ -162,7 +156,7 @@ define([
 
                 return {
                     valueContent: div
-                } 
+                };
             },
 
             _createGroupButtons: function(){
@@ -186,62 +180,13 @@ define([
                     this.patternModel.addGroup(this.patternModel.getGroupDropDownLabel());
                 }));
 
-                CommonForm.setButtonStyle(addButton, 90); 
+                CommonForm.setButtonStyle(addButton, 90);
 
                 return {
                     groupDropDown: groupDropDown.domNode,
                     addButton: addButton.domNode,
                     addAllButton: addAllGroupButton.domNode
-                }
-            },
-
-            _createGroupListBox: function(){
-
-                var div = html.createDiv();
-                var groupListBox = CommonForm.createListBox("width:95%;");
-                domConstruct.place(groupListBox.domNode, div);
-
-                this.patternModel.setGroupListBox(groupListBox);
-
-                return {
-                    valueContent: div
-                }
-            },
-
-            _createRemoveGroupButton: function(){
-
-                var removeGroupButton = CommonForm.createButton("Remove", dojo.hitch(this, function () {
-
-                    var optionList = this.patternModel.getGroupListBoxSelection();
-                    var groupList = new ArrayList();
-                    var thisObj = this;
-                     array.forEach(optionList, function (option) {
- 
-                         var group = thisObj.patternModel.sceneInteraction.groupSet.nameToGroup[option.innerHTML];
-                         groupList.add(group);
-                     });        
- 
-                     this.patternModel.removeGroups(groupList);
-                }));
-
-                CommonForm.setButtonStyle(removeGroupButton, 90);
-
-                var removeAllGroupButton = CommonForm.createButton("Remove All", dojo.hitch(this, function () {
-
-                    var groupList = this.patternModel.getGroups();
-                    var newGroupList = new ArrayList();
-                    groupList.forEach(function (group) {
-                        newGroupList.add(group);
-                    });
-                    this.patternModel.removeGroups(newGroupList);
-                }));
-
-                CommonForm.setButtonStyle(removeAllGroupButton, 90);
-                
-                return {                  
-                    removeButton: removeGroupButton.domNode,
-                    removeAllButton:removeAllGroupButton.domNode
-                }
+                };
             },
 
             _createSelectPatternDropDown: function(){
@@ -252,14 +197,14 @@ define([
 
                 return {
                     valueContent: patternDropDown.domNode
-                }
+                };
             },
 
             _createApplyPatternSection: function () {
 
                 var thisObj = this;
                 var applyButton = CommonForm.createButton('Apply Pattern', function () {
-                    thisObj.patternModel.applyPattern();
+                    thisObj.patternModel.applyPattern(thisObj.groupBox.getS);
                 });
 
                 CommonForm.setButtonStyle(applyButton, 90);

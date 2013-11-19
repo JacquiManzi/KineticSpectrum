@@ -102,11 +102,22 @@ define([
           
             /*Select all associated nodes with the groups selected in the group list box*/
             selectGroups: function (groupNames) {
-                this.ledSet.deselectAllVertexs();
-                this.ledSet.deselectAllLEDs();
-                this.selectedGroupNames.clear();
-                array.forEach(groupNames, dojo.hitch(this, this._selectGroup));
-                this._dispatchGroups();
+                if (!this._arraysEqual(groupNames, this.selectedGroupNames.toArray())) {
+                    this.ledSet.deselectAllVertexs();
+                    this.ledSet.deselectAllLEDs();
+                    this.selectedGroupNames.clear();
+                    array.forEach(groupNames, dojo.hitch(this, this._selectGroup));
+                    this._dispatchGroups();
+                }
+            },
+
+            _arraysEqual: function (array1, array2) {
+                if (array1.length === array2.length) {
+                    return array.every(array1, function (item) {
+                        return array.indexOf(array2, item) >= 0;
+                    });
+                }
+                return false;
             },
 
             /*Select all associated nodes with the group selected in the group list box*/
