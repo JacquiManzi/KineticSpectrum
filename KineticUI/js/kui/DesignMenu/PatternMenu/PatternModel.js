@@ -22,7 +22,7 @@ define([
         "use strict";
         return declare("kui.DesignMenu.PatternMenu.PatternModel", null, {
 
-            constructor: function (sceneModel) {
+            constructor: function (sceneModel, simulation) {
 
                 this.patternList = new ArrayList();
                 this.patternsUpdatedListeners = new ArrayList();
@@ -44,7 +44,7 @@ define([
 
 
                 this.sceneModel = sceneModel;
-                this.simulation = null;
+                this.simulation = simulation;
 
                 /*Add pattern menu element listeners*/
                 this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
@@ -168,9 +168,10 @@ define([
 
                 var patternDef = {};
 
-                patternDef.name = this.getPatternName();
+                patternDef.name = this.patternName;
                 patternDef.groups = this.sceneModel.getSelectedGroupNames();
-                patternDef.priority = this.getPatternPriority() * 1.0;
+//                patternDef.priority = this.getPatternPriority() * 1.0;
+                patternDef.priority = 1.0;
 
                 dojo.mixin(this.patternDef, this.effectsDef);
                 dojo.mixin(this.patternDef, patternDef);
@@ -196,8 +197,9 @@ define([
 
             _updatePatternDropDown: function(){ 
 
-                this._patternMenuElements.patternDropDown.dropDown.destroyDescendants();
-                this._patternMenuElements.patternDropDown.set('label', "Select Pattern");
+                var patternDropDown = this._patternMenuElements.patternDropDown;
+                patternDropDown.dropDown.destroyDescendants();
+                patternDropDown.set('label', "Select Pattern");
                                   
                 var thisObj = this;
                 SimState.getPatternNames(function (patterns) {
@@ -205,14 +207,14 @@ define([
 
                         var menuItem = new MenuItem({
                             label: patternName,
-                            onClick: dojo.hitch(thisObj, function (patternName) {
+                            onClick: function () {
 
-                                thisObj.patternDropDown.set('label', patternName);
-                                thisObj.patternDropDown.set('value', patternName); 
-                            }, patternName)
+                                patternDropDown.set('label', patternName);
+                                patternDropDown.set('value', patternName); 
+                            }
                         });
-                        thisObj.patternDropDown.dropDown.addChild(menuItem);
-                    }); 
+                        patternDropDown.dropDown.addChild(menuItem);
+                    });
                       
                 });
 

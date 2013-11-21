@@ -122,11 +122,14 @@ define([
                 var div = html.createDiv();
 
                 var effectMenu = new EffectMenu();
-                effectMenu.placeAt(div); 
+                effectMenu.placeAt(div);
+                on(effectMenu, "update", dojo.partial(function(model, value) {
+                    model.patternDef = value;
+                }, this.patternModel));
 
                 return {
                     valueContent: div
-                }
+                };
             },
             
             _createPrioritySection: function()
@@ -134,6 +137,9 @@ define([
 
                 var priorityDropDown = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 priorityDropDown.set('value', "0");
+                on(priorityDropDown, "change", dojo.partial(function(model, value) {
+                    model.patternPriority = value;
+                }, this.patternModel));
                  
                 this.patternModel.setPriorityDropDown(priorityDropDown);
 
@@ -221,10 +227,14 @@ define([
 
             },
 
-            _createPatternNameSection: function()
-            {
-                var nameField = CommonForm.createTextBox("", "Pattern Name", "text-align:left;width:100%;");
-                this.patternModel.setNameField(nameField); //refactor this out and use update handlers instead
+            _createPatternNameSection: function() {
+                var onChange = function(patternModel, value) {
+                    patternModel.patternName = value;
+                };
+                var nameField = CommonForm.createTextBox("", "Pattern Name",
+                    "text-align:left;width:100%;");
+//                this.patternModel.setNameField(nameField); //refactor this out and use update handlers instead
+                on(nameField, "change", dojo.partial(onChange, this.patternModel));
 
                 return {
                     title: "Name",
