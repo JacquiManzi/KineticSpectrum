@@ -1,5 +1,11 @@
-﻿
-
+﻿/*
+*@Author: Jacqui Manzi
+*Novemeber 22nd, 2013
+*jacqui@revkitt.com
+*
+* DesignMenu.js - This is the main AccordionContainer layout menu for Kinetic Spectrum UI (kui). 
+*                 All subset Accordian Iten menus are placed here.
+*/
 
 define([   
     "dojo/_base/declare",
@@ -18,7 +24,7 @@ define([
      "dojo/dom-class",
      "dijit/registry",
      "dojo/dom-geometry",
-     "dojox/gfx",
+     "dojox/gfx", 
      "dojo/aspect"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
@@ -28,14 +34,15 @@ define([
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
         constructor: function() {
-
+            
+            /*Default main css styling*/
             this.style = "background-color:#1f1f1f;" +
                 "height:100%;" +
                 "border-right: solid 2px #1f1f1f;" +
                 "width:100%;";
-
         },
-         
+        
+        /*Constructs the subset AccordianItem menus and creates the hide/show arrow bar for hiding the Design Menu*/
         createMenu: function () {
 
             this.containerDiv = html.createDiv("width:100%;" +
@@ -66,13 +73,13 @@ define([
             domConstruct.place(this.domNode, leftDiv);
             domConstruct.place(leftDiv, this.containerDiv);
 
-            var arrowMap = this.drawArrowCanvas(arrowDiv);
+            var arrowMap = this._drawArrowCanvas(arrowDiv);
          
             this.arrowBarClickEvent(rightDiv, leftDiv, arrowMap);
 
             var thisObj = this;
             aspect.after(this , "resize", function () {
-                thisObj.setArrowSize(arrowMap, arrowDiv);
+                thisObj._setArrowSize(arrowMap, arrowDiv);
             });
                                       
             /*LED Menu*/
@@ -115,7 +122,8 @@ define([
             this.startup();           
         },
 
-        drawArrowCanvas: function(div){
+        /*Draws the arrow image - orientation depends on hide/show state*/
+        _drawArrowCanvas: function(div){
 
             var size =  10;
             var canvas = gfx.createSurface(div, size, size);
@@ -136,7 +144,7 @@ define([
             }
         },
 
-        setArrowSize: function(arrowMap, div){
+        _setArrowSize: function(arrowMap, div){
 
             var x = 0;
             var y = (domGeom.getContentBox(div).h) / 2;
@@ -165,7 +173,7 @@ define([
                     leftContainer.isHidden = true;
 
                     arrowMap.currentArrow = arrowMap.rightArrow;
-                    thisObj.setArrowSize(arrowMap, rightDiv);
+                    thisObj._setArrowSize(arrowMap, rightDiv);
                 }
                 else {
 
@@ -173,7 +181,7 @@ define([
                     leftContainer.isHidden = false;
 
                     arrowMap.currentArrow = arrowMap.leftArrow;
-                    thisObj.setArrowSize(arrowMap, rightDiv);
+                    thisObj._setArrowSize(arrowMap, rightDiv);
                 }
             });
 
