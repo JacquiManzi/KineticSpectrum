@@ -1,7 +1,9 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    October 8th, 2013
-*    jacquimanzi@gmail.com
+*    jacqui@revkitt.com
+*
+*   AccordianItem.js - Class for constructing an accordian layout item in the DesignMenu
 */
 
 define([
@@ -11,7 +13,7 @@ define([
     "kui/util/CommonHTML",
     "dojo/dom-construct",
     "dojo/_base/array",
-     "dojo/dom-style"
+    "dojo/dom-style"
 ],
     function (declare, ContentPane, TitlePane, html, domConstruct, array, domStyle) {
 
@@ -19,10 +21,13 @@ define([
 
             constructor: function (title) {
 
+                /*Title for the Accordian Item top bar*/
                 this.title = title;
 
+                /*Container to be placed in the DesignMenu Accordian layout*/
                 this.domNode = html.createDiv("background-color:transparent;");
 
+                /*Default css styling for Accordian items*/
                 this.backgroundColor = "#141414";
                 this.textColor = "#3d8dd5";
                 this.tableStyle = "margin-left:auto;" +
