@@ -94,12 +94,12 @@
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitTabActive {
   border-color: #000000;
   background-color: #000000;
-  color: #3d8dd5;
+  color: #41baff;
   -webkit-transition-duration: 0.1s;
   -moz-transition-duration: 0.1s;
   transition-duration: 0.1s;
@@ -107,7 +107,7 @@
 .claro .dijitTabChecked {
   border-color: #000000;
   background-color: #141414;
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitTabDisabled {
   background-color: #d3d3d3;

@@ -3,7 +3,7 @@
 /* 'dijitTextBox' refers to 'dijit(TextBox|DateTextBox|CurrencyTextBox|...)' */
 .claro .dijitTextBox,
 .claro .dijitInputInner {
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitValidationTextBoxError .dijitValidationContainer {
   background-color: #d46464;

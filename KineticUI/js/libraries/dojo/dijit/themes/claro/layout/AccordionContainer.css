@@ -84,7 +84,7 @@
   transition-duration: 0.2s;
 }
 .claro .dijitAccordionInnerContainerHover .dijitAccordionTitle {
-  color: #3d8dd5;
+  color: #41baff;
 }
 /* Active state for closed pane */
 .claro .dijitAccordionInnerContainerActive {

@@ -46,7 +46,7 @@
   background-position: 0 0;
   background-repeat: repeat-x;
   border: solid 0 transparent;
-  color: #3d8dd5;
+  color: #41baff;
   -webkit-transition-property: background-color, border-color;
   -moz-transition-property: background-color, border-color;
   transition-property: background-color, border-color;
@@ -69,7 +69,7 @@
   padding: 3px 0 1px;
   border-color: #000000;
   border-width: 1px 0;
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitTreeRowHover {
   background-color: #060404;
@@ -83,7 +83,7 @@
   padding: 3px 0 1px;
   border-color: #000000;
   border-width: 1px 0;
-  color: #3d8dd5;
+  color: #41baff;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
   transition-duration: 0.25s;
@@ -100,7 +100,7 @@
   padding: 3px 0 1px;
   border-color: #000000;
   border-width: 1px 0;
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitTreeRowFocused {
   background-repeat: repeat;

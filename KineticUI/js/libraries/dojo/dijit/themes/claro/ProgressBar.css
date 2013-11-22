@@ -61,7 +61,7 @@
 .claro .dijitProgressBarLabel {
   /* Set to a color that contrasts with both the "Empty" and "Full" parts. */
 
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitProgressBarIndeterminate .dijitProgressBarTile {
   /* use an animated gif for the progress bar in 'indeterminate' mode;

@@ -23,10 +23,12 @@ define([
 
         removeFromScene: function (obj){
 
+            this.remove(obj);
         },
 
         addToScene: function (obj) {
 
+            this.add(obj);
         }
 
 

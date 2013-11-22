@@ -113,18 +113,14 @@ define([
             },
 
          /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
-            drawNodes: function (lineSegments, startAddress) {
+            drawNodes: function (lineSegments) {
 
                 var thisObj = this;
                 lineSegments.forEach(function (segment) {
 
-                    //var lightAddress = new LightAddress();
-                    startAddress.lightNo = thisObj.lightNo;
-                    startAddress.fixtureNo = thisObj.fixtureNo;
-                    startAddress.portNo = thisObj.portNo;
+                    var lightAddress = new LightAddress();
 
-                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(startAddress));
-                    startAddress.inc();
+                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(lightAddress));                   
                 });
             },
 

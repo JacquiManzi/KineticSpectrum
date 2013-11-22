@@ -14,15 +14,10 @@
         "use strict";
         return declare("kui.ModelMenu.ModelSkeleton", null, {
 
-            /*
-             *   
-             *
-             */
-
-            constructor: function (scene, nodeModel) {
+            constructor: function (sceneModel, nodeModel) {
               
                 this.geometryList = new ArrayList();
-                this.scene = scene;
+                this.sceneModel = sceneModel;
                 this.nodeModel = nodeModel;
             },
 
@@ -41,7 +36,7 @@
                         /*Adjust the sphere radius according to model scale*/
                         vertex.setRadius(distance * 0.007);
 
-                        this.scene.add(vertex);
+                        this.sceneModel.addSingleNode(vertex);
                         this.nodeModel.nodes.add(vertex);
                     }
                 }

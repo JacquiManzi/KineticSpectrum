@@ -47,7 +47,7 @@ There are three areas of styling for the Menu:
   border: 1px solid #1e1e1e;
 }
 .claro .dijitMenuItem {
-  color: #3d8dd5;
+  color: #41baff;
 }
 .claro .dijitMenuBar .dijitMenuItem {
   padding: 6px 10px 7px;
@@ -171,7 +171,7 @@ There are three areas of styling for the Menu:
 }
 .claro .dijitMenu .dijitMenuItemSelected td,
 .claro .dijitComboBoxMenu .dijitMenuItemSelected {
-  color: #3d8dd5;
+  color: #41baff;
   border-color: #000000;
   background-color: #060404;
 }
