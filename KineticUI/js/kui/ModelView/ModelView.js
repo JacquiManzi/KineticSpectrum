@@ -36,8 +36,7 @@ define([
 
                 this.camera = new Camera();
                 this.directionalLight = new DirectionalLight();
-                this.ambientLight = new AmbientLight();
-                this.scene = new Scene();
+                this.ambientLight = new AmbientLight();               
                 this.renderer = new Renderer();
                    
                 /*Lighting Properties*/
@@ -49,11 +48,12 @@ define([
 
             buildRendering: function(){
 
+                var scene = new Scene();
                 var domNode = this.inherited(arguments);
                 this.set('content', this.renderer.domElement);
 
-                this.sceneInteraction = new SceneInteraction(this.renderer.domElement, this.camera, this.scene);
-                this.sceneModel = new SceneModel(this.scene, this.sceneInteraction, this);
+                this.sceneInteraction = new SceneInteraction(this.renderer.domElement, this.camera, scene);
+                this.sceneModel = new SceneModel(scene, this.sceneInteraction, this);
 
                 dojo.connect(this.simulation, "onStateChange", dojo.hitch(this.sceneInteraction.nodeModel,
                 this.sceneInteraction.nodeModel.applyColorState));
@@ -90,13 +90,13 @@ define([
                             'z':  this.directionalLight.position.z
                         };
 
-                    this.shineDirectionalLight(this.scene, this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance, 
+                    this.shineDirectionalLight(this.sceneModel.getScene(), this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance,
                         positions);
                 }
 
                 if (this.hasAmbientLight)
                 {
-                    this.shineAmbientLight(this.scene);
+                    this.shineAmbientLight(this.sceneModel.getScene());
                 }
 
 
@@ -104,12 +104,12 @@ define([
 
                     requestAnimationFrame(this.render);
 
-                    this.camera.lookAt(this.scene.position);
-                    this.renderer.render(this.scene, this.camera);
+                    this.camera.lookAt(this.sceneModel.getScene().position);
+                    this.renderer.render(this.sceneModel.getScene(), this.camera);
                 });
 
-                this.axis = new Axis(this.scene);
-                this.load(fileLocation, this.scene);
+                this.axis = new Axis(this.sceneModel.getScene());
+                this.load(fileLocation, this.sceneModel.getScene());
 
                 var animate = dojo.hitch(this, function () {
 
@@ -135,8 +135,7 @@ define([
             
             loadServerGroups: function() {
                 var fileInterface = new FileInterface();
-                var groupModel = this.sceneInteraction.groupModel;
-                fileInterface.getGroups(dojo.hitch(groupModel, groupModel.addGroups));
+                fileInterface.getGroups(dojo.hitch(this.sceneInteraction.groupSet, this.sceneInteraction.groupSet.addGroups));
             },
 
             load: function(fileLocation, scene)
@@ -165,7 +164,7 @@ define([
                     this.removeAllMeshes();
                 } 
                        
-                var modelSkeleton = new ModelSkeleton(this.scene, this.sceneInteraction.nodeModel);
+                var modelSkeleton = new ModelSkeleton(this.sceneModel, this.sceneInteraction.nodeModel);
                 for (var i = 0; i < object.children.length; i++) { 
 
                     three.GeometryUtils.center(object.children[i].geometry);
@@ -187,7 +186,7 @@ define([
 
                 this.sceneInteraction.updateDragControl();
                 this.sceneInteraction.updateMeshes(this.meshes);
-                modelSkeleton.createVertexSpheres(this.scene); 
+                modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
 
                 this.loadServerLEDs();
 
@@ -197,11 +196,11 @@ define([
             removeAllMeshes: function()
             {
                 for (var i = 0; i < this.meshes.count; i++) {
-                    this.scene.remove(this.meshes.item(i));
+                    this.sceneModel.getScene().removeFromScene(this.meshes.item(i));
                 }
 
                 for (var i = 0; i <this.sceneInteraction.nodeModel.nodes.count; i++) {
-                    this.scene.remove(this.sceneInteraction.nodeModel.nodes.item(i));
+                    this.sceneModel.getScene().removeFromScene(this.sceneInteraction.nodeModel.nodes.item(i));
                 }
 
                this.meshes.clear();

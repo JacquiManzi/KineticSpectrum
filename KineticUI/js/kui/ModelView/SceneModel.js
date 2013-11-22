@@ -47,8 +47,30 @@ define([
             },
 
 
-            addLeds: function(){
+            addNodes: function (nodes) {
 
+                var thisObj = this;
+                nodes.forEach(function (node) {
+                    thisObj.scene.addToScene(node);
+                });
+            },
+
+            addSingleNode: function(node){
+
+                this.scene.addToScene(node);
+            },
+
+            removeNodes: function (nodes) {
+
+                var thisObj = this;
+                nodes.forEach(function (node) {
+                    thisObj.scene.removeFromScene(node);
+                }); 
+            },
+
+            removeNode: function(node){
+
+                this.scene.removeFromScene(node);
             },
 
             tryPattern: function () {
@@ -114,6 +136,13 @@ define([
               */
             getSelectedGroupNames: function() {
                 return this.groupModel.getSelectedGroupNames();
+            },
+
+            getSelectedNodes: function(){
+
+                var selectedNodes = this.getNodeModel().getSelectedNodes();
+
+                return selectedNodes;
             },
 
             /**
