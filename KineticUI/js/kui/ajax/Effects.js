@@ -1,4 +1,12 @@
-﻿define([
+﻿/*
+*@Author: Jacqui Manzi
+*Novemeber 22nd, 2013
+*jacqui@revkitt.com
+*
+* Effects.j - Ajax class for retrieving pattern effects from the server.
+*/
+
+define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
     "dojo/dom",
@@ -8,7 +16,6 @@
     "dojo/_base/xhr"
 ],
     function (declare, html, dom, domStyle, domConstruct, three, xhr) {
-        "use strict";
 
         var getEffects = function(onLoad) {
             xhr.get({

@@ -1,8 +1,7 @@
 ﻿/*
 *@Author: Jacqui Manzi
 *September 11th, 2013
-*jacquimanzi@gmail.com
-
+*jacqui@revkitt.com
 */
 
 define([
@@ -11,11 +10,8 @@ define([
     "dojox/collections/ArrayList"
 ],
     function (declare, Simulation, ArrayList) {
-        "use strict";
         return declare("kui.ModelView.SceneModel", null, {
-            /*
-             */
-           
+
             constructor: function (scene, sceneInteraction, modelView) {
 
                 this.scene = scene;
@@ -24,7 +20,6 @@ define([
                 this.modeView = modelView;
 
                 this.simulation = new Simulation();
-
             },
 
             getScene: function(){
@@ -95,14 +90,14 @@ define([
                 this.groupModel.selectGroups(groupNames);
             },
 
-            getGroupFromName: function(groupName){
+            getGroupFromName: function(/*String*/groupName){
 
                var group = this.groupModel.nameToGroup[groupNamde];
                 
                return group;
             },
 
-            createGroupFromSelected: function(groupName) {
+            createGroupFromSelected: function(/*String*/groupName) {
                 this.groupModel.createGroupFromSelected(groupName);
             },
 
@@ -138,10 +133,11 @@ define([
                 return this.groupModel.getSelectedGroupNames();
             },
 
+            /*Retrieves the selected nodes stored in the Node model*/
+            /*Returns ArrayList<String>*/
             getSelectedNodes: function(){
 
                 var selectedNodes = this.getNodeModel().getSelectedNodes();
-
                 return selectedNodes;
             },
 

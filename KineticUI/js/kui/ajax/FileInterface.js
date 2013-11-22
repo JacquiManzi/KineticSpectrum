@@ -1,31 +1,26 @@
-﻿define([
+﻿/*
+*@Author: Jacqui Manzi
+*Novemeber 22nd, 2013
+*jacqui@revkitt.com
+*
+* FileInterface.j - Ajax class for retrieving saved LED nodes and groups from the server.
+*                   Allows for LEDs to be present again after page reload.
+*/
+
+define([
     "dojo/_base/declare",
-    "kui/util/CommonHTML",
-    "dojo/dom",
-    "dojo/dom-style",
-    "dojo/dom-construct",
-    "threejs/three",
     "dojo/_base/xhr",
     "dojox/collections/ArrayList",
     "dojo/_base/array",
     "kui/ModelView/Node/LightAddress"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr, ArrayList, array, LightAddress) {
+    function (declare, xhr, ArrayList, array, LightAddress) {
         "use strict";
         return declare("kui.ajax.FileInterface", null, {
 
-            /*
-             *   
-             *
-             */
-
-            constructor: function () {
-
-              
-            },
-            getGroups: function (onSuccessFunc) {
-
-                
+            /*Retrieve saved groups from the server*/
+            /*Returns ArrayList<Map<String>>*/
+            getGroups: function (onSuccessFunc) {              
                 xhr.get({
 
                     url: "Env.svc/GetGroups",
@@ -42,17 +37,14 @@
                             groupList.add(group);
                         });
                         onSuccessFunc(groupList);
-
                     },
                     error: function (err1, err2) {
                         console.log(err1.stack);
                     }
-
-
                 });
-
-
             },
+            /*Retrieves the saved LED Nodes from the server*/
+            /*Returns ArrayList<Map<String>>*/
             getLightConfigList: function (onSuccessFunc) {
 
                 var lightInfoList = new ArrayList();
@@ -66,22 +58,13 @@
                             item.address = new LightAddress(item.address);
                             lightInfoList.add(item);
                         });
-
-                        
+                      
                         onSuccessFunc(lightInfoList);
-
                     },
                     error: function (err1, err2) {
                         console.log(err1.stack);
                     }
-
-
                 });
-
-
             }
-
-
         });
-
     });

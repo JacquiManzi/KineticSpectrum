@@ -2,7 +2,7 @@
 /*
 * @author: Jacqui Manzi
 * August 6th, 2013
-* jacquimanzi@gmail.com
+* jacqui@revkitt.com
 * SceneInteraction - All node interaction with the scene happens here.
 */
 define([
@@ -24,7 +24,7 @@ define([
 ],
     function (declare, ArrayList, LED, LightAddress, domGeom, Node, html,
         on, NodeModel, GroupModel, DragControls, OrbitalControl, Vector3, Raycaster, Projector) {
-        "use strict";
+
         return declare("kui.ModelView.SceneInteraction", null, {
 
             constructor: function (domNode, camera, scene) {
