@@ -25,11 +25,12 @@ define([
      "dijit/registry",
      "dojo/dom-geometry",
      "dojox/gfx", 
-     "dojo/aspect"
+     "dojo/aspect",
+     "dojo/query"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
         PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
-        domStyle, domClass, registry, domGeom, gfx, aspect) {
+        domStyle, domClass, registry, domGeom, gfx, aspect, query) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -39,7 +40,7 @@ define([
             this.style = "background-color:#1f1f1f;" +
                 "height:100%;" +
                 "border-right: solid 2px #1f1f1f;" +
-                "width:100%;";
+                "width:100%;";          
         },
         
         /*Constructs the subset AccordianItem menus and creates the hide/show arrow bar for hiding the Design Menu*/
@@ -119,7 +120,7 @@ define([
 
             fileMenu.createFileMenu(this);
             
-            this.startup();           
+            this.startup();
         },
 
         /*Draws the arrow image - orientation depends on hide/show state*/

@@ -118,6 +118,15 @@ define([
                   startup: function () {
                       this.inherited(arguments);
                       this.simPane.startup();
+
+                      /*Apply custom styling after dom is rendered*/
+                      dojo.query(".claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle").style("background-image", "none");
+                      dojo.query(".claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle").style("background-color", "#2d2d2d");
+                      dojo.query(".claro .dijitTitlePaneTitle").style("background-image", "none");
+                      dojo.query(".claro .dijitTitlePaneTitle").style("background-color", "#2d2d2d");
+                      dojo.query(".claro .dijitAccordionTitle").style("background-image", "none");
+                      dojo.query(".claro .dijitAccordionTitle").style("background-color", "#2d2d2d");
+                     
                   }
               });
 
