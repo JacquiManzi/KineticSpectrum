@@ -1,14 +1,19 @@
-﻿define([
+﻿/*
+*@Author: Jacqui Manzi
+*Novemeber 22nd, 2013
+*jacqui@revkitt.com
+*
+* SimState.js - Ajax class for sending and retrieving pattern effects to the server.
+*               Also used for sending the current state: Simulation mode or Live mode.
+*/
+define([
     "dojo/_base/declare",
-    "dojo/dom",
-    "threejs/three",
     "dojo/_base/xhr",
     "dojo/_base/array",
     "kui/ModelView/Node/LightAddress",
     "dojox/collections/ArrayList"
 ],
-    function (declare, dom, three, xhr, array, LightAddress, ArrayList) {
-        "use strict";
+    function (declare, xhr, array, LightAddress, ArrayList) {
 
         var setMode = function (mode) {
             var modeInt;
@@ -251,5 +256,4 @@
             getPatternStarts: getPatternStarts,
             removeStart: removeStart
         };
-
     });

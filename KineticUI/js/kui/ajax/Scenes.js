@@ -1,23 +1,23 @@
-﻿define([
+﻿/*
+*@Author: Jacqui Manzi
+*Novemeber 22nd, 2013
+*jacqui@revkitt.com
+*
+* Scenes.j - Ajax class for retrieving group information for the Scene Model.
+*/
+define([
     "dojo/_base/declare",
-    "kui/util/CommonHTML",
-    "dojo/dom",
-    "dojo/dom-style",
-    "dojo/dom-construct",
-    "threejs/three",
     "dojo/_base/xhr",
     "dojo/_base/array",
     "kui/ModelView/Node/LightAddress",
     "dojox/collections/ArrayList"
 ],
-    function (declare, html, dom, domStyle, domConstruct, three, xhr, array, LightAddress, ArrayList) {
-        "use strict";
-
+    function (declare, xhr, array, LightAddress, ArrayList) {
 
         var getGroupNames = function (onLoad) {
             xhr.get({
                 url: "Env.svc/GetGroupNames",
-                handleAs: "json",
+                handleAs: "json", 
                 load: onLoad,
                 error: function (err1, err2) {
                     console.log(err1.stack);
