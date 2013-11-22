@@ -10,9 +10,10 @@
     "kui/util/CommonHTML",
     "dijit/form/MultiSelect",
     "dijit/form/TextBox",
-    "dojo/dom-style"
+    "dojo/dom-style",
+    "dojo/on"
     ], function (domConstruct, NumberTextBox, CheckBox,
-        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect, TextBox, domStyle) {
+        ColorPalette, DropDownButton, MenuItem, DropDownMenu, Button, html, MultiSelect, TextBox, domStyle, on) {
         "use strict";
 
         var createNumberTextBox = function (label, list, changeButton) {
@@ -89,6 +90,17 @@
              {
                  domStyle.set(button.domNode, "width", widthAmount+"%");
                  domStyle.set(button.domNode.firstChild, "width", "100%");
+                 domStyle.set(button.domNode.firstChild, "background-image", "none");
+                 domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
+                 domStyle.set(button.domNode.firstChild, "border-radius", "0px");
+                
+                 on(button.domNode.firstChild, "mouseover", function () {
+                     domStyle.set(button.domNode.firstChild, "background-color", "#232323");
+                 });
+
+                 on(button.domNode.firstChild, "mouseleave", function () {
+                     domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
+                 });
              },
 
 

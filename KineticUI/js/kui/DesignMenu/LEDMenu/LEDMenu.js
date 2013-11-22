@@ -96,6 +96,8 @@ define([
 
                 }, null, "width:90%;");
 
+                CommonForm.setButtonStyle(checkButton, 70);
+
                 return {
                     title: "Amount",
                     valueContent: amountField.domNode,
@@ -111,6 +113,8 @@ define([
 
                 }, null, "width:90%;");
 
+                CommonForm.setButtonStyle(verifyButton, 70);
+
                 return {
                     title: "Address",
                     valueContent: this.ledAddressText.domNode,
@@ -123,6 +127,8 @@ define([
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 }, null, "width:90%;");
+
+                CommonForm.setButtonStyle(verifyButton, 70);
 
                 return {
                     title: "Fixture",
@@ -137,6 +143,8 @@ define([
                 var verifyButton = CommonForm.createButton('Verify', function () {
 
                 }, null, "width:90%;");
+
+                CommonForm.setButtonStyle(verifyButton, 70);
 
                 return {
                     title: "Port",
@@ -227,6 +235,8 @@ define([
 
                     thisObj.sceneModel.getNodeModel().removeLEDNodes();
                 });
+
+                CommonForm.setButtonStyle(removeButton, 90);
 
                 domConstruct.place(removeButton.domNode, div);
 
