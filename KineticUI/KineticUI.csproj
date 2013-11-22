@@ -118,7 +118,7 @@
     <Content Include="Images\scrollImage5.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="js\KineticSpectrum.css" />
+    <Content Include="css\KineticSpectrum.css" />
     <Content Include="js\kui\ajax\Effects.js" />
     <Content Include="js\kui\ajax\FileInterface.js" />
     <Content Include="js\kui\ajax\Scenes.js" />
@@ -7852,7 +7852,6 @@
       <DependentUpon>FileUpload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="CSharp\ProccessModel.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -8440,9 +8439,6 @@
     <Content Include="js\libraries\dojo\dojo\resources\LICENSE" />
     <Content Include="js\libraries\dojo\dojo\store\README" />
     <Content Include="js\libraries\dojo\dojo\_firebug\LICENSE" />
-    <Content Include="js\kui\3DModels\Lightbulb.js" />
-    <Content Include="js\kui\3DModels\doberman.js" />
-    <Content Include="js\kui\3DModels\Snake.js" />
     <Content Include="js\kui\3DModels\Rabbit.js" />
     <Content Include="js\kui\3DModels\GeodesicDome.js" />
     <Content Include="packages.config" />
