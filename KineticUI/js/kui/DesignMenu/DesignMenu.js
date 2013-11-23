@@ -54,7 +54,7 @@ define([
             var arrowDiv = html.createDiv("width:100%;"+
                 "height:100%;");
 
-            var rightDiv = html.createDiv("width:5%;" +
+            var rightDiv = html.createDiv("width:4%;" +
                 "height:100%;" +
                 "float:right;" +
                 "display:block;");
@@ -150,7 +150,7 @@ define([
 
             arrowMap.leftArrow.setShape({ x: 0, y: 0, width: 0, height: 0 });
             arrowMap.rightArrow.setShape({ x: 0, y: 0, width: 0, height: 0 });
-            arrowMap.currentArrow.setShape({x: x, y: y, width: 13, height: 20});           
+            arrowMap.currentArrow.setShape({x: x, y: y, width: 15, height: 20});           
             arrowMap.canvas.setDimensions((domGeom.getContentBox(div).w),(domGeom.getContentBox(div).h));
             
         },
@@ -191,7 +191,7 @@ define([
             leftWidth = this._findPaneWidth(kuiLayout, 1);
 
             if (leftWidth < 25) {
-                leftWidth = 25;
+                leftWidth = 18;
             }
             else if (leftWidth > 40) {
                 leftWidth = 40;

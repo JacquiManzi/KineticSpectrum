@@ -233,7 +233,7 @@ define([
                 };
             },
 
-            _createRemoveSection: function(){
+            _createRemoveSection: function(){ 
 
                 var div = html.createDiv("padding-top:10px;");
 
@@ -244,7 +244,7 @@ define([
                     thisObj.sceneModel.removeNodes(selectedNodes);
                 });
 
-                CommonForm.setButtonStyle(removeButton, 90);
+                CommonForm.setButtonStyle(removeButton, 90); 
 
                 domConstruct.place(removeButton.domNode, div);
 
