@@ -1,4 +1,12 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacqui@revkitt.com
+*
+*   EffectIten.js - Effect items are placed inside the Effect sub menu of Pattern Menu.
+*/
+
+define([
     "dojo/_base/declare",
     "dijit/_WidgetBase"
 

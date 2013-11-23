@@ -52,9 +52,7 @@ define([
                 "background-color:#000000;");
 
             var arrowDiv = html.createDiv("width:100%;"+
-                "height:100%;"+
-                "border-top-right-radius: 7px;"+
-                "border-bottom-right-radius: 7px;");
+                "height:100%;");
 
             var rightDiv = html.createDiv("width:5%;" +
                 "height:100%;" +

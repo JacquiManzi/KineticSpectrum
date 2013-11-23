@@ -36,6 +36,8 @@ define([
             domStyle.set(this.domNode, "background-color", "black");
             domStyle.set(this.domNode, "margin-right", "auto");
             domStyle.set(this.domNode, "margin-left", "auto");
+            domStyle.set(this.domNode, "margin-top", "10px");
+            domStyle.set(this.domNode, "margin-bottom", "10px");
 
             domClass.add(this.domNode, "designMenu");
         },

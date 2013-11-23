@@ -60,7 +60,7 @@ define([
  
                     title: title,
                     content: div
-                });
+                }); 
                 
                 titlePane.containerNode.setAttribute('style', 'padding:0;background-color:' + this.backgroundColor + ';');
 

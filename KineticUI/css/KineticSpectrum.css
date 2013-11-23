@@ -36,8 +36,6 @@ body {
 /* Track */
 .designMenu::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
     background-color: rgba(57, 57, 57, 0.9);
 }
 
@@ -47,8 +45,6 @@ body {
 
 /* Handle */
 .designMenu::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
     background: rgb(100, 100, 100);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }

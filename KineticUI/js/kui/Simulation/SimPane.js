@@ -1,4 +1,12 @@
-﻿define([
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacqui@revkitt.com
+*
+*   SimPane.js - The bottom simulation slider in the Model View pane. This keeps track of running pattern simulations.
+*/
+
+define([
     "dojo/_base/declare",
     "dojo/dom-construct",
     "dojo/dom-style",
@@ -39,7 +47,7 @@
             });
 
             domStyle.set(this.button.domNode, "height", "100%");
-            domStyle.set(this.button.domNode, "width", "92%");
+            CommonForm.setButtonStyle(this.button, 90);
 
             var table = html.createTable();
            
@@ -84,8 +92,7 @@
                 value: 0,
                 readOnly: true,
                 style: "width:10%;" +
-                    "background-color:#0a0a0a;" +
-                    "border-radius:7px;"
+                    "background-color:#0a0a0a;"
             });
 
             var boxRow = html.createRow();
