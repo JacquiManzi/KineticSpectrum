@@ -240,7 +240,8 @@ define([
                 var thisObj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
 
-                    thisObj.sceneModel.getNodeModel().removeNodes();
+                    var selectedNodes = thisObj.sceneModel.getSelectedNodes();
+                    thisObj.sceneModel.removeNodes(selectedNodes);
                 });
 
                 CommonForm.setButtonStyle(removeButton, 90);

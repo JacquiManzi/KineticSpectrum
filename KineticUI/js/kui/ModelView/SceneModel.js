@@ -55,12 +55,16 @@ define([
                 this.scene.addToScene(node);
             },
 
+            /*Remove the three.js object speheres from the Scene*/
             removeNodes: function (nodes) {
 
                 var thisObj = this;
                 nodes.forEach(function (node) {
                     thisObj.scene.removeFromScene(node);
-                }); 
+                });
+
+                //Also remove the nodes from the NodeModel Set.
+                this.getNodeModel().removeNodesFromSet(nodes);
             },
 
             removeNode: function(node){
