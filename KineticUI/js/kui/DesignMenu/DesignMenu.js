@@ -211,16 +211,16 @@ define([
 
         _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
 
-            leftWidth = this._findPaneWidth(kuiLayout, 26);
+            leftWidth = this._findPaneWidth(kuiLayout, 25);
             leftContainer.resize({ w: leftWidth });
          
             kuiLayout.resize();
 
-            leftDivWidth = this._findPaneWidth(leftContainer, 95);
-            rightDivWidth = this._findPaneWidth(leftContainer, 5);
+            leftDivWidth = this._findPaneWidth(leftContainer, 96);
+            rightDivWidth = this._findPaneWidth(leftContainer, 4);
 
             domStyle.set(leftDiv, 'width', leftDivWidth - 10 + 'px');
-            domStyle.set(rightDiv, 'width', rightDivWidth + 6 +'px');
+            domStyle.set(rightDiv, 'width', rightDivWidth  + 2 +'px');
 
             kuiLayout.resize();
         },
