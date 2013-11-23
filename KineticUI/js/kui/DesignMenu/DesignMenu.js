@@ -199,7 +199,7 @@ define([
 
             leftContainer.resize({ w: leftWidth });
             domStyle.set(leftDiv, 'width', '0px');
-            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
+            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;  
 
             /*Subtract 2 pixels for the border on design menu accordian container*/
             domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');

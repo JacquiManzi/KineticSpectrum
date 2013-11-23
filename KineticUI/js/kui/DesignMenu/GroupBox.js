@@ -24,20 +24,19 @@ define([
             this._sceneModel.addGroupsUpdatedListener(dojo.hitch(this, this._updateGroups));
             this._multiSelect = new MultiSelect({
                     items: this._sceneModel.getGroups(),
-                    selectedItems: this._sceneModel.getSelectedGroupNames()
+                    selectedItems: this._sceneModel.getSelectedGroupNames(),
+                    style: "width: 95%;"+
+                            "background-color: #000000;"+
+                            "margin-left: auto;"+
+                            "margin-top: 10px;"+
+                            "margin-bottom: 10px;"+
+                            "color: #3d8dd5;"
                 });
         },
 
         buildRendering: function () {
             this.inherited(arguments);
             this.domNode = this._multiSelect.domNode;
-
-            domStyle.set(this.domNode, "width", "95%");
-            domStyle.set(this.domNode, "background-color", "black");
-            domStyle.set(this.domNode, "margin-right", "auto");
-            domStyle.set(this.domNode, "margin-left", "auto");
-            domStyle.set(this.domNode, "margin-top", "10px");
-            domStyle.set(this.domNode, "margin-bottom", "10px");
 
             domClass.add(this.domNode, "designMenu");
         },
