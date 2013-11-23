@@ -3,8 +3,7 @@
 *    September 13th, 2013
 *    jacquimanzi@gmail.com
 *
-*     
-*   
+*   GroupBox.js - Widget for re-usable group xlist boxes between menus.
 */
 define([
     "dojo/_base/declare",
@@ -32,8 +31,11 @@ define([
         buildRendering: function () {
             this.inherited(arguments);
             this.domNode = this._multiSelect.domNode;
+
             domStyle.set(this.domNode, "width", "95%");
             domStyle.set(this.domNode, "background-color", "black");
+            domStyle.set(this.domNode, "margin-right", "auto");
+            domStyle.set(this.domNode, "margin-left", "auto");
 
             domClass.add(this.domNode, "designMenu");
         },

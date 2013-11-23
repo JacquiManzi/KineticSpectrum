@@ -274,14 +274,12 @@
                 "margin-right:auto;" +
                 "padding-top:5px;" +
                 "padding-bottom:5px;" +
-                "background-color:" + backgroundColor + ";" +
-                "border-radius: 7px;" +                
+                "background-color:" + backgroundColor + ";" +            
                 "width:99%;" +
                 "color:" + textColor + ";";
 
         var titleCellStyle = "background-color: #232323;" +
-                "border-radius:5px;" +
-                "width: 40%;";
+                "width: 50%;";
 
         var mainBackgroundColor = "background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px," +
                       "linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px," +

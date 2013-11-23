@@ -86,7 +86,7 @@ define([
 
                 var groupDivs = this.createTitlePane("Pattern Groups");
                 this.groupBox = new GroupBox({ sceneModel: this.sceneModel });
-                this.groupBox.placeAt(groupDivs.paneDiv);
+                this.groupBox.placeAt(groupDivs.contentDiv);
 
                 domConstruct.place(groupDivs.paneDiv, this.domNode);
             },
@@ -157,7 +157,7 @@ define([
                     thisObj.patternModel.createPattern();
                 });
 
-                //CommonForm.setButtonStyle(createButton, 50);               
+                CommonForm.setButtonStyle(createButton, 50);               
                 domConstruct.place(createButton.domNode, div);
 
                 return {
@@ -181,7 +181,7 @@ define([
                 }));
 
                CommonForm.setButtonStyle(addAllGroupButton, 80);
-
+                 
                 var addButton = CommonForm.createButton("+", dojo.hitch(this, function () {
                     this.patternModel.addGroup(this.patternModel.getGroupDropDownLabel());
                 }));

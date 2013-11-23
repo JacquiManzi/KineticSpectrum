@@ -1,10 +1,9 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    September 13th, 2013
-*    jacquimanzi@gmail.com
+*    jacqui@revkitt.com
 *
-*     
-*   
+*   EffectMenu.js - Effect menu object. This is where effects are selected for pattern creation.
 */
 define([
     "dojo/_base/declare",
@@ -44,7 +43,7 @@ define([
             titleCell.innerHTML = "Effect";
             domConstruct.place(titleCell, row);
 
-            var valueCell = html.createCell("width:60%;");
+            var valueCell = html.createCell("width:50%;");
             domConstruct.place(valueCell, row);
 
             var effectDropDown = CommonForm.createDropDown("Select Effect", "width:100%;");
