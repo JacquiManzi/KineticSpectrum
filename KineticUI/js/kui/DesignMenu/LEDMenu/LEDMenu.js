@@ -1,4 +1,11 @@
-﻿
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacqui@revkitt.com
+*
+*   LEDMenu.js - Main menu for Node control. LED creation and selection items are placed here.
+*/
+
 define([
     "dojo/_base/declare",
     "kui/util/CommonHTML",
@@ -88,9 +95,9 @@ define([
                     var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(amountField.get('value'));
 
                     var lightAddress = new LightAddress();
-                    lightAddress.lightNo = this.ledAddressText.get('value') || -1;
-                    lightAddress.fixtureNo = this.fixtureText.get('value') || -1;
-                    lightAddress.portNo = this.portText.get('value') || -1;
+                    lightAddress.lightNo = thisObj.ledAddressText.get('value') || -1;
+                    lightAddress.fixtureNo = thisObj.fixtureText.get('value') || -1;
+                    lightAddress.portNo = thisObj.portText.get('value') || -1;
 
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 

@@ -197,7 +197,7 @@ define([
 
             _createSelectPatternDropDown: function(){
 
-                var patternDropDown = CommonForm.createDropDown("Select Pattern", "");
+                var patternDropDown = CommonForm.createDropDown("Select Pattern", "margin-top:10px;");
                 CommonForm.setButtonStyle(patternDropDown, 90);
                 this.patternModel.setPatternDropDown(patternDropDown);
 
