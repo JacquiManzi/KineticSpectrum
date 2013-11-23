@@ -96,8 +96,8 @@ define([
 
                     var lightAddress = new LightAddress();
                     lightAddress.lightNo = thisObj.ledAddressText.get('value') || -1;
-                    lightAddress.fixtureNo = thisObj.fixtureText.get('value') || -1;
-                    lightAddress.portNo = thisObj.portText.get('value') || -1;
+                    lightAddress.fixtureNo = thisObj.fixtureAddressText.get('value') || -1;
+                    lightAddress.portNo = thisObj.portAddressText.get('value') || -1;
 
                     thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
 
