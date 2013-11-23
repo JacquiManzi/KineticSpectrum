@@ -25,7 +25,6 @@ define([
             });
         };
         
-
         var getPatternNames = function (onLoad) {
             xhr.get({
                 url: "Env.svc/GetPatternNames",

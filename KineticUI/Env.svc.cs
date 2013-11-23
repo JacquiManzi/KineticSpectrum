@@ -1,4 +1,12 @@
-﻿using System.Collections.Generic;
+﻿/*
+*   @Author: Jacqui Manzi
+*    September 13th, 2013
+*    jacqui@revkitt.com
+*
+*   Env.svc -  
+*/
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -208,11 +216,6 @@ namespace KineticUI
             s.Position = 0;
             return s;
         }
-
-
-
-        
-
         // Add more operations here and mark them with [OperationContract]
     }
 }
