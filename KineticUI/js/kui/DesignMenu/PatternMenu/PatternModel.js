@@ -44,9 +44,9 @@ define([
                 this.simulation = simulation;
 
                 /*Add pattern menu element listeners*/
-                this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
+                this.addPatternUpdateListener(dojo.hitch(this, this._updatePatternDropDown));
 
-                this.updatePatternList();               
+                this.updatePatternList();                
             },
 
             /*
@@ -156,9 +156,9 @@ define([
                  
                 var thisObj = this;   
                     SimState.removePattern(pattern.name, function () {
-
-                        thisObj._dispatchPatternsToListeners();
-                        thisObj.patternList.remove(pattern); 
+                      
+                        thisObj.patternList.remove(pattern);
+                        thisObj._dispatchPatternsToListeners(); 
 
                     }); 
             },

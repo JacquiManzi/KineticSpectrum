@@ -58,14 +58,21 @@ body {
     width: 100%;
 }
 
-.arrowButton {
+.arrowButton, .fullScreenButton{
     background-color: rgb(45, 45, 45);
 }
 
-.arrowButton:hover{
+.arrowButton:hover, .fullScreenButton:hover{
 
     cursor: pointer;
     background-color: #232323;
+}
 
+.fullScreenButton {
+
+    background-image: url("../images/fullscreen.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
  

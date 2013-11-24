@@ -212,7 +212,7 @@ define([
             updatePatternListBox: function () {
 
                 html.removeDomChildren(this.patternListBox);
-
+                 
                 var thisObj = this;
                  this.patternModel.patternList.forEach(function (pattern) {
 

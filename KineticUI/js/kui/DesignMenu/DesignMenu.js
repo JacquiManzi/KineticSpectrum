@@ -52,7 +52,10 @@ define([
                 "background-color:#000000;");
 
             var arrowDiv = html.createDiv("width:100%;"+
-                "height:100%;");
+                "height:95%;");
+
+            var fullScreenDiv = html.createDiv("width:100%;" +
+                "height:5%;");
 
             var rightDiv = html.createDiv("width:4%;" +
                 "height:100%;" +
@@ -66,7 +69,9 @@ define([
                "background-color:#000000;");
 
             domClass.add(arrowDiv, "arrowButton");
+            domClass.add(fullScreenDiv, "fullScreenButton"); 
                
+            domConstruct.place(fullScreenDiv, rightDiv);
             domConstruct.place(arrowDiv, rightDiv);
             domConstruct.place(rightDiv, this.containerDiv);
             domConstruct.place(this.domNode, leftDiv);
@@ -74,7 +79,7 @@ define([
 
             var arrowMap = this._drawArrowCanvas(arrowDiv);
          
-            this.arrowBarClickEvent(rightDiv, leftDiv, arrowMap);
+            this.arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap); 
 
             var thisObj = this;
             aspect.after(this , "resize", function () {
@@ -155,10 +160,10 @@ define([
             
         },
 
-        arrowBarClickEvent: function (rightDiv, leftDiv, arrowMap) {
+        arrowBarClickEvent: function (arrowDiv, rightDiv, leftDiv, arrowMap) {
 
             var thisObj = this;
-            dojo.connect(rightDiv, "onclick", function () {
+            dojo.connect(arrowDiv, "onclick", function () {
 
                 var leftContainer = registry.byId("leftContainer");
                 var kuiLayout = registry.byId("kuiLayout");
