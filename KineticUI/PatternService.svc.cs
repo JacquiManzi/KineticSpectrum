@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -8,6 +9,7 @@ using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading;
+using System.Web;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using KineticUI.JSConverters;
@@ -37,6 +39,9 @@ namespace KineticUI
                 var timeState = sim.LightState.Select(l => new LightState {Address = l.Address, Color = l.Color});
                 stateMap.Add(i/30.0, new List<LightState>(timeState));
             }
+            HttpContext context = HttpContext.Current;
+            context.Response.AppendHeader("Content-encoding", "gzip");
+            context.Response.Filter = new GZipStream(context.Response.Filter, CompressionMode.Compress);
             return Serializer.ToStream(stateMap);
         }
     }
