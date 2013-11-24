@@ -20,10 +20,11 @@ define([
     "kui/ModelView/ModelEnvironment/OrbitalControl",
     "kui/ModelView/ModelEnvironment/Vector3",
     "kui/ModelView/ModelEnvironment/Raycaster",
-    "kui/ModelView/ModelEnvironment/Projector"
+    "kui/ModelView/ModelEnvironment/Projector",
+    "dojo/_base/array"
 ],
     function (declare, ArrayList, LED, LightAddress, domGeom, Node, html,
-        on, NodeModel, GroupModel, DragControls, OrbitalControl, Vector3, Raycaster, Projector) {
+        on, NodeModel, GroupModel, DragControls, OrbitalControl, Vector3, Raycaster, Projector, array) {
 
         return declare("kui.ModelView.SceneInteraction", null, {
 
@@ -68,44 +69,92 @@ define([
                 dojo.connect(this.domNode, "onmousemove", dojo.hitch(this, this.doSelect));
                 dojo.connect(this.domNode, "onmousedown", dojo.hitch(this, this.findSelectionType));
 
-                dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function (event) {
-
+                dojo.connect(this.domNode, "onmouseup", dojo.hitch(this, function () {
                     this.orbitControl.enabled = true;
                     this.dragControls.enabled = false;
                 }));
             },
+            
+            getVertexNumber: function(geometry, vertices) {
+                var gVertices = geometry.vertices;
+                return array.map(vertices, function(vertex) {
+                    for (var i = 0; i < gVertices.length; i++) {
+                        if (!gVertices[i].distanceTo(vertex.position)) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                });
+            },
+
+            /**
+             * finds numberBetween positions between each vertex on the same face
+             */
+            findJoinedVerticies: function(numberBetween) {
+                var vertices = this.nodeModel.getSelectedNodes().toArray();
+                var segments = new ArrayList();
+                this.meshList.forEach(function(mesh) {
+                    var vIndices = this.getVertexNumber(mesh.geometry, vertices);
+                    for (var i = 0; i < vIndices.length; i++) {
+                        for (var j = i + 1; j < vIndices.length; j++) {
+                            var a = vIndices[i];
+                            var b = vIndices[j];
+                            var shareFace = array.some(mesh.geometry.faces, function(face) {
+                                return (face.a == a || face.b == a || face.c == a) &&
+                                    (face.a == b || face.b == b || face.c == b);
+                            });
+
+                            if (shareFace) {
+                                var between = this.positionsBetween(vertices[i].position,
+                                                       vertices[j].position, numberBetween);
+                                segments.addRange(between);
+                            }
+                        }
+                    }
+                }, this);
+                return segments;
+            },
+            
+            positionsBetween: function(v1, v2, count) {
+                var positions = new ArrayList();
+                var deltaX = (v1.x - v2.x) / (count + 1);
+                var deltaY = (v1.y - v2.y) / (count + 1);
+                var deltaZ = (v1.z - v2.z) / (count + 1);
+
+                for (var i = 1; i <= count; i++) {
+                    var x = v1.x - i * deltaX;
+                    var y = v1.y - i * deltaY;
+                    var z = v1.z - i * deltaZ;
+
+                    var vector = new Vector3();
+                    vector.setCoords(x, y, z);
+                    positions.add(vector);
+                }
+                return positions;
+            },
 
             /*Find the line segments between selected VertexSpheres*/
             findConnectingLines: function (amount) {
+                if (this.nodeModel.isOnlyVertexSelected()) {
+                    return this.findJoinedVerticies(amount);
+                }
+                return this.findSequentialNodes(amount);
+            },
 
-                var lineSegments = new ArrayList();
+            findSequentialNodes: function(numberBetween) {
                 var selectedNodes = this.nodeModel.getSelectedNodes();
+                var lineSegments = new ArrayList();
 
                 while (selectedNodes.count > 1) {
 
                     var sphereOne = selectedNodes.item(0).coords;
                     var sphereTwo = selectedNodes.item(1).coords;
 
-                    var deltaX = (sphereOne.x - sphereTwo.x) / (amount + 1);
-                    var deltaY = (sphereOne.y - sphereTwo.y) / (amount + 1);
-                    var deltaZ = (sphereOne.z - sphereTwo.z) / (amount + 1);
-
-                    for (var i = 1; i <= amount; i++) {
-                        var x = sphereOne.x - i * deltaX;
-                        var y = sphereOne.y - i * deltaY;
-                        var z = sphereOne.z - i * deltaZ;
-
-                        var vector = new Vector3();
-                        vector.setCoords(x, y, z);
-                        lineSegments.add(vector);
-                    }
+                    var between = this.positionsBetween(sphereOne, sphereTwo, numberBetween);
+                    lineSegments.addRange(between);
 
                     selectedNodes.remove(selectedNodes.item(0));
                 }
-
-                this.x = selectedNodes.item(0).position.x; //What am I saving x, y, and z for?
-                this.y = selectedNodes.item(0).position.y;
-                this.z = selectedNodes.item(0).position.z;
 
                 return lineSegments;
             },
