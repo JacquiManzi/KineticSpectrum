@@ -101,6 +101,16 @@
                  on(button.domNode.firstChild, "mouseleave", function () {
                      domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
                  });
+
+                 on(button.domNode.firstChild, "mousedown", function () {
+                     domStyle.set(button.domNode.firstChild, "background-color", "#3b6371");
+                 });
+
+                 on(button.domNode.firstChild, "mouseup", function () {
+                     domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
+                 });
+              
+                    
              },
 
 

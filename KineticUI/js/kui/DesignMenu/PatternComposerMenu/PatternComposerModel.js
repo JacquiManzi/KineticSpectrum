@@ -206,9 +206,7 @@ define([
                 this.patternList.forEach(function (patternObj) {
 
                     SimState.addStart(patternObj.pattern.name, patternObj.countID, patternObj.startTime);
-
                 });
-
             },
 
             updatePatternListBox: function () {

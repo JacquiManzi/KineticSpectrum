@@ -63,7 +63,7 @@ define([
 
                 var patternButtonTableItems = []; 
 
-                var patternDivs = this.createTitlePane("Add Pattern");
+                var patternDivs = this.createTitlePane("System Patterns");
                 this.addDivItem(this._createPatternBox(), patternDivs.contentDiv);
                 patternButtonTableItems.push(this._createPatternButtons());
                 this.addTableItem(patternButtonTableItems, patternDivs.contentDiv);
@@ -74,28 +74,30 @@ define([
             _createPatternBox: function(){
 
                 var div = html.createDiv();
-                var patternListBox = CommonForm.createListBox("width:90%;background-color:black;color:rgb(61, 141, 213);");
-                domClass.add(patternListBox.domNode, "designMenu");
+                var patternListBox = CommonForm.createListBox("width:90%;" +
+                    "background-color:black;" +
+                    "color:rgb(61, 141, 213);");
+
+                domClass.add(patternListBox.domNode, "designMenu");               
+                domConstruct.place(patternListBox.domNode, div);
 
                 this.patternComposerModel.patternListBox = patternListBox;
-
-                domConstruct.place(patternListBox.domNode, div);
 
                 return{
                     valueContent: div
                 }             
             },
-
+           
             _createPatternButtons: function(){
                
                 var thisObj = this;
-                var addButton = CommonForm.createButton('Add', function () {
+                var addButton = CommonForm.createButton('Add to Timeline', function () {
                     thisObj.patternComposerModel.addPattern(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
                 CommonForm.setButtonStyle(addButton, 90);
              
-                var removeButton = CommonForm.createButton('Remove', function () {
+                var removeButton = CommonForm.createButton('Remove from System', function () {
                     thisObj.patternComposerModel.removePatternFromOption(thisObj.patternComposerModel.patternListBox.getSelected());
                 });
 
@@ -122,7 +124,7 @@ define([
             _createPatternPropButtons: function(){
 
                 var thisObj = this;
-                var removeButton = CommonForm.createButton("Remove Pattern", function () {
+                var removeButton = CommonForm.createButton("Remove from Timeline", function () {
 
                     thisObj.patternComposerModel.removeSelectedPattern();
                 });
