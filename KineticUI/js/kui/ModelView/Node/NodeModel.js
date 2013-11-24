@@ -39,7 +39,8 @@ define([
                     var ledNode = new LED();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.radius = 0.005;   
+                    ledNode.setRadius(0.004);
+
 
                     this.scene.add(ledNode);
                     this.nodes.add(ledNode);
@@ -145,7 +146,7 @@ define([
                 var led = new LED();
                 led.updatePosition(position);
                 led.address = address;
-                led.setRadius(.003);
+                led.setRadius(.004);
 
                 Scenes.addLED(led);
 
