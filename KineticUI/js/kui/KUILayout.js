@@ -1,7 +1,9 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    August 15th, 2013
-*    jacquimanzi@gmail.com
+*    jacqui@revkitt.com
+*
+*   KUILayout.js - Initial setup of layout for Kinetic Spectrum. ModelView and DesignMenu are created and initialized here.
 */
 
 define([

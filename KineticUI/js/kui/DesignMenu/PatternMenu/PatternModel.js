@@ -3,23 +3,19 @@
 *   @author: Jacqui Manzi
 *   August 7th, 2013
 *   jacqui@revkitt.com
+*
+*   Model view controller for Patterns.
 */
 define([
     "dojo/_base/declare",
-    "kui/util/CommonHTML",
-    "dojo/dom",
-    "dijit/layout/ContentPane",
-    "dojo/dom-style",
-    "dojo/dom-construct",
-    "threejs/three",
     "dojox/collections/ArrayList",
     "dijit/MenuItem",
     "dojo/_base/array",
     "kui/ajax/Scenes",
     "kui/ajax/SimState"
 ],
-    function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList, MenuItem, array, Scenes, SimState) {
-        "use strict";
+    function (declare, ArrayList, MenuItem, array, Scenes, SimState) {
+
         return declare("kui.DesignMenu.PatternMenu.PatternModel", null, {
 
             constructor: function (sceneModel, simulation) {
@@ -33,6 +29,7 @@ define([
                 this.effectName = "";
                 this.effectProperties = {};
                 this.id = 0;
+                this.nameCount = 0;
 
                 this._patternMenuElements = {
                     groupDropDown: null,
@@ -168,9 +165,25 @@ define([
 
                 var patternDef = {};
 
-                patternDef.name = this.patternName;
+                patternDef.name = this.getPatternNameValue();
+
+                /*Give default name to pattern if none is provided then increment the pattern name counter for unique pattern naming.*/
+                if (!patternDef.name || patternDef.name === "") {
+
+                    var isAvailable = false;
+                    while(!isAvailable){
+
+                        if(this.patternList.contains("_Pattern" + this.nameCount)){
+                            this.nameCount++;
+                        }
+                        else{
+                            patternDef.name = "_Pattern" + this.nameCount++;
+                            isAvailable = true;
+                        }
+                    }            
+                }
+
                 patternDef.groups = this.sceneModel.getSelectedGroupNames();
-//                patternDef.priority = this.getPatternPriority() * 1.0;
                 patternDef.priority = 1.0;
 
                 dojo.mixin(this.patternDef, this.effectsDef);

@@ -31,25 +31,6 @@ define([
 
             createPatternMenu: function (container) {
 
-               /* var contentPane = new ContentPane(
-                  {
-                      title: "Pattern Menu",
-                      style: this.mainBackgroundColor,
-                      onShow: dojo.hitch(this, function() {
-                          this.patternModel.updateGroupDropDown();
-                          //TODO: JCU, JMM: This is why sample patterns don't work anymore!
-                         // container.simulation.setPatternMode();
-                      })
-                       
-                  });
-
-                container.addChild(contentPane);
-
-                
-            
-                var patternSection = this._createPatternSection();
-               */
-
                 this.onShow = function () {
 
                     //this.patternModel.updateGroupDropDown();
@@ -58,9 +39,7 @@ define([
                
                 domConstruct.place(this.domNode, container.domNode);
                 on(this, "show", dojo.hitch(container.simulation, container.simulation.setPatternMode));
-                //this.patternModel.updateGroupDropDown(); JMM---> what to do about this? Make this updateable
-                
-                              
+               
                 this._createPatternProps();
                 this._createPatternGroups();
                 this._createPatternCreation();
@@ -229,11 +208,13 @@ define([
 
             _createPatternNameSection: function() {
                 var onChange = function(patternModel, value) {
-                    patternModel.patternName = value;
+                    patternModel.getNameField().set('value', value);
                 };
                 var nameField = CommonForm.createTextBox("", "Pattern Name",
                     "text-align:left;width:100%;");
-//                this.patternModel.setNameField(nameField); //refactor this out and use update handlers instead
+
+                this.patternModel.setNameField(nameField);
+
                 on(nameField, "change", dojo.partial(onChange, this.patternModel));
 
                 return {
