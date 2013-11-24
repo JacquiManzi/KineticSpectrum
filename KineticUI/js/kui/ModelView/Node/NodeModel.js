@@ -138,6 +138,12 @@ define([
                 });
                 this.updateServerSelection();
             },
+
+            isOnlyVertexSelected: function() {
+                return array.every(this.selected.toArray(), function(node) {
+                    return node.isVertex;
+                });
+            },
             
             addGeneratedLED: function (position, address) {
                 address = address || new LightAddress();
