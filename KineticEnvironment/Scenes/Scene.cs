@@ -12,26 +12,63 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
     { 
         private const String TEMP_GROUP = "____TEMP____GROUP";
 
-        private readonly Dictionary<string, Group> _nameToGroup = new Dictionary<string, Group>();
+        private readonly Dictionary<string, MasterGroup> _nameToGroup = new Dictionary<string, MasterGroup>();
         private readonly Dictionary<string, Pattern> _patterns = new Dictionary<string, Pattern>();
-        private volatile List<Group> _selectedGroups = new List<Group>();
+        private volatile List<IGroup> _selectedGroups = new List<IGroup>();
         private readonly Dictionary<LightAddress, LEDNode> _addressToNode;
+        private readonly object _lock = new object();
 
         public Scene()
         {
             _addressToNode = new Dictionary<LightAddress, LEDNode>(
                     LightSystemProvider.Lights.ToDictionary(node=>node.Address)
                 );
-        }
-      
-        public Group SetGroup(String name, List<LightAddress> addresses)
-        {
-            return SetGroup(new Group(name, addresses.Select(a => _addressToNode[a])));
+            LightSystemProvider.OnLightsUpdated += LightsUpdated;
+            IsActive = false;
         }
 
-        public Group SetGroup(Group group)
+        private void LightsUpdated(bool added)
         {
-            _nameToGroup[group.Name] = group;
+            if (added)
+            {
+                foreach (LEDNode node in LightSystemProvider.Lights)
+                {
+                    if (!_addressToNode.ContainsKey(node.Address))
+                    {
+                        node.IsActive = IsActive;
+                        _addressToNode[node.Address] = node;
+                    }
+                }
+            }
+            else
+            {
+                ISet<LightAddress> addresses = new HashSet<LightAddress>(LightSystemProvider.Lights.Select(l=>l.Address));
+                IList<LightAddress> toRemove = _addressToNode.Keys.Where(address => !addresses.Contains(address)).ToList();
+                foreach (var remove in toRemove)
+                {
+                    _addressToNode.Remove(remove);
+                }
+            }
+        }
+      
+        public IGroup SetGroup(String name, List<LightAddress> addresses)
+        {
+            return SetGroup(new GroupStub(name, addresses));
+        }
+
+        public IGroup SetGroup(IGroup group)
+        {
+            lock (_lock)
+            {
+                if (_nameToGroup.ContainsKey(group.Name))
+                {
+                    _nameToGroup[group.Name].UpdateMembers(group.Lights);
+                }
+                else
+                {
+                    _nameToGroup[group.Name] = new MasterGroup(group.Name, group.Lights, this);
+                }
+            }
 
             var groupSingle = new List<string> {group.Name};
             foreach (var pattern in _patterns.Values)
@@ -56,26 +93,9 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             }
         }
 
-        public void RenameGroup(string oldName, Group newGroup)
+        public void RenameGroup(string oldName, IGroup newGroup)
         {
-            if (!_nameToGroup.Remove(oldName))
-                throw new ArgumentException("No group exists with name: " + oldName);
-
-            _nameToGroup[newGroup.Name] = newGroup;
-            var remGroup = new List<string> { oldName };
-            foreach (var pattern in _patterns.Values)
-            {
-                if(pattern.Groups.Contains(oldName))
-                {
-                    List<string> groups = new List<string>(pattern.Groups.Except(remGroup));
-                    groups.Add(newGroup.Name);
-                    pattern.Groups = groups;
-                }
-                else if(pattern.Groups.Contains(newGroup.Name))
-                {
-                    pattern.Groups = pattern.Groups;
-                }
-            }
+            throw new NotImplementedException("This functionality does not yet exist: Renaming Groups");
         }
 
         public void SetPattern(Pattern pattern)
@@ -116,15 +136,13 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
         public void SelectLights(IEnumerable<LightAddress> lights )
         {
-            var LEDs = LightSystemProvider.GetNodeMapping(lights).Values;
-
-            SelectedGroups = new List<Group>{new Group(TEMP_GROUP, LEDs)};
+            SelectedGroups = new List<IGroup>{new MasterGroup(TEMP_GROUP, lights, this)};
             ApplySelected();
         }
 
         public void SelectGroups(IEnumerable<string> groups )
         {
-            var selected = new List<Group>();
+            var selected = new List<IGroup>();
             foreach (var group in groups)
             {
                 selected.Add(_nameToGroup[group]);
@@ -135,7 +153,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
 
         public void ApplySelected()
         {
-            foreach (LEDNode node in LightSystemProvider.Lights)
+            foreach (LEDNode node in _addressToNode.Values)
             {
                 node.Color = Colors.Black;
             }
@@ -146,28 +164,39 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
                     led.Color = Colors.Red;
                 }
             }
-            LightSystemProvider.LightSystem.UpdateLights();
+            if (IsActive)
+            {
+                LightSystemProvider.LightSystem.UpdateLights();
+            }
         }
 
-        public IEnumerable<Group> SelectedGroups
+        public IEnumerable<IGroup> SelectedGroups
         {
             get { return _selectedGroups; }
-            set
+            private set
             {
-                _selectedGroups = new List<Group>(value);
+                _selectedGroups = new List<IGroup>(value);
                 ApplySelected();
             }
         }
 
-        public IList<Group> GetGroups(IEnumerable<string> groupNames )
+        public IList<IGroup> GetGroups(IEnumerable<string> groupNames )
         {
-            return new List<Group>(Groups.FindAll(g=>groupNames.Contains(g.Name)));
+            return new List<IGroup>(Groups.FindAll(g=>groupNames.Contains(g.Name)));
         }
 
-        public List<Group> Groups { get { return new List<Group>(_nameToGroup.Values); } }
+        internal IList<IGroup> GetGroupRefs(IEnumerable<string> groupNames, IActivatable lightProvider)
+        {
+                return new List<IGroup>( 
+                    _nameToGroup.Values.ToList()
+                                .FindAll(g => groupNames.Contains(g.Name))
+                                .Select(master => master.GetReference(lightProvider)));
+        }
+
+        public List<IGroup> Groups { get { return new List<IGroup>(_nameToGroup.Values); } }
         public IEnumerable<Pattern> Patterns { get { return _patterns.Values; } } 
 
-        public Group GetGroup(string groupName)
+        public IGroup GetGroup(string groupName)
         {
             return _nameToGroup[groupName];
         }
@@ -177,7 +206,10 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             return _patterns[patternName];
         }
 
-
+        public int EndTime { 
+            get { return 0; }
+            set { }
+        }
 
         public int Time 
         { 
@@ -194,10 +226,10 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             get { return Enumerable.Empty<LightState>(); }
         }
 
-        public int EndTime { get; private set; }
-
         public IEnumerable<LEDNode> Nodes {
             get { return _addressToNode.Values; }
         }
+
+        public bool IsActive { get; set; }
     }
 }

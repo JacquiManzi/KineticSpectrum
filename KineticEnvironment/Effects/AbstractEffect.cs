@@ -10,7 +10,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
     public abstract class AbstractEffect : IEffect
     {
 
-        private readonly Group _group;
+        private readonly IGroup _group;
 
         public int Priority { get; internal set; }
 
@@ -20,7 +20,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected bool Reverse { get; private set; }
         protected IOrdering Ordering { get; private set; }
 
-        protected AbstractEffect(Group group)
+        protected AbstractEffect(IGroup group)
         {
             if(group == null)
                 throw new ArgumentNullException("group");
@@ -28,7 +28,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         }
 
         public abstract string Name { get; }
-        protected Group Group { get { return _group; } }
+        protected IGroup Group { get { return _group; } }
 
         public int TotalTime { get { return Duration*RepeatCount; } }
 

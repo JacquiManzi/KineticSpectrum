@@ -11,23 +11,25 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     public class PatternStart
     {
         private readonly Scene _scene;
+        private readonly IActivatable _lightProvider;
         private bool _localPriority = true;
         private readonly int _id;
         private int _priority;
         private Pattern _pattern;
-        private Dictionary<Group, IEffect> _groupToEffect ; 
+        private Dictionary<IGroup, IEffect> _groupToEffect ; 
 
-        public PatternStart(Scene scene, int id, int startTime, Pattern pattern) :this(scene, id, startTime, pattern, pattern.Priority)
+        public PatternStart(IActivatable lightProvider, Scene scene, int id, int startTime, Pattern pattern) : this(lightProvider, scene, id, startTime, pattern, pattern.Priority)
         {
             _localPriority = false;
         }
 
-        public PatternStart(Scene scene, int id, int startTime, Pattern pattern, int priority)
+        public PatternStart(IActivatable lightProvider, Scene scene, int id, int startTime, Pattern pattern, int priority)
         {
             _id = id;
             StartTime = startTime;
             _priority = priority;
             _scene = scene;
+            _lightProvider = lightProvider;
             Pattern = pattern;
         }
 
@@ -58,8 +60,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         private void SetupPattern(Pattern pattern)
         {
-            Dictionary<Group, IEffect> groupToEffect = new Dictionary<Group, IEffect>();
-            IList<Group> groups = _scene.GetGroups(pattern.Groups);
+            Dictionary<IGroup, IEffect> groupToEffect = new Dictionary<IGroup, IEffect>();
+            IList<IGroup> groups = _scene.GetGroupRefs(pattern.Groups, _lightProvider);
             EffectAttributes attr = EffectRegistry.EffectAttributes[pattern.EffectName];
             foreach (var group in groups)
             {

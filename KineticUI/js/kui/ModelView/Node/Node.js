@@ -54,16 +54,15 @@ define([
                 }
                 if (!this.material.color) {
                     var material = new MeshBasicMaterial();
-                    material.setColor(color);
+                    material.color.setHex(color);
                     this.setMaterial(material);
                 } else if(this.material.color.getHex() !== color) {
-                    this.material.setColor(color);
+                    this.material.color.setHex(color);
                 }
             },
 
             select: function () {
-                var color = new Color(0xff0000);
-                this.setColor(color);
+                this.setColor(0xff0000);
                 this.isSelected = true;
             },
 

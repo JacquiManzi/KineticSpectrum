@@ -15,7 +15,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly List<PatternStart> _patternStarts = new List<PatternStart>();
         private readonly IDictionary<LightAddress, LightState> _stateMap = new Dictionary<LightAddress, LightState>();
         private readonly List<LightState> _lightState = new List<LightState>();
-        private readonly IList<LEDNode> _lights = LightSystemProvider.Lights; 
+        private readonly List<LEDNode> _lights = LightSystemProvider.Lights; 
 
         private readonly Timer _updateTimer;
         private int _currentTime;
@@ -40,9 +40,50 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 _stateMap[light.Address] = lState;
                 _lightState.Add(lState);
             }
+            LightSystemProvider.OnLightsUpdated += LightsUpdated;
+        }
+
+        private void LightsUpdated(bool added)
+        {
+            if (added)
+            { // if they've been added check all against the current set
+                ISet<LightAddress> addresses = new HashSet<LightAddress>(_lights.Select(l=>l.Address));
+                foreach (LEDNode node in LightSystemProvider.Lights)
+                {
+                    if (!addresses.Contains(node.Address))
+                    {
+                        node.IsActive = IsActive;
+                        _lights.Add(node);
+                        var lState = new LightState {Address = node.Address, Color = node.Color};
+                        _lightState.Add(lState);
+                        _stateMap[node.Address] = lState;
+                    }
+                }
+            }
+            else
+            {// if they've been removed check current set against all
+                ISet<LightAddress> addresses = new HashSet<LightAddress>(LightSystemProvider.Lights.Select(l=>l.Address));
+
+                for (int i = 0; i < _lights.Count; )
+                {
+                    if (addresses.Contains(_lights[i].Address))
+                    {
+                        i++;
+                    }
+                    else
+                    {
+                        LightAddress toRemove = _lights[i].Address;
+                        _lights.RemoveAt(i);
+                        var lState = _stateMap[toRemove];
+                        _stateMap.Remove(toRemove);
+                        _lightState.Remove(lState);
+                    }
+                }
+            }
         }
 
         public IEnumerable<LEDNode> Nodes { get { return _lights; } }
+        public bool IsActive { get; set; }
 
         public void Clear()
         {
@@ -68,7 +109,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         public PatternStart AddPattern(Pattern pattern, int startTime, int id)
         {
-            PatternStart pStart = new PatternStart(_scene, id, startTime, pattern );
+            PatternStart pStart = new PatternStart(this,_scene, id, startTime, pattern );
             _endTime = Math.Max(_endTime, pStart.EndTime);
             _patternStarts.RemoveAll(start => start.Id == id);
             _patternStarts.Add(pStart);
@@ -191,17 +232,18 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 {
                     light.Color = ColorUtil.Empty;
                 }
-
                 foreach (var patternStart in starts)
                 {
                     patternStart.Apply(time);
                 }
-
                 foreach (var light in _lights)
                 {
                     _stateMap[light.Address].Color = light.Color;
                 }
-                LightSystemProvider.UpdateLights();
+                if (IsActive)
+                {
+                    LightSystemProvider.UpdateLights();
+                }
             }
             finally
             {

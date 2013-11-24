@@ -154,11 +154,13 @@ define([
                 led.address = address;
                 led.setRadius(.004);
 
-                Scenes.addLED(led);
+                Scenes.addLED(led, dojo.hitch(this, function(serverAddress) {
+                    led.address = new LightAddress(serverAddress);
+                    this.addressToLED[led.address] = led;
+                    this.nodes.add(led);
+                    this.scene.add(led); 
+                }));
 
-                this.addressToLED[address] = led;
-                this.nodes.add(led);
-                this.scene.add(led); 
             },
             
             getLEDNode: function(lightAddress) {

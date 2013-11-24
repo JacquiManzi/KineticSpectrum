@@ -13,7 +13,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
     public interface IOrdering
     {
 
-        Group Group { get; set; } 
+        IGroup Group { get; set; } 
         [JsonProperty]
         string Type { get; }
         [JsonProperty]

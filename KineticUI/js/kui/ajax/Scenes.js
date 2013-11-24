@@ -112,14 +112,13 @@ define([
             });
         };
 
-        var addLED = function (led) {
+        var addLED = function (led, addressFunc) {
+            addressFunc = addressFunc || function() {};
             xhr.post({
                 url: "Env.svc/AddLED",
                 handleAs: "json",
                 content: { d: JSON.stringify(led) },
-                load: function (address) {
-                    led.address = address;
-                }
+                load: addressFunc
             });
         };
         

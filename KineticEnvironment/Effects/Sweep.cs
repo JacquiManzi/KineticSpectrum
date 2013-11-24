@@ -19,7 +19,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         private IColorEffect _endColorEffect;
        
 
-        public Sweep(Group group) : base(group) { }
+        public Sweep(IGroup group) : base(group) { }
 
         public static EffectFactroy SweepFactory = g=>new Sweep(g);
 

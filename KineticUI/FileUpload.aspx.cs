@@ -31,7 +31,7 @@ namespace KineticUI
             if (nameToSection.ContainsKey("Groups"))
             {
                 string section = nameToSection["Groups"];
-                foreach (var group in Serializer.FromString<IEnumerable<Group>>(section))
+                foreach (var group in Serializer.FromString<IEnumerable<IGroup>>(section))
                 {
                     State.Scene.SetGroup(group);
                 }

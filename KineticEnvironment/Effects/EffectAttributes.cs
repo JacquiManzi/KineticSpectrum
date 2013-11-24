@@ -9,7 +9,7 @@ using RevKitt.KS.KineticEnvironment.Scenes;
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
 
-    public delegate IEffect EffectFactroy(Group group);
+    public delegate IEffect EffectFactroy(IGroup group);
 
     public delegate void ApplyColors(IEnumerable<IEffect> effect, int numCycles);
 
