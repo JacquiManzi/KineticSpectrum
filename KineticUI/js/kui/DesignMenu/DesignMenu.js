@@ -25,11 +25,12 @@ define([
      "dijit/registry",
      "dojo/dom-geometry",
      "dojox/gfx", 
-     "dojo/aspect"
+     "dojo/aspect",
+     "kui/Simulation/Simulation"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
         PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
-        domStyle, domClass, registry, domGeom, gfx, aspect) {
+        domStyle, domClass, registry, domGeom, gfx, aspect, Simulation) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -86,9 +87,9 @@ define([
             });
 
             ledMenu.createLEDMenu(this); 
-            
+             
             /*Pattern Menu*/
-            var patternModel = new PatternModel(this.sceneModel);
+            var patternModel = new PatternModel(this.sceneModel, this.simulation);
             var patternMenu = new PatternMenu({
                 sceneModel: this.sceneModel,
                 patternModel: patternModel

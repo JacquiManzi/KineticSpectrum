@@ -1,7 +1,7 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    August 15th, 2013
-*    jacquimanzi@gmail.com
+*    jacqui@revkitt.com
 */
 define([
     "dojo/_base/declare",

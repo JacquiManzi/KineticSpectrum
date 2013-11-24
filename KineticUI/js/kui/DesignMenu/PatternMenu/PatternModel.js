@@ -2,7 +2,7 @@
 /*
 *   @author: Jacqui Manzi
 *   August 7th, 2013
-*
+*   jacqui@revkitt.com
 */
 define([
     "dojo/_base/declare",
