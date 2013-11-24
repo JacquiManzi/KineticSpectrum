@@ -3,7 +3,8 @@
 *    September 13th, 2013
 *    jacquimanzi@gmail.com
 *
-*    NodeModel.js - 
+*    NodeModel.js - Model view controller for LED nodes and Vertices in the system.
+*
 *   
 */
 
