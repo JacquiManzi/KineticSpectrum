@@ -1,7 +1,9 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    August 15th, 2013
-*    jacquimanzi@gmail.com
+*    jaqui@revkitt.com
+*
+*   ModelView.js - ContentPane in which the Scene object get's placed. General scene seup happen here.
 */
 
 define([
@@ -90,15 +92,14 @@ define([
                             'z':  this.directionalLight.position.z
                         };
 
-                    this.shineDirectionalLight(this.sceneModel.getScene(), this.shineDirectionalLightColor, this.directionalLightIntensity, this.directionalLightDistance,
-                        positions);
+                    this.shineDirectionalLight(this.sceneModel.getScene(), this.shineDirectionalLightColor,
+                        this.directionalLightIntensity, this.directionalLightDistance, positions);
                 }
 
                 if (this.hasAmbientLight)
                 {
                     this.shineAmbientLight(this.sceneModel.getScene());
                 }
-
 
                 this.render = dojo.hitch(this, function () {
 
@@ -118,7 +119,6 @@ define([
                 });
 
                 animate(); 
-
             },
             
             loadServerLEDs:function() {
@@ -135,7 +135,11 @@ define([
             
             loadServerGroups: function() {
                 var fileInterface = new FileInterface();
-                fileInterface.getGroups(dojo.hitch(this.sceneInteraction.groupSet, this.sceneInteraction.groupSet.addGroups));
+
+                /*Retrieve the saved groups from the GroupModel and pass the addGroups function into the File Interface object*/
+                var groupModel = this.sceneModel.getGroupModel();
+                var addGroupsFunc = groupModel.addGroups;   
+                fileInterface.getGroups(dojo.hitch(groupModel, addGroupsFunc));  
             },
 
             load: function(fileLocation, scene)

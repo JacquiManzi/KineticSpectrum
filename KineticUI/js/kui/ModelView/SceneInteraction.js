@@ -47,9 +47,7 @@ define([
                 
                 this.lightNo = 0;
                 this.portNO = 0;
-                this.fixtureNo = 0;
-
-                
+                this.fixtureNo = 0;                
             },
 
             updateMeshes: function(meshList){
@@ -112,7 +110,7 @@ define([
                 return lineSegments;
             },
 
-         /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
+            /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
             drawNodes: function (lineSegments) {
 
                 var thisObj = this;

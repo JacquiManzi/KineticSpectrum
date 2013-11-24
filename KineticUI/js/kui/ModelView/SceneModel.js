@@ -94,6 +94,11 @@ define([
                 this.groupModel.selectGroups(groupNames);
             },
 
+            getGroupModel: function(){
+
+                return this.groupModel;
+            },
+
             getGroupFromName: function(/*String*/groupName){
 
                var group = this.groupModel.nameToGroup[groupNamde];
