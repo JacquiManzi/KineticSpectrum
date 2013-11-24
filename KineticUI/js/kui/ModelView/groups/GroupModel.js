@@ -1,7 +1,9 @@
 ﻿/*
 * @author: Jacqui Manzi
 * August, 7th 2013
-* jacquimanzi@gmail.com
+* jacqui@revkitt.com
+*
+* GroupModel.js - Model view controller for groups.
 */
 
 define([
@@ -11,9 +13,10 @@ define([
     "dojox/collections/ArrayList",
     "dojo/_base/array",
     "dojo/_base/lang",
-    "kui/ModelView/groups/Group"
+    "kui/ModelView/groups/Group",
+    "kui/ajax/Scenes"
 ],
-    function (declare, html, three, ArrayList, array, lang, Group) {
+    function (declare, html, three, ArrayList, array, lang, Group, Scenes) {
         "use strict";
         return declare("kui.ModelView.groups.GroupSet", null, {
 
@@ -65,11 +68,19 @@ define([
                 return this.selectedGroupNames.toArray();
             },
 
-            deleteSelectedGroups: function() {
-                selectedGroupNames.forEach(function(groupName) {
-                    delete this.nameToGroup[groupName];
-                } );
-                selectedGroupNames.clear();
+            deleteSelectedGroups: function () {
+
+                var thisObj = this;
+                this.selectedGroupNames.forEach(function(groupName) {
+
+                    thisObj.deselectGroup(groupName);
+                    delete thisObj.nameToGroup[groupName];
+                    /*Delete group from server*/
+                    Scenes.deleteGroup(groupName);
+                });
+               
+                this.selectedGroupNames.clear();
+                this._dispatchGroups();
             },
 
             createGroupFromSelected: function (groupName) {
@@ -172,7 +183,7 @@ define([
                         var group = this.nameToGroup[option];
                         group.selectAll();                    
                     });             
-            },
+            }
 
         });
 

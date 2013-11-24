@@ -62,6 +62,15 @@ define([
             });
         };
 
+        var deleteGroup = function (groupName) {
+
+            xhr.get({
+                url: "Env.svc/DeleteGroup",
+                handleAs: "json",
+                content: { groupName: groupName }
+            });
+        };
+
         var tryPattern = function(pattern, onLoad) {
             xhr.post({
                 url: "PatternService.svc/TryPattern",
@@ -126,6 +135,7 @@ define([
             getGroupNames: getGroupNames,
             getPatternNames: getPatternNames,
             getGroups: getGroups,
+            deleteGroup: deleteGroup,
             tryPattern: tryPattern,
             addLED: addLED,
             selectLEDs: selectLEDs,

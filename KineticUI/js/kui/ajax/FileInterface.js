@@ -42,7 +42,7 @@ define([
                         console.log(err1.stack);
                     }
                 });
-            },
+            },           
             /*Retrieves the saved LED Nodes from the server*/
             /*Returns ArrayList<Map<String>>*/
             getLightConfigList: function (onSuccessFunc) {
