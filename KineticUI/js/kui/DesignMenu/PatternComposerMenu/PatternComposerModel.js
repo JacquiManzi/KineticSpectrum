@@ -182,19 +182,20 @@ define([
 
                 var thisObj = this;
                 var removedOptions = this._getSelectedOptions();
+                var systemPatterns = this.patternModel.patternList;
 
                 for (var i = 0; i < removedOptions.length; i++) {
-                    for (var j = 0; j < this.patternList.count; j++) {
+                    for (var j = 0; j < systemPatterns.count; j++) {
 
-                        if (this.patternList.item(j).pattern.name === removedOptions[i].innerHTML) {
+                        if (systemPatterns.item(j).name === removedOptions[i].innerHTML) {
 
                             /*Remove pattern from pattern model*/
-                            this.patternModel.removePattern(this.patternList.item(j));
+                            this.patternModel.removePattern(systemPatterns.item(j));
                             /*Update list box for composer model*/
                             this.updatePatternListBox();
-                            this.patternList.removeAt(j); 
-                        }
-                    }
+                            this.patternList.removeAt(j);  
+                        } 
+                    } 
                 }
 
                 this.addPatternBars();

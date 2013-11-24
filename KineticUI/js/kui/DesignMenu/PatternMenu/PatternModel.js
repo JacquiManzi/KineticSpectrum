@@ -155,7 +155,7 @@ define([
             removePattern: function(pattern){
                  
                 var thisObj = this;   
-                    SimState.removePattern(pattern.pattern.name, function () {
+                    SimState.removePattern(pattern.name, function () {
 
                         thisObj._dispatchPatternsToListeners();
                         thisObj.patternList.remove(pattern); 
