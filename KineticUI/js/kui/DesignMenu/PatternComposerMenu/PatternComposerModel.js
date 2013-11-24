@@ -2,7 +2,9 @@
 /*
 *   @author: Jacqui Manzi
 *   August 22th, 2013
+*   jacqui@revkitt.com
 *
+*   PatternComposerModel.js - Model view controller for the pattern composer menu.
 */
 define([
     "dojo/_base/declare",
@@ -20,10 +22,6 @@ define([
         "use strict";
         return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerModel", null, {
 
-            /*
-             *   
-             */
-
             constructor: function (patternModel) {
 
                 this.patternModel = patternModel;
@@ -31,7 +29,7 @@ define([
                 this.patternList = new ArrayList();
                 this.timeline = new Timeline();
 
-                this.barData = [{}];
+                this.barData = [{}]; 
                 this.xCount = 40;
                 this.yCount = 30;
                 this.countID = 0;
@@ -40,7 +38,7 @@ define([
 
                 //Get's passed an implicit pattern list from patternModel whenever the pattern list changes
                 patternModel.addPatternUpdateListener(dojo.hitch(this, this.updatePatternListBox));
-
+                
             },
 
             _getSelectedOptions: function () {
@@ -207,12 +205,12 @@ define([
 
             },
 
-            updatePatternListBox: function (patternList) {
+            updatePatternListBox: function () {
 
                 html.removeDomChildren(this.patternListBox);
 
                 var thisObj = this;
-                 patternList.forEach(function (pattern) {
+                 this.patternModel.patternList.forEach(function (pattern) {
 
                     var option = html.createOption(pattern.name);
                     dojo.connect(option, "onclick", function () {
@@ -256,7 +254,7 @@ define([
                         thisObj.countID = Math.max(thisObj.countID, pattern.countID + 1);
                     });
                     thisObj.addPatternBars();
-
+                   
                 });
 
             }

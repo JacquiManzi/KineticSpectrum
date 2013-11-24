@@ -207,15 +207,15 @@ define([
             },
 
             _createPatternNameSection: function() {
-                var onChange = function(patternModel, value) {
+                /*var onChange = function(patternModel, value) {
                     patternModel.getNameField().set('value', value);
-                };
+                };*/
                 var nameField = CommonForm.createTextBox("", "Pattern Name",
                     "text-align:left;width:100%;");
 
                 this.patternModel.setNameField(nameField);
 
-                on(nameField, "change", dojo.partial(onChange, this.patternModel));
+               // on(nameField, "change", dojo.partial(onChange, this.patternModel));
 
                 return {
                     title: "Name",

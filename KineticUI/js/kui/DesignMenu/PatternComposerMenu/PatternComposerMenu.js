@@ -1,4 +1,11 @@
 ﻿
+/*
+*   @Author: Jacqui Manzi
+*    August 15th, 2013
+*    jacqui@revkitt.com
+*
+*   PatternComposerMenu.js - The sub accordian item for the pattern composer. Located in Design Menu.
+*/
 
 define([
     "dojo/_base/declare",
@@ -15,11 +22,9 @@ define([
 ],
     function (declare, html, CommonForm, domConstruct, on, domGeom, Moveable,
         SimSate, array, AccordianItem, domClass) {
-        "use strict";
+
         return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", AccordianItem, {
 
-            /*   
-             */
             constructor: function () {
             
                 this.title = "Pattern Composer";               
@@ -37,11 +42,12 @@ define([
 
                     this.patternComposerModel.timeline.createCanvas(timelineDiv);
                     this.patternComposerModel.updateComposerFromServer();
+                    this.patternComposerModel.updatePatternListBox();
                     this.sceneModel.simulation.setSimulationMode();
                 };
 
-                domClass.add(this.domNode, "designMenu");
-            },
+                domClass.add(this.domNode, "designMenu"); 
+            }, 
 
             _createTimeline: function(){
 
@@ -68,7 +74,9 @@ define([
             _createPatternBox: function(){
 
                 var div = html.createDiv();
-                var patternListBox = CommonForm.createListBox("width:90%;");
+                var patternListBox = CommonForm.createListBox("width:90%;background-color:black;color:rgb(61, 141, 213);");
+                domClass.add(patternListBox.domNode, "designMenu");
+
                 this.patternComposerModel.patternListBox = patternListBox;
 
                 domConstruct.place(patternListBox.domNode, div);
@@ -124,7 +132,7 @@ define([
 
                     thisObj.patternComposerModel.applyAllPatterns();
                 });
-                CommonForm.setButtonStyle(applyButton, 90);
+                CommonForm.setButtonStyle(applyButton, 80);
 
                 return {
 

@@ -71,9 +71,8 @@ define([
                     
                 var yAxisGroup = this.svg.append("g")
                 .attr("transform", "translate(35,30)")
-                .style('fill', 'white')   
+                .style('fill', '#3d8dd5')
                 .call(yAxis);   
-
             },
 
             addBars: function (patternData) {
@@ -161,12 +160,6 @@ define([
             clearCanvas: function () {
                this.svg.remove();              
             }   
-
-
-
-
-
-
         }); 
 
     });

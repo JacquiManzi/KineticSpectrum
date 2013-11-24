@@ -47,6 +47,7 @@ define([
                 this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
 
                 this.updatePatternList();
+                this._dispatchPatternsToListeners();
             },
 
             /*
@@ -122,7 +123,7 @@ define([
                 if (!this.patternDef.effectName || this.patternDef.effectName === "") {
 
                     alert("You must select an effect type before creating a pattern");
-                }
+                } 
                 else {
                     this._createPatternDefinition();
                     SimState.createPattern(this.patternDef);
