@@ -60,7 +60,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             public string Ordering { get; private set; }
             public bool Runnable { get { return Group != null; } }
 
-            private Group _group;
+            private IGroup _group;
             private readonly Dictionary<LightAddress, int> _addressToPos = new Dictionary<LightAddress, int>();
             private int _last;
 
@@ -93,7 +93,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                 return 0;
             }
 
-            public Group Group
+            public IGroup Group
             {
                 get { return _group; }
                 set

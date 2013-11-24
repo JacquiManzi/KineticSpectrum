@@ -70,7 +70,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             return GetTime(PropertyDefinition.Duration.Name);
         }
 
-        public IOrdering GetOrdering(Group group )
+        public IOrdering GetOrdering(IGroup group )
         {
             var ordering = (IOrdering) this[PropertyDefinition.Ordering.Name];
             ordering = Orderings.GetOrdering(ordering.Type, ordering.Ordering);

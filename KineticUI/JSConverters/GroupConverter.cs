@@ -14,7 +14,7 @@ namespace KineticUI.JSConverters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var la = (Group)value;
+            var la = (IGroup)value;
             writer.WriteStartObject();
             writer.WritePropertyName("name");
             writer.WriteValue(la.Name);
@@ -32,7 +32,7 @@ namespace KineticUI.JSConverters
 //            JArray lightArray = (JArray) groupObj["lights"].Sel;
 
             IEnumerable<LightAddress> addresses = groupObj["lights"].Select(LightAddressConverter.FromObj);
-            return new Group(name, LightSystemProvider.GetNodeMapping(addresses).Values);
+            return new GroupStub(name, addresses);
 
 
 //            if(reader.TokenType != JsonToken.StartObject)
@@ -65,7 +65,7 @@ namespace KineticUI.JSConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof (Group).IsAssignableFrom(objectType);
+            return typeof (IGroup).IsAssignableFrom(objectType);
         }
     }
 }

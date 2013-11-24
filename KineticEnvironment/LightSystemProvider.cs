@@ -9,6 +9,8 @@ using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment
 {
+    public delegate void LightsUpdatedEventHandler(bool added);
+
     public class LightSystemProvider
     {
         public static readonly LightSystem LightSystem = new LightSystem();
@@ -33,10 +35,18 @@ namespace RevKitt.KS.KineticEnvironment
             Console.WriteLine("Done Searching.");
         }
 
+        public static event LightsUpdatedEventHandler OnLightsUpdated;
+
+        private static void LightsUpdated(bool added)
+        {
+            if (OnLightsUpdated != null)
+                OnLightsUpdated(added);
+        }
+
         private static readonly Dictionary<LightAddress, LEDNode> _nodes = new Dictionary<LightAddress, LEDNode>();
         private static int _unaddressed = 0;
 
-        public static IList<LEDNode> Lights { get { return new List<LEDNode>(_nodes.Values.Select(node=>new LEDNode(node.Address, node.Position))); } } 
+        public static List<LEDNode> Lights { get { return new List<LEDNode>(_nodes.Values.Select(node=>new LEDNode(node.Address, node.Position))); } } 
 
         public static void UpdateLights()
         {
@@ -59,6 +69,7 @@ namespace RevKitt.KS.KineticEnvironment
             if (_nodes.ContainsKey(address))
             {
                 _nodes.Remove(address);
+                LightsUpdated(false);
             }
         }
 
@@ -72,6 +83,7 @@ namespace RevKitt.KS.KineticEnvironment
             }
 
             _nodes.Add(node.Address, node);
+            LightsUpdated(true);
             return node.Address;
         }
 
@@ -148,6 +160,7 @@ namespace RevKitt.KS.KineticEnvironment
                     Console.WriteLine("Found Duplicates: address: " + address + " orig pos: "+ _nodes[address].Position + " dup pos:" + new Vector3D(x,y,z));
                 }
             }
+            LightsUpdated(true);
             Console.WriteLine("Found " + duplicates + " duplicates.");
         }
 

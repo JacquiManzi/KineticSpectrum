@@ -33,7 +33,7 @@ namespace KineticUI
         [OperationContract]
         public void EditGroup(Stream group)
         {
-            Group groupObj = Serializer.FromPost<Group>(group);
+            IGroup groupObj = Serializer.FromPost<IGroup>(group);
             State.Scene.SetGroup(groupObj);
         }
 
@@ -69,7 +69,7 @@ namespace KineticUI
         [WebGet]
         public void RenameGroup(string oldName, string newGroup)
         {
-            Group groupObj = Serializer.Ser.Deserialize<Group>(new JsonTextReader(new StreamReader(newGroup)));
+            IGroup groupObj = Serializer.Ser.Deserialize<IGroup>(new JsonTextReader(new StreamReader(newGroup)));
             State.Scene.RenameGroup(oldName, groupObj);
         }
 

@@ -16,13 +16,12 @@ define([
         COLOR: 0x000000,
 
         constructor: function () {
-            this.color = this.COLOR;
+            this.color = new three.Color(this.COLOR);
         },
 
         setColor: function (color) {
-            this.color = color;
+            this.color.set(color);
         }
-
     });
 
 });

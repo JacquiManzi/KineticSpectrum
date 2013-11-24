@@ -20,7 +20,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         private IColorEffect _colorEffect;
         
-        public FixedEffect(Group group) : base(group) { }
+        public FixedEffect(IGroup group) : base(group) { }
 
         public override string Name
         {

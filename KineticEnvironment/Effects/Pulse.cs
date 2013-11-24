@@ -19,7 +19,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         private IColorEffect _pulseColor;
         private double _width;
 
-        public Pulse(Group group) : base(group) { }
+        public Pulse(IGroup group) : base(group) { }
 
         public static EffectFactroy PulseFactory = g=> new Pulse(g);
 

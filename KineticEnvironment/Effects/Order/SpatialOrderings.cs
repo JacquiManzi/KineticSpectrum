@@ -103,13 +103,13 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
     abstract class SpatialOrdering : IOrdering
     {
         protected static readonly Random Rand = new Random();
-        private Group _group;
+        private IGroup _group;
         private IDictionary<LightAddress, double> _addressToPos;
         private Orderings.PositionFunc Position { get;  set; }
         private double _max;
         private double _min;
 
-        public Group Group {
+        public IGroup Group {
             get { return _group; }
             set { 
                 _group = value;
@@ -129,7 +129,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
             Position = positionFunc;
         }
 
-        private void RemapAddresses(Group group)
+        private void RemapAddresses(IGroup group)
         {
             IList<LEDNode> nodes = group.LEDNodes;
             IList<Vector3D> vectors = nodes.Select(node => node.Position).ToList();

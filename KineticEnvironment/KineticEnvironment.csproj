@@ -85,9 +85,12 @@
     <Compile Include="LightSystemProvider.cs" />
     <Compile Include="LightSystemProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\GroupReference.cs" />
+    <Compile Include="Scenes\GroupStub.cs" />
     <Compile Include="Scenes\GroupView.cs" />
+    <Compile Include="Scenes\IGroup.cs" />
     <Compile Include="Scenes\Pattern.cs" />
-    <Compile Include="Scenes\Group.cs" />
+    <Compile Include="Scenes\MasterGroup.cs" />
     <Compile Include="Scenes\LEDNode.cs" />
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Sim\PatternStart.cs" />

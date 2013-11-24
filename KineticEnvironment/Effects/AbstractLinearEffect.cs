@@ -14,7 +14,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         protected Tween Tween;
 
-        protected AbstractLinearEffect(Group group) : base(group) {}
+        protected AbstractLinearEffect(IGroup group) : base(group) {}
 
         protected override void ApplyProperties(EffectProperties properties)
         {

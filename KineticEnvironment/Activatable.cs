@@ -10,5 +10,6 @@ namespace RevKitt.KS.KineticEnvironment
     public interface IActivatable
     {
         IEnumerable<LEDNode> Nodes { get; }
+        bool IsActive { get; set; }
     }
 }
