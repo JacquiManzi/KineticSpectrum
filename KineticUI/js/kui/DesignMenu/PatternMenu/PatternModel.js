@@ -119,23 +119,29 @@ define([
 
             createPattern: function(){
 
-                this._createPatternDefinition();
-                SimState.createPattern(this.patternDef);
+                if (!this.patternDef.effectName || this.patternDef.effectName === "") {
 
-                var newPattern = dojo.clone(this.patternDef);
+                    alert("You must select an effect type before creating a pattern");
+                }
+                else {
+                    this._createPatternDefinition();
+                    SimState.createPattern(this.patternDef);
 
-                var thisObj = this;
-                this.patternList.forEach(function (pattern) {
+                    var newPattern = dojo.clone(this.patternDef);
 
-                    if (pattern.name === newPattern.name) {
-                        thisObj.patternList.remove(pattern);                      
-                    }                     
-                });
+                    var thisObj = this;
+                    this.patternList.forEach(function (pattern) {
 
-                this.patternList.add(newPattern);
-                this._dispatchPatternsToListeners();
+                        if (pattern.name === newPattern.name) {
+                            thisObj.patternList.remove(pattern);
+                        }
+                    });
 
-                this._updatePatternDropDown();
+                    this.patternList.add(newPattern);
+                    this._dispatchPatternsToListeners();
+
+                    this._updatePatternDropDown();
+                }
             },
 
             applyPattern: function(){

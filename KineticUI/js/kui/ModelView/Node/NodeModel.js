@@ -1,7 +1,7 @@
 ﻿/*
 *   @Author: Jacqui Manzi
 *    September 13th, 2013
-*    jacquimanzi@gmail.com
+*    jacqui@revkitt.com
 *
 *    NodeModel.js - Model view controller for LED nodes and Vertices in the system.
 *
@@ -21,7 +21,7 @@ define([
         "kui/ajax/Scenes"
     ],
     function (declare, ArrayList, LED, LightAddress, domGeom, html, on, Group, array, Scenes) {
-        "use strict";
+
         return declare("kui.ModelView.Node.NodeModel", null, {
             nodes: null,
             addressToLED: null, 
@@ -41,7 +41,6 @@ define([
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
                     ledNode.setRadius(0.004);
-
 
                     this.scene.add(ledNode);
                     this.nodes.add(ledNode);
