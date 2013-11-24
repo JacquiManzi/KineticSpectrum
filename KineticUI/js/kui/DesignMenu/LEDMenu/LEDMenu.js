@@ -86,12 +86,10 @@ define([
             },
 
             _createNodeAmountSection: function(){
-
                 var amountField = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
 
                 var thisObj = this;
                 var checkButton = CommonForm.createButton('Add', function () {
-
                     var lineSegments = thisObj.sceneModel.sceneInteraction.findConnectingLines(amountField.get('value'));
 
                     var lightAddress = new LightAddress();
@@ -99,7 +97,7 @@ define([
                     lightAddress.fixtureNo = thisObj.fixtureAddressText.get('value') || -1;
                     lightAddress.portNo = thisObj.portAddressText.get('value') || -1;
 
-                    thisObj.sceneModel.sceneInteraction.drawNodes(lineSegments, lightAddress);
+                    thisObj.sceneModel.createLEDForSegments(lineSegments, lightAddress);
 
                 }, null, "width:90%;");
 
@@ -110,10 +108,9 @@ define([
                     valueContent: amountField.domNode,
                     checkButton: checkButton.domNode
                 };
-
             },
 
-            _createLEDAddressSection: function(){
+            _createLEDAddressSection: function() {
 
                 this.ledAddressText = CommonForm.createTableNumberTextBox("text-align:left;width:100%;");
                 var verifyButton = CommonForm.createButton('Verify', function () {

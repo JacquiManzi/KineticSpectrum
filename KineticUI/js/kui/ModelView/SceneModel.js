@@ -51,11 +51,14 @@ define([
             },
 
             addSingleNode: function(node){
-
                 this.scene.addToScene(node);
             },
 
             /*Remove the three.js object speheres from the Scene*/
+            createLEDForSegments: function(lineSegments, initialAddress) {
+                this.sceneInteraction.createLEDForSegments(lineSegments, initialAddress);
+            },
+
             removeNodes: function (nodes) {
 
                 var thisObj = this;
@@ -101,7 +104,7 @@ define([
 
             getGroupFromName: function(/*String*/groupName){
 
-               var group = this.groupModel.nameToGroup[groupNamde];
+               var group = this.groupModel.getGr
                 
                return group;
             },

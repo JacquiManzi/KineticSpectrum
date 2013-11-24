@@ -25,12 +25,11 @@ define([
      "dijit/registry",
      "dojo/dom-geometry",
      "dojox/gfx", 
-     "dojo/aspect",
-     "dojo/query"
+     "dojo/aspect"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
         PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
-        domStyle, domClass, registry, domGeom, gfx, aspect, query) {
+        domStyle, domClass, registry, domGeom, gfx, aspect) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -140,7 +139,7 @@ define([
                 leftArrow: leftArrow,
                 rightArrow: rightArrow,
                 currentArrow: leftArrow
-            }
+            };
         },
 
         _setArrowSize: function(arrowMap, div){
@@ -158,13 +157,10 @@ define([
         arrowBarClickEvent: function (rightDiv, leftDiv, arrowMap) {
 
             var thisObj = this;
-            dojo.connect(rightDiv, "onclick", function (evt) {
+            dojo.connect(rightDiv, "onclick", function () {
 
                 var leftContainer = registry.byId("leftContainer");
                 var kuiLayout = registry.byId("kuiLayout");
-
-                var leftWidth = 0;
-                var rightWidth = 0;
 
                 if (!leftContainer.isHidden) {
                    
@@ -188,7 +184,7 @@ define([
 
         _hideMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
 
-            leftWidth = this._findPaneWidth(kuiLayout, 1);
+            var leftWidth = this._findPaneWidth(kuiLayout, 1);
 
             if (leftWidth < 25) {
                 leftWidth = 18;
@@ -199,7 +195,7 @@ define([
 
             leftContainer.resize({ w: leftWidth });
             domStyle.set(leftDiv, 'width', '0px');
-            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;  
+            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
 
             /*Subtract 2 pixels for the border on design menu accordian container*/
             domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');
@@ -209,13 +205,13 @@ define([
 
         _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
 
-            leftWidth = this._findPaneWidth(kuiLayout, 25);
+            var leftWidth = this._findPaneWidth(kuiLayout, 25);
             leftContainer.resize({ w: leftWidth });
          
             kuiLayout.resize();
 
-            leftDivWidth = this._findPaneWidth(leftContainer, 96);
-            rightDivWidth = this._findPaneWidth(leftContainer, 4);
+            var leftDivWidth = this._findPaneWidth(leftContainer, 96);
+            var rightDivWidth = this._findPaneWidth(leftContainer, 4);
 
             domStyle.set(leftDiv, 'width', leftDivWidth - 10 + 'px');
             domStyle.set(rightDiv, 'width', rightDivWidth  + 2 +'px');

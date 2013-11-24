@@ -125,12 +125,12 @@ define([
                 var fileInterface = new FileInterface();
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
 
-                        this.sceneInteraction.removeAllNodes();
-                        //this.removeAllMeshes();
+                    this.sceneInteraction.removeAllNodes();
+                    //this.removeAllMeshes();
 
-                        modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
-                        this.sceneInteraction.nodeModel.createLEDNodes(lightList);
-                        this.loadServerGroups();
+                    modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
+                    this.sceneInteraction.nodeModel.createLEDNodes(lightList);
+                    this.loadServerGroups();
                 }));
             },
             

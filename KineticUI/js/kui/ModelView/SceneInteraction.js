@@ -111,14 +111,15 @@ define([
             },
 
             /*Draws an idividual LED node on the indicated (user clicked on) line segment*/
-            drawNodes: function (lineSegments) {
+            createLEDForSegments: function (lineSegments, initialAddress) {
+                var address = initialAddress || new LightAddress();
 
                 var thisObj = this;
                 lineSegments.forEach(function (segment) {
-
-                    var lightAddress = new LightAddress();
-
-                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(lightAddress));                   
+                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(address));                   
+                    if (address.isDefined()) {
+                        address.inc();
+                    }
                 });
             },
 
@@ -198,7 +199,7 @@ define([
                     var intersects = this.findIntersects(meshList, event);
 
                     if (intersects.length > 0) {
-                        this.nodeModel.addSingleLED(intersects);
+                        this.nodeModel.addSingleLED(intersects[0].point);
                     }
                     
                     //@TODO: Jacqui- This does not work on loaded light configuration files since they do not have meshes,

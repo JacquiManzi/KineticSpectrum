@@ -84,6 +84,11 @@
         buildRendering: function() {
             this.inherited(arguments);
             this._baseMultiSelect = new BaseMultiSelect();
+            //Override the base multi-select onChange handler since the current form doesn't trigger
+            //if anything is de-selected
+            this._baseMultiSelect._onChange = dojo.hitch(this._baseMultiSelect, function(/*Event*/) {
+                    this.onChange(this.get('value'));
+                });
             this.domNode = this._baseMultiSelect.domNode;
         },
 

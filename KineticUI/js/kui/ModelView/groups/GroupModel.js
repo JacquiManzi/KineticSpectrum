@@ -83,6 +83,10 @@ define([
                 this._dispatchGroups();
             },
 
+            getGroupFromName: function(groupName) {
+                return this.nameToGroup[groupName];
+            },
+
             createGroupFromSelected: function (groupName) {
                 groupName = groupName || this.generateGroupName();
                 var selectedNodes = this.ledSet.getSelectedNodes();
