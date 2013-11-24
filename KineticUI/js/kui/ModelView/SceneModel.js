@@ -63,7 +63,7 @@ define([
                     thisObj.scene.removeFromScene(node);
                 });
 
-                //Also remove the nodes from the NodeModel Set.
+                //Also remove the nodes from the NodeModel Set and from server.
                 this.getNodeModel().removeNodesFromSet(nodes);
             },
 

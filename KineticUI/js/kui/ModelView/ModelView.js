@@ -124,14 +124,13 @@ define([
             loadServerLEDs:function(modelSkeleton) {
                 var fileInterface = new FileInterface();
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
-                    if (lightList.count > 0) {
+
                         this.sceneInteraction.removeAllNodes();
                         //this.removeAllMeshes();
 
                         modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
                         this.sceneInteraction.nodeModel.createLEDNodes(lightList);
                         this.loadServerGroups();
-                    }
                 }));
             },
             

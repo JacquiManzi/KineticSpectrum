@@ -215,8 +215,15 @@ define([
                 this.nodes.add(node);
             },
 
-            removeNodeFromSet: function (node) {
-                this.nodes.remove(node); 
-            }
+            removeNodesFromSet: function (nodes) {
+                     
+                var thisObj = this;
+                nodes.forEach(function (node) {
+                    /* remove LED node from list and from server.*/
+                    thisObj.nodes.remove(node);
+                    thisObj.selected.remove(node);   
+                    Scenes.removeLED(node);
+                });   
+            } 
         });
     });
