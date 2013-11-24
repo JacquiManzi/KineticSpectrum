@@ -46,8 +46,7 @@ define([
                 /*Add pattern menu element listeners*/
                 this.addPatternMenuElementListener(dojo.hitch(this, this._updatePatternDropDown));
 
-                this.updatePatternList();
-                this._dispatchPatternsToListeners();
+                this.updatePatternList();               
             },
 
             /*
@@ -153,19 +152,15 @@ define([
                 } 
             },
 
-            removePattern: function(){
+            removePattern: function(pattern){
                  
-                var selectedPattern = this.getSelectedPattern();
-
                 var thisObj = this;   
-                if (!!selectedPattern) {
-                    SimState.removePattern(selectedPattern.name, function () {
+                    SimState.removePattern(pattern.pattern.name, function () {
 
-                        thisObj.updatePatternDropDown();
-                        thisObj.patternList.remove(selectedPattern); 
+                        thisObj._dispatchPatternsToListeners();
+                        thisObj.patternList.remove(pattern); 
 
-                    });
-                }
+                    }); 
             },
 
             _createPatternDefinition: function () {

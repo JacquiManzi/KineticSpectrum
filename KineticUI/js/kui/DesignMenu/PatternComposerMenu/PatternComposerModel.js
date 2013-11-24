@@ -147,7 +147,7 @@ define([
                         patternObj.updateStartTime = updateStartTime;
 
                         if (!patternObj.xCount) {
-                            patternObj.xCount = thisObj.xCount;
+                            patternObj.xCount = thisObj.xCount; 
                         }
                         if(!patternObj.yCount)
                         {
@@ -187,7 +187,12 @@ define([
                     for (var j = 0; j < this.patternList.count; j++) {
 
                         if (this.patternList.item(j).pattern.name === removedOptions[i].innerHTML) {
-                            this.patternList.removeAt(j);
+
+                            /*Remove pattern from pattern model*/
+                            this.patternModel.removePattern(this.patternList.item(j));
+                            /*Update list box for composer model*/
+                            this.updatePatternListBox();
+                            this.patternList.removeAt(j); 
                         }
                     }
                 }
