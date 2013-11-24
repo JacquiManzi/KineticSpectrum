@@ -95,7 +95,7 @@
             var colorOnClick = function () {
                 dojo.hitch(thisObj, thisObj._colorUpdated, colorPalette.get('value'), colorBox)();
             };
-            var colorPalette = CommonForm.createColorPalette(colorOnClick, "width:100%");
+            var colorPalette = CommonForm.createColorPalette(colorOnClick, "width:100%;background-color:#000000;");
 
             var colorPaletteItem = new MenuItem({});
 
