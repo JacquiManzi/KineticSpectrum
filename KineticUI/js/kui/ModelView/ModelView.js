@@ -121,12 +121,14 @@ define([
                 animate(); 
             },
             
-            loadServerLEDs:function() {
+            loadServerLEDs:function(modelSkeleton) {
                 var fileInterface = new FileInterface();
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
                     if (lightList.count > 0) {
                         this.sceneInteraction.removeAllNodes();
                         //this.removeAllMeshes();
+
+                        modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
                         this.sceneInteraction.nodeModel.createLEDNodes(lightList);
                         this.loadServerGroups();
                     }
@@ -156,8 +158,7 @@ define([
                 var object = loader.parse(data);
 
                 this.loadObj = dojo.hitch(this, this.loadObject, scene, object);
-                this.loadObj();
-
+                this.loadObj(); 
             },
 
             loadObject: function(scene, object)
@@ -190,9 +191,8 @@ define([
 
                 this.sceneInteraction.updateDragControl();
                 this.sceneInteraction.updateMeshes(this.meshes);
-                modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
-
-                this.loadServerLEDs();
+              
+                this.loadServerLEDs(modelSkeleton);
 
                 this.render();
             },
