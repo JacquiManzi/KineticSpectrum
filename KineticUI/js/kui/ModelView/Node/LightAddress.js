@@ -12,12 +12,7 @@ define([
 ],
     function (declare, html, dom, ContentPane, domStyle, domConstruct, three, ArrayList) {
         "use strict";
-        return declare("kui.ModelView..Node.LightAddress", null, {
-
-            /*
-             *  Group
-             *
-             */
+        return declare("kui.ModelView.Node.LightAddress", null, {
 
             constructor: function (address) {
                 address = address ? address : {};
@@ -26,6 +21,11 @@ define([
                 this.lightNo = -1;
                 dojo.mixin(this, address);
             },
+
+            isDefined: function () {
+                return !(this.fixtureNo === -1 && this.portNo === -1 && this.lightNo === -1);
+            },
+
             inc: function() {
                 this.lightNo++;
                 if (this.lightNo > 49) {

@@ -30,10 +30,6 @@ define([
                 this.addressToLED = [];
                 this.scene = scene;
                 this.selected = new ArrayList();
-
-                this.lightNo = 0;
-                this.portNo = 0;
-                this.fixtureNo = 0;
             },   
 
             createLEDNodes: function(ledList) {
@@ -143,34 +139,15 @@ define([
                 this.updateServerSelection();
             },
             
-            
-            addSingleLED: function (intersects, address) {
-                address = address ? address : new LightAddress();
-                
-                var distance = intersects[0].object.geometry.boundingBox.min.distanceTo(intersects[0].object.geometry.boundingBox.max);
-                var position = intersects[0].point;
+            addGeneratedLED: function (position, address) {
+                address = address || new LightAddress();
 
                 var led = new LED();
                 led.updatePosition(position);
-                led.setRadius(distance * .003);
-                led.address = address;
-
-                this.addressToLED[address] = led;
-
-                Scenes.addLED(led);
-
-                this.nodes.add(led);
-                this.scene.add(led);
-            },
-
-            addGeneratedLED: function (segment, address) {
-
-                var led = new LED();
-                led.updatePosition(segment);
                 led.address = address;
                 led.setRadius(.003);
 
-                Scenes.addLED({ address: led.address, position: led, color: 0 });
+                Scenes.addLED(led);
 
                 this.addressToLED[address] = led;
                 this.nodes.add(led);
