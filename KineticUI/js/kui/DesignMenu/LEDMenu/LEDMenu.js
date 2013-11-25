@@ -243,7 +243,7 @@ define([
 
             _createRemoveSection: function(){ 
 
-                var div = html.createDiv("padding-top:10px;");
+                var div = html.createDiv();
 
                 var thisObj = this;
                 var removeButton = CommonForm.createButton('Remove Selected Nodes', function () {
