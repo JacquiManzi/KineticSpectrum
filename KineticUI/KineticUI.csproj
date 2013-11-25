@@ -172,8 +172,10 @@
     <Content Include="js\kui\ModelView\Node\LightAddress.js" />
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternModel.js" />
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternMenu.js" />
+    <Content Include="js\kui\prototypes.js" />
     <Content Include="js\kui\Simulation\SimPane.js" />
     <Content Include="js\kui\Simulation\Simulation.js" />
+    <Content Include="js\kui\Simulation\TimeManager.js" />
     <Content Include="js\kui\util\CommonFormItems.js" />
     <Content Include="js\kui\Widgets\MultiSelect.js" />
     <Content Include="js\libraries\d3js\d3.js" />

@@ -12,7 +12,7 @@ namespace RevKitt.KS.KineticEnvironment
     {
         int Time { get; set; }
         bool IsPlaying { get; set; }
-        IEnumerable<LightState> LightState { get; }
+        IList<LightState> LightState { get; }
         int EndTime { get; }
     }
 }

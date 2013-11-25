@@ -14,6 +14,10 @@ define([
     "dojox/collections/ArrayList"
 ],
     function (declare, xhr, array, LightAddress, ArrayList) {
+        var handleError = function(err) {
+            console.log(err.stack);
+            return err;
+        };
 
         var setMode = function (mode) {
             var modeInt;
@@ -42,7 +46,7 @@ define([
         };
 
         var createPattern = function (patternDef) {
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/SetPattern",
                 content: { d: JSON.stringify(patternDef) }
             });
@@ -135,7 +139,7 @@ define([
                         start.endTime = start.endTime / 1000.0;
                         delete start.id;
                         list.add(start);
-                        start.yCount = 30 + start.startTime * 5
+                        start.yCount = 30 + start.startTime * 5;
 
                     });
                     onLoad(list);
@@ -239,6 +243,50 @@ define([
             });
         };
 
+        var getPatternRange = function (startTime, endTime) {
+            var timer = Date.now();
+            return xhr.get({
+                url: "PatternService.svc/GetRange",
+                content: {
+                    start: Math.round(startTime * 1000),
+                    end: Math.round(endTime * 1000)
+                },
+                handleAs: "json"
+            }).then(function(lightStates) {
+                console.log("load time: " + (Date.now() - timer));
+                timer = Date.now();
+                var time, timeState;
+                var times = [];
+                var states = [];
+                for (var i = 0; i < lightStates.length; i++) {
+                    var lights = lightStates[i];
+                    time = lights[0] / 1000.0;
+                    var state = [];
+                    for (var j = 1; j < lights.length;) {
+                        state.push({
+                            address: new LightAddress({
+                                fixtureNo: lights[j],
+                                portNo: lights[j + 1],
+                                lightNo: lights[j + 2]
+                            }),
+                            color: lights[j + 3]
+                        });
+                        j = j + 4;
+                    }
+                    times.push(time);
+                    states.push(state);
+                    timer = Date.now();
+                }
+                console.log("processing time: " + (Date.now() - timer));
+                return {
+                    times: times,
+                    states: states,
+                    start: startTime,
+                    end: endTime
+                };
+            },handleError);
+        };
+
         return {
             setMode: setMode,
             createPattern: createPattern,
@@ -254,6 +302,7 @@ define([
             getEndTime: getEndTime,
             addStart: addStart,
             getPatternStarts: getPatternStarts,
-            removeStart: removeStart
+            removeStart: removeStart,
+            getPatternRange: getPatternRange
         };
     });

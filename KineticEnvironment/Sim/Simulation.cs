@@ -181,7 +181,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         public int EndTime { get { return _endTime; } }
 
-        public IEnumerable<LightState> LightState
+        public IList<LightState> LightState
         {
             get { return _lightState.AsReadOnly(); }
         }

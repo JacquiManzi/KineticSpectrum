@@ -145,7 +145,27 @@ define([
                     return node.isVertex;
                 });
             },
-            
+            addUnaddressedLEDs: function(positions) {
+                var leds = array.map(positions.toArray(), function(position) {
+                    return {
+                        position: position,
+                        address: new LightAddress()
+                    };
+                }, this);
+
+                Scenes.addLEDs(leds, dojo.hitch(this, function(serverAddresses) {
+                    for (var i = 0; i < serverAddresses.length; i++) {
+                        var led = new LED();
+                        led.updatePosition(leds[i].position);
+                        led.setRadius(0.004);
+                        led.address = new LightAddress(serverAddresses[i]);
+                        this.addressToLED[led.address] = led;
+                        this.nodes.add(led);
+                        this.scene.add(led);
+                    }
+                }));
+            },
+
             addGeneratedLED: function (position, address) {
                 address = address || new LightAddress();
 

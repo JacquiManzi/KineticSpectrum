@@ -70,6 +70,7 @@ define([
 
             setPatternDropDown: function(patternDropDown){
                 this._patternMenuElements.patternDropDown = patternDropDown;
+                this._updatePatternDropDown();
             },
 
             /*
@@ -125,22 +126,23 @@ define([
                 } 
                 else {
                     this._createPatternDefinition();
-                    SimState.createPattern(this.patternDef);
+                    SimState.createPattern(this.patternDef).then(dojo.hitch(this, function() {
+                        var newPattern = dojo.clone(this.patternDef);
 
-                    var newPattern = dojo.clone(this.patternDef);
+                        var thisObj = this;
+                        this.patternList.forEach(function(pattern) {
 
-                    var thisObj = this;
-                    this.patternList.forEach(function (pattern) {
+                            if (pattern.name === newPattern.name) {
+                                thisObj.patternList.remove(pattern);
+                            }
+                        });
 
-                        if (pattern.name === newPattern.name) {
-                            thisObj.patternList.remove(pattern);
-                        }
-                    });
+                        this.patternList.add(newPattern);
+                        this._dispatchPatternsToListeners();
 
-                    this.patternList.add(newPattern);
-                    this._dispatchPatternsToListeners();
+                        this._updatePatternDropDown();
+                    }));
 
-                    this._updatePatternDropDown();
                 }
             },
 

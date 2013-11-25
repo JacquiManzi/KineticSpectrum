@@ -105,9 +105,9 @@ define([
 
                     requestAnimationFrame(this.render);
 
-                    this.camera.lookAt(this.sceneModel.getScene().position);
                     this.renderer.render(this.sceneModel.getScene(), this.camera);
                 });
+                this.camera.lookAt(this.sceneModel.getScene().position);
 
                 this.axis = new Axis(this.sceneModel.getScene());
                 this.load(fileLocation, this.sceneModel.getScene());

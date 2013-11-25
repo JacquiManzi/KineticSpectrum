@@ -164,13 +164,15 @@ define([
             createLEDForSegments: function (lineSegments, initialAddress) {
                 var address = initialAddress || new LightAddress();
 
-                var thisObj = this;
-                lineSegments.forEach(function (segment) {
-                    thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(address));                   
-                    if (address.isDefined()) {
+                if (address.isDefined()) {
+                    var thisObj = this;
+                    lineSegments.forEach(function(segment) {
+                        thisObj.nodeModel.addGeneratedLED(segment, new LightAddress(address));
                         address.inc();
-                    }
-                });
+                    });
+                } else {
+                    this.nodeModel.addUnaddressedLEDs(lineSegments);
+                }
             },
 
             /*Removes all nodes from the scene- LEDs and Vertices*/

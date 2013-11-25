@@ -221,9 +221,9 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             set { }
         }
 
-        public IEnumerable<LightState> LightState
+        public IList<LightState> LightState
         {
-            get { return Enumerable.Empty<LightState>(); }
+            get { return new List<LightState>(); }
         }
 
         public IEnumerable<LEDNode> Nodes {
