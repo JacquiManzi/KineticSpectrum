@@ -52,7 +52,7 @@ define([
                 "background-color:#000000;");
 
             var arrowDiv = html.createDiv("width:100%;"+
-                "height:97%;");
+                "height:97%;"); 
 
             var fullScreenDiv = html.createDiv();
 
@@ -62,7 +62,7 @@ define([
                 "display:block;");
 
             var leftDiv = html.createDiv("width:95%;" +
-               "height:100%;" +
+               "height:100%;" + 
                "float:left;" +
                "display:block;"+
                "background-color:#000000;");
@@ -76,11 +76,8 @@ define([
             domConstruct.place(this.domNode, leftDiv);
             domConstruct.place(leftDiv, this.containerDiv);
 
-            var arrowMap = this._drawArrowCanvas(arrowDiv);
+            var arrowMap = this._drawArrowCanvas(arrowDiv); 
          
-            this._arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap);
-            this._fullScreenClickEvent(fullScreenDiv, leftDiv, rightDiv);
-
             var thisObj = this;
             aspect.after(this , "resize", function () {
                 thisObj._setArrowSize(arrowMap, arrowDiv);
@@ -111,6 +108,9 @@ define([
             });
 
             patternComposer.createComposerMenu(this);
+
+            this._fullScreenClickEvent(fullScreenDiv, leftDiv, rightDiv, patternComposerModel); 
+            this._arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap, patternComposerModel);
                     
            /*Model Menu
             var modelmenu = new ModelMenu(this.modelView);
@@ -160,7 +160,7 @@ define([
             
         },
 
-        _arrowBarClickEvent: function (arrowDiv, rightDiv, leftDiv, arrowMap) {
+        _arrowBarClickEvent: function (arrowDiv, rightDiv, leftDiv, arrowMap, patternComposerModel) {
 
             var thisObj = this;
             dojo.connect(arrowDiv, "onclick", function () {
@@ -170,15 +170,15 @@ define([
 
                 if (!leftContainer.isHidden) {
                    
-                    thisObj._hideMenu(leftDiv, rightDiv, kuiLayout, leftContainer);
+                    thisObj._hideMenu(leftDiv, rightDiv, kuiLayout, leftContainer, patternComposerModel);
                     leftContainer.isHidden = true;
 
-                    arrowMap.currentArrow = arrowMap.rightArrow;
+                    arrowMap.currentArrow = arrowMap.rightArrow; 
                     thisObj._setArrowSize(arrowMap, rightDiv);
                 }
                 else {
 
-                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25);
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25, patternComposerModel);
                     leftContainer.isHidden = false;
 
                     arrowMap.currentArrow = arrowMap.leftArrow;
@@ -187,7 +187,7 @@ define([
             }); 
         },
 
-        _fullScreenClickEvent: function(fullScreenDiv, leftDiv, rightDiv){
+        _fullScreenClickEvent: function(fullScreenDiv, leftDiv, rightDiv, patternComposerModel){
 
             var thisObj = this;
             dojo.connect(fullScreenDiv, "onclick", function () {
@@ -198,12 +198,9 @@ define([
 
                 if (!leftContainer.isFullScreen) {
 
-                    //var windowWidth = domGeom.getContentBox(kuiLayout.domNode).w;
                     domStyle.set(leftContainer.domNode, 'max-width', '100%');  
-                    //leftContainer.resize({ w: windowWidth });
-                    //domStyle.set(leftDiv, 'width', '96%');
 
-                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 100);
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 100, patternComposerModel);
 
                     leftContainer.isFullScreen = true;  
                     kuiLayout.resize();
@@ -213,7 +210,7 @@ define([
                     domStyle.set(leftContainer.domNode, 'max-width', '400px');
                     leftContainer.isFullScreen = false;
 
-                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25); 
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25, patternComposerModel); 
                 }  
             });         
         },
@@ -239,7 +236,7 @@ define([
             kuiLayout.resize();
         },
 
-        _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer, percentage){
+        _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer, percentage, patternComposerModel){
 
             var leftWidth = this._findPaneWidth(kuiLayout, percentage);
             leftContainer.resize({ w: leftWidth });
@@ -248,10 +245,11 @@ define([
 
             var rightDivWidth = 20;
             var leftDivWidth = (this._findPaneWidth(leftContainer, 100)) - rightDivWidth;
-            //var rightDivWidth = this._findPaneWidth(leftContainer, 4);
-
+            
             domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
-            domStyle.set(rightDiv, 'width', rightDivWidth  - 3 +'px');
+            domStyle.set(rightDiv, 'width', rightDivWidth - 3 + 'px');
+
+            patternComposerModel.timeline.svg.attr("width", leftDivWidth); 
 
             kuiLayout.resize();
         },
