@@ -63,7 +63,7 @@ define([
             },
 
             _createPatternSection: function(){
-
+                   
                 var patternButtonTableItems = []; 
 
                 var patternDivs = this.createTitlePane("System Patterns");

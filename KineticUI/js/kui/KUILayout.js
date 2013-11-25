@@ -17,10 +17,11 @@ define([
       "dojo/dom-construct",
       "kui/Simulation/Simulation",
       "kui/Simulation/SimPane",
-      "dojo/dom-style"
+      "dojo/dom-style",
+      "dojo/dom-class"
 ],
           function (declare, registry, BorderContainer, ContentPane, DesignMenu,
-               ModelView, html, domConstruct, Simulation, SimPane, domStyle) {
+               ModelView, html, domConstruct, Simulation, SimPane, domStyle, domClass) {
 
               return declare("kui.PatternMenu.KUILayout", BorderContainer, {
 
@@ -116,6 +117,37 @@ define([
 
                       bottomContainer.set('content', this.simPane);
                       this.addChild(bottomContainer);
+
+                      var modeDiv = html.createDiv("width: 100px;" +
+                          "height:30px;"+
+                          "position: absolute;"+
+                          "top:0;"+
+                          "right:0;"+
+                          "background-color:#141414;"+
+                          "display: table;"+
+                          "vertical-align: middle;"+
+                          "text-align: center;"+
+                          "margin: 10px;"+
+                          "border: 2px solid #222222;");
+
+                      var liveDiv = html.createDiv(
+                          "background-color:#8e0100;");
+
+                      domClass.add(liveDiv, "modeItem"); 
+
+                      liveDiv.innerHTML = "live";
+
+                      var vertexDiv = html.createDiv(
+                          "background-color:#141414;" +
+                          "color:#e0e0e0;"+
+                          "background-image:url('../js/kui/images/vertex.png');");
+
+                      domClass.add(vertexDiv, "modeItem"); 
+
+                      domConstruct.place(liveDiv, modeDiv); 
+                      domConstruct.place(vertexDiv, modeDiv);
+                      domConstruct.place(modeDiv, modelView.domNode);
+                     
                   },
 
                   startup: function () {

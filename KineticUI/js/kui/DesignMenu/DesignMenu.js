@@ -56,7 +56,7 @@ define([
 
             var fullScreenDiv = html.createDiv();
 
-            var rightDiv = html.createDiv("width:4%;" +
+            var rightDiv = html.createDiv("width:4%;" + 
                 "height:100%;" +
                 "float:right;" +
                 "display:block;");
@@ -196,7 +196,7 @@ define([
                 var centerContainer = registry.byId("centerContainer");
                 var kuiLayout = registry.byId("kuiLayout");
 
-                if (!leftContainer.isFullScreen) {
+                if (!leftContainer.isFullScreen) { 
 
                     domStyle.set(leftContainer.domNode, 'max-width', '100%');  
 
