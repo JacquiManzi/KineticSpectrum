@@ -69,6 +69,7 @@ define([
                       /*Left container*/
                       var leftContainer = new ContentPane({
                           isHidden: false,
+                          isFullScreen: false,
                           isLayoutContainer: true,
                           region: "left",
                           id: "leftContainer",
@@ -82,9 +83,9 @@ define([
                       this.addChild(leftContainer);
                       
                       var leftDiv = html.createDiv("height:100%;" +
-                          "width:99%;" +
+                          "width:100%;" +
                           "background-color:black;" +
-                          "overflow:hidden;");
+                          "overflow:hidden;"); 
 
                       var innerTopDiv = html.createDiv("height:5%;" +
                           "width:100%;" +

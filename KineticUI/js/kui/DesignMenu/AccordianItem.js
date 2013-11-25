@@ -54,10 +54,10 @@ define([
             createTitlePane: function (title) {
 
                 var spacerDivStyle = "width:100%;height:7px;";
-                var div = html.createDiv("text-align:center;");
+                var div = html.createDiv("text-align:center;max-width:400px;margin-left:auto;margin-right:auto;");
                
                 var titlePane = new TitlePane({
- 
+  
                     title: title,
                     content: div
                 }); 

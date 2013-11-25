@@ -18,10 +18,11 @@ define([
     "kui/ajax/SimState",
     "dojo/_base/array",
     "kui/DesignMenu/AccordianItem",
-    "dojo/dom-class" 
+    "dojo/dom-class",
+    "dojo/dom-style"
 ],
     function (declare, html, CommonForm, domConstruct, on, domGeom, Moveable,
-        SimSate, array, AccordianItem, domClass) {
+        SimSate, array, AccordianItem, domClass, domStyle) {
 
         return declare("kui.DesignMenu.PatternComposerMenu.PatternComposerMenu", AccordianItem, {
 
@@ -30,7 +31,7 @@ define([
                 this.title = "Pattern Composer";               
             },
 
-            createComposerMenu: function (container) {
+            createComposerMenu: function (container) { 
                
                 domConstruct.place(this.domNode, container.domNode);
                
@@ -52,6 +53,8 @@ define([
             _createTimeline: function(){
 
                 var timelineDivs = this.createTitlePane("Pattern Timeline");
+                domStyle.set(timelineDivs.paneDiv, 'max-width', '100%');
+                domStyle.set(timelineDivs.contentDiv, 'max-width', '100%');
                 this.patternComposerModel.timeline.createCanvas(timelineDivs.contentDiv);
 
                 domConstruct.place(timelineDivs.paneDiv, this.domNode);

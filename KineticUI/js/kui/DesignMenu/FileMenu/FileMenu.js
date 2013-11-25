@@ -91,7 +91,7 @@ define([
                 var fileDivs = this.createTitlePane("Upload Files");
 
                 uploadTableItems.push(this._createUploadButton());
-                uploadTableItems.push({ contentValue: html.createDiv("height:10px;") });
+                uploadTableItems.push({ contentValue: html.createDiv("height:10px;") }); 
                 uploadTableItems.push(this._createLightConfigUploadButton());
                 this.addTableItem(uploadTableItems, fileDivs.contentDiv);
 

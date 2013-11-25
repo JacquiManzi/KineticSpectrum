@@ -74,5 +74,8 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+
+    height: 3%;
+    width: 100%;  
 }
  
