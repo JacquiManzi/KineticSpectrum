@@ -19,7 +19,7 @@ define([
                 url: "Env.svc/GetGroupNames",
                 handleAs: "json", 
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -30,7 +30,7 @@ define([
                 url: "Env.svc/GetPatternNames",
                 handleAs: "json",
                 load: onLoad,
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -56,7 +56,7 @@ define([
                     onSuccessFunc(groupList);
 
                 },
-                error: function (err1, err2) {
+                error: function (err1) {
                     console.log(err1.stack);
                 }
             });
@@ -71,26 +71,15 @@ define([
             });
         };
 
+        
+
         var tryPattern = function(pattern, onLoad) {
-            xhr.post({
+            return xhr.post({
                 url: "PatternService.svc/TryPattern",
                 content: { d: JSON.stringify(pattern) },
                 handleAs: "json",
-                load: function (lightStates) {
-                    var time, timeState, timeStr;
-                    var endTime = 0;
-                    var newStates = {};
-                    for (timeStr in lightStates) {
-                        time = timeStr * 1.0;
-                        endTime = Math.max(time, endTime);
-                        timeState = lightStates[timeStr];
-                        
-                        array.forEach(timeState, function (lightState) {
-                            lightState.address = new LightAddress(lightState.address);
-                        });
-                        newStates[time] = timeState;
-                    }
-                    onLoad(lightStates, endTime);  
+                load: function(endTime) {
+                    onLoad(endTime / 1000);
                 },
                 error: function(err) {
                     console.log(err.stack);
@@ -109,6 +98,18 @@ define([
             xhr.post({
                 url: "Env.svc/SelectLights",
                 content: { d: JSON.stringify(leds) }
+            });
+        };
+
+        var addLEDs = function (leds, addressFunc) {
+            addressFunc = addressFunc || function() {};
+            xhr.post({
+                url: "Env.svc/AddLEDs",
+                handleAs: "json",
+                content: { d: JSON.stringify(leds) },
+                load: function(data) {
+                    addressFunc(data);
+                }
             });
         };
 
@@ -137,9 +138,10 @@ define([
             deleteGroup: deleteGroup,
             tryPattern: tryPattern,
             addLED: addLED,
+            addLEDs: addLEDs,
             selectLEDs: selectLEDs,
             selectGroups: selectGroups,
-            removeLED:removeLED
+            removeLED:removeLED,
         };
 
     });

@@ -45,6 +45,13 @@ namespace KineticUI
         }
 
         [OperationContract]
+        public Stream AddLEDs(Stream ledStream)
+        {
+            IEnumerable<LEDNode> node = Serializer.FromPost<IEnumerable<LEDNode>>(ledStream);
+            return Serializer.ToStream(LightSystemProvider.AddLEDs(node));
+        }
+
+        [OperationContract]
         public void RemoveLED(Stream addressStream)
         {
             LightAddress node = Serializer.FromPost<LightAddress>(addressStream);

@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="css/KineticSpectrum.css" media="screen"/>
 
     <!--Javascript libraries to import -->
+    <!-- Load javascript prototypes to "fix" the language a bit-->
+    <script type="text/javascript" src="js/kui/prototypes.js" ></script>
     <!--Dojo toolkit -->
-    <script "text/javascript" src="js/libraries/dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true, gfxRenderer:'svg,silverlight,vml',
+    <script type="text/javascript" src="js/libraries/dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true, gfxRenderer:'svg,silverlight,vml',
     debugAtAllCosts: true, isDebug: true, mblThemeFiles: ['base','Carousel','PageIndicator'], locale: '${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}',  paths: {'kui': '/js/kui', 'd3js': '/js/libraries/d3js', 'threejs': '/js/libraries/threejs'} "></script>  
     <!-- Dijit- Dojo toolkit UI library -->
     <script type="text/javascript" src="js/libraries/dojo/dijit/dijit.js" data-dojo-config="async: true, parseOnLoad: true, isDebug: true,  debugAtAllCosts: true ,

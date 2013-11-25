@@ -73,6 +73,23 @@ namespace RevKitt.KS.KineticEnvironment
             }
         }
 
+        public static IList<LightAddress> AddLEDs(IEnumerable<LEDNode> nodes)
+        {
+            IList<LightAddress> addresses = new List<LightAddress>();
+            foreach (LEDNode node in nodes)
+            {
+                LEDNode uNode = node;
+                if (node.Address.IsUnknown)
+                {
+                    uNode = new LEDNode(new LightAddress(-1,-1, _unaddressed++), node.Position );
+                }
+                _nodes.Add(uNode.Address, uNode);
+                addresses.Add(uNode.Address);
+            }
+            LightsUpdated(true);
+            return addresses;
+        }
+
         public static LightAddress AddLED(LEDNode node)
         {
             if (_nodes.ContainsKey(node.Address))

@@ -2,9 +2,10 @@
     "dojo/_base/declare",    
     "kui/ModelView/Node/Node",
     "kui/ModelView/ModelEnvironment/Vector3",
+    "kui/ModelView/Node/LightAddress",
     "kui/ModelView/ModelEnvironment/MeshBasicMaterial"
 ],
-    function (declare, Node, Vector3, MeshBasicMaterial) {
+    function (declare, Node, Vector3, LightAddress, MeshBasicMaterial) {
         "use strict";
         return declare("kui.ModelView.Node.LED", [Node], {
 
@@ -28,7 +29,7 @@
                 this.setSegmentWidth(this.SEGMENT_WIDTH);
                 this.setSegmentHeight(this.SEGMENT_HEIGHT);
 
-                this.address = this.ADDRESS;
+                this.address = new LightAddress();
                 this.position = new Vector3();
                 this.color = this.COLOR;
 
