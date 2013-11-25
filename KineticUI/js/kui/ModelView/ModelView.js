@@ -275,9 +275,7 @@ define([
 
             shineAmbientLight: function (scene) {
              scene.add(this.ambientLight);
-            }
-             
-
+            }           
         });
 
     });

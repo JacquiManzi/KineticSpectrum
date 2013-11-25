@@ -88,7 +88,7 @@ body {
     font-size: 1.2em;
     display: table-cell;
     vertical-align: middle;
-    border: 1px solid #141414;
+
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -98,6 +98,35 @@ body {
     cursor: pointer;
     opacity: 0.8;
  }
+
+.allLeds { 
+
+    width:50px;
+    height:50px;
+    background-image:url('../js/kui/images/ledSprite.png');
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    background-size: 100px 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .allLeds:hover, .allVertices:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+
+    .allVertices {  
+
+    width:50px;
+    height:50px;
+    background-image:url('../js/kui/images/selectVertex.png');
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    background-size: 100px 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
  
   
  

@@ -17,10 +17,11 @@ define([
     "kui/ModelView/Node/LightAddress",
     "kui/DesignMenu/AccordianItem",
     "kui/DesignMenu/GroupBox",
-    "dojo/dom-class"
+    "dojo/dom-class",
+    "dojo/dom-style"  
 ],
-    function (declare, html,  domConstruct, CommonForm,  on, array, Scenes, LightAddress, AccordianItem, GroupBox, domClass) {
-        "use strict";
+    function (declare, html, domConstruct, CommonForm, on, array, Scenes, LightAddress, AccordianItem, GroupBox, domClass, domStyle) {
+
         return declare("kui.DesignMenu.LEDMenu.LEDMenu", AccordianItem, {
                    
             constructor: function () {
@@ -57,14 +58,14 @@ define([
 
             _createSelectNodes: function(){
 
-                var selectNodeDivs = this.createTitlePane("Select / Deselect Nodes");
-                this.addDivItem(this._createSelectLEDsSection(), selectNodeDivs.contentDiv);
-                this.addDivItem(this._createDeselectLEDsSection(), selectNodeDivs.contentDiv);
-                this.addDivItem(this._createtSelectVertexSection(), selectNodeDivs.contentDiv);
-                this.addDivItem(this._createDeselectVertexSection(), selectNodeDivs.contentDiv);
+                var selectNodeDivs = this.createTitlePane("Select / Deselect All Nodes");
+                var nodeTableItems = [];
+                nodeTableItems.push(this._createSelectNodeSection());
+                this.addTableItem(nodeTableItems, selectNodeDivs.contentDiv);
+
                 this.addDivItem(this._createRemoveSection(), selectNodeDivs.contentDiv);
 
-                domConstruct.place(selectNodeDivs.paneDiv, this.domNode);                
+                domConstruct.place(selectNodeDivs.paneDiv, this.domNode);                 
             },
 
             _createAddLEDModeDiv: function(){
@@ -158,72 +159,82 @@ define([
 
             },
 
-            _createSelectLEDsSection: function(){
+            _createSelectNodeSection: function(){
 
                 var div = html.createDiv("padding-top:10px;");
 
                 var thisObj = this;
-                var selectLEDButton = CommonForm.createButton('Select All LEDs', function () {
+                var selectLEDButton = html.createDiv();
+                domClass.add(selectLEDButton, "allLeds");
 
-                    thisObj.sceneModel.getNodeModel().selectAllLEDs();
+                on(selectLEDButton, "click", function(){
+
+                    if (!thisObj.sceneModel.allLEDsSelected) {
+                        thisObj.sceneModel.getNodeModel().selectAllLEDs();
+                        domStyle.set(selectLEDButton, "background-position", "-50px 0px");
+
+                        thisObj.sceneModel.allLEDsSelected = true;
+                    }
+                    else {
+                        thisObj.sceneModel.getNodeModel().deselectAllLEDs();
+                        domStyle.set(selectLEDButton, "background-position", "0px 0px");
+
+                        thisObj.sceneModel.allLEDsSelected = false;
+                    } 
                 });
 
-                domConstruct.place(selectLEDButton.domNode, div);
-                CommonForm.setButtonStyle(selectLEDButton, 90);
+                domConstruct.place(selectLEDButton, div);
+
+                var selectVertexButton = html.createDiv();
+                domClass.add(selectVertexButton, "allVertices");
+
+                on(selectVertexButton, "click", function () {
+
+                    if (!thisObj.sceneModel.allVerticesSelected) {
+                        thisObj.sceneModel.getNodeModel().selectAllVertexs();
+                        domStyle.set(selectVertexButton, "background-position", "-50px 0px");
+
+                        thisObj.sceneModel.allVerticesSelected = true;
+                    }
+                    else {
+                        thisObj.sceneModel.getNodeModel().deselectAllVertexs();
+                        domStyle.set(selectVertexButton, "background-position", "0px 0px");
+
+                        thisObj.sceneModel.allVerticesSelected = false;
+                    }
+                });
 
                 return {
-                    valueContent: div
+                    selectLEDButton: selectLEDButton,
+                    selectVertexButton: selectVertexButton
                 };
             },
 
-            _createDeselectLEDsSection: function(){
+            _createSelectVertexSection: function(){
 
-                var div = html.createDiv();
-
-                var thisObj = this;
-                var deselectLEDButton = CommonForm.createButton('Deselect All LEDs', function () {
-
-                    thisObj.sceneModel.getNodeModel().deselectAllLEDs();
-                });
-
-                domConstruct.place(deselectLEDButton.domNode, div);
-                CommonForm.setButtonStyle(deselectLEDButton, 90);
-
-                return {
-                    valueContent: div
-                };
-            },
-
-            _createtSelectVertexSection: function(){
-
-                var div = html.createDiv();
+                var div = html.createDiv(); 
 
                 var thisObj = this;
-                var selectVertexButton = CommonForm.createButton('Select All Vertices', function () {
+                var selectVertexButton = html.createDiv();
+                domClass.add(selectVertexButton, "allVertices");
 
-                    thisObj.sceneModel.getNodeModel().selectAllVertexs();
+                on(selectVertexButton, "click", function () {
+
+                    if (!thisObj.sceneModel.allVerticesSelected) {
+                        thisObj.sceneModel.getNodeModel().selectAllVertexs();
+                        domStyle.set(selectVertexButton, "background-position", "-50px 0px");
+
+                        thisObj.sceneModel.allVerticesSelected = true;
+                    } 
+                    else {
+                        thisObj.sceneModel.getNodeModel().deselectAllVertexs();
+                        domStyle.set(selectVertexButton, "background-position", "0px 0px");
+
+                        thisObj.sceneModel.allVerticesSelected = false; 
+                    }
                 });
 
-                domConstruct.place(selectVertexButton.domNode, div);
-                CommonForm.setButtonStyle(selectVertexButton, 90);
-
-                return {
-                    valueContent: div
-                };
-            },
-
-            _createDeselectVertexSection: function(){
-
-                var div = html.createDiv();
-
-                var thisObj = this;
-                var deselectVertexButton = CommonForm.createButton('Deselect All Vertices', function () {
-
-                    thisObj.sceneModel.getNodeModel().deselectAllVertexs();
-                });
-
-                domConstruct.place(deselectVertexButton.domNode, div);
-                CommonForm.setButtonStyle(deselectVertexButton, 90);
+                domConstruct.place(selectVertexButton, div); 
 
                 return {
                     valueContent: div

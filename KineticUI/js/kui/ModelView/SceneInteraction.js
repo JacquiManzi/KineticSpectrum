@@ -43,6 +43,7 @@ define([
                 this.orbitControl = new OrbitalControl(this.camera, this.domNode);  
                 this.dragControls = new DragControls(this.camera, this.nodeModel.nodes, this.domNode, domGeom);
                 this.addModeOn = false;
+                this.verticesHidden = false;
 
                 this._initiateMouseEvents();
                 

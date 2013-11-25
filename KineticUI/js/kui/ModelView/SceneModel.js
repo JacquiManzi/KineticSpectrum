@@ -18,6 +18,8 @@ define([
                 this.sceneInteraction = sceneInteraction;
                 this.groupModel = this.sceneInteraction.groupModel;
                 this.modeView = modelView;
+                this.allLEDsSelected = false;
+                this.allVerticesSelected = false;
 
                 this.simulation = new Simulation();
             },

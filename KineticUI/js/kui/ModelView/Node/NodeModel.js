@@ -201,6 +201,26 @@ define([
                 this.nodes.add(node);
             },
 
+            hideAllVertices: function(){
+
+                this.nodes.forEach(function (node) {
+
+                    if (node.isVertex) {
+                        node.visible = false;  
+                    }
+                }); 
+            },
+
+            showAllVertices: function(){
+
+                this.nodes.forEach(function (node) {
+
+                    if (node.isVertex) {
+                        node.visible = true; 
+                    }
+                });
+            },
+
             removeNodesFromSet: function (nodes) {
                      
                 var thisObj = this;

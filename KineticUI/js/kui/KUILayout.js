@@ -18,14 +18,15 @@ define([
       "kui/Simulation/Simulation",
       "kui/Simulation/SimPane",
       "dojo/dom-style",
-      "dojo/dom-class"
+      "dojo/dom-class",
+      "dojo/on"
 ],
           function (declare, registry, BorderContainer, ContentPane, DesignMenu,
-               ModelView, html, domConstruct, Simulation, SimPane, domStyle, domClass) {
+               ModelView, html, domConstruct, Simulation, SimPane, domStyle, domClass, on) {
 
               return declare("kui.PatternMenu.KUILayout", BorderContainer, {
 
-                  buildRendering: function () {
+                  buildRendering: function () { 
 
                       this.inherited(arguments);                     
                       this._createKUILayout();
@@ -142,7 +143,23 @@ define([
                           "color:#e0e0e0;"+
                           "background-image:url('../js/kui/images/vertex.png');");
 
-                      domClass.add(vertexDiv, "modeItem"); 
+                      domClass.add(vertexDiv, "modeItem");
+
+                      on(vertexDiv, "click", function () {
+
+                          if (!modelView.sceneInteraction.verticesHidden) {
+                              modelView.sceneInteraction.nodeModel.hideAllVertices();
+                              modelView.sceneInteraction.verticesHidden = true;
+
+                              domStyle.set(vertexDiv, "background-color", "#0072c4");
+                          }
+                          else {
+                              modelView.sceneInteraction.nodeModel.showAllVertices();
+                              modelView.sceneInteraction.verticesHidden = false;
+
+                              domStyle.set(vertexDiv, "background-color", "transparent"); 
+                          }
+                      });
 
                       domConstruct.place(liveDiv, modeDiv); 
                       domConstruct.place(vertexDiv, modeDiv);
