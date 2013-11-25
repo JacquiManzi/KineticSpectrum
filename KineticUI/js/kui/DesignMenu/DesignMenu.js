@@ -52,10 +52,9 @@ define([
                 "background-color:#000000;");
 
             var arrowDiv = html.createDiv("width:100%;"+
-                "height:95%;");
+                "height:97%;");
 
-            var fullScreenDiv = html.createDiv("width:100%;" +
-                "height:5%;");
+            var fullScreenDiv = html.createDiv();
 
             var rightDiv = html.createDiv("width:4%;" +
                 "height:100%;" +
@@ -79,7 +78,8 @@ define([
 
             var arrowMap = this._drawArrowCanvas(arrowDiv);
          
-            this.arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap); 
+            this._arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap);
+            this._fullScreenClickEvent(fullScreenDiv, leftDiv, rightDiv);
 
             var thisObj = this;
             aspect.after(this , "resize", function () {
@@ -160,7 +160,7 @@ define([
             
         },
 
-        arrowBarClickEvent: function (arrowDiv, rightDiv, leftDiv, arrowMap) {
+        _arrowBarClickEvent: function (arrowDiv, rightDiv, leftDiv, arrowMap) {
 
             var thisObj = this;
             dojo.connect(arrowDiv, "onclick", function () {
@@ -178,14 +178,44 @@ define([
                 }
                 else {
 
-                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer);
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25);
                     leftContainer.isHidden = false;
 
                     arrowMap.currentArrow = arrowMap.leftArrow;
                     thisObj._setArrowSize(arrowMap, rightDiv);
                 }
-            });
+            }); 
+        },
 
+        _fullScreenClickEvent: function(fullScreenDiv, leftDiv, rightDiv){
+
+            var thisObj = this;
+            dojo.connect(fullScreenDiv, "onclick", function () {
+
+                var leftContainer = registry.byId("leftContainer");
+                var centerContainer = registry.byId("centerContainer");
+                var kuiLayout = registry.byId("kuiLayout");
+
+                if (!leftContainer.isFullScreen) {
+
+                    //var windowWidth = domGeom.getContentBox(kuiLayout.domNode).w;
+                    domStyle.set(leftContainer.domNode, 'max-width', '100%');  
+                    //leftContainer.resize({ w: windowWidth });
+                    //domStyle.set(leftDiv, 'width', '96%');
+
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 100);
+
+                    leftContainer.isFullScreen = true;  
+                    kuiLayout.resize();
+                }
+                else {
+
+                    domStyle.set(leftContainer.domNode, 'max-width', '400px');
+                    leftContainer.isFullScreen = false;
+
+                    thisObj._showMenu(leftDiv, rightDiv, kuiLayout, leftContainer, 25); 
+                }  
+            });         
         },
 
         _hideMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
@@ -209,18 +239,19 @@ define([
             kuiLayout.resize();
         },
 
-        _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer){
+        _showMenu: function(leftDiv, rightDiv, kuiLayout, leftContainer, percentage){
 
-            var leftWidth = this._findPaneWidth(kuiLayout, 25);
+            var leftWidth = this._findPaneWidth(kuiLayout, percentage);
             leftContainer.resize({ w: leftWidth });
          
             kuiLayout.resize();
 
-            var leftDivWidth = this._findPaneWidth(leftContainer, 96);
-            var rightDivWidth = this._findPaneWidth(leftContainer, 4);
+            var rightDivWidth = 20;
+            var leftDivWidth = (this._findPaneWidth(leftContainer, 100)) - rightDivWidth;
+            //var rightDivWidth = this._findPaneWidth(leftContainer, 4);
 
-            domStyle.set(leftDiv, 'width', leftDivWidth - 10 + 'px');
-            domStyle.set(rightDiv, 'width', rightDivWidth  + 2 +'px');
+            domStyle.set(leftDiv, 'width', leftDivWidth + 'px');
+            domStyle.set(rightDiv, 'width', rightDivWidth  - 3 +'px');
 
             kuiLayout.resize();
         },

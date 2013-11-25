@@ -88,8 +88,11 @@
 
          setButtonStyle = function(button, widthAmount)
              {
-                 domStyle.set(button.domNode, "width", widthAmount+"%");
+                 domStyle.set(button.domNode, "width", widthAmount+"%"); 
                  domStyle.set(button.domNode.firstChild, "width", "100%");
+                 //domStyle.set(button.domNode.firstChild, "max-width", "350px");
+                 domStyle.set(button.domNode.firstChild, "margin-right", "auto");
+                 domStyle.set(button.domNode.firstChild, "margin-left", "auto");  
                  domStyle.set(button.domNode.firstChild, "background-image", "none");
                  domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
                  domStyle.set(button.domNode.firstChild, "border-radius", "0px");
@@ -108,11 +111,8 @@
 
                  on(button.domNode.firstChild, "mouseup", function () {
                      domStyle.set(button.domNode.firstChild, "background-color", "#2d2d2d");
-                 });
-              
-                    
+                 });                    
              },
-
 
          createDropDown = function (label, style) {
 
@@ -133,7 +133,7 @@
 
                  label: label,
                  onClick: func,
-                 style: style
+                 style: style    
              });
 
              if (!!div) {
