@@ -40,7 +40,7 @@ define([
                     var ledNode = new LED();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.setRadius(0.004);
+                    ledNode.setRadius(0.007);
 
                     this.scene.add(ledNode);
                     this.nodes.add(ledNode);
@@ -157,7 +157,7 @@ define([
                     for (var i = 0; i < serverAddresses.length; i++) {
                         var led = new LED();
                         led.updatePosition(leds[i].position);
-                        led.setRadius(0.004);
+                        led.setRadius(0.007);
                         led.address = new LightAddress(serverAddresses[i]);
                         this.addressToLED[led.address] = led;
                         this.nodes.add(led);
@@ -172,7 +172,7 @@ define([
                 var led = new LED();
                 led.updatePosition(position);
                 led.address = address;
-                led.setRadius(.004);
+                led.setRadius(.007);
 
                 Scenes.addLED(led, dojo.hitch(this, function(serverAddress) {
                     led.address = new LightAddress(serverAddress);
@@ -201,9 +201,13 @@ define([
             applyColorState: function(lightStateList) {
 
                 var addressToLED = this.addressToLED;
+                var addressString = this.addressString;
                 array.forEach(lightStateList, function(state) {
-                    addressToLED[state.address.toString()].setColor(state.color);
+                    addressToLED[addressString(state.address)].setColor(state.color);
                 });
+            },
+            addressString: function(address) {
+                return address.fixtureNo + '-' + address.portNo + '-' + address.lightNo;
             },
 
             getAllLEDs: function () {

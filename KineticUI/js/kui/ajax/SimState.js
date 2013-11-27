@@ -275,7 +275,6 @@ define([
                     }
                     times.push(time);
                     states.push(state);
-                    timer = Date.now();
                 }
                 console.log("processing time: " + (Date.now() - timer));
                 return {

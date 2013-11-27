@@ -173,6 +173,7 @@
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternModel.js" />
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternMenu.js" />
     <Content Include="js\kui\prototypes.js" />
+    <Content Include="js\kui\Simulation\LoadWorker.js" />
     <Content Include="js\kui\Simulation\SimPane.js" />
     <Content Include="js\kui\Simulation\Simulation.js" />
     <Content Include="js\kui\Simulation\TimeManager.js" />
