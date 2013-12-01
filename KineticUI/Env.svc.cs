@@ -35,20 +35,25 @@ namespace KineticUI
         {
             IGroup groupObj = Serializer.FromPost<IGroup>(group);
             State.Scene.SetGroup(groupObj);
+            Saver.LocalSave();
         }
 
         [OperationContract]
         public Stream AddLED(Stream ledStream)
         {
             LEDNode node = Serializer.FromPost<LEDNode>(ledStream);
-            return Serializer.ToStream(LightSystemProvider.AddLED(node));
+            var ledAddress = LightSystemProvider.AddLED(node);
+            Saver.LocalSave();
+            return Serializer.ToStream(ledAddress);
         }
 
         [OperationContract]
         public Stream AddLEDs(Stream ledStream)
         {
             IEnumerable<LEDNode> node = Serializer.FromPost<IEnumerable<LEDNode>>(ledStream);
-            return Serializer.ToStream(LightSystemProvider.AddLEDs(node));
+            var addresses = LightSystemProvider.AddLEDs(node);
+            Saver.LocalSave();
+            return Serializer.ToStream(addresses);
         }
 
         [OperationContract]
@@ -56,6 +61,7 @@ namespace KineticUI
         {
             LightAddress node = Serializer.FromPost<LightAddress>(addressStream);
             LightSystemProvider.RemoveLED(node);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -63,6 +69,7 @@ namespace KineticUI
         {
             var patternObj = Serializer.FromPost<Pattern>(pattern);
             State.Scene.SetPattern(patternObj);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -70,6 +77,7 @@ namespace KineticUI
         public void DeleteGroup(string groupName)
         {
             State.Scene.DeleteGroup(groupName);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -78,6 +86,7 @@ namespace KineticUI
         {
             IGroup groupObj = Serializer.Ser.Deserialize<IGroup>(new JsonTextReader(new StreamReader(newGroup)));
             State.Scene.RenameGroup(oldName, groupObj);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -85,6 +94,7 @@ namespace KineticUI
         public void DeletePattern(string patternName)
         {
             State.Scene.DeletePattern(patternName);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -93,6 +103,7 @@ namespace KineticUI
         {
             var patternObj = Serializer.FromStream<Pattern>(newPattern);
             State.Scene.RenamePattern(oldName, patternObj);
+            Saver.LocalSave();
         }
 
         [OperationContract]
@@ -179,50 +190,10 @@ namespace KineticUI
         public Stream Save()
         {
             Stream s = new MemoryStream();
-            Serializer.Ser.Formatting = Formatting.Indented;
-
-            var writer = new StreamWriter(s);
-
-            writer.WriteLine("###Fixtures\n");
-            foreach (var kv in LightSystemProvider.getFixtures())
-            {
-                writer.Write(kv.Key);
-                writer.Write(" ");
-                writer.Write(kv.Value);
-                writer.WriteLine();
-            }
-            writer.WriteLine("\n###Lights\n");
-            foreach (var node in LightSystemProvider.Lights)
-            {
-                writer.Write(node.Address.ToString());
-                writer.Write(' ');
-                writer.Write(node.Position.X);
-                writer.Write(' ');
-                writer.Write(node.Position.Y);
-                writer.Write(' ');
-                writer.Write(node.Position.Z);
-                writer.WriteLine();
-            }
-
-            writer.WriteLine("\n\n### Groups\n");
-            writer.Flush();
-            Serializer.ToStream(State.Scene.Groups, writer.BaseStream);
-//            writer.Write(groups);
-//            groups = null;
-
-
-            writer.WriteLine("\n\n### Patterns\n");
-            writer.Flush();
-            Serializer.ToStream(State.Scene.Patterns, writer.BaseStream);
-//            writer.WriteLine(patterns);
-//            patterns = null;
-            writer.Flush();
-
-            Serializer.Ser.Formatting = Formatting.None;
-
+            StreamWriter writer = new StreamWriter(s);
+            Saver.Save(writer);
             s.Position = 0;
             return s;
         }
-        // Add more operations here and mark them with [OperationContract]
     }
 }

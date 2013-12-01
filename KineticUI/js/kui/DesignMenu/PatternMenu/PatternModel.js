@@ -142,7 +142,6 @@ define([
 
                         this._updatePatternDropDown();
                     }));
-
                 }
             },
 
@@ -188,7 +187,7 @@ define([
                 }
 
                 patternDef.groups = this.sceneModel.getSelectedGroupNames();
-                patternDef.priority = 1.0;
+                patternDef.priority = 0.0;
 
                 dojo.mixin(this.patternDef, this.effectsDef);
                 dojo.mixin(this.patternDef, patternDef);

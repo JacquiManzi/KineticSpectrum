@@ -34,7 +34,7 @@ define([
                 default:
                     throw new Error("Simulation mode '" + mode + "' is not a valid simulation mode");
             }
-            xhr.get({
+            return xhr.get({
                 url: "SimState.svc/SetMode",
                 content: {mode:modeInt},
                 error: function (err1) {
@@ -53,7 +53,8 @@ define([
         };
 
         var removePattern = function (patternName, onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Env.svc/DeletePattern",
                 handleAs: "json",
                 sync: true,
@@ -70,7 +71,8 @@ define([
         };
 
         var getPatternNames = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Env.svc/GetPatternNames",
                 handleAs: "json",
                 sync: true,
@@ -90,7 +92,8 @@ define([
 
         var getPatterns = function(onLoad){
 
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Env.svc/GetPatterns",
                 handleAs: "json",
                 sync: true, 
@@ -109,11 +112,16 @@ define([
 
         };
 
-        var addStart = function (patternName, patternID, startTime) {
+        var addStart = function (patternName, patternID, startTime, priority) {
 
             return xhr.get({
                 url: "SimService.svc/AddStart",
-                content: { patternName: patternName, startTime: startTime, id: patternID }
+                content: {
+                    patternName: patternName,
+                    startTime: startTime,
+                    id: patternID,
+                    priority: priority
+                }
             });
 
         };
@@ -127,8 +135,9 @@ define([
         };
 
         var getPatternStarts = function (onLoad) {
+            onLoad = onLoad || function() { };
 
-            xhr.get({
+            return xhr.get({
                 url: "SimService.svc/GetStarts",
                 handleAs: "json",
                 load: function (data) {
@@ -153,7 +162,8 @@ define([
         };
 
         var getLightState = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "SimState.svc/GetLightState",
                 handleAs: "json",
                 load: function(states) {
@@ -171,7 +181,7 @@ define([
         };
         
         var play = function () {
-            xhr.get({
+            return xhr.get({
                 url: "SimState.svc/Play",
                 error: function (err1) {
                     if (!!err1) {
@@ -182,7 +192,7 @@ define([
         };
         
         var pause = function () {
-            xhr.get({
+            return xhr.get({
                 url: "SimState.svc/Pause",
                 error: function (err1) {
                     if (!!err1) {
@@ -193,7 +203,8 @@ define([
         };
         
         var isPlaying = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "SimState.svc/IsPlaying",
                 handleAs: "json",
                 load: function (data) { onLoad(data.d); },
@@ -206,7 +217,8 @@ define([
         };
 
         var getTime = function(onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "SimState.svc/GetTime",
                 handleAs: "json",
                 load: function (data) { onLoad(data.d); },
@@ -219,7 +231,7 @@ define([
         };
 
         var setTime = function (time) {
-            xhr.get({
+            return xhr.get({
                 url: "SimState.svc/SetTime",
                 content: { time: time },
                 error: function (err1) {
@@ -229,12 +241,16 @@ define([
                 }
             });
         };
-        
+
         var getEndTime = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "SimState.svc/GetEndTime",
                 handleAs: "json",
-                load: function (data) { onLoad(data.d); },
+                load: function (data) {
+                    onLoad(data.d);
+                    return data.d;
+                },
                 error: function (err1) {
                     if (!!err1) {
                         console.log(err1.stack);
@@ -243,48 +259,49 @@ define([
             });
         };
 
-        var getPatternRange = function (startTime, endTime) {
-            var timer = Date.now();
-            return xhr.get({
-                url: "PatternService.svc/GetRange",
-                content: {
-                    start: Math.round(startTime * 1000),
-                    end: Math.round(endTime * 1000)
-                },
-                handleAs: "json"
-            }).then(function(lightStates) {
-                console.log("load time: " + (Date.now() - timer));
-                timer = Date.now();
-                var time, timeState;
-                var times = [];
-                var states = [];
-                for (var i = 0; i < lightStates.length; i++) {
-                    var lights = lightStates[i];
-                    time = lights[0] / 1000.0;
-                    var state = [];
-                    for (var j = 1; j < lights.length;) {
-                        state.push({
-                            address: new LightAddress({
-                                fixtureNo: lights[j],
-                                portNo: lights[j + 1],
-                                lightNo: lights[j + 2]
-                            }),
-                            color: lights[j + 3]
-                        });
-                        j = j + 4;
-                    }
-                    times.push(time);
-                    states.push(state);
-                }
-                console.log("processing time: " + (Date.now() - timer));
-                return {
-                    times: times,
-                    states: states,
-                    start: startTime,
-                    end: endTime
-                };
-            },handleError);
-        };
+        //Commented out because this should be happening in a worker thread now
+//        var getPatternRange = function (startTime, endTime) {
+//            var timer = Date.now();
+//            return xhr.get({
+//                url: "PatternService.svc/GetRange",
+//                content: {
+//                    start: Math.round(startTime * 1000),
+//                    end: Math.round(endTime * 1000)
+//                },
+//                handleAs: "json"
+//            }).then(function(lightStates) {
+//                console.log("load time: " + (Date.now() - timer));
+//                timer = Date.now();
+//                var time, timeState;
+//                var times = [];
+//                var states = [];
+//                for (var i = 0; i < lightStates.length; i++) {
+//                    var lights = lightStates[i];
+//                    time = lights[0] / 1000.0;
+//                    var state = [];
+//                    for (var j = 1; j < lights.length;) {
+//                        state.push({
+//                            address: new LightAddress({
+//                                fixtureNo: lights[j],
+//                                portNo: lights[j + 1],
+//                                lightNo: lights[j + 2]
+//                            }),
+//                            color: lights[j + 3]
+//                        });
+//                        j = j + 4;
+//                    }
+//                    times.push(time);
+//                    states.push(state);
+//                }
+//                console.log("processing time: " + (Date.now() - timer));
+//                return {
+//                    times: times,
+//                    states: states,
+//                    start: startTime,
+//                    end: endTime
+//                };
+//            },handleError);
+//        };
 
         return {
             setMode: setMode,
@@ -302,6 +319,6 @@ define([
             addStart: addStart,
             getPatternStarts: getPatternStarts,
             removeStart: removeStart,
-            getPatternRange: getPatternRange
+//            getPatternRange: getPatternRange
         };
     });

@@ -15,7 +15,8 @@ define([
     function (declare, xhr, array, LightAddress, ArrayList) {
 
         var getGroupNames = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Env.svc/GetGroupNames",
                 handleAs: "json", 
                 load: onLoad,
@@ -26,7 +27,8 @@ define([
         };
         
         var getPatternNames = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Env.svc/GetPatternNames",
                 handleAs: "json",
                 load: onLoad,
@@ -37,8 +39,9 @@ define([
         };
 
         var getGroups = function (onSuccessFunc) {
-               
-            xhr.get({
+            onSuccessFunc = onSuccessFunc || function() {};
+
+            return xhr.get({
 
                 url: "Env.svc/GetGroups",
                 handleAs: "json",
@@ -64,7 +67,7 @@ define([
 
         var deleteGroup = function (groupName) {
 
-            xhr.get({
+            return xhr.get({
                 url: "Env.svc/DeleteGroup",
                 handleAs: "json",
                 content: { groupName: groupName }
@@ -73,7 +76,8 @@ define([
 
         
 
-        var tryPattern = function(pattern, onLoad) {
+        var tryPattern = function (pattern, onLoad) {
+            onLoad = onLoad || function() { };
             return xhr.post({
                 url: "PatternService.svc/TryPattern",
                 content: { d: JSON.stringify(pattern) },
@@ -88,14 +92,14 @@ define([
         };
 
         var selectGroups = function(groups) {
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/SelectGroups",
                 content: { d: JSON.stringify(groups) }
             });
         };
 
         var selectLEDs = function(leds) {
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/SelectLights",
                 content: { d: JSON.stringify(leds) }
             });
@@ -103,7 +107,7 @@ define([
 
         var addLEDs = function (leds, addressFunc) {
             addressFunc = addressFunc || function() {};
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/AddLEDs",
                 handleAs: "json",
                 content: { d: JSON.stringify(leds) },
@@ -115,7 +119,7 @@ define([
 
         var addLED = function (led, addressFunc) {
             addressFunc = addressFunc || function() {};
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/AddLED",
                 handleAs: "json",
                 content: { d: JSON.stringify(led) },
@@ -124,7 +128,7 @@ define([
         };
         
         var removeLED = function (led) {
-            xhr.post({
+            return xhr.post({
                 url: "Env.svc/RemoveLED",
                 handleAs: "json",
                 content: { d: JSON.stringify(led.address) }

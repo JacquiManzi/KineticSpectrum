@@ -29,7 +29,7 @@ namespace KineticUI
 
             var sim = State.PatternSim;
             sim.Clear();
-            sim.AddPattern(pObj, 0, 0);
+            sim.AddPattern(pObj, 0, 0, 0);
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
             sw.Write(sim.EndTime);
@@ -43,7 +43,7 @@ namespace KineticUI
         public Stream GetRange(int start, int end)
         {
             DateTime timerStart = DateTime.Now;
-            var sim = State.PatternSim;
+            var sim = State.Active;
             var ms = new MemoryStream();
             var streamWriter = new StreamWriter(ms);
             if (end > sim.EndTime || start < 0)

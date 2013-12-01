@@ -45,7 +45,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             {
                 if(value == null)
                     throw new ArgumentException("Cannot set Color to null on LEDNode");
-                if (!_address.IsUnknown && _active)
+                if (!_address.IsUnknown && !_address.IsVirtual && _active)
                     _lightSystem[_address] = value;
                 _color = value;
             }

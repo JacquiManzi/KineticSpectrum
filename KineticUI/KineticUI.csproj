@@ -7876,6 +7876,7 @@
     <Compile Include="Effects.svc.cs">
       <DependentUpon>Effects.svc</DependentUpon>
     </Compile>
+    <Compile Include="Saver.cs" />
     <Compile Include="SimService.svc.cs">
       <DependentUpon>SimService.svc</DependentUpon>
     </Compile>

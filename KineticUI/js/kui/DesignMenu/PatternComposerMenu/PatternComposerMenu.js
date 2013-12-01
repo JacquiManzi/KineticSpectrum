@@ -44,7 +44,7 @@ define([
                     this.patternComposerModel.timeline.createCanvas(timelineDiv);
                     this.patternComposerModel.updateComposerFromServer();
                     this.patternComposerModel.updatePatternListBox();
-                    this.sceneModel.simulation.setSimulationMode();
+                    this.simulation.setSimulationMode();
                 };
 
                 domClass.add(this.domNode, "designMenu"); 

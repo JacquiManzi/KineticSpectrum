@@ -32,7 +32,6 @@ define([
                 this.defaultCanvasHeight = 300;
                   
                 this.patternGroup = null;
-
             },
 
             createCanvas: function (div) {
@@ -80,18 +79,19 @@ define([
                 this.clearCanvas();
                 this.createCanvas(this.div);
 
-                var dragmove = function dragmove(d) {
+                var dragmove = function(d) {
                     var x = Math.max(44, Math.round(d3.event.sourceEvent.offsetX / 22) * 22);
                     var y = Math.round(d3.event.sourceEvent.offsetY/5) * 5;
                     d.updateStartTime(y);   
                     d3.select(this)
+                        .attr("x", d.priority = (x-44)/22)
                         .attr("x", d.xCount = x)
                         .attr("y", d.yCount = y);
                 };   
 
                 var dragend = function(d){
 
-                    SimState.addStart(d.getText(), d.countID, d.startTime);
+                    SimState.addStart(d.getText(), d.countID, d.startTime, d.priority);
                 };
 
                 var drag = d3.behavior.drag()
@@ -122,7 +122,6 @@ define([
                   
                     if (this.getAttribute('selected') === "false") {
                         d3.select(this).attr('r', 25)
-                            .style("fill", "lightcoral")
                             .style("stroke", "red");
                            
                         this.setAttribute('selected', 'true');
@@ -130,7 +129,7 @@ define([
                     else {
                         d3.select(this).attr('r', 25)
                             .style("fill", this.getAttribute('color'))
-                            .style("stroke", this.getAttribute('color'));
+                            .style("stroke", "#FFFFFF");
                               
                         this.setAttribute('selected', 'false'); 
                     }
