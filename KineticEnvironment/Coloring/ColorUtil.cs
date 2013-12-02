@@ -1,15 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
-namespace RevKitt.KS.KineticEnvironment
+namespace RevKitt.KS.KineticEnvironment.Coloring
 {
     public class ColorUtil
     {
-        public static readonly Color Empty = Color.FromArgb(100, 0, 0, 0);
+        public static readonly System.Windows.Media.Color Empty = System.Windows.Media.Color.FromArgb(100, 0, 0, 0);
 
 
         /// <summary>
@@ -20,9 +16,9 @@ namespace RevKitt.KS.KineticEnvironment
         /// <param name="rest">Remaining Layers - Optional</param>
         /// <see href="http://en.wikipedia.org/wiki/Alpha_compositing#Alpha_blending"/>
         /// <returns>The blended color from all layers</returns>
-        public static Color AlphaBlend(Color top, Color next, params Color[] rest)
+        public static System.Windows.Media.Color AlphaBlend(System.Windows.Media.Color top, System.Windows.Media.Color next, params System.Windows.Media.Color[] rest)
         {
-            List<Color> colors = new List<Color>{next};
+            List<System.Windows.Media.Color> colors = new List<System.Windows.Media.Color>{next};
             colors.AddRange(rest);
 
             foreach (var bottom in colors)
@@ -41,7 +37,7 @@ namespace RevKitt.KS.KineticEnvironment
                 double outG = (top.G * tA + bottom.G * bA * (1 - tA)) / (outA * 255);
                 double outB = (top.B * tA + bottom.B * bA * (1 - tA)) / (outA * 255);
 
-                top = Color.FromArgb((byte) Math.Max(255, outA*255),
+                top = System.Windows.Media.Color.FromArgb((byte) Math.Max(255, outA*255),
                                      (byte) Math.Max(255, outR*255),
                                      (byte) Math.Max(255, outG*255),
                                      (byte) Math.Max(255, outB*255));
@@ -49,16 +45,16 @@ namespace RevKitt.KS.KineticEnvironment
             return top;
         }
 
-        public static Color FromInt(int color)
+        public static System.Windows.Media.Color FromInt(int color)
         {
 //            return Color.FromArgb((byte) (color         & 0xff),
-            return Color.FromArgb((byte) 255,
+            return System.Windows.Media.Color.FromArgb((byte) 255,
                                   (byte) ((color >> 16) & 0xff),
                                   (byte) ((color >> 8) & 0xff),
                                   (byte) (color & 0xff));
         }
 
-        public static int ToInt(Color color)
+        public static int ToInt(System.Windows.Media.Color color)
         {
             int intColor = color.R;
             intColor = (intColor << 8) | color.G;
@@ -67,27 +63,27 @@ namespace RevKitt.KS.KineticEnvironment
             return intColor;
         }
 
-        public static Color Clone(Color color)
+        public static System.Windows.Media.Color Clone(System.Windows.Media.Color color)
         {
-            return Color.FromArgb(color.A, color.R, color.G, color.B);
+            return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
-        public static Color Interpolate(System.Drawing.Color color1, System.Drawing.Color color2, double fraction)
+        public static System.Windows.Media.Color Interpolate(System.Drawing.Color color1, System.Drawing.Color color2, double fraction)
         {
             double a = Interpolate(color1.A, color2.A, fraction);
             double r = Interpolate(color1.R, color2.R, fraction);
             double g = Interpolate(color1.G, color2.G, fraction);
             double b = Interpolate(color1.B, color2.B, fraction);
-            return Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
+            return System.Windows.Media.Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
         }
 
-        public static Color Interpolate(Color color1, Color color2, double fraction)
+        public static System.Windows.Media.Color Interpolate(System.Windows.Media.Color color1, System.Windows.Media.Color color2, double fraction)
         {
             double a = Interpolate(color1.A, color2.A, fraction);
             double r = Interpolate(color1.R, color2.R, fraction);
             double g = Interpolate(color1.G, color2.G, fraction);
             double b = Interpolate(color1.B, color2.B, fraction);
-            return Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
+            return System.Windows.Media.Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
         }
 
         private static double Interpolate(double d1, double d2, double fraction)
