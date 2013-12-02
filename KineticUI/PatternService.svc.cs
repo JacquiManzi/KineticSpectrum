@@ -12,6 +12,7 @@ using System.Threading;
 using System.Web;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.Coloring;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using KineticUI.JSConverters;
 

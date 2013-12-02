@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using KineticControl;
+using RevKitt.KS.KineticEnvironment.Coloring;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using Timer = System.Timers.Timer;
 

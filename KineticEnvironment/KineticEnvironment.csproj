@@ -53,8 +53,9 @@
   <ItemGroup>
     <Compile Include="Activatable.cs" />
     <Compile Include="ActivityController.cs" />
-    <Compile Include="ColorUtil.cs" />
-    <Compile Include="ColorUtilTest.cs" />
+    <Compile Include="Coloring\ColorPicker.cs" />
+    <Compile Include="Coloring\ColorUtil.cs" />
+    <Compile Include="Coloring\ColorUtilTest.cs" />
     <Compile Include="D3\D3Util.cs" />
     <Compile Include="D3\Plane.cs" />
     <Compile Include="Effects\AbstractEffect.cs" />
@@ -124,6 +125,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
