@@ -41,6 +41,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 _lightState.Add(lState);
             }
             LightSystemProvider.OnLightsUpdated += LightsUpdated;
+            ActivePatterns = new List<PatternStart>();
         }
 
         private void LightsUpdated(bool added)
@@ -101,15 +102,15 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         }
 
 
-        public PatternStart AddPattern(string patternName, int startTime, int id)
+        public PatternStart AddPattern(string patternName, int startTime, int id, int priority)
         {
             Pattern pattern = _scene.Patterns.First(p => p.Name.Equals(patternName));
-            return AddPattern(pattern, startTime, id);
+            return AddPattern(pattern, startTime, id, priority);
         }
 
-        public PatternStart AddPattern(Pattern pattern, int startTime, int id)
+        public PatternStart AddPattern(Pattern pattern, int startTime, int id, int priority)
         {
-            PatternStart pStart = new PatternStart(this,_scene, id, startTime, pattern );
+            PatternStart pStart = new PatternStart(this,_scene, id, startTime, pattern, priority);
             _endTime = Math.Max(_endTime, pStart.EndTime);
             _patternStarts.RemoveAll(start => start.Id == id);
             _patternStarts.Add(pStart);

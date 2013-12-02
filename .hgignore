@@ -9,3 +9,4 @@ style: regexp
 \.suo$
 \.orig$
 Config.resx$
+^KineticUI/SaveFile.\.json$

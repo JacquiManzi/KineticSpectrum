@@ -21,8 +21,7 @@ define([
             /*Retrieve saved groups from the server*/
             /*Returns ArrayList<Map<String>>*/
             getGroups: function (onSuccessFunc) {              
-                xhr.get({
-
+                return xhr.get({
                     url: "Env.svc/GetGroups",
                     handleAs: "json",
                     load: function (jsonData) {
@@ -48,7 +47,7 @@ define([
             getLightConfigList: function (onSuccessFunc) {
 
                 var lightInfoList = new ArrayList();
-                var file = xhr.get({
+                return xhr.get({
 
                     url: "Env.svc/GetLEDNodes",
                     handleAs: "json",

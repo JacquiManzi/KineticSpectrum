@@ -173,6 +173,7 @@
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternModel.js" />
     <Content Include="js\kui\DesignMenu\PatternMenu\PatternMenu.js" />
     <Content Include="js\kui\prototypes.js" />
+    <Content Include="js\kui\Simulation\LoadWorker.js" />
     <Content Include="js\kui\Simulation\SimPane.js" />
     <Content Include="js\kui\Simulation\Simulation.js" />
     <Content Include="js\kui\Simulation\TimeManager.js" />
@@ -7875,6 +7876,7 @@
     <Compile Include="Effects.svc.cs">
       <DependentUpon>Effects.svc</DependentUpon>
     </Compile>
+    <Compile Include="Saver.cs" />
     <Compile Include="SimService.svc.cs">
       <DependentUpon>SimService.svc</DependentUpon>
     </Compile>

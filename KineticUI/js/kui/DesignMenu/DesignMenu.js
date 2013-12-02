@@ -29,7 +29,7 @@ define([
      "kui/Simulation/Simulation"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
-        PatterComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
+        PatternComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
         domStyle, domClass, registry, domGeom, gfx, aspect, Simulation) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
@@ -100,11 +100,12 @@ define([
             patternMenu.createPatternMenu(this); 
 
             /*Pattern Composer Menu*/
-            var patternComposerModel = new PatternComposerModel(patternModel);
-            var patternComposer = new PatterComposerMenu({
+            var patternComposerModel = new PatternComposerModel(patternModel, this.simulation);
+            var patternComposer = new PatternComposerMenu({
                 sceneModel: this.sceneModel,
                 patternComposerModel: patternComposerModel,
-                patternModel: patternModel
+                patternModel: patternModel,
+                simulation:this.simulation
             });
 
             patternComposer.createComposerMenu(this);

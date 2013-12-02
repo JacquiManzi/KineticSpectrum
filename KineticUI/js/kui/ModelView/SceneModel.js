@@ -20,8 +20,6 @@ define([
                 this.modeView = modelView;
                 this.allLEDsSelected = false;
                 this.allVerticesSelected = false;
-
-                this.simulation = new Simulation();
             },
 
             getScene: function(){

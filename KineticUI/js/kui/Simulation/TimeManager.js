@@ -25,21 +25,36 @@
                 if (this.status !== Status.Empty) {
                     return deferredNoOp();
                 }
+                var deferred = new Deferred();
+                this.states = [];
+                this.times = [];
 
                 this.status = Status.Pending;
-                return SimState.getPatternRange(this.start, this.end)
-                    .then(dojo.hitch(this, function(rangeState) {
-                        this.states = rangeState.states;
-                        this.times = rangeState.times;
-                        if (this.times.length < 5) {
-                            throw Error("Number of returned states was unexpectedly small");
-                        }
-                        this.status = Status.Present;
-                    }), dojo.hitch(this, function(err) {
-                        this.status = Status.Empty;
-                        this.states = null;
-                        return err;
-                    }));
+                var worker = new Worker('/js/kui/Simulation/LoadWorker.js');
+                worker.onmessage = dojo.hitch(this, this._loadSuccess, deferred);
+                worker.onerror = dojo.hitch(this, this._loadError, deferred);
+                worker.postMessage({ start: this.start, end: this.end, url:document.URL });
+
+                return deferred;
+            };
+
+            this._loadSuccess = function(deferred, worker) {
+                var rangeState = worker.data;
+                if (!rangeState.done) {
+                    this.states.push(rangeState.state);
+                    this.times.push(rangeState.time);
+                }
+                if ((this.times.length > 20 || rangeState.done)
+                       && this.status !== Status.Present) {
+                    this.status = Status.Present;
+                    deferred.resolve();
+                }
+            };
+
+            this._loadError = function(deferred, worker, err) {
+                this.status = Status.Empty;
+                this.states = null;
+                deferred.reject(err, true);
             };
             
             this.getState = function(now) {
@@ -135,8 +150,5 @@
                         }
                     }));
             }
-
-
-
         }); 
     });

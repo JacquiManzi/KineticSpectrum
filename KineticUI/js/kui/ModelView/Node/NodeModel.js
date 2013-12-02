@@ -46,7 +46,7 @@ define([
                     this.nodes.add(ledNode);
                     this.addressToLED[item.address.toString()] = ledNode;
                 }));
-            }, 
+            },
             
             updateServerSelection: function() {
                 var addresses = [];
@@ -201,9 +201,13 @@ define([
             applyColorState: function(lightStateList) {
 
                 var addressToLED = this.addressToLED;
+                var addressString = this.addressString;
                 array.forEach(lightStateList, function(state) {
-                    addressToLED[state.address.toString()].setColor(state.color);
+                    addressToLED[addressString(state.address)].setColor(state.color);
                 });
+            },
+            addressString: function(address) {
+                return address.fixtureNo + '-' + address.portNo + '-' + address.lightNo;
             },
 
             getAllLEDs: function () {
@@ -217,7 +221,7 @@ define([
                 }
             },
 
-            addNodeToSet: function (node) { 
+            addNodeToSet: function (node) {
                 this.nodes.add(node);
             },
 

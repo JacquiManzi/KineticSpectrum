@@ -37,11 +37,17 @@ namespace KineticControl
 
         public bool IsUnknown
         {
-            get { return FixtureNo==-1 && PortNo==-1; }
+            get { return FixtureNo==-1 && PortNo==-1 && LightNo ==-1; }
         }
 
-        private const string SplitChar = "/";
+        public bool IsVirtual
+        {
+            get { return FixtureNo == -1 && PortNo == -1 && LightNo != -1; }
+        }
+
+        private const string SplitChar = "-";
         private const string UnknownString = "?";
+        private const string VirtualPrefix = "v";
 
         public static bool TryParse(string addressString, out LightAddress lightAddress)
         {
@@ -51,6 +57,16 @@ namespace KineticControl
                 lightAddress = Unknown;
                 return true;
             }
+            if (addressString.StartsWith(VirtualPrefix))
+            {
+                int light;
+                if (int.TryParse(addressString.Substring(1), out light))
+                {
+                    lightAddress = new LightAddress(-1,-1,light);
+                    return true;
+                }
+            }
+
             string[] split = addressString.Split(SplitChar.ToCharArray());
             if(split.Count() != 3) return false;
             int fixtureNo, portNo, lightNo;
@@ -79,7 +95,11 @@ namespace KineticControl
 
         public override String ToString()
         {
-            return IsUnknown ? "?" : _fixtureNumber + "-" + _portNumber + "-" + _lightNumber;
+            if (IsUnknown)
+                return "?";
+            if (IsVirtual)
+                return VirtualPrefix + _lightNumber;
+            return _fixtureNumber + "-" + _portNumber + "-" + _lightNumber;
         }
 
         public bool Equals(LightAddress other)

@@ -45,7 +45,7 @@
         onEndTimeChange: function(endTime) { },
         
         _onTimeChange: function (time) {
-            if (this.mode == modes.pattern) {
+            if (this.mode !== modes.scene) {
                 var deferred = this.timeManager.getState(time);
                 if (!deferred.isResolved()) {
                     console.log("Buffering....");
@@ -65,7 +65,7 @@
             this.isPlaying = isPlaying;
             clearInterval(this.intervalHandle);
             if (isPlaying) {
-                this.playStartTime = Date.now() - this.pauseTime;
+                this.playStartTime = Date.now() - this.pauseTime*1000;
                 this.intervalHandle = setInterval(dojo.hitch(this, this._intervalUpdate), 1000/30);
             }
         },
@@ -80,26 +80,26 @@
         },
         
         setPatternMode: function() {
-            this.mode = modes.pattern;
-            SimState.setMode(this.mode);
-            this.onSimMode(true);
-            this.play();
+            if (this.mode !== modes.pattern) {
+                this.mode = modes.pattern;
+                SimState.setMode(this.mode);
+                this.onSimMode(true);
+                this.loadSimulation();
+            }
         },
         
         setSimulationMode: function() {
-            this.mode = modes.Simulation;
-            SimState.setMode(this.mode);
-            this.onSimMode(true);
-            SimState.getEndTime(dojo.hitch(this, function (endTime) {
-                this.onEndTimeChange(endTime);
-                this.play();
-            }));
+            if (this.mode != modes.Simulation) {
+                this.mode = modes.Simulation;
+                SimState.setMode(this.mode);
+                this.onSimMode(true);
+                this.loadSimulation();
+            }
         },
         
         play: function () {
             if (!this.isPlaying) {
                 this.onPlayChange(true);
-                SimState.setTime(this.getTime());
                 SimState.play();
             }
         },
@@ -121,7 +121,7 @@
         setTime: function (time) {
             if (Math.abs(this.getTime() - time) > .01) {
                 this.pauseTime = time;
-                this.playStartTime = Date.now() - time;
+                this.playStartTime = Date.now() - (time*1000);
                 this.onTimeChange(time);
                 SimState.setTime(time);
             }
@@ -132,17 +132,23 @@
         },
         
         simulatePattern: function(pattern) {
-            var thisObj = this;
             this.pause();
             this.pauseTime = 0;
-            Scenes.tryPattern(pattern, function(endTime) {
-                thisObj.timeManager.newSimulation(endTime)
-                    .then(function() {
-                        thisObj.onEndTimeChange(endTime);
-                        thisObj.onTimeChange(0);
-                        thisObj.play();
-                    });
-            });
+            Scenes.tryPattern(pattern).then(dojo.hitch(this, this.loadSimulation));
+        },
+
+        loadSimulation: function() {
+            this.pause();
+            this.pauseTime = 0;
+            SimState.getEndTime()
+                .then(dojo.hitch(this, function(endTime) {
+                    this.timeManager.newSimulation(endTime)
+                        .then(dojo.hitch(this, function() {
+                            this.onEndTimeChange(endTime);
+                            this.onTimeChange(0);
+                            this.play();
+                        }));
+                }));
         },
 
         _serverStateUpdate: function () {

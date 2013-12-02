@@ -18,7 +18,8 @@ define([
     function (declare, html, dom, domStyle, domConstruct, three, xhr) {
 
         var getEffects = function(onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetEffects",
                 handleAs: "json",
                 load: onLoad,
@@ -29,7 +30,8 @@ define([
         };
         
         var getOrderingTypes = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetOrderingTypes",
                 handleAs: "json",
                 load: onLoad,
@@ -40,7 +42,8 @@ define([
         };
         
         var getRepeatMethods = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetRepeatMethods",
                 handleAs: "json",
                 load: onLoad,
@@ -51,7 +54,8 @@ define([
         };
         
         var getEasings = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetEasings",
                 handleAs: "json",
                 load: onLoad,
@@ -62,7 +66,8 @@ define([
         };
 
         var getEffectDefinition = function(effectName, onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetEffectDef",
                 handleAs: "json",
                 content: { effectName: effectName },
@@ -74,7 +79,8 @@ define([
         };
         
         var getOrderingForType = function (orderingType, onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetOrderingForType",
                 handleAs: "json",
                 content: { type: orderingType },
@@ -86,7 +92,8 @@ define([
         };
 
         var getColorEffects = function (onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetColorEffects",
                 handleAs: "json",
                 load: onLoad,
@@ -97,7 +104,8 @@ define([
         };
 
         var getImages = function(onLoad) {
-            xhr.get({
+            onLoad = onLoad || function() { };
+            return xhr.get({
                 url: "Effects.svc/GetImages",
                 handleAs: "json",
                 load:onLoad,

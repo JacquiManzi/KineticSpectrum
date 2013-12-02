@@ -21,30 +21,7 @@ namespace KineticUI
             Stream stream = Request.Browser.Browser == "IE"
                                 ? Request.Files[0].InputStream
                                 : Request.InputStream;
-
-            IDictionary<string, string> nameToSection;
-            LightSystemProvider.ParseProps(stream, out nameToSection);
-            State.Scene = new Scene();
-            State.PatternSim = new Simulation(State.Scene);
-            State.Simulation = new Simulation(State.Scene);
-
-            if (nameToSection.ContainsKey("Groups"))
-            {
-                string section = nameToSection["Groups"];
-                foreach (var group in Serializer.FromString<IEnumerable<IGroup>>(section))
-                {
-                    State.Scene.SetGroup(group);
-                }
-            }
-
-            if (nameToSection.ContainsKey("Patterns"))
-            {
-                string section = nameToSection["Patterns"];
-                foreach (var pattern in Serializer.FromString<IEnumerable<Pattern>>(section))
-                {
-                    State.Scene.SetPattern(pattern);
-                }
-            }
+            Saver.Load(stream);
             
             Response.Write(JsonConvert.SerializeObject(LightSystemProvider.Lights));
         }
