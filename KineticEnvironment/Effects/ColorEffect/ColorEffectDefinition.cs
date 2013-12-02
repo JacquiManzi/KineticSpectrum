@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using RevKitt.KS.KineticEnvironment.Coloring;
 
 namespace RevKitt.KS.KineticEnvironment.Effects.ColorEffect
 {

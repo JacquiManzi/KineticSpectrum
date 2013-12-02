@@ -6,6 +6,7 @@ using System.Windows.Media;
 using KineticControl;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.Coloring;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace KineticUI.JSConverters

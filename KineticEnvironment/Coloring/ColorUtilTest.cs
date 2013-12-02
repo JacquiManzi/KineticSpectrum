@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using NUnit.Framework;
 
-namespace RevKitt.KS.KineticEnvironment
+namespace RevKitt.KS.KineticEnvironment.Coloring
 {
     [TestFixture]
     class ColorUtilTest

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using RevKitt.KS.KineticEnvironment.Coloring;
 using Color = System.Windows.Media.Color;
 
 namespace RevKitt.KS.KineticEnvironment
