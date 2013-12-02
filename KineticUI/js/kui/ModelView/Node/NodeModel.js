@@ -40,13 +40,13 @@ define([
                     var ledNode = new LED();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.setRadius(0.004);
+                    ledNode.setRadius(0.007);
 
                     this.scene.add(ledNode);
                     this.nodes.add(ledNode);
                     this.addressToLED[item.address.toString()] = ledNode;
                 }));
-            },
+            }, 
             
             updateServerSelection: function() {
                 var addresses = [];
@@ -157,7 +157,7 @@ define([
                     for (var i = 0; i < serverAddresses.length; i++) {
                         var led = new LED();
                         led.updatePosition(leds[i].position);
-                        led.setRadius(0.004);
+                        led.setRadius(0.007);
                         led.address = new LightAddress(serverAddresses[i]);
                         this.addressToLED[led.address] = led;
                         this.nodes.add(led);
@@ -172,7 +172,7 @@ define([
                 var led = new LED();
                 led.updatePosition(position);
                 led.address = address;
-                led.setRadius(.004);
+                led.setRadius(.007);
 
                 Scenes.addLED(led, dojo.hitch(this, function(serverAddress) {
                     led.address = new LightAddress(serverAddress);
@@ -217,7 +217,7 @@ define([
                 }
             },
 
-            addNodeToSet: function (node) {
+            addNodeToSet: function (node) { 
                 this.nodes.add(node);
             },
 
