@@ -12,6 +12,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
     {
         private readonly string _name;
         private readonly IActivatable _lightProvider;
+        private ISet<LightAddress> _addresSet; 
 
         internal GroupReference(String name, IEnumerable<LightAddress> addresses, IActivatable lightProvider)
         {
@@ -30,10 +31,15 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
             IEnumerable<LEDNode> availableNodes = _lightProvider.Nodes;
             IDictionary<LightAddress, LEDNode> dict = availableNodes.ToDictionary(n => n.Address);
             LEDNodes = new List<LEDNode>(addresses.Select(a => dict[a])).AsReadOnly();
+            _addresSet = new HashSet<LightAddress>(LEDNodes.Select(n=>n.Address));
         }
 
         public string Name { get { return _name; } }
         public IList<LightAddress> Lights { get { return LEDNodes.Select(led => led.Address).ToList(); } }
         public IList<LEDNode> LEDNodes { get; private set; }
+        public bool InGroup(LEDNode node)
+        {
+            return _addresSet.Contains(node.Address);
+        }
     }
 }

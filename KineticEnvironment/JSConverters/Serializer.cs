@@ -1,13 +1,10 @@
-﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Net;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     public class Serializer
     {

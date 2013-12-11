@@ -9,8 +9,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
-
-using KineticUI.JSConverters;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 
 namespace KineticUI
 {

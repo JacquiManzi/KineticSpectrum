@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using KineticControl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     public class GroupConverter : JsonConverter
     {

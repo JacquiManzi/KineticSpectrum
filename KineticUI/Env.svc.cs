@@ -15,8 +15,8 @@ using System.ServiceModel.Web;
 using KineticControl;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 using RevKitt.KS.KineticEnvironment.Scenes;
-using KineticUI.JSConverters;
 
 namespace KineticUI
 {

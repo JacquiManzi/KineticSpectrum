@@ -24,5 +24,10 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         {
             get { throw new NotImplementedException("This operation is not valid on a stub group"); }
         }
+
+        public bool InGroup(LEDNode node)
+        {
+            throw new NotImplementedException("This operation is not valid on a stub group");
+        }
     }
 }

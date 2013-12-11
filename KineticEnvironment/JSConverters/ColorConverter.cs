@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System;
 using System.Windows.Media;
-using KineticControl;
 using Newtonsoft.Json;
-using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Coloring;
-using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     public class ColorConverter : JsonConverter
     {

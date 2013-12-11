@@ -16,6 +16,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public int Priority { get; internal set; }
 
         private EffectProperties _properties;
+        private readonly EffectApplier _effectApplier;
         protected int Duration { get; private set; }
         protected int RepeatCount { get; private set; }
         protected bool Reverse { get; private set; }
@@ -26,7 +27,12 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if(group == null)
                 throw new ArgumentNullException("group");
             _group = group;
+            _effectApplier = new EffectApplier(this);
         }
+
+        public abstract IList<IColorEffect> ColorEffects { get; }
+        public abstract IColorEffect StartEffect { get; }
+        public abstract IColorEffect EndEffect { get; }
 
         public abstract string Name { get; }
         protected IGroup Group { get { return _group; } }
@@ -49,6 +55,23 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected abstract void ApplyProperties(EffectProperties properties);
         protected abstract IColorEffect ApplyCycle(TimeRange range, LEDNode ledNode);
 
+
+        public IEffectApplier GetApplier(int time)
+        {
+            if (time > Duration * RepeatCount)
+                time = Duration*RepeatCount;
+            int cycleTime = time%Duration;
+            int cycleCount = time/Duration;
+
+            if (Reverse && cycleCount % 2 == 1)
+                cycleTime = Duration - cycleTime - 1;
+
+            _effectApplier.Range = new TimeRange(cycleTime, Duration, cycleCount, Duration*RepeatCount);
+            _effectApplier.OrderingMin = Ordering.GetMin();
+            _effectApplier.OrderingSize = Ordering.GetMax() - Ordering.GetMin();
+
+            return _effectApplier;
+        }
 
         public void Apply(int time)
         {
@@ -85,6 +108,45 @@ namespace RevKitt.KS.KineticEnvironment.Effects
                                                                       PropertyDefinition.RepeatMethod,
                                                                       PropertyDefinition.Ordering
                                                                   };
+
+
+        public delegate IColorEffect EffectProvider(LEDNode node);
+        class EffectApplier : IEffectApplier
+        {
+            private readonly AbstractEffect _effect;
+            public double OrderingMin { private get; set; }
+            public double OrderingSize { private get; set; }
+            public TimeRange Range { private get; set; }
+
+            public EffectApplier(AbstractEffect effect)
+            {
+                _effect = effect;
+            }
+
+            public IColorEffect GetEffect(LEDNode node)
+            {
+                if (_effect._group.InGroup(node))
+                {
+                    return _effect.ApplyCycle(Range, node);
+                }
+                return null;
+            }
+
+            public void ApplyEffect(LEDNode node, IColorEffect colorEffect)
+            {
+                double position = (_effect.Ordering.GetLEDPosition(node) - OrderingMin) / OrderingSize;
+                node.Color = colorEffect.SetColor(Range, position, node);
+            }
+
+            public IGroup Group
+            {
+                get { return _effect.Group; }
+            }
+
+            public IColorEffect StartColor { get { return _effect.StartEffect; } }
+            public IColorEffect EndColor { get { return _effect.EndEffect; } }
+            public int EndTime { get; set; }
+        }
     }
     
 }

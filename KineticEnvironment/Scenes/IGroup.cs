@@ -19,5 +19,7 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         IList<LightAddress> Lights { get; }
 
         IList<LEDNode> LEDNodes { get; }
+
+        bool InGroup(LEDNode node);
     }
 }

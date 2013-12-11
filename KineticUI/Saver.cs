@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using KineticUI.JSConverters;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
 
@@ -238,7 +238,7 @@ namespace KineticUI
 
             if (nameToSection.ContainsKey("Composition"))
             {
-                var split = nameToSection["Composition"].Split(new[]{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
+                var split = nameToSection["Composition"].Split(new[]{"\r\n","\n"}, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in split)
                 {
                     var props = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

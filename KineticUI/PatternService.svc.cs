@@ -13,8 +13,8 @@ using System.Web;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Coloring;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 using RevKitt.KS.KineticEnvironment.Scenes;
-using KineticUI.JSConverters;
 
 namespace KineticUI
 {
@@ -46,54 +46,15 @@ namespace KineticUI
             DateTime timerStart = DateTime.Now;
             var sim = State.Active;
             var ms = new MemoryStream();
-            var streamWriter = new StreamWriter(ms);
-            if (end > sim.EndTime || start < 0)
-            {
-                throw new ArgumentException("Range ("+start + ',' +end+") exceeds Pattern Range (0,"+sim.EndTime+").");
-            }
 
-            int steps = (end-start)*30/1000;
-            streamWriter.Write('[');
-            for (int i = 0; i < steps; i++)
-            {
-                int time = start + i*1000/30;
-                sim.Time = time;
-                WriteState(streamWriter, time, sim.LightState, i==steps-1);
-            }
-            streamWriter.Write(']');
-            streamWriter.Flush();
+            sim.WriteRange(ms, start, end);
+
             HttpContext context = HttpContext.Current;
             context.Response.AppendHeader("Content-encoding", "gzip");
             context.Response.Filter = new GZipStream(context.Response.Filter, CompressionMode.Compress);
             ms.Position = 0;
             System.Diagnostics.Debug.WriteLine((DateTime.Now - timerStart).TotalMilliseconds);
             return ms;
-        }
-
-        private static void WriteState(StreamWriter streamWriter, int time, IList<LightState> states, bool last)
-        {
-                streamWriter.Write('[');
-                streamWriter.Write(time);
-                streamWriter.Write(',');
-                for (int i = 0; i < states.Count; i++ )
-                {
-                    var state = states[i];
-                    LightAddress a = state.Address;
-                    streamWriter.Write(a.FixtureNo);
-                    streamWriter.Write(',');
-                    streamWriter.Write(a.PortNo);
-                    streamWriter.Write(',');
-                    streamWriter.Write(a.LightNo);
-                    streamWriter.Write(',');
-                    streamWriter.Write(ColorUtil.ToInt(state.Color));
-                    if(i<states.Count-1)
-                        streamWriter.Write(',');
-                }
-                streamWriter.Write(']');
-                if (!last)
-                {
-                    streamWriter.Write(',');
-                }
         }
     }
 }

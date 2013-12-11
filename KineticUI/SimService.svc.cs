@@ -2,8 +2,8 @@
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
-using KineticUI.JSConverters;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 
 namespace KineticUI
 {
@@ -40,6 +40,20 @@ namespace KineticUI
         {
             State.Simulation.ShiftAfter((int) (shiftAt*1000), (int) (amountToShift*1000));
             Saver.LocalSave();
+        }
+
+        [OperationContract]
+        [WebGet]
+        public void SetSpeed(double speed)
+        {
+            State.Simulation.Speed = speed;
+        }
+
+        [OperationContract]
+        [WebGet]
+        public double GetSpeed()
+        {
+            return State.Simulation.Speed;
         }
     }
 }

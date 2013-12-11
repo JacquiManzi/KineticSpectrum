@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Web;
-using System.Windows.Media.Media3D;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     public class PatternConverter : JsonConverter
     {

@@ -30,10 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="C5">
+      <HintPath>..\packages\C5.2.2.5073.27396\lib\portable-net40+sl50+wp80+win\C5.dll</HintPath>
+    </Reference>
     <Reference Include="ILNumerics, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ILNumerics.3.2.2.0\lib\ILNumerics.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -66,6 +70,7 @@
     <Compile Include="Effects\ColorEffect\ColorFade.cs" />
     <Compile Include="Effects\ColorEffect\FixedColor.cs" />
     <Compile Include="Effects\ColorEffect\ImageEffect.cs" />
+    <Compile Include="Effects\EffectApplier.cs" />
     <Compile Include="Effects\EffectAttributes.cs" />
     <Compile Include="Effects\EffectProperties.cs" />
     <Compile Include="Effects\EffectPropertyTypes.cs" />
@@ -81,7 +86,18 @@
     <Compile Include="Effects\Pulse.cs" />
     <Compile Include="Effects\Sweep.cs" />
     <Compile Include="Images.cs" />
+    <Compile Include="Interact\KinectPlugin.cs" />
     <Compile Include="IStateProvider.cs" />
+    <Compile Include="JSConverters\ColorConverter.cs" />
+    <Compile Include="JSConverters\ColorEffectConverter.cs" />
+    <Compile Include="JSConverters\EffectConverter.cs" />
+    <Compile Include="JSConverters\GroupConverter.cs" />
+    <Compile Include="JSConverters\LightAddressConverter.cs" />
+    <Compile Include="JSConverters\LightAddressConverterTest.cs" />
+    <Compile Include="JSConverters\PatternConverter.cs" />
+    <Compile Include="JSConverters\PatternConverterTest.cs" />
+    <Compile Include="JSConverters\Serializer.cs" />
+    <Compile Include="JSConverters\Vector3Converter.cs" />
     <Compile Include="LightState.cs" />
     <Compile Include="LightSystemProvider.cs" />
     <Compile Include="LightSystemProviderTest.cs" />
@@ -94,7 +110,10 @@
     <Compile Include="Scenes\MasterGroup.cs" />
     <Compile Include="Scenes\LEDNode.cs" />
     <Compile Include="Scenes\Scene.cs" />
+    <Compile Include="Sim\ColorBuilder.cs" />
+    <Compile Include="Sim\ISimulation.cs" />
     <Compile Include="Sim\PatternStart.cs" />
+    <Compile Include="Sim\ReadAheadSimulation.cs" />
     <Compile Include="Sim\Simulation.cs" />
     <Compile Include="State.cs" />
     <Compile Include="TimeRange.cs" />

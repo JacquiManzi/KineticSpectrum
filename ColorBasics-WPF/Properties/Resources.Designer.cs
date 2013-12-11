@@ -70,7 +70,7 @@ namespace RevKitt.LightBuilder.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wireless Network Connection.
+        ///   Looks up a localized string similar to Local Area Connection 2.
         /// </summary>
         internal static string HostInterface {
             get {

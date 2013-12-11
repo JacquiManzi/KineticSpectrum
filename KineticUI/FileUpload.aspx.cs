@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
-using KineticUI.JSConverters;
 
 namespace KineticUI
 {

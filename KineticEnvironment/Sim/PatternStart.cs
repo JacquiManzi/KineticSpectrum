@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using RevKitt.KS.KineticEnvironment.Effects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
@@ -62,6 +64,10 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             Dictionary<IGroup, IEffect> groupToEffect = new Dictionary<IGroup, IEffect>();
             IList<IGroup> groups = _scene.GetGroupRefs(pattern.Groups, _lightProvider);
+            if (groups.Count == 0)
+            {
+                throw new ArgumentException("The specified pattern '" + pattern.Name + "' doesn't have any groups.");
+            }
             EffectAttributes attr = EffectRegistry.EffectAttributes[pattern.EffectName];
             foreach (var group in groups)
             {
@@ -73,7 +79,25 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 _priority = pattern.Priority;
             _groupToEffect = groupToEffect;
         }
+        
+        public IEffect SampleEffect
+        {
+            get { return _groupToEffect.Values.First(); }
+        }
 
+        public void ApplyColors(List<Color> toApply)
+        {
+            foreach (IEffect effect in _groupToEffect.Values)
+            {
+                int i = 0;
+                foreach (IColorEffect colorEffect in effect.ColorEffects)
+                {
+                    int noColors = colorEffect.Colors.Count;
+                    colorEffect.Colors = toApply.GetRange(i, noColors);
+                    i += noColors;
+                }
+            }
+        }
 
         public bool Applies(int time)
         {
@@ -87,6 +111,25 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 effect.Apply(time);                
             }
+        }
+
+        public IEnumerable<IEffectApplier> GetApplier(int time)
+        {
+            time = time - StartTime;
+
+            IList<IEffectApplier> appliers = new List<IEffectApplier>();
+            foreach ( var effect in _groupToEffect.Values)
+            {
+                IEffectApplier applier = effect.GetApplier(time);
+                applier.EndTime = EndTime;
+                appliers.Add(applier);
+            }
+            return appliers;
+        }
+
+        private IEffectApplier Selector(IEffect effect, int time)
+        {
+            throw new NotImplementedException();
         }
 
         public int EndTime
@@ -110,7 +153,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         public int Compare(PatternStart x, PatternStart y)
         {
-            return y.Priority - x.Priority;
+            return x.Priority - y.Priority;
         }
     }
 }

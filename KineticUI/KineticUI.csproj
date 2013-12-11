@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="C5">
+      <HintPath>..\packages\C5.2.2.5073.27396\lib\portable-net40+sl50+wp80+win\C5.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -7859,16 +7862,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="JSConverters\ColorConverter.cs" />
-    <Compile Include="JSConverters\ColorEffectConverter.cs" />
-    <Compile Include="JSConverters\EffectConverter.cs" />
-    <Compile Include="JSConverters\GroupConverter.cs" />
-    <Compile Include="JSConverters\LightAddressConverter.cs" />
-    <Compile Include="JSConverters\LightAddressConverterTest.cs" />
-    <Compile Include="JSConverters\PatternConverter.cs" />
-    <Compile Include="JSConverters\PatternConverterTest.cs" />
-    <Compile Include="JSConverters\Serializer.cs" />
-    <Compile Include="JSConverters\Vector3Converter.cs" />
     <Compile Include="PatternService.svc.cs">
       <DependentUpon>PatternService.svc</DependentUpon>
     </Compile>

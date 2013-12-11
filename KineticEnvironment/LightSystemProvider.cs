@@ -149,7 +149,7 @@ namespace RevKitt.KS.KineticEnvironment
             string line;
             while (null != (line = ReadSectionLine(reader)))
             {
-                builder.Append(line);
+                builder.Append(line).Append(Environment.NewLine);
             }
             return builder.ToString();
         }

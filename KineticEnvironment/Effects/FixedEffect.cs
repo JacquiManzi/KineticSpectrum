@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
-using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -21,6 +16,21 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         private IColorEffect _colorEffect;
         
         public FixedEffect(IGroup group) : base(group) { }
+
+        public override IList<IColorEffect> ColorEffects
+        {
+            get { return new List<IColorEffect> {_colorEffect}; }
+        }
+
+        public override IColorEffect StartEffect
+        {
+            get { return _colorEffect; }
+        }
+
+        public override IColorEffect EndEffect
+        {
+            get { return _colorEffect; }
+        }
 
         public override string Name
         {

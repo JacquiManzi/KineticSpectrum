@@ -1,7 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Windows.Media;
 using NUnit.Framework;
 using RevKitt.KS.KineticEnvironment.Effects;
@@ -10,7 +7,7 @@ using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Tweening;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     [TestFixture]
     public class PatternConverterTest

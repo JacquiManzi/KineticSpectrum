@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using KineticControl;
 using NUnit.Framework;
-using Newtonsoft.Json;
 
-namespace KineticUI.JSConverters
+namespace RevKitt.KS.KineticEnvironment.JSConverters
 {
     [TestFixture]
     public class LightAddressConverterTest

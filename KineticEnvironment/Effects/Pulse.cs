@@ -23,6 +23,21 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public static EffectFactroy PulseFactory = g=> new Pulse(g);
 
+        public override IList<IColorEffect> ColorEffects
+        {
+            get { return new List<IColorEffect>{_backgroundColor, _pulseColor}; }
+        }
+
+        public override IColorEffect StartEffect
+        {
+            get { return _backgroundColor; }
+        }
+
+        public override IColorEffect EndEffect
+        {
+            get { return _backgroundColor; }
+        }
+
         public override string Name { get { return EffectName; } }
 
 

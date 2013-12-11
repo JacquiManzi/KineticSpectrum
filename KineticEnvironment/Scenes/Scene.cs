@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Media;
 using KineticControl;
@@ -209,6 +210,11 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         public int EndTime { 
             get { return 0; }
             set { }
+        }
+
+        public void WriteRange(Stream stream, int start, int end)
+        {
+            throw new NotImplementedException("Cannot write range for a Scene object");
         }
 
         public int Time 

@@ -23,6 +23,21 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public static EffectFactroy SweepFactory = g=>new Sweep(g);
 
+        public override IList<IColorEffect> ColorEffects
+        {
+            get { return new List<IColorEffect>{_startColorEffect, _endColorEffect}; }
+        }
+
+        public override IColorEffect StartEffect
+        {
+            get { return _startColorEffect; }
+        }
+
+        public override IColorEffect EndEffect
+        {
+            get { return _endColorEffect; }
+        }
+
         public override string Name { get { return EffectName; } }
 
         protected override void ApplyProperties(EffectProperties properties)

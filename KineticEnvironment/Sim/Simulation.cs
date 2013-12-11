@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Windows.Media;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment.Coloring;
+using RevKitt.KS.KineticEnvironment.Effects;
+using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
+using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using Timer = System.Timers.Timer;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
 {
-    public class Simulation : IStateProvider
+    public class Simulation : ISimulation
     {
         private const String TEMP_NAME = "___TEMP__SIMULATION";
         private readonly Scene _scene;
@@ -21,6 +26,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly Timer _updateTimer;
         private int _currentTime;
         private int _endTime;
+        private KinectPlugin _plugin;
 
         public readonly String Name;
 
@@ -33,6 +39,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _updateTimer = new Timer();
             _updateTimer.Elapsed += (o, args) => AdvanceTime();
             _updateTimer.Interval = 1000/60;
+            Speed = 1;
             GC.KeepAlive(_updateTimer);
 
             foreach (var light in _lights)
@@ -132,6 +139,52 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
+        public void WriteRange(Stream stream, int start, int end)
+        {
+            var streamWriter = new StreamWriter(stream);
+            if (end > EndTime || start < 0)
+            {
+                throw new ArgumentException("Range (" + start + ',' + end + ") exceeds Pattern Range (0," + EndTime + ").");
+            }
+
+            int steps = (end - start) * 30 / 1000;
+            streamWriter.Write('[');
+            for (int i = 0; i < steps; i++)
+            {
+                int time = start + i * 1000 / 30;
+                Time = time;
+                WriteState(streamWriter, time, LightState, i == steps - 1);
+            }
+            streamWriter.Write(']');
+            streamWriter.Flush();
+        }
+
+        private static void WriteState(StreamWriter streamWriter, int time, IList<LightState> states, bool last)
+        {
+            streamWriter.Write('[');
+            streamWriter.Write(time);
+            streamWriter.Write(',');
+            for (int i = 0; i < states.Count; i++)
+            {
+                var state = states[i];
+                LightAddress a = state.Address;
+                streamWriter.Write(a.FixtureNo);
+                streamWriter.Write(',');
+                streamWriter.Write(a.PortNo);
+                streamWriter.Write(',');
+                streamWriter.Write(a.LightNo);
+                streamWriter.Write(',');
+                streamWriter.Write(ColorUtil.ToInt(state.Color));
+                if (i < states.Count - 1)
+                    streamWriter.Write(',');
+            }
+            streamWriter.Write(']');
+            if (!last)
+            {
+                streamWriter.Write(',');
+            }
+        }
+
         public void RemovePattern(int id)
         {
             for (int i = 0; i < _patternStarts.Count; i++ )
@@ -144,6 +197,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 }
             }
         }
+
+        public double Speed { get; set; }
+        public KinectPlugin Plugin { get { return _plugin; } set { _plugin = value; } }
 
         private void UpdateEndTime()
         {
@@ -165,6 +221,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                     value = _endTime - 1;
                 else if (value < 0)
                     value = 0;
+                if (_currentTime > value)
+                    new ColorBuilder(_patternStarts).RandomizeColoring();
                 _currentTime = value;
                 UpdateState(value);
             }
@@ -177,7 +235,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 if (value)
                     _lastRun = DateTime.Now;
-                _updateTimer.Enabled = value;
+                //_updateTimer.Enabled = value;
             }
         }
 
@@ -194,7 +252,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private void AdvanceTime()
         {
             DateTime thisRun = DateTime.Now;
-            int newTime = Time + (int)(thisRun-_lastRun).TotalMilliseconds;
+            int newTime = Time + (int)(Speed * (thisRun-_lastRun).TotalMilliseconds);
             _lastRun = thisRun;
             if (newTime > _endTime)
                 newTime = 0;
@@ -219,7 +277,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 return !wasProcessing;
             }
         }
-        
+
         private void UpdateState(int time)
         {
             if (!EnterProcessing()) return;
@@ -230,20 +288,22 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 starts.Sort(PatternStart.PriorityComparer);
                 ActivePatterns = starts;
 
+                IList<IEffectApplier> appliers = starts.SelectMany(start => start.GetApplier(time)).ToList();
+
                 foreach (var light in _lights)
                 {
                     light.Color = ColorUtil.Empty;
                 }
-                foreach (var patternStart in starts)
-                {
-                    patternStart.Apply(time);
-                }
+                ApplyForTime(appliers, time);
                 foreach (var light in _lights)
                 {
                     _stateMap[light.Address].Color = light.Color;
                 }
                 if (IsActive)
                 {
+                    KinectPlugin plugin = _plugin;
+                    if(plugin != null)
+                        plugin.Apply(_lights);
                     LightSystemProvider.UpdateLights();
                 }
             }
@@ -253,5 +313,88 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
+        private readonly IDictionary<string, IEffectApplier> groupBackground = new Dictionary<string, IEffectApplier>();
+        private readonly IDictionary<string, NextUp> groupBackgroundNext = new Dictionary<string, NextUp>();
+
+        private void ApplyForTime(IList<IEffectApplier> appliers, int time)
+        {
+            var groupApply = appliers.GroupBy(a => a.Group.Name);
+
+            HandleBackground(time, groupApply);
+
+            foreach (var light in _lights)
+            {
+                foreach (IGrouping<string, IEffectApplier> effectAppliers in groupApply)
+                {
+                    bool backgroundApplied = false;
+                    IEffectApplier background;
+                    if (groupBackground.TryGetValue(effectAppliers.Key, out background))
+                    {
+                        background.ApplyEffect(light, background.EndColor);
+                        backgroundApplied = true;
+                    }
+                    foreach (IEffectApplier applier in effectAppliers)
+                    {
+                        IColorEffect colorEffect = applier.GetEffect(light);
+                        if (colorEffect != applier.StartColor)
+                        {
+                            applier.ApplyEffect(light, colorEffect);
+                        }
+                        else if (!backgroundApplied)
+                        {
+                            applier.ApplyEffect(light, colorEffect);
+                        }
+                        backgroundApplied = true;
+                    }
+                }
+            }
+        }
+
+        private enum PluginMode {NO_BACK, NO_FORE}
+
+        private void HandleBackground(int time, IEnumerable<IGrouping<string, IEffectApplier>> groupApply)
+        {
+            foreach (IGrouping<string, IEffectApplier> effectAppliers in groupApply)
+            {
+                if (groupBackgroundNext.ContainsKey(effectAppliers.Key))
+                {
+                    int whenApply = groupBackgroundNext[effectAppliers.Key].AtTime;
+                    if(whenApply <= time || whenApply -3000 > time)
+                    {
+                        var nextUp = groupBackgroundNext[effectAppliers.Key];
+                        groupBackgroundNext.Remove(effectAppliers.Key);
+                        if (effectAppliers.Count() == 1)
+                        {
+                            groupBackgroundNext[effectAppliers.Key] = new NextUp(effectAppliers.First().EndTime);
+                        }
+                        if (nextUp.ToApply == null)
+                            groupBackground.Remove(effectAppliers.Key);
+                        else if(effectAppliers.Count() != 0)
+                            groupBackground[effectAppliers.Key] = nextUp.ToApply;
+                    }
+                }
+                if (effectAppliers.Count() > 1 && !groupBackgroundNext.ContainsKey(effectAppliers.Key))
+                {
+                    groupBackgroundNext[effectAppliers.Key] = new NextUp(effectAppliers.First());
+                }
+            }
+        }
+
+        private class NextUp
+        {
+            public readonly int AtTime;
+            public readonly IEffectApplier ToApply;
+
+            public NextUp(IEffectApplier applier)
+            {
+                AtTime = applier.EndTime;
+                ToApply = applier;
+            }
+
+            public NextUp(int atTime)
+            {
+                AtTime = atTime;
+            }
+        }
     }
 }

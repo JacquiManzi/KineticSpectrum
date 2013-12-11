@@ -7,15 +7,15 @@ namespace RevKitt.KS.KineticEnvironment
     {
         private static readonly object         Lock = new object();
         private static volatile SimulationMode _mode = SimulationMode.Scene;
-        private static volatile Simulation     _runningComposition;
+        private static volatile ISimulation     _runningComposition;
 
         public static Scene Scene = new Scene();
 
-        public static Simulation Simulation = new Simulation(Scene);
+        public static ISimulation Simulation = new ReadAheadSimulation(Scene);
 
-        public static Simulation PatternSim = new Simulation(Scene);
+        public static ISimulation PatternSim = new ReadAheadSimulation(Scene);
 
-        public static Simulation RunningComposition { set { _runningComposition = value; } }
+        public static ISimulation RunningComposition { set { _runningComposition = value; } }
 
         public static bool IsCompositionRunning { get { return _runningComposition != null; } }
 

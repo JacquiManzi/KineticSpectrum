@@ -59,5 +59,9 @@ namespace RevKitt.KS.KineticEnvironment.Scenes
         public string Name { get { return _me.Name; } }
         public IList<LightAddress> Lights { get { return _me.Lights; } }
         public IList<LEDNode> LEDNodes { get { return _me.LEDNodes; } }
+        public bool InGroup(LEDNode node)
+        {
+            return _me.InGroup(node);
+        }
     }
 }
