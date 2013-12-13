@@ -215,8 +215,8 @@ namespace KineticUI
             IDictionary<string, string> nameToSection;
             LightSystemProvider.ParseProps(stream, out nameToSection);
             State.Scene = new Scene();
-            State.PatternSim = new Simulation(State.Scene);
-            State.Simulation = new Simulation(State.Scene);
+            State.PatternSim = new ReadAheadSimulation(State.Scene);
+            State.Simulation = new ReadAheadSimulation(State.Scene);
 
             if (nameToSection.ContainsKey("Groups"))
             {

@@ -13,7 +13,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
     public interface IEffectApplier
     {
         IColorEffect GetEffect(LEDNode node);
-        void ApplyEffect(LEDNode node, IColorEffect colorEffect);
+        Color GetNodeColor(LEDNode node, IColorEffect colorEffect);
         IGroup Group { get; }
 
         IColorEffect StartColor { get; }

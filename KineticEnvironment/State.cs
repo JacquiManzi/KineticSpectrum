@@ -1,3 +1,4 @@
+using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
 
@@ -18,6 +19,8 @@ namespace RevKitt.KS.KineticEnvironment
         public static ISimulation RunningComposition { set { _runningComposition = value; } }
 
         public static bool IsCompositionRunning { get { return _runningComposition != null; } }
+
+        public static readonly KinectPlugin Plugin = new KinectPlugin();
 
         public static void EndRunningComposition()
         {
@@ -74,6 +77,7 @@ namespace RevKitt.KS.KineticEnvironment
             {
                 node.IsActive = false;
             }
+            activatable.IsActive = false;
         }
 
         private static void Activate(IActivatable activatable)
@@ -82,6 +86,7 @@ namespace RevKitt.KS.KineticEnvironment
             {
                 node.IsActive = true;
             }
+            activatable.IsActive = true;
         }
     }
     public enum SimulationMode { Scene=1, Pattern=2, Simulation=3 }

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.Interact;
 
 namespace KineticUI
 {

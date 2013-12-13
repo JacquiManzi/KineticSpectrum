@@ -166,10 +166,14 @@ namespace RevKitt.KS.KineticEnvironment.Coloring
             for (numColors--; numColors > 0; numColors--)
             {
                 IList<Color> matched = ColorMap[startColor];
+                int itct = 0;
                 do
                 {
                     startColor = matched[Random.Next(matched.Count)];
-                } while (colors.Contains(startColor));
+                    itct++;
+                } while (colors.Contains(startColor) && itct < 20);
+                if (itct > 20)
+                    startColor = Colors.Black;
                 colors.Add(startColor);
             }
             return colors;

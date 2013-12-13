@@ -17,16 +17,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public ReadAheadSimulation(Scene scene)
         {
             _readAhead = new Simulation(scene);
-            _active = new Simulation(scene);
+            _active = new Simulation(scene) {Plugin = State.Plugin};
         }
 
         public ReadAheadSimulation(Scene scene, String name)
         {
             _readAhead = new Simulation(name, scene);
-            _active = new Simulation(name, scene);
+            _active = new Simulation(name, scene) {Plugin = State.Plugin};
         }
-
-
 
         public IEnumerable<LEDNode> Nodes
         {

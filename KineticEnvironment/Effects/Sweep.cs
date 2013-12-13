@@ -35,7 +35,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         public override IColorEffect EndEffect
         {
-            get { return _endColorEffect; }
+            get { return (RepeatCount %2 == 1 ? _endColorEffect: _startColorEffect); }
         }
 
         public override string Name { get { return EffectName; } }

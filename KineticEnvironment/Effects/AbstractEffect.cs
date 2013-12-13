@@ -132,10 +132,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
                 return null;
             }
 
-            public void ApplyEffect(LEDNode node, IColorEffect colorEffect)
+            public Color GetNodeColor(LEDNode node, IColorEffect colorEffect)
             {
                 double position = (_effect.Ordering.GetLEDPosition(node) - OrderingMin) / OrderingSize;
-                node.Color = colorEffect.SetColor(Range, position, node);
+                return colorEffect.SetColor(Range, position, node);
             }
 
             public IGroup Group

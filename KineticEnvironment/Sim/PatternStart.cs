@@ -35,6 +35,16 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             Pattern = pattern;
         }
 
+        public PatternStart(PatternStart toClone)
+        {
+            _id = toClone._id;
+            StartTime = toClone.StartTime;
+            _priority = toClone._priority;
+            _scene = toClone._scene;
+            _lightProvider = toClone._lightProvider;
+            Pattern = toClone.Pattern;
+        }
+
         public Pattern Pattern
         {
             get { return _pattern; }

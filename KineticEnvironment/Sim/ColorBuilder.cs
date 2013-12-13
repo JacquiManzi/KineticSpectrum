@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using RevKitt.KS.KineticEnvironment.Coloring;
@@ -12,13 +13,10 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         internal ColorBuilder(List<PatternStart> starts)
         {
-            _patternStarts = CloneStarts(starts);
+            _patternStarts = starts;
         }
 
-        private List<PatternStart> CloneStarts(List<PatternStart> starts)
-        {
-            return starts;
-        }
+        public IList<PatternStart> InternalStarts { get { return _patternStarts; } } 
 
         public IList<PatternStart> RandomizeColoring()
         {
@@ -27,10 +25,6 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             //keep track of the active patterns. Will contain new color
             List<PatternStart> active = new List<PatternStart>();
 
-            //initialize so that it continues from the end of the previous cycle
-//            PatternStart lastStart = _patternStarts.Last();
-//            active.Add(lastStart);
-//            startToColor[lastStart] = EffectsToColors(lastStart.SampleEffect.ColorEffects);
             foreach (var start in _patternStarts)
             {
                 IList<Color> colors = EffectsToColors(start.SampleEffect.ColorEffects);

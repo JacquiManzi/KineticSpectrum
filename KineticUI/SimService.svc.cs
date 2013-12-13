@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
+using KineticControl;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.JSConverters;
 
@@ -44,6 +46,20 @@ namespace KineticUI
 
         [OperationContract]
         [WebGet]
+        public void SetFalloff(double falloff)
+        {
+            State.Plugin.FallOff = falloff;
+        }
+
+        [OperationContract]
+        [WebGet]
+        public double GetFalloff()
+        {
+            return State.Plugin.FallOff;
+        }
+
+        [OperationContract]
+        [WebGet]
         public void SetSpeed(double speed)
         {
             State.Simulation.Speed = speed;
@@ -55,5 +71,46 @@ namespace KineticUI
         {
             return State.Simulation.Speed;
         }
+
+        [OperationContract]
+        [WebGet]
+        public bool IsKinectAttached()
+        {
+            return State.Plugin.HasKinect;
+        }
+
+        [OperationContract]
+        [WebGet]
+        public bool IsKinectEnabled()
+        {
+            return State.Plugin.Enabled;
+        }
+
+        [OperationContract]
+        [WebGet]
+        public String SetKinectEnabled(bool enable)
+        {
+            if (!State.Plugin.HasKinect)
+                return "Kinect is not attached, please connect it to your computer";
+            State.Plugin.Enabled = enable;
+
+            //update the model on the kinect...
+            //todo: your code sucks joseph
+            foreach (var node in State.Simulation.Nodes)
+            {
+                var position = node.Position;
+
+                State.Plugin.XMax = Math.Max(State.Plugin.XMax, position.X);
+                State.Plugin.XMin = Math.Min(State.Plugin.XMin, position.X);
+                State.Plugin.YMax = Math.Max(State.Plugin.YMax, position.Y);
+                State.Plugin.YMin = Math.Min(State.Plugin.YMin, position.Y);
+            }
+
+            if (State.Plugin.Enabled)
+                return "Kinect Enabled";
+            return "Kinect Disabled";
+        }
+
+
     }
 }

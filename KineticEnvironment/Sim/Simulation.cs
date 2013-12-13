@@ -222,8 +222,16 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 else if (value < 0)
                     value = 0;
                 if (_currentTime > value)
+                {
                     new ColorBuilder(_patternStarts).RandomizeColoring();
+                }
                 _currentTime = value;
+                if (value == 0)
+                {
+                    groupBackground.Clear();
+                    groupBackgroundNext.Clear();
+                }
+
                 UpdateState(value);
             }
         }
@@ -235,7 +243,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 if (value)
                     _lastRun = DateTime.Now;
-                //_updateTimer.Enabled = value;
+                _updateTimer.Enabled = value;
             }
         }
 
@@ -286,6 +294,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
                 starts.Sort(PatternStart.PriorityComparer);
+                HandlePatternChanges(new List<PatternStart>(ActivePatterns), starts);
                 ActivePatterns = starts;
 
                 IList<IEffectApplier> appliers = starts.SelectMany(start => start.GetApplier(time)).ToList();
@@ -301,9 +310,6 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 }
                 if (IsActive)
                 {
-                    KinectPlugin plugin = _plugin;
-                    if(plugin != null)
-                        plugin.Apply(_lights);
                     LightSystemProvider.UpdateLights();
                 }
             }
@@ -311,6 +317,24 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 _inProcessing = false;
             }
+        }
+
+        private void HandlePatternChanges(IList<PatternStart> current, IList<PatternStart> update)
+        {
+           foreach (PatternStart start in update)
+           {
+               current.Remove(start);
+           }
+            if (current.Count > 0)
+            {
+                var effect = current.First().SampleEffect as Sweep;
+                if (effect != null && effect.StartEffect != effect.EndEffect)
+                {
+                    _kinectState = (_kinectState == PluginMode.NoBack) ? 
+                        PluginMode.NoFore : PluginMode.NoBack;
+                }
+            }
+
         }
 
         private readonly IDictionary<string, IEffectApplier> groupBackground = new Dictionary<string, IEffectApplier>();
@@ -330,7 +354,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                     IEffectApplier background;
                     if (groupBackground.TryGetValue(effectAppliers.Key, out background))
                     {
-                        background.ApplyEffect(light, background.EndColor);
+                        Color nodeColor = background.GetNodeColor(light, background.EndColor);
+                        WriteBackground(light, nodeColor);
                         backgroundApplied = true;
                     }
                     foreach (IEffectApplier applier in effectAppliers)
@@ -338,11 +363,13 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                         IColorEffect colorEffect = applier.GetEffect(light);
                         if (colorEffect != applier.StartColor)
                         {
-                            applier.ApplyEffect(light, colorEffect);
+                            Color nodeColor = applier.GetNodeColor(light, colorEffect);
+                            WriteForeground(light, nodeColor);
                         }
                         else if (!backgroundApplied)
                         {
-                            applier.ApplyEffect(light, colorEffect);
+                            Color nodeColor = applier.GetNodeColor(light, colorEffect);
+                            WriteBackground(light, nodeColor);
                         }
                         backgroundApplied = true;
                     }
@@ -350,7 +377,38 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
-        private enum PluginMode {NO_BACK, NO_FORE}
+        private void WriteBackground(LEDNode light, Color color)
+        {
+            if (_plugin != null && _plugin.Enabled && 
+                _kinectState == PluginMode.NoBack)
+            {
+                byte amount = _plugin.Applies(light.Position.X, light.Position.Y); 
+                if (amount != 0)
+                {
+                    light.Color = ColorUtil.Interpolate(color, Colors.Black, amount/255.0);
+                    return;
+                }
+            }
+            light.Color = color;
+        }
+
+        private void WriteForeground(LEDNode light, Color color)
+        {
+            if (_plugin != null && _plugin.Enabled &&
+                _kinectState == PluginMode.NoFore)
+            {
+                byte amount = _plugin.Applies(light.Position.X, light.Position.Y); 
+                if (amount != 0)
+                {
+                    light.Color = ColorUtil.Interpolate(color, Colors.Black, amount/255.0);
+                    return;
+                }
+            }
+            light.Color = color;
+        }
+
+        private enum PluginMode {NoBack, NoFore}
+        private PluginMode _kinectState = PluginMode.NoBack;
 
         private void HandleBackground(int time, IEnumerable<IGrouping<string, IEffectApplier>> groupApply)
         {
@@ -359,7 +417,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 if (groupBackgroundNext.ContainsKey(effectAppliers.Key))
                 {
                     int whenApply = groupBackgroundNext[effectAppliers.Key].AtTime;
-                    if(whenApply <= time || whenApply -3000 > time)
+                    if(whenApply <= time)
                     {
                         var nextUp = groupBackgroundNext[effectAppliers.Key];
                         groupBackgroundNext.Remove(effectAppliers.Key);
