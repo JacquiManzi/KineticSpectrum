@@ -17,9 +17,9 @@ define([
         ASPECT: 0,        //Aspect ratio
         NEAR: 0.09,       //Near frustrum plane
         FAR: 10000,       //Far frustrum plane
-        CAMERA_POS_X: 2,  //Camera X position
-        CAMERA_POS_Y: 2,  //Camera Y position
-        CAMERA_POS_Z: 2,  //Camera Z position
+        CAMERA_POS_X: 200,  //Camera X position
+        CAMERA_POS_Y: 200,  //Camera Y position
+        CAMERA_POS_Z: 200,  //Camera Z position
 
         constructor: function () {
 

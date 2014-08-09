@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
 {
+    class RandSelector
+    {
+        private static readonly Random Random = new Random();
+        public static string GetRand(IList<string> strings)
+        {
+            return strings[Random.Next(strings.Count)];
+        }
+    }
+
     public class EffectPropertyTypes
     {
         public const string ColorEffect = "ColorEffect";
@@ -23,6 +32,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public const string Reverse = "Reverse";
 
         public static readonly IList<string> All = new List<string>{Restart, Reverse}.AsReadOnly();  
+        public static string GetRandom()
+        {
+            return RandSelector.GetRand(All);
+        }
     }
 
     public class OrderingTypes
@@ -39,6 +52,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         }
 
         public static readonly IList<string> All = new List<string>{Group, Spatial}.AsReadOnly();
+        public static string GetRandom()
+        {
+            return RandSelector.GetRand(All);
+        }
     }
 
     public class GroupOrderingTypes
@@ -49,6 +66,10 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public const string InOut = "In-Out";
 
         public static readonly IList<string> All = new List<string> { Forward, Reverse, OutIn, InOut }.AsReadOnly();
+        public static string GetRandom()
+        {
+            return RandSelector.GetRand(All);
+        }
     }
 
     public class SpatialOrderingTypes
@@ -62,5 +83,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public const string ExpandRand = "Expand Random";
 
         public static readonly IList<string> All = new List<string> { OneDirection, TwoDirectionsIn, TwoDirectionsOut, Shrink, Expand, ShrinkRand, ExpandRand }.AsReadOnly();
+        public static string GetRandom()
+        {
+            return RandSelector.GetRand(All);
+        }
     }
 }

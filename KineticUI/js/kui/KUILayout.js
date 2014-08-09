@@ -65,7 +65,7 @@ define([
                       designMenu.createMenu();             
 
                       dojo.connect(modelView, 'onShow', function(){                     
-                          dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/GeodesicDome.js")();                                       
+                          dojo.hitch(modelView, modelView.displayModel, "/js/kui/3DModels/bag.js")();                                       
                       });
                         
                       /*Left container*/

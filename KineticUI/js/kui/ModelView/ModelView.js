@@ -126,7 +126,7 @@ define([
                 fileInterface.getLightConfigList(dojo.hitch(this, function (lightList) {
 
                     this.sceneInteraction.removeAllNodes();
-                    this.removeAllMeshes();
+                    //this.removeAllMeshes();
 
                     //modelSkeleton.createVertexSpheres(this.sceneModel.getScene());
                     this.sceneInteraction.nodeModel.createLEDNodes(lightList);

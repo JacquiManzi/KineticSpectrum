@@ -17,7 +17,7 @@ namespace KineticUI
         [WebGet]
         public void AddStart(string patternName, double startTime, int id, int priority)
         {
-            State.Simulation.AddPattern(patternName, (int) (startTime*1000), id, priority);
+            State.Simulation.PatternProvider.AddPattern(patternName, (int) (startTime*1000), id, priority);
             Saver.LocalSave();
         }
 
@@ -25,7 +25,7 @@ namespace KineticUI
         [WebGet]
         public void RemoveStart(int id)
         {
-            State.Simulation.RemovePattern(id);
+            State.Simulation.PatternProvider.RemovePattern(id);
             Saver.LocalSave();
         }
 
@@ -33,14 +33,14 @@ namespace KineticUI
         [WebGet]
         public Stream GetStarts()
         {
-            return Serializer.ToStream(State.Simulation.PatternStarts);
+            return Serializer.ToStream(State.Simulation.PatternProvider.PatternStarts);
         }
 
         [OperationContract]
         [WebGet]
         public void ShiftAfter(double shiftAt, double amountToShift)
         {
-            State.Simulation.ShiftAfter((int) (shiftAt*1000), (int) (amountToShift*1000));
+            State.Simulation.PatternProvider.ShiftAfter((int) (shiftAt*1000), (int) (amountToShift*1000));
             Saver.LocalSave();
         }
 

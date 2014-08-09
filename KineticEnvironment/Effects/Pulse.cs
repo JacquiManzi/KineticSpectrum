@@ -9,9 +9,9 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     class Pulse : AbstractLinearEffect
     {
-        private const string BackgroundEffectName = "Background";
-        private const string PulseEffectName = "Pulse";
-        private const string WidthName = "Width";
+        public const string BackgroundEffectName = "Background";
+        public const string PulseEffectName = "Pulse";
+        public const string WidthName = "Width";
 
         public const string EffectName = "Pulse";
 

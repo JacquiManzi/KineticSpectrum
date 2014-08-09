@@ -27,21 +27,21 @@
 
             constructAxis: function() {
                 var geometry = new three.Geometry();
-                geometry.vertices.push(new three.Vector3(10, 0, 0));
+                geometry.vertices.push(new three.Vector3(200, 0, 0));
                 geometry.vertices.push(new three.Vector3(0, 0, 0));
-                geometry.vertices.push(new three.Vector3(-10, 0, 0));
+                geometry.vertices.push(new three.Vector3(-200, 0, 0));
                 this.xAxis = new three.Line(geometry, new three.LineBasicMaterial({color: 0xFF0000}));
 
                 geometry = new three.Geometry();
-                geometry.vertices.push(new three.Vector3(0, 10, 0));
+                geometry.vertices.push(new three.Vector3(0, 200, 0));
                 geometry.vertices.push(new three.Vector3(0, 0, 0));
-                geometry.vertices.push(new three.Vector3(0, -10, 0));
+                geometry.vertices.push(new three.Vector3(0, -200, 0));
                 this.yAxis = new three.Line(geometry, new three.LineBasicMaterial({color: 0x00FF00}));
 
                 geometry = new three.Geometry();
-                geometry.vertices.push(new three.Vector3(0, 0, 10));
+                geometry.vertices.push(new three.Vector3(0, 0, 200));
                 geometry.vertices.push(new three.Vector3(0, 0, 0));
-                geometry.vertices.push(new three.Vector3(0, 0, -10));
+                geometry.vertices.push(new three.Vector3(0, 0, -200));
                 this.zAxis = new three.Line(geometry, new three.LineBasicMaterial({color: 0x0000FF}));
 
                 this._scene.add(this.xAxis);

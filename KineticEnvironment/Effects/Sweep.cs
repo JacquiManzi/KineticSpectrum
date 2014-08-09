@@ -9,8 +9,8 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     public class Sweep : AbstractLinearEffect
     {
-        private const string StartEffectName = "Sweep Start";
-        private const string EndEffectName = "Sweep End";
+        public const string StartEffectName = "Sweep Start";
+        public const string EndEffectName = "Sweep End";
 
         public const string EffectName = "Sweep";
 

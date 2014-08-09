@@ -12,9 +12,9 @@ namespace RevKitt.KS.KineticEnvironment
 
         public static Scene Scene = new Scene();
 
-        public static ISimulation Simulation = new ReadAheadSimulation(Scene);
+        public static ISimulation Simulation = ReadAheadSimulation.TempSimulation(Scene);
 
-        public static ISimulation PatternSim = new ReadAheadSimulation(Scene);
+        public static ISimulation PatternSim = ReadAheadSimulation.TempSimulation(Scene);
 
         public static ISimulation RunningComposition { set { _runningComposition = value; } }
 

@@ -40,7 +40,7 @@ define([
                     var ledNode = new LED();
                     ledNode.updatePosition(item.position);
                     ledNode.address = item.address;
-                    ledNode.setRadius(0.007);
+                    ledNode.setRadius(1.000);
 
                     this.scene.add(ledNode);
                     this.nodes.add(ledNode);

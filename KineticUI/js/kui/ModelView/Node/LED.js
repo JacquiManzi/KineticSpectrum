@@ -9,7 +9,7 @@
         "use strict";
         return declare("kui.ModelView.Node.LED", [Node], {
 
-            RADIUS: 0.02,
+            RADIUS: 1.00,
             SEGMENT_WIDTH: 8,
             SEGMENT_HEIGHT: 6,
             RED: 0,

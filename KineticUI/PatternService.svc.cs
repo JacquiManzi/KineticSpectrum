@@ -30,7 +30,7 @@ namespace KineticUI
 
             var sim = State.PatternSim;
             sim.Clear();
-            sim.AddPattern(pObj, 0, 0, 0);
+            sim.PatternProvider.AddPattern(pObj, 0, 0, 0);
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
             sw.Write(sim.EndTime);

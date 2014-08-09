@@ -368,6 +368,8 @@ namespace RevKitt.KS.KineticEnvironment.Tweening
             }
 	    }
 
+
+
         private static readonly IDictionary<string, IEasing> _easingNameMap = new Dictionary<string, IEasing>
         {{Linear.Name, Linear},{Quadratic.Name,Quadratic}, {Cubic.Name, Cubic}, {Quartic.Name,Quartic},{Quintic.Name, Quintic},
          {Sinusoidal.Name, Sinusoidal}, {Exponential.Name, Exponential}, {Circular.Name, Circular}, {Back.Name, Back}, 

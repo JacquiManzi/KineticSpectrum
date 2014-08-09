@@ -13,14 +13,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         void Clear();
 
-        IList<PatternStart> PatternStarts { get; }
-
-        PatternStart AddPattern(string patternName, int startTime, int id, int priority);
-        PatternStart AddPattern(Pattern pattern, int startTime, int id, int priority);
-
-        void ShiftAfter(int shiftAfterTime, int timeToShift);
-
-        void RemovePattern(int id);
+        IPatternProvider PatternProvider { get; }
 
         double Speed { get; set; }
 

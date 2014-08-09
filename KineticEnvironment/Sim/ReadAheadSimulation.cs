@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
@@ -14,16 +10,32 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly Simulation _readAhead;
         private readonly Simulation _active;
 
-        public ReadAheadSimulation(Scene scene)
+
+        public static ISimulation TempSimulation(Scene scene)
         {
-            _readAhead = new Simulation(scene);
-            _active = new Simulation(scene) {Plugin = State.Plugin};
+            return new ReadAheadSimulation(Simulation.TempSimulation(scene),
+                                           Simulation.TempSimulation(scene));
         }
 
-        public ReadAheadSimulation(Scene scene, String name)
+        public static ISimulation GenerativeSimulation(Scene scene)
         {
-            _readAhead = new Simulation(name, scene);
-            _active = new Simulation(name, scene) {Plugin = State.Plugin};
+            return new ReadAheadSimulation(Simulation.GenerativeSimulation(scene),
+                                           Simulation.GenerativeSimulation(scene));
+
+        }
+
+        public static ISimulation ProgrammedSimulation(string name, Scene scene)
+        {
+            return new ReadAheadSimulation(Simulation.ProgrammedSimulation(name, scene),
+                                           Simulation.ProgrammedSimulation(name, scene));
+        }
+
+        public ReadAheadSimulation(Simulation readAhead, Simulation active)
+        {
+            _readAhead = readAhead;
+            _active = active;
+            _active.Plugin = State.Plugin;
+            PatternProvider = new CompositePatternProvider(_active.PatternProvider, _readAhead.PatternProvider);
         }
 
         public IEnumerable<LEDNode> Nodes
@@ -66,33 +78,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _readAhead.Clear();
         }
 
-        public IList<PatternStart> PatternStarts { get { return _active.PatternStarts; } }
-
-        public PatternStart AddPattern(string patternName, int startTime, int id, int priority)
-        {
-            PatternStart added = _active.AddPattern(patternName, startTime, id, priority);
-            _readAhead.AddPattern(added.Pattern, startTime, id, priority);
-            return added;
-        }
-
-        public PatternStart AddPattern(Pattern pattern, int startTime, int id, int priority)
-        {
-            PatternStart added = _active.AddPattern(pattern, startTime, id, priority);
-            _readAhead.AddPattern(added.Pattern, startTime, id, priority);
-            return added;
-        }
-
-        public void ShiftAfter(int shiftAfterTime, int timeToShift)
-        {
-            _active.ShiftAfter(shiftAfterTime, timeToShift);
-            _readAhead.ShiftAfter(shiftAfterTime, timeToShift);
-        }
-
-        public void RemovePattern(int id)
-        {
-            _active.RemovePattern(id);
-            _readAhead.RemovePattern(id);
-        }
+        public IPatternProvider PatternProvider { get; private set; }
 
         public double Speed
         {
@@ -106,7 +92,6 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             set
             {
                 _active.Plugin = value;
-                _readAhead.Plugin = value;
             }
         }
     }

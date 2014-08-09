@@ -116,7 +116,7 @@ namespace KineticUI
             writer.Flush();
 
             writer.WriteLine("\n\n### Composition");
-            foreach (var start in State.Simulation.PatternStarts)
+            foreach (var start in State.Simulation.PatternProvider.PatternStarts)
             {
                 writer.WriteLine(string.Join(",", new[]
                                                       {
@@ -215,8 +215,8 @@ namespace KineticUI
             IDictionary<string, string> nameToSection;
             LightSystemProvider.ParseProps(stream, out nameToSection);
             State.Scene = new Scene();
-            State.PatternSim = new ReadAheadSimulation(State.Scene);
-            State.Simulation = new ReadAheadSimulation(State.Scene);
+            State.PatternSim = ReadAheadSimulation.TempSimulation(State.Scene);
+            State.Simulation = ReadAheadSimulation.TempSimulation(State.Scene);
 
             if (nameToSection.ContainsKey("Groups"))
             {
@@ -249,7 +249,7 @@ namespace KineticUI
                         System.Diagnostics.Debug.WriteLine("Invalid Composition Line: " + line);
                         continue;
                     }
-                    State.Simulation.AddPattern(props[0], startTime, id, priority);
+                    State.Simulation.PatternProvider.AddPattern(props[0], startTime, id, priority);
                 }
             }
             stream.Close();
