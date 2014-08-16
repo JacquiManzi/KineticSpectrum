@@ -3,7 +3,6 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
-using KineticControl;
 using RevKitt.KS.KineticEnvironment;
 using RevKitt.KS.KineticEnvironment.JSConverters;
 
@@ -17,7 +16,7 @@ namespace KineticUI
         [WebGet]
         public void AddStart(string patternName, double startTime, int id, int priority)
         {
-            State.Simulation.PatternProvider.AddPattern(patternName, (int) (startTime*1000), id, priority);
+            State.ProgramSim.PatternProvider.AddPattern(patternName, (int) (startTime*1000), id, priority);
             Saver.LocalSave();
         }
 
@@ -25,7 +24,7 @@ namespace KineticUI
         [WebGet]
         public void RemoveStart(int id)
         {
-            State.Simulation.PatternProvider.RemovePattern(id);
+            State.ProgramSim.PatternProvider.RemovePattern(id);
             Saver.LocalSave();
         }
 
@@ -33,14 +32,14 @@ namespace KineticUI
         [WebGet]
         public Stream GetStarts()
         {
-            return Serializer.ToStream(State.Simulation.PatternProvider.PatternStarts);
+            return Serializer.ToStream(State.ProgramSim.PatternProvider.PatternStarts);
         }
 
         [OperationContract]
         [WebGet]
         public void ShiftAfter(double shiftAt, double amountToShift)
         {
-            State.Simulation.PatternProvider.ShiftAfter((int) (shiftAt*1000), (int) (amountToShift*1000));
+            State.ProgramSim.PatternProvider.ShiftAfter((int) (shiftAt*1000), (int) (amountToShift*1000));
             Saver.LocalSave();
         }
 
@@ -62,14 +61,15 @@ namespace KineticUI
         [WebGet]
         public void SetSpeed(double speed)
         {
-            State.Simulation.Speed = speed;
+            State.ProgramSim.Speed = speed;
+            State.GenSim.Speed = speed;
         }
 
         [OperationContract]
         [WebGet]
         public double GetSpeed()
         {
-            return State.Simulation.Speed;
+            return State.ProgramSim.Speed;
         }
 
         [OperationContract]
@@ -96,7 +96,7 @@ namespace KineticUI
 
             //update the model on the kinect...
             //todo: your code sucks joseph
-            foreach (var node in State.Simulation.Nodes)
+            foreach (var node in State.ProgramSim.Nodes)
             {
                 var position = node.Position;
 

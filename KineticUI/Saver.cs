@@ -116,16 +116,9 @@ namespace KineticUI
             writer.Flush();
 
             writer.WriteLine("\n\n### Composition");
-            foreach (var start in State.Simulation.PatternProvider.PatternStarts)
-            {
-                writer.WriteLine(string.Join(",", new[]
-                                                      {
-                                                          start.Pattern.Name,
-                                                          start.StartTime.ToString(),
-                                                          start.Id.ToString(),
-                                                          start.Priority.ToString()
-                                                      }));
-            }
+            State.ProgramSim.PatternProvider.WritePatterns(writer);
+            writer.WriteLine("\n\n### GenParameters");
+            State.GenSim.PatternProvider.WritePatterns(writer);
 
             Serializer.Ser.Formatting = Formatting.None;
         }
@@ -216,7 +209,8 @@ namespace KineticUI
             LightSystemProvider.ParseProps(stream, out nameToSection);
             State.Scene = new Scene();
             State.PatternSim = ReadAheadSimulation.TempSimulation(State.Scene);
-            State.Simulation = ReadAheadSimulation.TempSimulation(State.Scene);
+            State.ProgramSim = ReadAheadSimulation.TempSimulation(State.Scene);
+            State.GenSim = ReadAheadSimulation.GenerativeSimulation(State.Scene);
 
             if (nameToSection.ContainsKey("Groups"))
             {
@@ -237,21 +231,9 @@ namespace KineticUI
             }
 
             if (nameToSection.ContainsKey("Composition"))
-            {
-                var split = nameToSection["Composition"].Split(new[]{"\r\n","\n"}, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in split)
-                {
-                    var props = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    int startTime, id, priority;
-                    if (props.Count() != 4 || !int.TryParse(props[1], out startTime) 
-                          || !int.TryParse(props[2], out id) || !int.TryParse(props[3], out priority))
-                    {
-                        System.Diagnostics.Debug.WriteLine("Invalid Composition Line: " + line);
-                        continue;
-                    }
-                    State.Simulation.PatternProvider.AddPattern(props[0], startTime, id, priority);
-                }
-            }
+                State.ProgramSim.PatternProvider.ReadPatterns(nameToSection["Composition"]);
+            if (nameToSection.ContainsKey("GenParameters"))
+                State.ProgramSim.PatternProvider.ReadPatterns(nameToSection["GenParameters"]);
             stream.Close();
         }
     }

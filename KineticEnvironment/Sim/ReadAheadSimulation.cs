@@ -60,7 +60,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             get { return _active.IsPlaying; }
             set { 
                 _active.IsPlaying = value;
-                _readAhead.IsPlaying = value;
+                _readAhead.IsPlaying = false;
             }
         }
 

@@ -128,6 +128,8 @@
     <Content Include="js\kui\ajax\Scenes.js" />
     <Content Include="js\kui\ajax\SimState.js" />
     <Content Include="js\kui\DesignMenu\AccordianItem.js" />
+    <Content Include="js\kui\DesignMenu\GenerativeMenu\GenerativeMenu.js" />
+    <Content Include="js\kui\DesignMenu\GenerativeMenu\GenerativeModel.js" />
     <Content Include="js\kui\DesignMenu\PatternComposerMenu\PatternComposerModel.js" />
     <Content Include="js\kui\DesignMenu\DesignMenu.js" />
     <Content Include="js\kui\DesignMenu\EffectMenu\ColorEffectItem.js" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
@@ -93,6 +94,37 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             List<PatternStart> starts = _patternStarts.Where(patternStart => patternStart.Applies(time)).ToList();
             starts.Sort(PatternStart.PriorityComparer);
             return starts;
+        }
+
+        public void WritePatterns(StreamWriter writer)
+        {
+            foreach (var start in PatternStarts)
+            {
+                writer.WriteLine(string.Join(",", new[]
+                                                 {
+                                                     start.Pattern.Name,
+                                                     start.StartTime.ToString(),
+                                                     start.Id.ToString(),
+                                                     start.Priority.ToString()
+                                                 }));
+            }
+        }
+
+        public void ReadPatterns(string patterns)
+        {
+            var split = patterns.Split(new[]{"\r\n","\n"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in split)
+            {
+                var props = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                int startTime, id, priority;
+                if (props.Count() != 4 || !int.TryParse(props[1], out startTime) 
+                      || !int.TryParse(props[2], out id) || !int.TryParse(props[3], out priority))
+                {
+                    System.Diagnostics.Debug.WriteLine("Invalid Composition Line: " + line);
+                    continue;
+                }
+                AddPattern(props[0], startTime, id, priority);
+            }
         }
     }
 }

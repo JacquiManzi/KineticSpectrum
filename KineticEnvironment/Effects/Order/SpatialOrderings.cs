@@ -14,7 +14,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
         {
             switch (orderingName)
             {
-                    
                 case SpatialOrderingTypes.OneDirection:
                     return new LinearSpatialOrdering(SpatialOrderingTypes.OneDirection, Orderings.ForwardFunc);
                 case SpatialOrderingTypes.TwoDirectionsIn:
@@ -33,7 +32,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                     throw new ArgumentException("Type '" + orderingName + "' is not a valid SpatialOrderingType");
             }
         }
-
     }
 
     class PolarSpatialOrdering : SpatialOrdering

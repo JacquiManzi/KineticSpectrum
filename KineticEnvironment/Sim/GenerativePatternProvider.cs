@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
@@ -63,8 +64,18 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public IList<PatternStart> GetActive(int time)
         {
             _patternStarts.RemoveAll(p => p.EndTime < time);
-            _patternStarts.AddRange(_patternGenerator.GetPatterns(time, Simulation));
+            _patternStarts.AddRange(_patternGenerator.GetPatterns(time, Simulation, _patternStarts.Count));
             return _patternStarts;
+        }
+
+        public void WritePatterns(StreamWriter writer)
+        {
+            _patternGenerator.WriteParameters(writer);
+        }
+
+        public void ReadPatterns(string parameters)
+        {
+            _patternGenerator.ReadParameters(parameters);
         }
     }
 }

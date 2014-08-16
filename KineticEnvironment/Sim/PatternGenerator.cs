@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Media;
 using RevKitt.KS.KineticEnvironment.Coloring;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
+using RevKitt.KS.KineticEnvironment.JSConverters;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Tweening;
 
@@ -13,23 +15,27 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 {
     class PatternParams
     {
-        public int PatternLengthMin = 1;
-        public int PatternLengthMax = 10;
+        public double PatternLengthMin = 1;
+        public double PatternLengthMax = 10;
         public double PatternIntervalMin = .5;
         public double PatternIntervalMax = 5;
-        public int PulseSizeMin = 10;
-        public int PulseSizeMax = 50;
+        public double PulseSizeMin = 10;
+        public double PulseSizeMax = 50;
         public int PulseRepeatMin = 1;
         public int PulseRepeastMax = 5;
         public int ColorsMin = 1;
         public int ColorMax = 6;
+
+        public int PatternsMax = 3;
     }
 
     class PatternGenerator
     {
         private readonly Scene _scene;
-        private Random _random = new Random();
+        private readonly Random _random = new Random();
+        private int id = 0;
         public PatternParams Params = new PatternParams();
+        
         private int _nextTime = 0;
 
         public PatternGenerator(Scene scene)
@@ -37,13 +43,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _scene = scene;
         }
 
-        public IEnumerable<Pattern> GetPattern(int time)
+        public IEnumerable<PatternStart> GetPatterns(int time, IActivatable simulation, int patternCount)
         {
-            if (IsNewPattern(time))
+            if (patternCount < Params.PatternsMax && IsNewPattern(time))
             {
-                return new List<Pattern> {GenPattern()};
+                PatternStart start = new PatternStart(simulation, _scene, id++, time, GenPattern());
+                return new List<PatternStart> {start};
             }
-            return Enumerable.Empty<Pattern>();
+            return Enumerable.Empty<PatternStart>();
         }
 
         private List<IGroup> GetGroups()
@@ -62,9 +69,11 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
+        private static readonly Color Transparent = Color.FromArgb(0, 0, 0, 0);
+
         private IColorEffect GetTransparent()
         {
-            return new FixedColor(Colors.Transparent);
+            return new FixedColor(Transparent);
         }
 
         private IColorEffect GenerateColorEffect()
@@ -93,11 +102,17 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             ApplyDuration(effectProperties);
             ApplyOrdering(effectProperties);
             ApplyRepeat(effectProperties, true);
+            ApplyWidth(effectProperties);
             Pattern pattern = new Pattern();
             pattern.EffectName = Pulse.EffectName;
             pattern.EffectProperties = effectProperties;
             pattern.Groups = groups.Select(g => g.Name).ToList();
             return pattern;
+        }
+
+        private void ApplyWidth(EffectProperties effectProperties)
+        {
+            effectProperties[Pulse.WidthName] = GenRange(Params.PulseSizeMin, Params.PulseSizeMax);
         }
 
         private Pattern GenSweep(IList<IGroup> groups )
@@ -120,7 +135,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         private void ApplyOrdering(EffectProperties effectProperties)
         {
-            effectProperties[PropertyDefinition.Ordering.Name] = OrderingTypes.Spatial;
+            IOrdering ordering = SpatialOrderings.GetOrdering(SpatialOrderingTypes.GetRandom());
+            effectProperties[PropertyDefinition.Ordering.Name] = ordering;
         }
 
         private void ApplyEasing(EffectProperties effectProperties)
@@ -175,5 +191,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             return _random.NextDouble()* (max-min) + min;
         }
 
+        public void WriteParameters(StreamWriter writer)
+        {
+            Serializer.ToStream(Params);
+        }
+
+        public void ReadParameters(string parameters)
+        {
+            Serializer.FromString<PatternParams>(parameters);
+        }
     }
 }

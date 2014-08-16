@@ -9,7 +9,7 @@
     "kui/ajax/Scenes",
     "kui/Simulation/TimeManager"
 ], function (declare, domConstruct, parser, ready, _WidgetBase, html, Effects, CommonForm, array, SimState, Scenes, TimeManager) {
-    var modes = { scene: "Scene", pattern: "Pattern", Simulation: "Simulation" };
+    var modes = { scene: "Scene", pattern: "Pattern", Simulation: "Simulation", Generative: "Generative" };
     return declare("kui.Simulation.Simulation", null, {
 
         mode: modes.scene,
@@ -91,6 +91,15 @@
         setSimulationMode: function() {
             if (this.mode != modes.Simulation) {
                 this.mode = modes.Simulation;
+                SimState.setMode(this.mode);
+                this.onSimMode(true);
+                this.loadSimulation();
+            }
+        },
+
+        setGenerativeMode: function() {
+            if (this.mode != modes.Generative) {
+                this.mode = modes.Generative;
                 SimState.setMode(this.mode);
                 this.onSimMode(true);
                 this.loadSimulation();

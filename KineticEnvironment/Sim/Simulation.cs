@@ -250,7 +250,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
             try
             {
-                IList<PatternStart> nowActive = PatternProvider.GetActive(time);
+                //todo: I shouldn't have to make a copy here, but there was a concurrent modification
+                //exception when getting the appiers below. Make sure there is no concurrent access...
+                IList<PatternStart> nowActive = new List<PatternStart>(PatternProvider.GetActive(time));
                 HandlePatternChanges(new List<PatternStart>(ActivePatterns), nowActive);
                 ActivePatterns = nowActive;
 

@@ -31,6 +31,9 @@ define([
                 case "Simulation":
                     modeInt = 3;
                     break;
+                case "Generative":
+                    modeInt = 4;
+                    break;
                 default:
                     throw new Error("Simulation mode '" + mode + "' is not a valid simulation mode");
             }

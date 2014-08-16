@@ -106,10 +106,10 @@ define([
 
                 CommonForm.setButtonStyle(removeButton, 90);
 
-                return {               
+                return {
                     addButton: addButton.domNode,
                     removeButton: removeButton.domNode
-                }
+                };
 
             },
 

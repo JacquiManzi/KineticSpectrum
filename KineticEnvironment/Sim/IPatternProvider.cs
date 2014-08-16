@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         void ShiftAfter(int shiftAfterTime, int timeToShift);
         void RemovePattern(int id);
         IList<PatternStart> GetActive(int time);
+        void WritePatterns(StreamWriter writer);
+        void ReadPatterns(string patterns);
     }
 
     public class CompositePatternProvider : IPatternProvider
@@ -89,6 +92,17 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public IList<PatternStart> GetActive(int time)
         {
             throw new NotImplementedException();
+        }
+
+        public void WritePatterns(StreamWriter writer)
+        {
+            _first.WritePatterns(writer);
+        }
+
+        public void ReadPatterns(string patterns)
+        {
+            _first.ReadPatterns(patterns);
+            _second.ReadPatterns(patterns);
         }
     }
 }

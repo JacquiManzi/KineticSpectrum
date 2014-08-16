@@ -16,6 +16,8 @@ namespace KineticControl
         private readonly int _initialLength;
         private readonly int _initial;
 
+        public static double Brightness = .60;
+
         public LightType LightType { get; set; }
 
         public ColorData(PDS pds, byte[] initialData, LightType lightType, int initial = 0)
@@ -49,7 +51,14 @@ namespace KineticControl
         public Color this[int pos]
         {
             get { return _leds[pos].Color; }
-            set { _leds[pos].Color = value; }
+            set
+            {
+                _leds[pos].Color = Color.FromArgb(value.A,
+                                                  (byte) (Brightness*value.R),
+                                                  (byte) (Brightness*value.G),
+                                                  (byte) (Brightness*value.B));
+
+            }
         }
 
         public IPAddress Address { get { return _deviceAddress; } }
@@ -86,7 +95,7 @@ namespace KineticControl
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((ColorData) obj);
         }
 

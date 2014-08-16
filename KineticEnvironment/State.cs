@@ -12,8 +12,8 @@ namespace RevKitt.KS.KineticEnvironment
 
         public static Scene Scene = new Scene();
 
-        public static ISimulation Simulation = ReadAheadSimulation.TempSimulation(Scene);
-
+        public static ISimulation ProgramSim = ReadAheadSimulation.TempSimulation(Scene);
+        public static ISimulation GenSim     = ReadAheadSimulation.GenerativeSimulation(Scene);
         public static ISimulation PatternSim = ReadAheadSimulation.TempSimulation(Scene);
 
         public static ISimulation RunningComposition { set { _runningComposition = value; } }
@@ -36,7 +36,9 @@ namespace RevKitt.KS.KineticEnvironment
                     case SimulationMode.Pattern:
                         return PatternSim;
                     case SimulationMode.Simulation:
-                        return Simulation;
+                        return ProgramSim;
+                    case SimulationMode.Generative:
+                        return GenSim;
                     default:
                         return Scene;
                 }
@@ -89,5 +91,5 @@ namespace RevKitt.KS.KineticEnvironment
             activatable.IsActive = true;
         }
     }
-    public enum SimulationMode { Scene=1, Pattern=2, Simulation=3 }
+    public enum SimulationMode { Scene=1, Pattern=2, Simulation=3, Generative=4 }
 }

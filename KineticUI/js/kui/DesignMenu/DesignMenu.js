@@ -15,8 +15,10 @@ define([
     "kui/DesignMenu/LEDMenu/LEDMenu",
     "kui/DesignMenu/PatternMenu/PatternMenu",
     "kui/DesignMenu/PatternComposerMenu/PatternComposerMenu",
+    "kui/DesignMenu/GenerativeMenu/GenerativeMenu",
     "kui/DesignMenu/PatternMenu/PatternModel",
     "kui/DesignMenu/PatternComposerMenu/PatternComposerModel",
+    "kui/DesignMenu/GenerativeMenu/GenerativeModel",
     "kui/util/CommonHTML",
     "kui/util/CommonFormItems",
     "dojo/dom-construct",
@@ -25,12 +27,12 @@ define([
      "dijit/registry",
      "dojo/dom-geometry",
      "dojox/gfx", 
-     "dojo/aspect",
-     "kui/Simulation/Simulation"
+     "dojo/aspect"
 ], 
     function (declare, AccordionContainer, ModelMenu, FileMenu, LEDMenu, PatternMenu,
-        PatternComposerMenu, PatternModel, PatternComposerModel, html, CommonForm, domConstruct,
-        domStyle, domClass, registry, domGeom, gfx, aspect, Simulation) {
+        PatternComposerMenu, GenerativeMenu, PatternModel, PatternComposerModel,
+        GenerativeModel, html, CommonForm, domConstruct, domStyle, domClass, registry,
+        domGeom, gfx, aspect) {
 
     return declare("kui.DesignMenu.DesignMenu", AccordionContainer, {
 
@@ -109,6 +111,16 @@ define([
             });
 
             patternComposer.createComposerMenu(this);
+
+            /*Generative Menu */
+            var generativeModel = new GenerativeModel(this.simulation);
+            var generativeMenu = new GenerativeMenu({
+                sceneModel: this.sceneModel,
+                generativeModel: generativeModel,
+                simulation: this.simulation,
+            });
+
+            generativeMenu.createComposerMenu(this);
 
             this._fullScreenClickEvent(fullScreenDiv, leftDiv, rightDiv, patternComposerModel); 
             this._arrowBarClickEvent(arrowDiv, rightDiv, leftDiv, arrowMap, patternComposerModel);
@@ -229,7 +241,7 @@ define([
 
             leftContainer.resize({ w: leftWidth });
             domStyle.set(leftDiv, 'width', '0px');
-            rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
+            var rightWidth = domGeom.getContentBox(leftContainer.domNode).w;
 
             /*Subtract 2 pixels for the border on design menu accordian container*/
             domStyle.set(rightDiv, 'width', rightWidth - 2 + 'px');
