@@ -16,7 +16,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         public int Priority { get; internal set; }
 
         private EffectProperties _properties;
-        private readonly EffectApplier _effectApplier;
         protected int Duration { get; private set; }
         protected int RepeatCount { get; private set; }
         protected bool Reverse { get; private set; }
@@ -27,7 +26,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
             if(group == null)
                 throw new ArgumentNullException("group");
             _group = group;
-            _effectApplier = new EffectApplier(this);
         }
 
         public abstract IList<IColorEffect> ColorEffects { get; }
@@ -65,12 +63,12 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
             if (Reverse && cycleCount % 2 == 1)
                 cycleTime = Duration - cycleTime - 1;
+            EffectApplier effectApplier = new EffectApplier(this);
+            effectApplier.Range = new TimeRange(cycleTime, Duration, cycleCount, Duration*RepeatCount);
+            effectApplier.OrderingMin = Ordering.GetMin();
+            effectApplier.OrderingSize = Ordering.GetMax() - Ordering.GetMin();
 
-            _effectApplier.Range = new TimeRange(cycleTime, Duration, cycleCount, Duration*RepeatCount);
-            _effectApplier.OrderingMin = Ordering.GetMin();
-            _effectApplier.OrderingSize = Ordering.GetMax() - Ordering.GetMin();
-
-            return _effectApplier;
+            return effectApplier;
         }
 
         public void Apply(int time)

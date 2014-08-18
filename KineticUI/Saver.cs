@@ -233,7 +233,7 @@ namespace KineticUI
             if (nameToSection.ContainsKey("Composition"))
                 State.ProgramSim.PatternProvider.ReadPatterns(nameToSection["Composition"]);
             if (nameToSection.ContainsKey("GenParameters"))
-                State.ProgramSim.PatternProvider.ReadPatterns(nameToSection["GenParameters"]);
+                State.GenSim.PatternProvider.ReadPatterns(nameToSection["GenParameters"]);
             stream.Close();
         }
     }

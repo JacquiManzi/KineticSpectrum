@@ -117,6 +117,7 @@
     <Compile Include="Sim\GenerativeSimulation.cs" />
     <Compile Include="Sim\IPatternProvider.cs" />
     <Compile Include="Sim\ISimulation.cs" />
+    <Compile Include="Sim\KinectPatternStart.cs" />
     <Compile Include="Sim\PatternGenerator.cs" />
     <Compile Include="Sim\PatternStart.cs" />
     <Compile Include="Sim\ProgrammedPatternProvider.cs" />

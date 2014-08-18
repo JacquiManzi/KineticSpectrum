@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
@@ -126,5 +127,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 AddPattern(props[0], startTime, id, priority);
             }
         }
+
+        public KinectPlugin Plugin { get; set; }
     }
 }

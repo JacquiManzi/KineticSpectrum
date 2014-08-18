@@ -33,7 +33,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         private readonly Scene _scene;
         private readonly Random _random = new Random();
-        private int id = 0;
+        private int id = 3;
         public PatternParams Params = new PatternParams();
         
         private int _nextTime = 0;
@@ -43,22 +43,23 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _scene = scene;
         }
 
-        public IEnumerable<PatternStart> GetPatterns(int time, IActivatable simulation, int patternCount)
+        public IEnumerable<PatternStart> GetPatterns(int time, IActivatable simulation, int patternCount, int priority)
         {
             if (patternCount < Params.PatternsMax && IsNewPattern(time))
             {
-                PatternStart start = new PatternStart(simulation, _scene, id++, time, GenPattern());
+                PatternStart start = new PatternStart(simulation, _scene, id++, time, GenPattern(), priority);
                 return new List<PatternStart> {start};
             }
             return Enumerable.Empty<PatternStart>();
         }
 
-        private List<IGroup> GetGroups()
+        private IList<string> GetGroups()
         {
-            return new List<IGroup> {_scene.GetGroup("All")};
+            IList<IGroup> groups = _scene.Groups;
+            return new List<string>{FromRandom(groups).Name};
         }
 
-        private Pattern GenPattern()
+        public Pattern GenPattern()
         {
             switch (_random.Next(4))
             {
@@ -69,11 +70,10 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
-        private static readonly Color Transparent = Color.FromArgb(0, 0, 0, 0);
 
         private IColorEffect GetTransparent()
         {
-            return new FixedColor(Transparent);
+            return new FixedColor(ColorUtil.GetTransparent());
         }
 
         private IColorEffect GenerateColorEffect()
@@ -92,7 +92,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             return ColorPicker.PickColors(GenRange(Params.ColorsMin, Params.ColorMax));
         }
 
-        private Pattern GenPulse(IList<IGroup> groups )
+        public Pattern GenPulse(IList<string> groupNames)
         {
             EffectProperties effectProperties = new EffectProperties();
             effectProperties[Pulse.BackgroundEffectName] = GetTransparent();
@@ -106,7 +106,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             Pattern pattern = new Pattern();
             pattern.EffectName = Pulse.EffectName;
             pattern.EffectProperties = effectProperties;
-            pattern.Groups = groups.Select(g => g.Name).ToList();
+            pattern.Groups = groupNames;
             return pattern;
         }
 
@@ -115,7 +115,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             effectProperties[Pulse.WidthName] = GenRange(Params.PulseSizeMin, Params.PulseSizeMax);
         }
 
-        private Pattern GenSweep(IList<IGroup> groups )
+        public Pattern GenSweep(IList<string> groupNames )
         {
             EffectProperties effectProperties = new EffectProperties();
             effectProperties[Sweep.StartEffectName] = GetTransparent();
@@ -129,13 +129,19 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             Pattern pattern = new Pattern();
             pattern.EffectName = Sweep.EffectName;
             pattern.EffectProperties = effectProperties;
-            pattern.Groups = groups.Select(g => g.Name).ToList();
+            pattern.Groups = groupNames;
             return pattern;
         }
 
+        private IList<string> _availableOrderings = SpatialOrderingTypes.All;  
+        public IList<string> AvailableOrderings
+        {
+            get { return _availableOrderings; }
+            set { _availableOrderings = new List<string>(value).AsReadOnly(); }
+        } 
         private void ApplyOrdering(EffectProperties effectProperties)
         {
-            IOrdering ordering = SpatialOrderings.GetOrdering(SpatialOrderingTypes.GetRandom());
+            IOrdering ordering = SpatialOrderings.GetOrdering(FromRandom(_availableOrderings));
             effectProperties[PropertyDefinition.Ordering.Name] = ordering;
         }
 
@@ -199,6 +205,11 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public void ReadParameters(string parameters)
         {
             Serializer.FromString<PatternParams>(parameters);
+        }
+
+        private T FromRandom<T>(IList<T> randomFrom)
+        {
+            return randomFrom[_random.Next(randomFrom.Count)];
         }
     }
 }

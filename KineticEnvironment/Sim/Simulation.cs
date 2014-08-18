@@ -363,7 +363,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                     return;
                 }
             }
-            light.Color = color;
+            light.Color = ColorUtil.Interpolate(light.Color, color);
         }
 
         private enum PluginMode {NoBack, NoFore}

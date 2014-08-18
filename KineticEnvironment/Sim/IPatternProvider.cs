@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Sim
@@ -25,6 +26,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         IList<PatternStart> GetActive(int time);
         void WritePatterns(StreamWriter writer);
         void ReadPatterns(string patterns);
+        KinectPlugin Plugin { get; set; }
     }
 
     public class CompositePatternProvider : IPatternProvider
@@ -39,7 +41,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         }
 
         public IList<PatternStart> PatternStarts { get { return _first.PatternStarts; } }
-        public int EndTime { get; private set; }
+        public int EndTime { get { return _first.EndTime; } }
         public void Clear()
         {
             _first.Clear();
@@ -103,6 +105,12 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             _first.ReadPatterns(patterns);
             _second.ReadPatterns(patterns);
+        }
+
+        public KinectPlugin Plugin
+        {
+            get { return _first.Plugin; }
+            set { _first.Plugin = value; }
         }
     }
 }

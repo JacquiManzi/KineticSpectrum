@@ -9,7 +9,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     class FixedEffect : AbstractEffect
     {
-        private const string ColorEffectName = "Color Effect";
+        public const string ColorEffectName = "Color Effect";
         public const string EffectName = "Fixed";
         public static EffectFactroy FixedFactory = g=>new FixedEffect(g);
 

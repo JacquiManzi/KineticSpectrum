@@ -34,7 +34,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             _readAhead = readAhead;
             _active = active;
-            _active.Plugin = State.Plugin;
+            _active.PatternProvider.Plugin = State.Plugin;
             PatternProvider = new CompositePatternProvider(_active.PatternProvider, _readAhead.PatternProvider);
         }
 
