@@ -83,7 +83,7 @@ namespace KineticControl
                 {
                     NetworkCard = inter;
                     InitializeLocalIP();
-                    InitializeLocalPort();
+//                    InitializeLocalPort();
                     _connected = true;
                     return;
                 }
@@ -208,8 +208,15 @@ namespace KineticControl
 //                args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
 //                args.RemoteEndPoint = endPoint;
                 //            _socket.SendAsync(args);
-                _socket.BeginSendTo(colorData.Bytes, 0, colorData.Bytes.Length,
+//                SocketAsyncEventArgs eventArgs = new SocketAsyncEventArgs();
+//                eventArgs.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Length);
+//                eventArgs.SocketFlags = SocketFlags.None;
+//                eventArgs.RemoteEndPoint = endPoint;
+//                _socket.SendAsync(eventArgs);
+
+                IAsyncResult result = _socket.BeginSendTo(colorData.Bytes, 0, colorData.Bytes.Length,
                     SocketFlags.None, endPoint, null, null);
+
 //                _socket.SendToAsync(args);
             }
         }

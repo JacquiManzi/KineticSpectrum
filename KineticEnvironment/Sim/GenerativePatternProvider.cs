@@ -71,6 +71,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             _patternStarts.RemoveAll(p => p.EndTime < time);
             _patternStarts.AddRange(_patternGenerator.GetPatterns(time, Simulation, _patternStarts.Count, 2));
             if (_kinectPattern != null)
+                //todo memory problems here!
                 return new List<PatternStart>(_patternStarts) {_kinectPattern};
             return _patternStarts;
         }
