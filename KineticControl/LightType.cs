@@ -10,6 +10,7 @@ namespace KineticControl
         public static readonly LightType None = new LightType() {Name = "None", Spacing = 0, NoLights = 0};
         public static readonly LightType Short = new LightType() {Name = "iColor Flex 12", Spacing = 12, NoLights = 50};
         public static readonly LightType Long = new LightType() {Name = "iColor Flex 4", Spacing = 4, NoLights = 50};
+        public static readonly LightType Panel = new LightType() { Name = "ModularFX", Spacing = 1, NoLights = 72 };
 
         public static List<LightType> Types = new List<LightType>()
         {

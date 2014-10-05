@@ -32,7 +32,7 @@ namespace KineticControl
 //                }
 //            }
 
-            network.SetInterface("Local Area Connection");
+            network.SetInterface("Ethernet");
 
 
            
@@ -42,7 +42,7 @@ namespace KineticControl
                for (int i = 0; i < pattern.GetColors().Count; i++)
                {
                    Color color = pattern.GetColors()[i];
-                   for (int j = 0; j < 50; j++)
+                   for (int j = 0; j < 72; j++)
                    {
                        foreach (PDS pds in network.PDSs)
                        {

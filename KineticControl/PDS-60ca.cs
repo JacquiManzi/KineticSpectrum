@@ -6,10 +6,10 @@ namespace KineticControl
 {
     public class PDS60Ca : PDSca
     {
-        public PDS60Ca() : base(InitHex)
+        public PDS60Ca() : base(InitHex, LightType.Short)
         { }
 
-        public PDS60Ca(Network network, IPEndPoint endPoint) : base(network, endPoint, InitHex) 
+        public PDS60Ca(Network network, IPEndPoint endPoint) : base(network, endPoint, InitHex, LightType.Short) 
         { }
 
         public void SetColorData1(LightType lightType)

@@ -46,11 +46,16 @@ namespace KineticControl
         private Network()
         {
 //            _pdss.Add(new PDS60Ca(this, new IPEndPoint(IPAddress.Parse("169.254.227.1"),6038)));
-            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.150"), 6038)));
-            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.151"), 6038)));
-            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.152"), 6038)));
-            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.153"), 6038)));
-            _pdss.Add(new PDS60Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.154"), 6038)));
+//            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.150"), 6038)));
+//            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.151"), 6038)));
+//            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.152"), 6038)));
+//            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.153"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.160"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.161"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.162"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.163"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.164"), 6038)));
+            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.165"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.50"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.51"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.52"), 6038)));
@@ -84,7 +89,7 @@ namespace KineticControl
                 {
                     NetworkCard = inter;
                     InitializeLocalIP();
-//                    InitializeLocalPort();
+                    InitializeLocalPort();
                     _connected = true;
                     return;
                 }
@@ -209,15 +214,8 @@ namespace KineticControl
 //                args.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Count());
 //                args.RemoteEndPoint = endPoint;
                 //            _socket.SendAsync(args);
-//                SocketAsyncEventArgs eventArgs = new SocketAsyncEventArgs();
-//                eventArgs.SetBuffer(colorData.Bytes, 0, colorData.Bytes.Length);
-//                eventArgs.SocketFlags = SocketFlags.None;
-//                eventArgs.RemoteEndPoint = endPoint;
-//                _socket.SendAsync(eventArgs);
-
-                IAsyncResult result = _socket.BeginSendTo(colorData.Bytes, 0, colorData.Bytes.Length,
+                _socket.BeginSendTo(colorData.Bytes, 0, colorData.Bytes.Length,
                     SocketFlags.None, endPoint, null, null);
-
 //                _socket.SendToAsync(args);
             }
         }

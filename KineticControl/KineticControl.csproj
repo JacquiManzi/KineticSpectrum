@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PDS480Ca75V.cs" />
     <Compile Include="JetbrainsAnnotations.cs" />
     <Compile Include="HexStrings.cs" />
     <Compile Include="Led.cs" />
