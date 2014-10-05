@@ -16,7 +16,7 @@ namespace KineticControl
         private readonly int _initialLength;
         private readonly int _initial;
 
-        public static double Brightness = .60;
+        public static double Brightness = .30;
 
         public LightType LightType { get; set; }
 

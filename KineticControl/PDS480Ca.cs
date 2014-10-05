@@ -7,10 +7,10 @@ namespace KineticControl
 {
     class PDS480Ca : PDSca
     {
-        public PDS480Ca() : base(InitHex)
+        public PDS480Ca() : base(InitHex, LightType.Short)
         { }
 
-        public PDS480Ca(Network network, IPEndPoint endPoint) : base(network, endPoint, InitHex) 
+        public PDS480Ca(Network network, IPEndPoint endPoint) : base(network, endPoint, InitHex, LightType.Short) 
         { }
 
         public override string getType()

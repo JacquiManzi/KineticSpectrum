@@ -14,14 +14,14 @@ namespace KineticControl
         private readonly List<String>    _initialHexs; 
  
 
-        public PDSca( IEnumerable<String> initialHexs ): this(Network.GetInstance(), new IPEndPoint(IPAddress.Any, 6038), initialHexs )
+        public PDSca( IEnumerable<String> initialHexs, LightType lightType ): this(Network.GetInstance(), new IPEndPoint(IPAddress.Any, 6038), initialHexs, lightType)
         {
             EndPoint = new IPEndPoint(IPAddress.Any, 6038);
             _network = Network.GetInstance();
             
         }
 
-        public PDSca( Network network, IPEndPoint endPoint, IEnumerable<String> initialHexs  )
+        public PDSca( Network network, IPEndPoint endPoint, IEnumerable<String> initialHexs, LightType lightType  )
         {
             _network = network;
             EndPoint = endPoint;
@@ -30,7 +30,7 @@ namespace KineticControl
             foreach (var initialHex in _initialHexs)
             {
                 byte[] hexBytes = HexStrings.DecodeString(initialHex);
-                _ports.Add(new ColorData(this, hexBytes, LightType.Short));
+                _ports.Add(new ColorData(this, hexBytes, lightType));
             }
         }
 
