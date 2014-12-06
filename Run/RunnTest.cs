@@ -33,8 +33,6 @@ namespace KineticControl
 //            }
 
             network.SetInterface("Ethernet");
-
-
            
            network.BroadCast();
            while (true)

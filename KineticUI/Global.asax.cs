@@ -19,6 +19,9 @@ namespace KineticUI
             LightSystemProvider.Init(Config.HostInterface);
             Images.GetImages(Config.ImageDirectory);
             Saver.LocalLoad();
+            bool enabled = false;
+            bool.TryParse(Config.KinectEnabled, out enabled); //false if unsuccessfull
+            KinectPlugin.Instance.Enabled = enabled;
         }
 
         protected void Session_Start(object sender, EventArgs e)

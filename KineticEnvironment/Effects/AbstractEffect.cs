@@ -10,7 +10,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 {
     public abstract class AbstractEffect : IEffect
     {
-
         private readonly IGroup _group;
 
         public int Priority { get; internal set; }

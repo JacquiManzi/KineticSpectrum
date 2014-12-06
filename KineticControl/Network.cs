@@ -50,12 +50,12 @@ namespace KineticControl
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.151"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.152"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("169.254.49.153"), 6038)));
-            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.160"), 6038)));
-            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.161"), 6038)));
+//            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.160"), 6038)));
+//            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.161"), 6038)));
             _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.162"), 6038)));
             _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.163"), 6038)));
-            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.164"), 6038)));
-            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.165"), 6038)));
+//            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.164"), 6038)));
+//            _pdss.Add(new PDS480Ca75V(this, new IPEndPoint(IPAddress.Parse("169.254.49.165"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.50"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.51"), 6038)));
 //            _pdss.Add(new PDS480Ca(this, new IPEndPoint(IPAddress.Parse("192.168.1.52"), 6038)));

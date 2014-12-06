@@ -20,7 +20,7 @@ namespace RevKitt.KS.KineticEnvironment
 
         public static bool IsCompositionRunning { get { return _runningComposition != null; } }
 
-        public static readonly KinectPlugin Plugin = new KinectPlugin();
+        public static readonly KinectPlugin Plugin = KinectPlugin.Instance;
 
         public static void EndRunningComposition()
         {

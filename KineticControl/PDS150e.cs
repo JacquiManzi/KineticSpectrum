@@ -10,8 +10,6 @@ namespace KineticControl
     {
         private readonly Network _network;
         private readonly IPEndPoint _endPoint;
-        
-
         private readonly ColorData _data1;
 
         public PDS150e(Network network, IPEndPoint endPoint)
