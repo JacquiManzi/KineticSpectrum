@@ -16,8 +16,6 @@ namespace KineticControl
         private readonly int _initialLength;
         private readonly int _initial;
 
-        public static double Brightness = .30;
-
         public LightType LightType { get; set; }
 
         public ColorData(PDS pds, byte[] initialData, LightType lightType, int initial = 0)
@@ -48,16 +46,24 @@ namespace KineticControl
 
         public IList<Led> Leds { get { return _leds; } }
 
+        public double Brightness
+        {
+            get { return _leds[0].Brightness; }
+            set
+            {
+                foreach (var led in _leds)
+                {
+                    led.Brightness = value;
+                }
+            }
+        }
+
         public Color this[int pos]
         {
             get { return _leds[pos].Color; }
             set
             {
-                _leds[pos].Color = Color.FromArgb(value.A,
-                                                  (byte) (Brightness*value.R),
-                                                  (byte) (Brightness*value.G),
-                                                  (byte) (Brightness*value.B));
-
+                _leds[pos].Color = Color.FromArgb(value.A, value.R, value.G, value.B);
             }
         }
 

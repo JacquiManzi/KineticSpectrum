@@ -73,9 +73,9 @@ namespace KineticControl
             get { return new List<string>(_network.RetrieveNetworkCards().Select(card => card.Name));}
         }
 
-        public Task<IList<LightAddress>> RefreshLightList()
+        public void RefreshLightList()
         {
-            return Task.Factory.StartNew(() => FindNetworks());
+            FindNetworks();
         }
 
         public Color GetColor(LightAddress lightAddress)

@@ -67,12 +67,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlEncoder.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KinectAPI\KinectAPI.csproj">
-      <Project>{329CCBA1-6D35-46A8-A8D5-5AAE3AF4157D}</Project>
-      <Name>KinectAPI</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

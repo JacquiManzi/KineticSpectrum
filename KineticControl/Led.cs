@@ -9,6 +9,7 @@ namespace KineticControl
         private readonly byte[] _byteArray;
         private readonly int _initialLength;
         private readonly int _pos;
+        private double _brightness = 1;
 
         internal Led(byte[] bytes, int initialLength, int position)
         {
@@ -16,6 +17,12 @@ namespace KineticControl
             _pos = position;
             _initialLength = initialLength;
             Color = Colors.Black;
+        }
+
+        public double Brightness
+        {
+            get { return _brightness; }
+            set { _brightness = Math.Max(0, Math.Min(1, value)); }
         }
 
         public Color Color
@@ -27,32 +34,30 @@ namespace KineticControl
                 {
                     R = ReverseBrightness(_byteArray[_initialLength + _pos * 3]),
                     G = ReverseBrightness(_byteArray[_initialLength + _pos * 3 + 1]),
-                    B = ReverseBrightness(_byteArray[_initialLength + _pos * 3 + 2])
+                    B = ReverseBrightness(_byteArray[_initialLength + _pos * 3 + 2]),
                 };
                 return color;
             }
             set
             {
                 if (_initialLength + _pos * 3 > _byteArray.Length) throw new IndexOutOfRangeException();
-                _byteArray[_initialLength + _pos * 3] = AdjustBrightness(value.R);
-                _byteArray[_initialLength + _pos * 3 + 1] = AdjustBrightness(value.G);
-                _byteArray[_initialLength + _pos * 3 + 2] = AdjustBrightness(value.B);
+                _byteArray[_initialLength + _pos * 3] = (AdjustBrightness(value.R));
+                _byteArray[_initialLength + _pos * 3 + 1] = (AdjustBrightness(value.G));
+                _byteArray[_initialLength + _pos * 3 + 2] = (AdjustBrightness(value.B));
             }
         }
 
-        private static byte ReverseBrightness(byte byteValue)
+        private byte ReverseBrightness(byte byteValue)
         {
-            if (ColorData.Brightness == 0)
+            if (_brightness == 0)
                 return 0;
-            byte newValue = (byte) (byteValue/ColorData.Brightness);
+            byte newValue = (byte) (byteValue/_brightness);
             return Math.Max((byte) 0, Math.Min(newValue, (byte) 255));
         }
-        private static byte AdjustBrightness(byte byteValue)
+        private byte AdjustBrightness(byte byteValue)
         {
-            byte newValue = (byte) (byteValue*ColorData.Brightness);
+            byte newValue = (byte) (byteValue*_brightness);
             return Math.Max((byte) 0, Math.Min(newValue, (byte) 255));
         }
-
-
     }
 }

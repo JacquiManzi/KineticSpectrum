@@ -29,7 +29,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             {
                 IList<Color> colors = EffectsToColors(start.SampleEffect.ColorEffects);
                 startToColor[start] = colors;
-                C5.HashedLinkedList<Color> distinct = new C5.HashedLinkedList<Color>();
+                OrderedSet<Color> distinct = new OrderedSet<Color>();
                 distinct.AddAll(colors);
                 IDictionary<Color, Color> oldToNew = OldToNew(startToColor, active);
                 Color randBase = distinct.FirstOrDefault(oldToNew.ContainsKey);

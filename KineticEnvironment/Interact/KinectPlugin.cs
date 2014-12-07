@@ -20,7 +20,7 @@ namespace RevKitt.KS.KineticEnvironment.Interact
 
     class GesturePosition
     {
-        public int SkeletonId;
+        public ulong SkeletonId;
         public Vector3D RightHand;
         public Vector3D LeftHand;
         public Vector3D RightShoulder;
@@ -143,13 +143,16 @@ namespace RevKitt.KS.KineticEnvironment.Interact
 
     public class KinectPlugin
     {
+        public static KinectPlugin Instance = new KinectPlugin();
         private KinectSensor _sensor;
-        private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution320x240Fps30;
+        private BodyFrameReader _frameReader;
+//        private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution320x240Fps30;
         private bool _enabled;
-        private DepthImagePixel[] _depthPixels;
+//        private DepthImagePixel[] _depthPixels;
         private byte[] _imagePixels;
         private readonly object _lock = new object();
-        private Skeleton[] _skeletonData;
+        private Body[] _bodies = null;
+        private Body _currentBody = null;
 
         private readonly GestureState _gestureState = new GestureState();
 
@@ -160,7 +163,6 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         public KinectPlugin()
         {
             FallOff = .99;
-            Enabled = true;
         }
 
         private void Setup()
@@ -170,15 +172,7 @@ namespace RevKitt.KS.KineticEnvironment.Interact
                 if(_sensor != null)
                     return;
 
-                foreach (var potentialSensor in KinectSensor.KinectSensors)
-                {
-                    if (potentialSensor.Status == KinectStatus.Connected)
-                    {
-                        _sensor = potentialSensor;
-                        System.Diagnostics.Debug.WriteLine("Sensor Detected with status: {0}", _sensor.Status);
-                        break;
-                    }
-                }
+                _sensor = KinectSensor.GetDefault();
                 if (_sensor == null)
                 {
                     System.Diagnostics.Debug.WriteLine("No Kinect Found");
@@ -190,7 +184,7 @@ namespace RevKitt.KS.KineticEnvironment.Interact
                     SetupGesture(_sensor);
                 try
                 {
-                    _sensor.Start();
+                    _sensor.Open();
                 }
                 catch (Exception)
                 {
@@ -203,47 +197,41 @@ namespace RevKitt.KS.KineticEnvironment.Interact
 
         private void SetupGesture(KinectSensor sensor)
         {
-            sensor.SkeletonStream.Enable(new TransformSmoothParameters
-            {
-                Smoothing = 0.5f,
-                Correction = 0.5f,
-                Prediction = 0.5f,
-                JitterRadius = 0.05f,
-                MaxDeviationRadius = 0.04f
-            }); 
-            sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-            sensor.SkeletonStream.Enable();
-            _skeletonData = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength]; // Allocate ST data
-            sensor.SkeletonFrameReady += SkeletonFrameReady; // Get Ready for Skeleton Ready Events
+            _frameReader = sensor.BodyFrameSource.OpenReader();
+            _frameReader.FrameArrived += SkeletonFrameReady;
         }
 
         public double GesturePortion { get { return _gestureState.CurrentPortion; } }
 
-        private void SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        private void SkeletonFrameReady(object sender, BodyFrameArrivedEventArgs e)
         {
-            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame()) // Open the Skeleton frame
+            using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame()) // Open the Skeleton frame
             {
-                if (skeletonFrame != null && _skeletonData != null) // check that a frame is available
+                if (bodyFrame != null)
                 {
-                    skeletonFrame.CopySkeletonDataTo(_skeletonData); // get the skeletal information in this frame
-                    foreach (Skeleton skeleton in _skeletonData)
+                    if (this._bodies == null)
                     {
-                        if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
-                        {
-                            HandleSkeletonUpdate(skeleton);
-                            return;
-                        }
+                        this._bodies = new Body[bodyFrame.BodyCount];
+                    }
+                    bodyFrame.GetAndRefreshBodyData(this._bodies);
+                    if (_currentBody == null || !_currentBody.IsTracked)
+                    {
+                        _currentBody = _bodies.FirstOrDefault(b => b.IsTracked);
+                    }
+                    if (_currentBody != null)
+                    {
+                        HandleSkeletonUpdate(_currentBody);
                     }
                 }
             }
         }
 
-        private void HandleSkeletonUpdate(Skeleton skeleton)
+        private void HandleSkeletonUpdate(Body body)
         {
-            JointCollection jc = skeleton.Joints;
+            var jc = body.Joints;
             _gestureState.UpdatePosition( new GesturePosition
                    {
-                       SkeletonId = skeleton.TrackingId,
+                       SkeletonId = body.TrackingId,
                        RightHand = OrientJoint(jc[JointType.HandRight]),
                        LeftHand = OrientJoint(jc[JointType.HandLeft]),
                        RightShoulder = OrientJoint(jc[JointType.ShoulderRight]),
@@ -265,50 +253,50 @@ namespace RevKitt.KS.KineticEnvironment.Interact
 
         private void SetupShadow(KinectSensor sensor)
         {
-            sensor.DepthStream.Enable(DepthFormat);
-            _depthPixels = new DepthImagePixel[sensor.DepthStream.FramePixelDataLength];
-            _imagePixels = new byte[sensor.DepthStream.FramePixelDataLength];
-            _width = _sensor.DepthStream.FrameWidth;
-            _height = _sensor.DepthStream.FrameHeight;
-            sensor.DepthFrameReady += SensorOnDepthFrameReady;
+//            sensor.DepthStream.Enable(DepthFormat);
+//            _depthPixels = new DepthImagePixel[sensor.DepthStream.FramePixelDataLength];
+//            _imagePixels = new byte[sensor.DepthStream.FramePixelDataLength];
+//            _width = _sensor.DepthStream.FrameWidth;
+//            _height = _sensor.DepthStream.FrameHeight;
+//            sensor.DepthFrameReady += SensorOnDepthFrameReady;
         }
-
-        private void SensorOnDepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
-        {
-            using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
-            {
-                if (depthFrame != null)
-                {
-                    depthFrame.CopyDepthImagePixelDataTo(_depthPixels);
- 
-                    int minDepth = depthFrame.MinDepth;
-                    int maxDepth = depthFrame.MaxDepth;
-
-                    for (int i = 0; i < _depthPixels.Count(); i++)
-                    {
-                        _imagePixels[i] = (byte)(FallOff*_imagePixels[i]);
-                        if (_imagePixels[i] < 10)
-                            _imagePixels[i] = 0;
-                        short depth = _depthPixels[i].Depth;
-                        if (depth > minDepth && depth < maxDepth)
-                        {
-                            _imagePixels[i] = 255;
-//                            _colorPixels[colorIndex++] = _imagePixels[i];
-//                            _colorPixels[colorIndex++] = _imagePixels[i];
-//                            _colorPixels[colorIndex++] = _imagePixels[i];
-//                            colorIndex++;
-                        }
-                    }
-                    // Write the pixel data into our bitmap
-//                    _colorBitmap.WritePixels(
-//                        new Int32Rect(0, 0, _colorBitmap.PixelWidth, _colorBitmap.PixelHeight),
-//                        _colorPixels,
-//                        _colorBitmap.PixelWidth * sizeof(int),
-//                        0);
-                }
-            }
-        }
-
+//
+//        private void SensorOnDepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
+//        {
+//            using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
+//            {
+//                if (depthFrame != null)
+//                {
+//                    depthFrame.CopyDepthImagePixelDataTo(_depthPixels);
+// 
+//                    int minDepth = depthFrame.MinDepth;
+//                    int maxDepth = depthFrame.MaxDepth;
+//
+//                    for (int i = 0; i < _depthPixels.Count(); i++)
+//                    {
+//                        _imagePixels[i] = (byte)(FallOff*_imagePixels[i]);
+//                        if (_imagePixels[i] < 10)
+//                            _imagePixels[i] = 0;
+//                        short depth = _depthPixels[i].Depth;
+//                        if (depth > minDepth && depth < maxDepth)
+//                        {
+//                            _imagePixels[i] = 255;
+////                            _colorPixels[colorIndex++] = _imagePixels[i];
+////                            _colorPixels[colorIndex++] = _imagePixels[i];
+////                            _colorPixels[colorIndex++] = _imagePixels[i];
+////                            colorIndex++;
+//                        }
+//                    }
+//                    // Write the pixel data into our bitmap
+////                    _colorBitmap.WritePixels(
+////                        new Int32Rect(0, 0, _colorBitmap.PixelWidth, _colorBitmap.PixelHeight),
+////                        _colorPixels,
+////                        _colorBitmap.PixelWidth * sizeof(int),
+////                        0);
+//                }
+//            }
+//        }
+//
         public bool HasKinect
         {
             get

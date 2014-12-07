@@ -134,6 +134,7 @@ namespace RevKitt.KS.KineticEnvironment.D3
             return new Extent(min,minPoint, max, maxPoint);
         }
 
+
         public static Plane FindPlane(IList<Vector3D> vectors)
         {
             return FindPlane(Convert(vectors));
@@ -141,11 +142,7 @@ namespace RevKitt.KS.KineticEnvironment.D3
 
         public static Plane FindPlane(IList<ILArray<double>> vectors)
         {
-            ILArray<double> sum = ILMath.zeros(NUM_DIM);
-            sum = vectors.Aggregate(sum, (s, vecs) => ILMath.add(s, vecs));
-            ILArray<double> mean = ILMath.array(sum.GetValue(0)/vectors.Count,
-                                                sum.GetValue(1)/vectors.Count,
-                                                sum.GetValue(2)/vectors.Count);
+            var mean = FindMean(vectors);
 
             ILArray<double> A = vectors.Aggregate(ILMath.zeros(NUM_DIM, NUM_DIM),
                                     (s, vecs)=>ILMath.multiply(ILMath.subtract(mean,vecs),
@@ -163,6 +160,21 @@ namespace RevKitt.KS.KineticEnvironment.D3
 
             ILArray<double> evec = o.a[ILMath.full, minIndex];
             return new Plane(Convert(evec), Convert(mean));
+        }
+
+        public static Vector3D FindMean(IList<Vector3D> vectors)
+        {
+            return Convert(FindMean(Convert(vectors)));
+        }
+
+        public static ILArray<double> FindMean(IList<ILArray<double>> vectors)
+        {
+            ILArray<double> sum = ILMath.zeros(NUM_DIM);
+            sum = vectors.Aggregate(sum, (s, vecs) => ILMath.add(s, vecs));
+            ILArray<double> mean = ILMath.array(sum.GetValue(0)/vectors.Count,
+                sum.GetValue(1)/vectors.Count,
+                sum.GetValue(2)/vectors.Count);
+            return mean;
         }
     }
 }
