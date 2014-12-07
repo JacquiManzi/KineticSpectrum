@@ -46,7 +46,8 @@ namespace KineticControl
                        {
                            foreach (var colorData in pds.AllColorData)
                            {
-                               colorData[j] = color;
+                               if (j<colorData.Count)
+                                   colorData[j] = color;
                            }
                            pds.UpdateSystem();
                        }

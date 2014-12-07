@@ -24,7 +24,6 @@ namespace KineticControl
 
         public Patterns()
         {
-            AllColors.Add(Colors.White);
             AllColors.Add(Colors.Blue);
             AllColors.Add(Colors.Red);
             AllColors.Add(Colors.Green);
@@ -80,6 +79,7 @@ namespace KineticControl
             AllColors.Add(Colors.MediumSeaGreen);
             AllColors.Add(Colors.MediumSlateBlue);
             AllColors.Add(Colors.MediumSpringGreen);
+            AllColors.Add(Colors.White);
             AllColors.Add(Colors.MediumTurquoise);
             AllColors.Add(Colors.MediumVioletRed);
             AllColors.Add(Colors.Navy);

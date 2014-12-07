@@ -79,7 +79,7 @@ namespace KineticUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to True.
+        ///   Looks up a localized string similar to False.
         /// </summary>
         internal static string KinectEnabled {
             get {
