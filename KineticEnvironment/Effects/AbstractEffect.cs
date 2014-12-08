@@ -18,7 +18,7 @@ namespace RevKitt.KS.KineticEnvironment.Effects
         protected int Duration { get; private set; }
         protected int RepeatCount { get; private set; }
         protected bool Reverse { get; private set; }
-        protected IOrdering Ordering { get; private set; }
+        public IOrdering Ordering { get; set; }
 
         protected AbstractEffect(IGroup group)
         {

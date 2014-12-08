@@ -45,6 +45,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         public IEnumerable<PatternStart> GetPatterns(int time, IActivatable simulation, int patternCount, int priority)
         {
+//            return Enumerable.Empty<PatternStart>();
             if (patternCount < Params.PatternsMax && IsNewPattern(time))
             {
                 PatternStart start = new PatternStart(simulation, _scene, id++, time, GenPattern(), priority);

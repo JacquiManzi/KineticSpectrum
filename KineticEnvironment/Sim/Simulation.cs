@@ -303,7 +303,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             var groupApply = appliers.GroupBy(a => a.Group.Name).ToList();
 
-            HandleBackground(time, groupApply);
+//            HandleBackground(time, groupApply);
 
             foreach (var light in _lights)
             {

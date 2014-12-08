@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using RevKitt.KS.KineticEnvironment.Coloring;
 using RevKitt.KS.KineticEnvironment.Effects;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
@@ -16,13 +19,76 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         private readonly PatternGenerator _patternGen;
         private readonly KinectPlugin _plugin;
+        private readonly int _bodyIndex;
+        private readonly object _gestureLock = new object();
+        private readonly object _taskLock = new object();
 
-        public KinectPatternStart(IActivatable lightProvider, Scene scene, KinectPlugin kinectPlugin) :
-            base(lightProvider, scene, 0, 0, GetBasePattern(), 1)
+        private IOrdering _ordering;
+        private bool _tracked = false;
+        private bool _isLast = false;
+        private bool _restart = false;
+
+        private Task _currentTask;
+
+        public KinectPatternStart(IActivatable lightProvider, Scene scene, KinectPlugin kinectPlugin, int bodyIndex) :
+            base(lightProvider, scene, 0, 0, GetBasePattern(), bodyIndex+1)
         {
+            _ordering = GetOrdering(scene, new Vector3D());
+            _bodyIndex = bodyIndex;
             _plugin = kinectPlugin;
             _patternGen = new PatternGenerator(scene);
-            _patternGen.AvailableOrderings = new List<string>{SpatialOrderingTypes.Expand, SpatialOrderingTypes.TwoDirectionsOut};
+            _patternGen.AvailableOrderings = new List<string>{SpatialOrderingTypes.Expand};
+            _patternGen.Params.PatternLengthMin = .5;
+            _patternGen.Params.PatternLengthMax = 1;
+            _patternGen.Params.ColorsMin = 2;
+            kinectPlugin.GestureUpdateHandler += HandleGestureUpdate;
+        }
+
+        private static IOrdering GetOrdering(Scene scene, Vector3D position)
+        {
+            IOrdering ordering = SpatialOrderings.GetPositionalOrdering(SpatialOrderingTypes.Expand, position);
+            ordering.Group = scene.GetGroup("All");
+            return ordering;
+        }
+
+        private void HandleGestureUpdate(GesturePosition[] gesturePositions, int lastBodyIndex)
+        {
+            lock (_taskLock)
+            {
+                if (_currentTask != null)
+                {
+                    return;
+                }
+                _currentTask = Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        GesturePosition gesturePosition = gesturePositions[_bodyIndex];
+                        IOrdering ordering = null;
+                        if (gesturePosition.IsTracked)
+                        {
+                            ordering = GetOrdering(Scene, gesturePosition.Head);
+                        }
+                        lock (_gestureLock)
+                        {
+                            if (ordering != null)
+                                _ordering = ordering;
+                            if (!_tracked && gesturePosition.IsTracked)
+                                _restart = true;
+                            _tracked = gesturePosition.IsTracked;
+                            _isLast = _bodyIndex == lastBodyIndex;
+                        }
+                    }
+                    finally
+                    {
+                        lock (_taskLock)
+                        {
+                            _currentTask = null;
+                        }
+
+                    }
+                });
+            }
         }
 
         public new int EndTime { get { return int.MaxValue; } }
@@ -45,11 +111,13 @@ namespace RevKitt.KS.KineticEnvironment.Sim
                 };
         }
 
-        private Pattern GenPattern()
+        private Pattern GenPattern(IOrdering ordering)
         {
             Pattern pattern = _patternGen.GenSweep(new List<string> {"All"});
             pattern.EffectProperties[PropertyDefinition.RepeatCount.Name] = 1;
             pattern.EffectProperties[PropertyDefinition.Easing.Name] = Easings.Linear;
+            pattern.EffectProperties[PropertyDefinition.Ordering.Name] = ordering;
+            pattern.EffectProperties[PropertyDefinition.RepeatCount.Name] = 1000;
             return pattern;
         }
 
@@ -57,52 +125,48 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             if (!_plugin.Enabled)
                 return base.GetApplier(0);
+            IOrdering ordering;
+            bool tracked = false;
+            bool isLast = false;
+            bool restart = false;
+            lock (_gestureLock)
+            {
+                ordering = _ordering;
+                tracked = _tracked;
+                isLast = _isLast;
+                restart = _restart;
+                _restart = false;
+            }
 
-            double gesturePortion = _plugin.GesturePortion;
-            if (Double.IsNaN(gesturePortion))
+            if (!tracked)
             {
                 _appliedState = _appliedState*_plugin.FallOff;
                 if (_appliedState < .05)
                     _appliedState = 0;
-                gesturePortion = _lastPortion;
             }
-            else if (_appliedState < .5)
+            else if (_appliedState < .2)
             {
-                Pattern = GenPattern();
-                _patternStart = time;
-                _appliedState = 1;
-                _lastPortion = gesturePortion;
+                _appliedState = .2;
             }
             else
             {
-                _appliedState = 1;
-                _lastPortion = gesturePortion;
+                _appliedState = Math.Min(1, _appliedState/_plugin.FallOff);
+            }
+            if (restart)
+            {
+                Pattern = GenPattern(ordering);
+                StartTime = time;
             }
 
             //align time with when the underlying pattern start thinks it started
-            time = time - _patternStart;
-            int effectTime = SampleEffect.TotalTime;
-            int gestureTime = (int) (effectTime*gesturePortion);
-            int timeTime = GetTimeTime(time, effectTime);
-            if (DateTime.Now - new TimeSpan(0, 0, 1) > _lastPrint)
-            {
-                _lastPrint = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine("timetime {0} gesturetime {1} gesture {2}", timeTime, gestureTime,
-                                                   gesturePortion);
-            }
 
-            return base.GetApplier(gestureTime)
-                .Zip(base.GetApplier(timeTime), (gesture, node) => new KinectApplier(gesture, node, _appliedState));
+            IEffect sample = SampleEffect;
+            sample.Ordering = ordering;
+            IEffectApplier colorApplier = base.GetApplier(time).First();
+            int fifth = sample.Properties.GetTime(PropertyDefinition.Duration.Name)/10 + StartTime;
+            IEffectApplier nodeApplier = base.GetApplier(tracked?fifth:0).First();
 
-        }
-        private DateTime _lastPrint = DateTime.Now;
-
-        private int GetTimeTime(int time, int totalTime)
-        {
-            int rangeTime = time%totalTime;
-            if ((time/totalTime)%2 == 1)
-                return totalTime - rangeTime;
-            return rangeTime;
+            return new List<IEffectApplier>(1) {new KinectApplier(nodeApplier, colorApplier, _appliedState, isLast)};
         }
         /// <summary>
         /// The ammount to apply this pattern as a range from 0 to 1
@@ -110,12 +174,6 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         /// so this allows for a falloff
         /// </summary>
         private double _appliedState = 0;
-        /// <summary>
-        /// The last state when the gesture was applied. When the gesture ends
-        /// it stays in its last state, but falls off to transparent
-        /// </summary>
-        private double _lastPortion = 0;
-        private int _patternStart = 0;
     }
 
     class KinectApplier : IEffectApplier
@@ -123,12 +181,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly IEffectApplier _nodeApplier;
         private readonly IEffectApplier _colorApplier;
         private readonly double _alphaPortion;
+        private readonly bool _applyBackground;
 
-        public KinectApplier(IEffectApplier nodeApplier, IEffectApplier colorApplier, double alphaPortion)
+        public KinectApplier(IEffectApplier nodeApplier, IEffectApplier colorApplier, double alphaPortion, bool applyBackground)
         {
             _nodeApplier = nodeApplier;
             _colorApplier = colorApplier;
             _alphaPortion = alphaPortion;
+            _applyBackground = applyBackground;
         }
 
         public IColorEffect GetEffect(LEDNode node)
@@ -138,6 +198,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
         public Color GetNodeColor(LEDNode node, IColorEffect colorEffect)
         {
+            if (_applyBackground && colorEffect == StartColor)
+                return new Color() {A = (byte) (256*_alphaPortion), B=1};
+
             Color color = _colorApplier.GetNodeColor(node, colorEffect);
             color.A = (byte)(color.A*_alphaPortion);
             return color;

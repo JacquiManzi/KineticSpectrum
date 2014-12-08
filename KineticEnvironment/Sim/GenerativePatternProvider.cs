@@ -12,7 +12,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly PatternGenerator _patternGenerator;
         private readonly Scene _scene;
 
-        private KinectPatternStart _kinectPattern;
+        private IEnumerable<KinectPatternStart> _kinectPatterns;
 
         public GenerativePatternProvider(Scene scene)
         {
@@ -69,10 +69,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public IList<PatternStart> GetActive(int time)
         {
             _patternStarts.RemoveAll(p => p.EndTime < time);
-            _patternStarts.AddRange(_patternGenerator.GetPatterns(time, Simulation, _patternStarts.Count, 2));
-            if (_kinectPattern != null)
+            _patternStarts.AddRange(_patternGenerator.GetPatterns(time, Simulation, _patternStarts.Count, 7));
+            if (_kinectPatterns != null)
+            {
                 //todo memory problems here!
-                return new List<PatternStart>(_patternStarts) {_kinectPattern};
+                List<PatternStart> starts = new List<PatternStart>(_patternStarts);
+                starts.AddRange(_kinectPatterns);
+                return starts;
+            }
             return _patternStarts;
         }
 
@@ -80,13 +84,18 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         {
             _patternGenerator.WriteParameters(writer);
         }
-
+        
         public void ReadPatterns(string parameters)
         {
             _patternGenerator.ReadParameters(parameters);
             if (Plugin != null)
             {
-                _kinectPattern = new KinectPatternStart(Simulation, _scene, _plugin);
+                List<KinectPatternStart> kinectPatterns = new List<KinectPatternStart>(6);
+                for (int i = 0; i < 6; i++)
+                {
+                   kinectPatterns.Add(new KinectPatternStart(Simulation, _scene, _plugin, i));
+                }
+                _kinectPatterns = kinectPatterns;
             }
         }
 

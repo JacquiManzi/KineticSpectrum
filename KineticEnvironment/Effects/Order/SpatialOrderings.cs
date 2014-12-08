@@ -32,12 +32,24 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                     throw new ArgumentException("Type '" + orderingName + "' is not a valid SpatialOrderingType");
             }
         }
+
+        public static IOrdering GetPositionalOrdering(string orderingName, Vector3D position)
+        {
+            switch (orderingName)
+            {
+                case SpatialOrderingTypes.Expand: 
+                    return new DefinedPolarSpatialOrdering(SpatialOrderingTypes.Expand, Orderings.ForwardFunc, position);
+                default:
+                    throw new ArgumentException("Type '" + orderingName + "' cannot be used as a positional ordering");
+            }
+            
+        }
     }
 
     class PolarSpatialOrdering : SpatialOrdering
     {
         private readonly bool _rand;
-        
+
         public PolarSpatialOrdering(string ordering, Orderings.PositionFunc positionFunc, bool rand) : base(ordering, positionFunc)
         {
             _rand = rand;
@@ -55,6 +67,22 @@ namespace RevKitt.KS.KineticEnvironment.Effects.Order
                 .Select(v => D3Util.Distance(plane.Center, v)).ToList();
         }
     }
+
+    class DefinedPolarSpatialOrdering : SpatialOrdering
+    {
+        private readonly Vector3D _center;
+
+        public DefinedPolarSpatialOrdering(string ordering, Orderings.PositionFunc positionFunc, Vector3D center) : base(ordering, positionFunc)
+        {
+            _center = center;
+        }
+
+        protected override IList<double> VectorsToPositions(IList<Vector3D> vectors)
+        {
+            return vectors.Select(v => D3Util.Distance(_center, v)).ToList();
+        }
+    }
+
 
     class LinearSpatialOrdering : SpatialOrdering
     {

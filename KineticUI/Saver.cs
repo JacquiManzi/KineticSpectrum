@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Media.Media3D;
 using Newtonsoft.Json;
 using RevKitt.KS.KineticEnvironment;
+using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.JSConverters;
 using RevKitt.KS.KineticEnvironment.Scenes;
 using RevKitt.KS.KineticEnvironment.Sim;
@@ -100,6 +102,10 @@ namespace KineticUI
                 writer.Write(node.Position.Z);
                 writer.WriteLine();
             }
+
+            writer.WriteLine("\n\n### Camera\n");
+            Vector3D cameraPosition = KinectPlugin.Instance.CameraPosition;
+            writer.WriteLine("{0} {1} {2}", cameraPosition.X, cameraPosition.Y, cameraPosition.Z);
 
             writer.WriteLine("\n\n### Groups\n");
             writer.Flush();
@@ -211,6 +217,13 @@ namespace KineticUI
             State.PatternSim = ReadAheadSimulation.TempSimulation(State.Scene);
             State.ProgramSim = ReadAheadSimulation.TempSimulation(State.Scene);
             State.GenSim = ReadAheadSimulation.GenerativeSimulation(State.Scene);
+
+            if (nameToSection.ContainsKey("Camera"))
+            {
+                string[] xyz = nameToSection["Camera"].Split(' ');
+                Vector3D cameraPosition = new Vector3D(double.Parse(xyz[0]), double.Parse(xyz[1]), double.Parse(xyz[2]));
+                KinectPlugin.Instance.CameraPosition = cameraPosition;
+            }
 
             if (nameToSection.ContainsKey("Groups"))
             {

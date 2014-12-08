@@ -18,8 +18,9 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         SHADOW, GESTURE
     }
 
-    class GesturePosition
+    public class GesturePosition
     {
+        public bool IsTracked;
         public ulong SkeletonId;
         public Vector3D RightHand;
         public Vector3D LeftHand;
@@ -27,11 +28,12 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         public Vector3D LeftShoulder;
         public Vector3D RightWrist;
         public Vector3D LeftWrist;
+        public Vector3D Head;
 
         public void PrintGesture()
         {
             System.Diagnostics.Debug.WriteLine("RH: {0} {1} {2}", RightHand.X, RightHand.Y, RightHand.Z );
-            System.Diagnostics.Debug.WriteLine("RS: {0} {1} {2}", RightShoulder.X, RightShoulder.Y, RightShoulder.Z);
+            System.Diagnostics.Debug.WriteLine("RW: {0} {1} {2}", RightWrist.X, RightWrist.Y, RightWrist.Z);
         }
     }
 
@@ -116,17 +118,17 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         private DateTime _lastPrint;
         public void UpdatePosition(GesturePosition gesturePostition)
         {
-            UpdateTime();
             if((DateTime.Now - LastUpdate()).TotalSeconds > 1)
+                UpdateTime();
                 gesturePostition.PrintGesture();
-            if (!IsValid(gesturePostition))
-            {
-                _initialGesture = null;
-                return;
-            }
-            Initialize(gesturePostition);
-            if(_initialGesture != null)
-                CurrentPortion = GetRatio(gesturePostition);
+//            if (!IsValid(gesturePostition))
+//            {
+//                _initialGesture = null;
+//                return;
+//            }
+//            Initialize(gesturePostition);
+//            if(_initialGesture != null)
+//                CurrentPortion = GetRatio(gesturePostition);
 //            if (DateTime.Now - new TimeSpan(0, 0, 1) > _lastPrint)
 //            {
 //                gesturePostition.PrintGesture();
@@ -141,6 +143,8 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         }
     }
 
+    public delegate void GesturesUpdates(GesturePosition[] gesturePositions, int lastBodyId);
+
     public class KinectPlugin
     {
         public static KinectPlugin Instance = new KinectPlugin();
@@ -153,8 +157,11 @@ namespace RevKitt.KS.KineticEnvironment.Interact
         private readonly object _lock = new object();
         private Body[] _bodies = null;
         private Body _currentBody = null;
+        public Vector3D CameraPosition = new Vector3D(0,0,0);
+        public GesturesUpdates GestureUpdateHandler;
 
-        private readonly GestureState _gestureState = new GestureState();
+//        private readonly GestureState _gestureState = new GestureState();
+        private GesturePosition[] _gesturePositions;
 
         private int _width, _height;
 
@@ -162,7 +169,7 @@ namespace RevKitt.KS.KineticEnvironment.Interact
 
         public KinectPlugin()
         {
-            FallOff = .99;
+            FallOff = .95;
         }
 
         private void Setup()
@@ -201,7 +208,7 @@ namespace RevKitt.KS.KineticEnvironment.Interact
             _frameReader.FrameArrived += SkeletonFrameReady;
         }
 
-        public double GesturePortion { get { return _gestureState.CurrentPortion; } }
+//        public double GesturePortion { get { return _gestureState.CurrentPortion; } }
 
         private void SkeletonFrameReady(object sender, BodyFrameArrivedEventArgs e)
         {
@@ -209,45 +216,56 @@ namespace RevKitt.KS.KineticEnvironment.Interact
             {
                 if (bodyFrame != null)
                 {
-                    if (this._bodies == null)
+                    if (_bodies == null)
                     {
-                        this._bodies = new Body[bodyFrame.BodyCount];
+                        _bodies = new Body[bodyFrame.BodyCount];
+                        _gesturePositions = new GesturePosition[bodyFrame.BodyCount];
+                        for (int i = 0; i < _gesturePositions.Length; i++)
+                        {
+                            _gesturePositions[i] = new GesturePosition() {IsTracked = false};
+                        }
                     }
                     bodyFrame.GetAndRefreshBodyData(this._bodies);
-                    if (_currentBody == null || !_currentBody.IsTracked)
-                    {
-                        _currentBody = _bodies.FirstOrDefault(b => b.IsTracked);
-                    }
-                    if (_currentBody != null)
-                    {
-                        HandleSkeletonUpdate(_currentBody);
-                    }
+                    HandleSkeletonUpdate(_bodies);
                 }
             }
         }
 
-        private void HandleSkeletonUpdate(Body body)
+        private void HandleSkeletonUpdate(Body[] bodies)
         {
-            var jc = body.Joints;
-            _gestureState.UpdatePosition( new GesturePosition
-                   {
-                       SkeletonId = body.TrackingId,
-                       RightHand = OrientJoint(jc[JointType.HandRight]),
-                       LeftHand = OrientJoint(jc[JointType.HandLeft]),
-                       RightShoulder = OrientJoint(jc[JointType.ShoulderRight]),
-                       LeftShoulder = OrientJoint(jc[JointType.ShoulderLeft]),
-                       RightWrist = OrientJoint(jc[JointType.WristRight]),
-                       LeftWrist = OrientJoint(jc[JointType.WristLeft])
-                   });
+            int lastTracked = -1;
+            for(int i=0; i<bodies.Length; i++)
+            {
+                Body body = bodies[i];
+                GesturePosition gesturePosition = _gesturePositions[i];
+                bool isTracked = body.IsTracked && body.Joints[JointType.HandLeft].Position.Z != 0.0;
+                gesturePosition.IsTracked = isTracked;
+                gesturePosition.SkeletonId = body.TrackingId;
+                if (isTracked)
+                { 
+                    lastTracked = i;
+                    var jc = body.Joints;
+                    gesturePosition.RightHand = OrientJoint(jc[JointType.HandRight]);
+                    gesturePosition.LeftHand = OrientJoint(jc[JointType.HandLeft]);
+                    gesturePosition.RightShoulder = OrientJoint(jc[JointType.ShoulderRight]);
+                    gesturePosition.LeftShoulder = OrientJoint(jc[JointType.ShoulderLeft]);
+                    gesturePosition.RightWrist = OrientJoint(jc[JointType.WristRight]);
+                    gesturePosition.LeftWrist = OrientJoint(jc[JointType.WristLeft]);
+                    gesturePosition.Head = OrientJoint(jc[JointType.Head]);
+                }
+            }
+            if(GestureUpdateHandler != null)
+                GestureUpdateHandler(_gesturePositions, lastTracked);
         }
 
+        private static readonly double METERS_TO_INCHES = 3.28*12;
         private Vector3D OrientJoint(Joint joint)
         {
             return new Vector3D
                        {
-                           X = joint.Position.X,
-                           Y = joint.Position.Y,
-                           Z = joint.Position.Z
+                           X = joint.Position.Z * METERS_TO_INCHES + CameraPosition.X,
+                           Y = joint.Position.X * METERS_TO_INCHES + CameraPosition.Y,
+                           Z = joint.Position.Y * METERS_TO_INCHES + CameraPosition.Z
                        };
         }
 

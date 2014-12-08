@@ -99,6 +99,11 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             }
         }
 
+        protected Scene Scene
+        {
+            get { return _scene; }
+        }
+
         public bool Applies(int time)
         {
             return time >= StartTime && time < EndTime;

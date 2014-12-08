@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using KineticControl;
 using RevKitt.KS.KineticEnvironment.Effects.ColorEffect;
+using RevKitt.KS.KineticEnvironment.Effects.Order;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
 namespace RevKitt.KS.KineticEnvironment.Effects
@@ -26,5 +27,6 @@ namespace RevKitt.KS.KineticEnvironment.Effects
 
         IColorEffect StartEffect { get; }
         IColorEffect EndEffect { get; }
+        IOrdering Ordering { get; set; }
     }
 }
