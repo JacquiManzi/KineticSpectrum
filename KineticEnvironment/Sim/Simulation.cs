@@ -260,7 +260,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
                 foreach (var light in _lights)
                 {
-                    light.Color = ColorUtil.Empty;
+                    light.Color = ColorUtil.Transparent;
                 }
                 ApplyForTime(appliers, time);
                 foreach (var light in _lights)
@@ -307,31 +307,20 @@ namespace RevKitt.KS.KineticEnvironment.Sim
 
             foreach (var light in _lights)
             {
+                bool lightDone = false;
                 foreach (IGrouping<string, IEffectApplier> effectAppliers in groupApply)
                 {
-                    bool backgroundApplied = false;
-                    IEffectApplier background;
-                    if (groupBackground.TryGetValue(effectAppliers.Key, out background))
-                    {
-                        Color nodeColor = background.GetNodeColor(light, background.EndColor);
-                        WriteBackground(light, nodeColor);
-                        backgroundApplied = true;
-                    }
                     foreach (IEffectApplier applier in effectAppliers)
                     {
                         IColorEffect colorEffect = applier.GetEffect(light);
-                        if (colorEffect != applier.StartColor)
+                        Color nodeColor = applier.GetNodeColor(light, colorEffect);
+                        if (WriteForeground(light, nodeColor))
                         {
-                            Color nodeColor = applier.GetNodeColor(light, colorEffect);
-                            WriteForeground(light, nodeColor);
+                            lightDone = true;
+                            break;
                         }
-                        else if (!backgroundApplied)
-                        {
-                            Color nodeColor = applier.GetNodeColor(light, colorEffect);
-                            WriteBackground(light, nodeColor);
-                        }
-                        backgroundApplied = true;
                     }
+                    if (lightDone) break;
                 }
             }
         }
@@ -351,19 +340,14 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             light.Color = color;
         }
 
-        private void WriteForeground(LEDNode light, Color color)
+        private bool WriteForeground(LEDNode light, Color color)
         {
-            if (_plugin != null && _plugin.Enabled &&
-                _kinectState == PluginMode.NoFore)
+            light.Color = ColorUtil.Interpolate(color, light.Color);
+            if (light.Color.A >= 230)
             {
-                byte amount = _plugin.Applies(light.Position.X, light.Position.Y); 
-                if (amount != 0)
-                {
-                    light.Color = ColorUtil.Interpolate(color, Colors.Black, amount/255.0);
-                    return;
-                }
+                return true;
             }
-            light.Color = ColorUtil.Interpolate(light.Color, color);
+            return false;
         }
 
         private enum PluginMode {NoBack, NoFore}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using RevKitt.KS.KineticEnvironment.Interact;
 using RevKitt.KS.KineticEnvironment.Scenes;
 
@@ -73,8 +74,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             if (_kinectPatterns != null)
             {
                 //todo memory problems here!
-                List<PatternStart> starts = new List<PatternStart>(_patternStarts);
-                starts.AddRange(_kinectPatterns);
+                List<PatternStart> starts = new List<PatternStart>(_kinectPatterns.Where(p=>p.IsTracked));
+                starts.AddRange(_patternStarts);
                 return starts;
             }
             return _patternStarts;

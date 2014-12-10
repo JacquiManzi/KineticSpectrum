@@ -24,7 +24,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         private readonly object _taskLock = new object();
 
         private IOrdering _ordering;
-        private bool _tracked = false;
+        private volatile bool _tracked = false;
         private bool _isLast = false;
         private bool _restart = false;
 
@@ -50,6 +50,8 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             ordering.Group = scene.GetGroup("All");
             return ordering;
         }
+
+        public bool IsTracked { get { return _tracked;} } 
 
         private void HandleGestureUpdate(GesturePosition[] gesturePositions, int lastBodyIndex)
         {
@@ -166,7 +168,7 @@ namespace RevKitt.KS.KineticEnvironment.Sim
             int fifth = sample.Properties.GetTime(PropertyDefinition.Duration.Name)/10 + StartTime;
             IEffectApplier nodeApplier = base.GetApplier(tracked?fifth:0).First();
 
-            return new List<IEffectApplier>(1) {new KinectApplier(nodeApplier, colorApplier, _appliedState, isLast)};
+            return new List<IEffectApplier>(1) {new KinectApplier(nodeApplier, colorApplier, isLast)};
         }
         /// <summary>
         /// The ammount to apply this pattern as a range from 0 to 1
@@ -180,14 +182,12 @@ namespace RevKitt.KS.KineticEnvironment.Sim
     {
         private readonly IEffectApplier _nodeApplier;
         private readonly IEffectApplier _colorApplier;
-        private readonly double _alphaPortion;
         private readonly bool _applyBackground;
 
-        public KinectApplier(IEffectApplier nodeApplier, IEffectApplier colorApplier, double alphaPortion, bool applyBackground)
+        public KinectApplier(IEffectApplier nodeApplier, IEffectApplier colorApplier, bool applyBackground)
         {
             _nodeApplier = nodeApplier;
             _colorApplier = colorApplier;
-            _alphaPortion = alphaPortion;
             _applyBackground = applyBackground;
         }
 
@@ -199,11 +199,9 @@ namespace RevKitt.KS.KineticEnvironment.Sim
         public Color GetNodeColor(LEDNode node, IColorEffect colorEffect)
         {
             if (_applyBackground && colorEffect == StartColor)
-                return new Color() {A = (byte) (256*_alphaPortion), B=1};
+                return new Color() {A = (byte)(255*3/4)};
 
-            Color color = _colorApplier.GetNodeColor(node, colorEffect);
-            color.A = (byte)(color.A*_alphaPortion);
-            return color;
+            return _colorApplier.GetNodeColor(node, colorEffect);
         }
 
         public IGroup Group { get { return _nodeApplier.Group; } }

@@ -6,6 +6,7 @@ namespace RevKitt.KS.KineticEnvironment.Coloring
     public class ColorUtil
     {
         public static readonly System.Windows.Media.Color Empty = System.Windows.Media.Color.FromArgb(100, 0, 0, 0);
+        public static readonly System.Windows.Media.Color Transparent = System.Windows.Media.Color.FromArgb(0, 0, 0, 0);
         public static System.Windows.Media.Color GetTransparent()
         {
             return System.Windows.Media.Color.FromArgb(0, 0, 0, 0);
@@ -92,10 +93,11 @@ namespace RevKitt.KS.KineticEnvironment.Coloring
         public static System.Windows.Media.Color Interpolate(System.Windows.Media.Color color1, System.Windows.Media.Color color2)
         {
             double fraction = color2.A/255.0;
+            double a = Interpolate(color1.A, color2.A, fraction);
             double r = Interpolate(color1.R, color2.R, fraction);
             double g = Interpolate(color1.G, color2.G, fraction);
             double b = Interpolate(color1.B, color2.B, fraction);
-            return System.Windows.Media.Color.FromArgb(255,(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
+            return System.Windows.Media.Color.FromArgb((byte)Math.Round(a),(byte)Math.Round(r), (byte)Math.Round(g), (byte)Math.Round(b));
         }
 
         private static double Interpolate(double d1, double d2, double fraction)
